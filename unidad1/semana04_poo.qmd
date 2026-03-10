@@ -1,0 +1,380 @@
+---
+title: "Semana 4: Programación Orientada a Objetos (POO)"
+subtitle: "Modelando Instrumentos Financieros como Objetos"
+abstract: |
+  Introducimos la POO como paradigma para modelar instrumentos financieros.
+  Construimos las clases `Bono`, `BonoAmortizable` y `Portafolio`, aplicando
+  encapsulamiento, herencia, métodos mágicos y properties.
+---
+
+# Introducción
+
+La Programación Orientada a Objetos (POO) permite modelar entidades del mundo real como **objetos** que combinan datos (atributos) y comportamiento (métodos). Un bono, una acción o un portafolio son candidatos naturales para ser representados como objetos.
+
+::: {.callout-tip title="¿Por qué POO en finanzas?"}
+En lugar de tener funciones sueltas y diccionarios para representar un bono, la POO nos permite:
+
+- **Encapsular** datos y lógica en una sola entidad.
+- **Reutilizar** código mediante herencia.
+- **Proteger** invariantes del modelo (ej: un cupón no puede ser negativo).
+- **Componer** objetos complejos (un portafolio es una colección de bonos).
+:::
+
+---
+
+# Clases y Objetos
+
+- **Clase**: El *molde* que define estructura y comportamiento.
+- **Objeto** (instancia): Una entidad concreta creada a partir del molde.
+
+```{python}
+#| label: clase-basica
+class Bono:
+    """Representa un bono bullet (cupón fijo)."""
+    
+    def __init__(self, ticker, valor_nominal, cupon, maturity):
+        self.ticker = ticker
+        self.valor_nominal = valor_nominal
+        self.cupon = cupon
+        self.maturity = maturity
+    
+    def __repr__(self):
+        return f"Bono('{self.ticker}', cupón={self.cupon:.2%}, mat={self.maturity})"
+
+bono1 = Bono("GD30", 1000, 0.08, 5)
+print(bono1)
+print(f"Tipo: {type(bono1)}")
+```
+
+---
+
+# Encapsulamiento con `@property`
+
+El encapsulamiento permite **controlar el acceso** a los atributos y validar que los datos sean consistentes.
+
+```{python}
+#| label: property
+class BonoSeguro:
+    """Bono con validación de atributos."""
+    
+    def __init__(self, ticker, valor_nominal, cupon, maturity):
+        self.ticker = ticker
+        self._valor_nominal = valor_nominal
+        self.cupon = cupon  # Usa el setter con validación
+        self.maturity = maturity
+    
+    @property
+    def cupon(self):
+        """Tasa cupón del bono."""
+        return self._cupon
+    
+    @cupon.setter
+    def cupon(self, valor):
+        if valor < 0:
+            raise ValueError(f"El cupón no puede ser negativo: {valor}")
+        if valor > 1:
+            raise ValueError(f"El cupón debe ser decimal (ej: 0.08), recibido: {valor}")
+        self._cupon = valor
+    
+    @property
+    def flujo_cupon(self):
+        """Flujo de cupón por período (calculado)."""
+        return self._valor_nominal * self._cupon
+
+# Uso correcto
+bono = BonoSeguro("TEST", 1000, 0.08, 5)
+print(f"Cupón: {bono.cupon:.2%}")
+print(f"Flujo de cupón: ${bono.flujo_cupon:,.2f}")
+
+# Validación en acción
+try:
+    bono_malo = BonoSeguro("BAD", 1000, -0.05, 5)
+except ValueError as e:
+    print(f"Error capturado: {e}")
+```
+
+::: {.callout-note title="Convención de nombres"}
+- `self.cupon` → Atributo público (accesible directamente).
+- `self._cupon` → Atributo "privado" por convención (no tocar desde fuera).
+- `@property` → Crea acceso controlado con validación automática.
+:::
+
+---
+
+# Métodos de Valuación
+
+Ahora construimos una clase completa con métodos de cálculo financiero:
+
+```{python}
+#| label: clase-completa
+class Bono:
+    """Bono bullet con métodos de valuación completos."""
+    
+    def __init__(self, ticker, valor_nominal, cupon, maturity):
+        self.ticker = ticker
+        self.valor_nominal = valor_nominal
+        self.cupon = cupon
+        self.maturity = maturity
+    
+    def generar_flujos(self):
+        """Genera la lista de flujos de fondos."""
+        flujo_cupon = self.valor_nominal * self.cupon
+        flujos = [flujo_cupon] * self.maturity
+        flujos[-1] += self.valor_nominal
+        return flujos
+    
+    def calcular_precio(self, yield_req):
+        """Precio del bono: P = Σ CF_t / (1 + y)^t"""
+        flujos = self.generar_flujos()
+        precio = 0
+        for t, cf in enumerate(flujos, start=1):
+            precio += cf / (1 + yield_req) ** t
+        return precio
+    
+    def calcular_duracion(self, yield_req):
+        """Duración de Macaulay: D = (1/P) × Σ t × CF_t / (1+y)^t"""
+        flujos = self.generar_flujos()
+        precio = self.calcular_precio(yield_req)
+        numerador = sum(t * cf / (1 + yield_req) ** t 
+                        for t, cf in enumerate(flujos, start=1))
+        return numerador / precio
+    
+    def calcular_duracion_modificada(self, yield_req):
+        """Dur. Modificada = Dur. Macaulay / (1 + y)"""
+        return self.calcular_duracion(yield_req) / (1 + yield_req)
+    
+    def calcular_convexidad(self, yield_req):
+        """Convexidad: C = (1/P) × Σ t(t+1) × CF_t / (1+y)^(t+2)"""
+        flujos = self.generar_flujos()
+        precio = self.calcular_precio(yield_req)
+        numerador = sum(t * (t + 1) * cf / (1 + yield_req) ** (t + 2)
+                        for t, cf in enumerate(flujos, start=1))
+        return numerador / precio
+    
+    def __repr__(self):
+        return f"Bono('{self.ticker}', cupón={self.cupon:.2%}, mat={self.maturity})"
+```
+
+---
+
+# Métodos Mágicos: Comparar Bonos
+
+Los **métodos mágicos** (dunder methods) permiten definir cómo se comportan los objetos con operadores de Python:
+
+```{python}
+#| label: metodos-magicos
+class BonoComparable(Bono):
+    """Bono que se puede comparar con otros bonos."""
+    
+    def __eq__(self, otro):
+        """Dos bonos son iguales si tienen el mismo ticker."""
+        return self.ticker == otro.ticker
+    
+    def __lt__(self, otro):
+        """Un bono es 'menor' si tiene menor duración (menos riesgo)."""
+        y = 0.08  # Yield de referencia para comparación
+        return self.calcular_duracion(y) < otro.calcular_duracion(y)
+    
+    def __le__(self, otro):
+        return self == otro or self < otro
+
+# Crear bonos y compararlos
+bono_corto = BonoComparable("CORTO", 1000, 0.08, 3)
+bono_largo = BonoComparable("LARGO", 1000, 0.06, 10)
+
+print(f"{bono_corto.ticker}: Duración = {bono_corto.calcular_duracion(0.08):.2f} años")
+print(f"{bono_largo.ticker}: Duración = {bono_largo.calcular_duracion(0.08):.2f} años")
+print(f"¿{bono_corto.ticker} < {bono_largo.ticker}? {bono_corto < bono_largo}")
+print(f"¿Son iguales? {bono_corto == bono_largo}")
+
+# Se pueden ordenar!
+bonos = [bono_largo, bono_corto]
+bonos_ordenados = sorted(bonos)
+print(f"Ordenados por duración: {[b.ticker for b in bonos_ordenados]}")
+```
+
+---
+
+# Comparación de Instancias
+
+```{python}
+#| label: comparacion
+bono_tesoro = Bono("GD30", 1000, 0.08, 5)
+bono_corp = Bono("YPF26", 1000, 0.10, 3)
+yield_mercado = 0.09
+
+print(f"{'Ticker':<8} {'Precio':>10} {'Duración':>10} {'Dur.Mod':>10} {'Convex':>10}")
+print("-" * 52)
+
+for bono in [bono_tesoro, bono_corp]:
+    precio = bono.calcular_precio(yield_mercado)
+    dur = bono.calcular_duracion(yield_mercado)
+    dur_mod = bono.calcular_duracion_modificada(yield_mercado)
+    conv = bono.calcular_convexidad(yield_mercado)
+    print(f"{bono.ticker:<8} ${precio:>9,.2f} {dur:>9.2f}a {dur_mod:>9.4f} {conv:>10.2f}")
+```
+
+---
+
+# Herencia: Bono Amortizable
+
+La **herencia** permite crear clases especializadas que reutilizan la lógica de una clase base.
+
+```{python}
+#| label: herencia
+class BonoAmortizable(Bono):
+    """Bono que amortiza capital gradualmente."""
+    
+    def __init__(self, ticker, valor_nominal, cupon, maturity, amortizaciones):
+        super().__init__(ticker, valor_nominal, cupon, maturity)
+        self.amortizaciones = amortizaciones
+    
+    def generar_flujos(self):
+        """Override: flujos con amortización progresiva."""
+        flujos = []
+        saldo = self.valor_nominal
+        for t in range(self.maturity):
+            interes = saldo * self.cupon
+            amort = self.valor_nominal * self.amortizaciones[t]
+            flujos.append(interes + amort)
+            saldo -= amort
+        return flujos
+    
+    def __repr__(self):
+        return f"BonoAmort('{self.ticker}', mat={self.maturity})"
+
+# Bono con amortización uniforme (20% por año)
+amort = [0.20] * 5
+bono_amort = BonoAmortizable("AMORT5", 1000, 0.08, 5, amort)
+
+print(f"Flujos: {[f'${f:.2f}' for f in bono_amort.generar_flujos()]}")
+print(f"Precio (y=9%): ${bono_amort.calcular_precio(0.09):,.2f}")
+print(f"Duración: {bono_amort.calcular_duracion(0.09):.2f} años")
+```
+
+::: {.callout-tip title="Polimorfismo en acción"}
+Tanto `Bono` como `BonoAmortizable` tienen el método `generar_flujos()`. Al llamar `calcular_precio()`, Python usa automáticamente la versión correcta. Esto es **polimorfismo**: la misma interfaz, distinto comportamiento.
+:::
+
+---
+
+# Composición: Clase `Portafolio`
+
+Un portafolio **contiene** bonos. Esto es **composición** (un patrón diferente a la herencia).
+
+```{python}
+#| label: portafolio
+class Portafolio:
+    """Portafolio de bonos de renta fija."""
+    
+    def __init__(self, nombre):
+        self.nombre = nombre
+        self._posiciones = {}  # {bono: cantidad}
+    
+    def agregar(self, bono, cantidad):
+        """Agrega bonos al portafolio."""
+        if bono.ticker in [b.ticker for b in self._posiciones]:
+            # Buscar y sumar
+            for b in self._posiciones:
+                if b.ticker == bono.ticker:
+                    self._posiciones[b] += cantidad
+                    return
+        self._posiciones[bono] = cantidad
+    
+    def valor_total(self, yield_req):
+        """Valor de mercado total del portafolio."""
+        total = 0
+        for bono, cantidad in self._posiciones.items():
+            total += bono.calcular_precio(yield_req) * cantidad
+        return total
+    
+    def duracion_ponderada(self, yield_req):
+        """Duración del portafolio ponderada por valor de mercado."""
+        valor_total = self.valor_total(yield_req)
+        dur = 0
+        for bono, cantidad in self._posiciones.items():
+            peso = (bono.calcular_precio(yield_req) * cantidad) / valor_total
+            dur += peso * bono.calcular_duracion(yield_req)
+        return dur
+    
+    def resumen(self, yield_req):
+        """Imprime un resumen del portafolio."""
+        print(f"{'='*55}")
+        print(f"  Portafolio: {self.nombre}")
+        print(f"{'='*55}")
+        print(f"{'Ticker':<8} {'Cant':>6} {'Precio':>10} {'Valor':>12} {'Dur':>6}")
+        print(f"{'-'*55}")
+        
+        for bono, cantidad in self._posiciones.items():
+            precio = bono.calcular_precio(yield_req)
+            valor = precio * cantidad
+            dur = bono.calcular_duracion(yield_req)
+            print(f"{bono.ticker:<8} {cantidad:>6} ${precio:>9,.2f} ${valor:>11,.2f} {dur:>5.2f}")
+        
+        print(f"{'-'*55}")
+        print(f"{'TOTAL':<8} {'':>6} {'':>10} ${self.valor_total(yield_req):>11,.2f} {self.duracion_ponderada(yield_req):>5.2f}")
+
+# Construir portafolio
+port = Portafolio("Renta Fija ARG")
+port.agregar(Bono("GD30", 1000, 0.08, 5), 50)
+port.agregar(Bono("GD35", 1000, 0.07, 10), 30)
+port.agregar(BonoAmortizable("AL30", 1000, 0.06, 4, [0.25]*4), 100)
+
+port.resumen(0.09)
+```
+
+---
+
+# Diagrama de Clases {.unnumbered}
+
+```
+┌──────────────────────────┐
+│         Bono             │
+├──────────────────────────┤
+│ - ticker: str            │
+│ - valor_nominal: float   │
+│ - cupon: float           │
+│ - maturity: int          │
+├──────────────────────────┤
+│ + generar_flujos()       │
+│ + calcular_precio(y)     │
+│ + calcular_duracion(y)   │
+│ + calcular_convexidad(y) │
+└──────────┬───────────────┘
+           │ herencia
+           ▼
+┌──────────────────────────┐       ┌──────────────────────┐
+│    BonoAmortizable       │       │     Portafolio       │
+├──────────────────────────┤       ├──────────────────────┤
+│ - amortizaciones: list   │       │ - nombre: str        │
+├──────────────────────────┤       │ - _posiciones: dict  │
+│ + generar_flujos()  ←override    ├──────────────────────┤
+└──────────────────────────┘       │ + agregar(bono, n)   │
+                                   │ + valor_total(y)     │
+                                   │ + duracion_pond(y)   │
+                                   │ + resumen(y)         │
+                                   └──────────────────────┘
+                                         ◇ contiene Bono(s)
+```
+
+---
+
+# Ejercicios Propuestos
+
+::: {.callout-important title="Ejercicios"}
+1. **Clase `BonoZeroCoupon`**: Crear una subclase de `Bono` que no paga cupones (solo devuelve el nominal al vencimiento). Sobreescribir `generar_flujos()`.
+
+2. **Método `sensibilidad_precio()`**: Agregar a la clase `Bono` un método que devuelva un diccionario `{yield: precio}` para yields del 1% al 15% (en pasos de 1%).
+
+3. **Inmunización de portafolio**: Dado un pasivo con duración objetivo de 4 años, encontrar la combinación de dos bonos (uno corto y uno largo) que iguale esa duración.
+
+4. **Clase `Accion`**: Crear una clase `Accion` con atributos `ticker`, `precio`, `dividendo`. Agregarla al `Portafolio` usando una interfaz común (pista: ambas clases podrían compartir un método `calcular_precio()`).
+:::
+
+---
+
+# Referencias
+
+* Phillips, D. (2018). *Python 3 Object-Oriented Programming*. Packt.
+* Tuckman, B., & Serrat, A. (2011). *Fixed Income Securities*. Wiley.
+* Gamma, E. et al. (1994). *Design Patterns*. Addison-Wesley.

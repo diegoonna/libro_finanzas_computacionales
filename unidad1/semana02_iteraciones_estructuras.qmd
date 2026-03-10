@@ -1,0 +1,275 @@
+---
+title: "Semana 2: Iteraciones y Estructuras de Datos Nativas"
+subtitle: "Listas, Diccionarios, Bucles y Valuación de Bonos"
+abstract: |
+  Listas, diccionarios, bucles `for`/`while`, patrón acumulador. Aplicado a
+  valuación de bonos por DCF, relación precio-yield y búsqueda de la TIR.
+---
+
+# Introducción
+
+Esta semana introducimos las estructuras de datos fundamentales de Python (listas y diccionarios) y los mecanismos de iteración (bucles `for` y `while`). Las aplicaremos al problema central de renta fija: la **valuación de bonos** mediante flujos de fondos descontados.
+
+---
+
+# Listas
+
+Una lista es una colección **ordenada y mutable** de elementos. Es la estructura natural para representar una secuencia temporal de flujos de fondos.
+
+```{python}
+#| label: listas-basicas
+# Flujos de fondos de un bono bullet a 5 años
+# Valor nominal: $1,000 | Cupón: 8% anual
+cupones = [80, 80, 80, 80, 80]
+principal = 1000
+
+# El último flujo incluye devolución de capital
+flujos = cupones.copy()
+flujos[-1] += principal
+
+print(f"Flujos del bono: {flujos}")
+print(f"Total de flujos: {len(flujos)}")
+print(f"Último flujo: ${flujos[-1]:,}")
+```
+
+## Operaciones con Listas
+
+```{python}
+#| label: listas-operaciones
+# Slicing, append, indexación
+precios = [100.5, 101.2, 99.8, 102.1, 100.0]
+
+print(f"Primer precio: {precios[0]}")
+print(f"Últimos 3 precios: {precios[-3:]}")
+
+# Agregar un nuevo precio
+precios.append(103.5)
+print(f"Precios actualizados: {precios}")
+```
+
+---
+
+# Diccionarios (Hash Maps)
+
+Un diccionario almacena pares **clave-valor**. Es la estructura ideal para representar datos de un instrumento financiero.
+
+```{python}
+#| label: diccionarios
+# Representar un bono como diccionario
+bono_tesoro = {
+    "ticker": "GD30",
+    "emisor": "República Argentina",
+    "moneda": "USD",
+    "cupon": 0.08,
+    "valor_nominal": 1000,
+    "vencimiento": "2030-07-09",
+    "flujos": [80, 80, 80, 80, 80, 1080]
+}
+
+print(f"Bono: {bono_tesoro['ticker']}")
+print(f"Cupón: {bono_tesoro['cupon']:.0%}")
+print(f"Flujos: {bono_tesoro['flujos']}")
+```
+
+## Diccionarios Anidados
+
+```{python}
+#| label: dict-anidados
+# Portafolio como diccionario de diccionarios
+portafolio = {
+    "GD30": {"cantidad": 50, "precio": 35.2, "moneda": "USD"},
+    "AL30": {"cantidad": 100, "precio": 32.8, "moneda": "USD"},
+    "TX26": {"cantidad": 200, "precio": 950.0, "moneda": "ARS"},
+}
+
+# Acceso a datos anidados
+for ticker, datos in portafolio.items():
+    valor = datos["cantidad"] * datos["precio"]
+    print(f"{ticker}: {datos['cantidad']} unidades × ${datos['precio']:.2f} = ${valor:,.2f} {datos['moneda']}")
+```
+
+---
+
+# Bucles `for`
+
+El bucle `for` itera sobre cada elemento de una secuencia. Es el mecanismo principal para recorrer flujos de fondos.
+
+```{python}
+#| label: for-basico
+# Iterar sobre flujos de fondos
+flujos = [80, 80, 80, 80, 1080]
+tasa = 0.10
+
+# Calcular valor presente de cada flujo
+for t, flujo in enumerate(flujos, start=1):
+    vp = flujo / (1 + tasa) ** t
+    print(f"Período {t}: Flujo ${flujo:,} → VP ${vp:,.2f}")
+```
+
+## Acumuladores y Contadores
+
+```{python}
+#| label: acumuladores
+# Patrón acumulador: sumar valores presentes
+flujos = [80, 80, 80, 80, 1080]
+tasa = 0.10
+
+suma_vp = 0  # Acumulador
+for t, flujo in enumerate(flujos, start=1):
+    vp = flujo / (1 + tasa) ** t
+    suma_vp += vp  # Acumular
+
+print(f"Precio del bono (VP total): ${suma_vp:,.2f}")
+```
+
+---
+
+# Problemática Financiera: Valuación de Bonos
+
+## Valor Presente Neto (VPN)
+
+La fórmula fundamental de valuación por flujos descontados:
+
+$$VPN = \sum_{t=1}^{n} \frac{CF_t}{(1 + r)^t}$$
+
+Donde $CF_t$ es el flujo de fondos en el período $t$ y $r$ es la tasa de descuento.
+
+```{python}
+#| label: vpn-manual
+# TODO: Implementar VPN con bucle for
+flujos = [80, 80, 80, 80, 1080]
+yield_mercado = 0.10
+
+vpn = 0
+print("Desglose del Valor Presente:")
+print("-" * 45)
+
+for t, cf in enumerate(flujos, start=1):
+    factor_descuento = 1 / (1 + yield_mercado) ** t
+    vp_flujo = cf * factor_descuento
+    vpn += vp_flujo
+    print(f"  t={t}: CF=${cf:>6,} × FD={factor_descuento:.4f} = VP ${vp_flujo:>8,.2f}")
+
+print("-" * 45)
+print(f"  Precio del Bono (VPN): ${vpn:,.2f}")
+```
+
+## Precio de un Bono dado un Yield
+
+```{python}
+#| label: precio-bono
+# TODO: Generalizar para distintos yields
+yields = [0.06, 0.08, 0.10, 0.12]
+flujos = [80, 80, 80, 80, 1080]  # Bono bullet 8%, 5 años
+
+print(f"{'Yield':>8} | {'Precio':>10} | {'vs Par':>8}")
+print("-" * 32)
+
+for y in yields:
+    precio = 0
+    for t, cf in enumerate(flujos, start=1):
+        precio += cf / (1 + y) ** t
+    
+    diferencia = precio - 1000
+    print(f"{y:>8.2%} | ${precio:>9,.2f} | {diferencia:>+8,.2f}")
+```
+
+::: {.callout-important title="Relación Precio-Yield"}
+Cuando el yield es **mayor** que el cupón, el bono cotiza **bajo la par** (precio < 1000). Cuando es **menor**, cotiza **sobre la par**. Cuando son iguales, el precio es exactamente par.
+:::
+
+---
+
+# Bucles `while` y Búsqueda de la TIR
+
+El bucle `while` se ejecuta mientras una condición sea verdadera. Lo usaremos para buscar la **Tasa Interna de Retorno (TIR)** por tanteo.
+
+## TIR por Búsqueda Incremental
+
+La TIR es la tasa $r^*$ que hace que el VPN sea igual al precio de mercado:
+
+$$P_{mercado} = \sum_{t=1}^{n} \frac{CF_t}{(1 + r^*)^t}$$
+
+```{python}
+#| label: tir-tanteo
+# TODO: Implementar búsqueda de TIR por tanteo (método ingenuo)
+flujos = [-924.18, 80, 80, 80, 80, 1080]  # Flujo 0 = precio pagado (negativo)
+# El primer flujo es la inversión inicial (negativa)
+
+tasa_prueba = 0.01   # Empezamos en 1%
+paso = 0.0001         # Incremento
+max_iteraciones = 100_000
+
+iteraciones = 0
+while tasa_prueba < 1.0 and iteraciones < max_iteraciones:
+    vpn = 0
+    for t, cf in enumerate(flujos):
+        vpn += cf / (1 + tasa_prueba) ** t
+    
+    if abs(vpn) < 0.01:  # Tolerancia
+        break
+    
+    tasa_prueba += paso
+    iteraciones += 1
+
+print(f"TIR encontrada: {tasa_prueba:.4%}")
+print(f"VPN residual: ${vpn:.4f}")
+print(f"Iteraciones: {iteraciones:,}")
+```
+
+::: {.callout-warning title="Limitaciones del Método por Tanteo"}
+Este método es **ineficiente** (O(n) iteraciones). En la Semana 3 veremos métodos más eficientes, y en módulos posteriores usaremos `scipy.optimize` que implementa algoritmos como Newton-Raphson.
+:::
+
+---
+
+# Complejidad Algorítmica (Introducción)
+
+| Notación | Nombre | Ejemplo |
+|----------|--------|---------|
+| $O(1)$ | Constante | Acceder a un elemento por índice |
+| $O(n)$ | Lineal | Recorrer una lista |
+| $O(n^2)$ | Cuadrática | Bucle anidado (ej: correlaciones) |
+
+```{python}
+#| label: complejidad
+# O(1) - Acceso directo
+flujos = [80, 80, 80, 80, 1080]
+print(f"Acceso O(1): flujos[2] = {flujos[2]}")
+
+# O(n) - Recorrido lineal
+suma = 0
+for f in flujos:  # n operaciones
+    suma += f
+print(f"Suma O(n): {suma}")
+
+# O(n²) - Ejemplo: comparar todos los pares
+n = len(flujos)
+comparaciones = 0
+for i in range(n):
+    for j in range(i + 1, n):
+        comparaciones += 1
+print(f"Comparaciones O(n²): {comparaciones}")
+```
+
+---
+
+# Ejercicios Propuestos
+
+::: {.callout-important title="Ejercicios"}
+1. **Tabla de amortización**: Crear un programa que genere la tabla de amortización de un préstamo (sistema francés) usando listas y un bucle `for`. Debe mostrar: cuota, interés, amortización y saldo remanente para cada período.
+
+2. **Bono con cupón semestral**: Modificar el código de valuación para un bono que paga cupones semestrales en lugar de anuales. ¿Cómo cambia el precio?
+
+3. **Búsqueda de TIR mejorada**: Implementar una versión mejorada de la búsqueda por tanteo que use un paso adaptativo: comienza con pasos grandes y los reduce al acercarse a la solución (similar a búsqueda binaria).
+
+4. **Portafolio de bonos**: Dado un diccionario con 3 bonos diferentes (cada uno con sus flujos y cantidad), calcular el valor total del portafolio usando un yield común.
+:::
+
+---
+
+# Referencias
+
+* Fabozzi, F. J. (2015). *Bond Markets, Analysis, and Strategies*. Pearson.
+* Benninga, S. (2014). *Financial Modeling*. MIT Press.
+* Cormen, T. H. et al. (2009). *Introduction to Algorithms*. MIT Press.

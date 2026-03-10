@@ -1,0 +1,295 @@
+---
+title: "Semana 1: Pensamiento Computacional en Finanzas"
+subtitle: "Variables, Tipos de Datos, Estructuras de Control y Valor Tiempo del Dinero"
+abstract: |
+  Bases de Python aplicadas a finanzas: variables, tipos primitivos, operadores,
+  condicionales, f-strings, interés compuesto, conversión de tasas y valor presente.
+---
+
+# Introducción
+
+En esta primera semana establecemos las bases: cómo piensa una computadora y cómo traducir problemas financieros a instrucciones que Python pueda ejecutar. Aprenderemos sobre variables, tipos de datos, operadores y estructuras de control, aplicándolos al cálculo de interés compuesto y al análisis de valor presente.
+
+::: {.callout-tip title="Entorno de Trabajo"}
+Recomendamos usar **Jupyter Notebooks** (local) o **Google Colab** (en la nube). Ambos permiten ejecutar código Python de forma interactiva, celda por celda.
+:::
+
+---
+
+# Variables y Tipos de Datos Primitivos
+
+En Python, **todo es un objeto**. Una variable es simplemente una etiqueta que apunta a un objeto en memoria. Python utiliza **tipado dinámico**: no necesitamos declarar el tipo de dato explícitamente.
+
+## Tipos Numéricos
+
+### Enteros (`int`)
+
+Representan números del conjunto $\mathbb{Z}$. En Python 3, tienen precisión arbitraria.
+
+**Aplicación Financiera:** Cantidades discretas como número de acciones, días al vencimiento, iteraciones de simulación.
+
+```{pyodide-python}
+#| label: tipos-int
+# TODO: Definir variables enteras para un contexto financiero
+# Ejemplo: cantidad de bonos, días al vencimiento, lotes de acciones
+dias_vencimiento = 365
+cantidad_bonos = 100
+lotes = 10
+
+print(f"Días al vencimiento: {dias_vencimiento} | Tipo: {type(dias_vencimiento)}")
+```
+
+### Punto Flotante (`float`)
+
+Representan números reales mediante el estándar **IEEE 754**. Es el tipo estándar para precios, tasas y rendimientos.
+
+::: {.callout-warning title="Error de Punto Flotante"}
+Los números decimales como 0.1 no tienen representación binaria exacta. Para sistemas contables, usar la librería `decimal`.
+:::
+
+```{pyodide-python}
+#| label: tipos-float
+# Demostración del error de punto flotante
+precio_a = 0.1
+precio_b = 0.2
+resultado = precio_a + precio_b
+
+print(f"0.1 + 0.2 = {resultado}")
+print(f"¿Es exactamente 0.3? {resultado == 0.3}")
+```
+
+### Booleanos (`bool`)
+
+Valores lógicos `True` y `False`. Son la base de los algoritmos de decisión.
+
+```{pyodide-python}
+#| label: tipos-bool
+mercado_abierto = True
+volatilidad_alta = False
+
+# True se comporta como 1, False como 0
+señales_activas = True + True + False
+print(f"Señales de compra activas: {señales_activas}")
+```
+
+### Cadenas de Texto (`str`)
+
+Secuencias inmutables de caracteres. Esenciales para tickers, códigos ISIN y limpieza de datos.
+
+```{pyodide-python}
+#| label: tipos-str
+ticker = "GGAL"
+mercado = "BYMA"
+instrumento = f"{ticker}.{mercado}"
+print(f"Instrumento: {instrumento}")
+```
+
+---
+
+# Conversión de Tipos (Casting)
+
+Los datos del mundo real frecuentemente llegan como texto (desde CSVs o APIs). Es necesario convertirlos explícitamente.
+
+```{pyodide-python}
+#| label: casting
+# Dato que llega como string desde una fuente externa
+volumen_str = "5000"
+precio_cierre = 150.50
+
+# Conversión y operación
+volumen = int(volumen_str)
+monto_operado = volumen * precio_cierre
+
+print(f"Monto operado: ${monto_operado:,.2f}")
+```
+
+---
+
+# Operadores
+
+## Operadores Aritméticos
+
+```{pyodide-python}
+#| label: operadores-aritmeticos
+capital = 1_000_000
+tasa = 0.08
+
+# Operadores básicos
+interes = capital * tasa
+print(f"Interés simple: ${interes:,.2f}")
+
+# Potencia (**) — útil para interés compuesto
+periodos = 5
+valor_futuro = capital * (1 + tasa) ** periodos
+print(f"Valor futuro a {periodos} años: ${valor_futuro:,.2f}")
+```
+
+## Operadores de Comparación y Lógicos
+
+| Operador | Significado |
+|----------|-------------|
+| `==`, `!=` | Igualdad / Desigualdad |
+| `>`, `<`, `>=`, `<=` | Comparaciones |
+| `and`, `or`, `not` | Lógica booleana |
+
+```{pyodide-python}
+#| label: operadores-logicos
+precio = 150
+media_movil = 140
+rsi = 65
+
+señal_compra = precio > media_movil and rsi < 70
+print(f"¿Señal de compra? {señal_compra}")
+```
+
+---
+
+# Entrada y Salida de Datos
+
+## F-Strings (Formato Moderno)
+
+```{pyodide-python}
+#| label: f-strings
+tasa = 0.05238
+capital = 1_000_000
+interes = capital * tasa
+
+# Formatos: :.2% (porcentaje), :, (miles), :,.2f (decimal con miles)
+print(f"Tasa: {tasa:.2%}")
+print(f"Capital: ${capital:,}")
+print(f"Interés generado: ${interes:,.2f}")
+```
+
+## Input del Usuario
+
+::: {.callout-note}
+`input()` siempre devuelve un `str`. Debe combinarse con `float()` o `int()` para obtener números.
+:::
+
+```python
+# Ejemplo interactivo (no se ejecuta en renderizado estático)
+# tasa_input = float(input("Ingrese la tasa anual (%): ")) / 100
+```
+
+---
+
+# Estructuras de Control: `if` / `elif` / `else`
+
+Los algoritmos financieros requieren tomar decisiones basadas en condiciones de mercado.
+
+## Caso Práctico: Algoritmo de Decisión de Inversión
+
+```{pyodide-python}
+#| label: decision-inversion
+# --- Parámetros de dos proyectos ---
+vpn_proyecto_a = 150_000
+vpn_proyecto_b = 120_000
+riesgo_a = "alto"
+riesgo_b = "bajo"
+umbral_riesgo = "medio"  # tolerancia del inversor
+
+print("=" * 50)
+print("ALGORITMO DE DECISIÓN DE INVERSIÓN")
+print("=" * 50)
+
+# TODO: Implementar lógica de decisión basada en VPN y riesgo
+# Considerar: ¿qué pasa si ambos VPN son negativos?
+if vpn_proyecto_a > vpn_proyecto_b and riesgo_a != "alto":
+    print(f"→ Invertir en Proyecto A (VPN: ${vpn_proyecto_a:,})")
+elif vpn_proyecto_b > 0:
+    print(f"→ Invertir en Proyecto B (VPN: ${vpn_proyecto_b:,}, riesgo {riesgo_b})")
+else:
+    print("→ No invertir en ningún proyecto")
+```
+
+---
+
+# Problemática Financiera: Valor Tiempo del Dinero (TVM)
+
+## Interés Compuesto
+
+La fórmula fundamental:
+
+$$VF = VP \cdot (1 + r)^n$$
+
+Donde:
+
+- $VF$: Valor Futuro
+- $VP$: Valor Presente
+- $r$: Tasa de interés por período
+- $n$: Número de períodos
+
+```{pyodide-python}
+#| label: interes-compuesto
+# TODO: Implementar cálculo de interés compuesto
+capital_inicial = 100_000
+tasa_anual = 0.10
+años = 10
+
+valor_futuro = capital_inicial * (1 + tasa_anual) ** años
+interes_ganado = valor_futuro - capital_inicial
+
+print(f"Capital inicial:  ${capital_inicial:,.2f}")
+print(f"Tasa anual:       {tasa_anual:.2%}")
+print(f"Plazo:            {años} años")
+print(f"Valor futuro:     ${valor_futuro:,.2f}")
+print(f"Interés ganado:   ${interes_ganado:,.2f}")
+```
+
+## Conversión de Tasas
+
+```{pyodide-python}
+#| label: conversion-tasas
+# TODO: Implementar conversiones entre tasas
+# TNA → TEA, TEA → TNA, tasas continuas
+
+tna = 0.48  # Tasa Nominal Anual
+n = 12      # capitalización mensual
+
+# TNA a TEA
+tea = (1 + tna / n) ** n - 1
+print(f"TNA: {tna:.2%} → TEA: {tea:.2%}")
+
+# TEA a tasa continua
+import math
+tasa_continua = math.log(1 + tea)
+print(f"TEA: {tea:.2%} → Tasa continua: {tasa_continua:.4f}")
+```
+
+## Valor Presente
+
+$$VP = \frac{VF}{(1 + r)^n}$$
+
+```{pyodide-python}
+#| label: valor-presente
+# TODO: Calcular el valor presente de un flujo futuro
+flujo_futuro = 1_000_000
+tasa = 0.08
+años = 5
+
+valor_presente = flujo_futuro / (1 + tasa) ** años
+print(f"Recibir ${flujo_futuro:,} en {años} años")
+print(f"equivale a ${valor_presente:,.2f} hoy (al {tasa:.0%})")
+```
+
+---
+
+# Ejercicios Propuestos
+
+::: {.callout-important title="Ejercicios"}
+1. **Interés compuesto con capitalización variable**: Escribir un programa que calcule el valor futuro para capitalización anual, semestral, trimestral, mensual y diaria. Comparar los resultados.
+
+2. **Algoritmo de decisión**: Dado un bono con TIR del 8% y un plazo fijo con tasa del 6%, crear un algoritmo que recomiende la inversión considerando también el horizonte temporal y la tolerancia al riesgo del inversor.
+
+3. **Conversión de tasas**: Crear un programa que convierta entre TNA, TEA, tasa efectiva mensual y tasa continua. El usuario debe poder elegir qué conversión realizar.
+
+4. **Valor presente neto simple**: Dados tres flujos futuros de $10,000, $15,000 y $20,000 a recibir en los años 1, 2 y 3 respectivamente, calcular el VPN con una tasa de descuento del 10%.
+:::
+
+---
+
+# Referencias
+
+* Van Rossum, G., & Drake, F. L. (2009). *Python 3 Reference Manual*. CreateSpace.
+* Benninga, S. (2014). *Financial Modeling*. MIT Press.
+* Brealey, R., Myers, S., & Allen, F. (2020). *Principles of Corporate Finance*. McGraw-Hill.
