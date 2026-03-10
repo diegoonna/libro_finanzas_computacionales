@@ -1,0 +1,308 @@
+---
+title: "Semana 3: Funciones y Modularización"
+subtitle: "Creando una Librería Financiera Reutilizable"
+abstract: |
+  Funciones con parámetros, `*args`, scope, manejo de errores. Construimos
+  la librería `finanzas_basicas.py` con VPN, valuación de bonos, TIR y conversión de tasas.
+---
+
+# Introducción
+
+Hasta ahora hemos escrito código de forma lineal. Esta semana aprendemos a **encapsular lógica** en funciones reutilizables, siguiendo el principio **DRY** (*Don't Repeat Yourself*). Al final, tendremos nuestra propia librería `finanzas_basicas.py`.
+
+---
+
+# Definición de Funciones
+
+Una función es un bloque de código reutilizable que recibe **parámetros** y devuelve un **resultado**.
+
+```{python}
+#| label: funcion-basica
+def valor_futuro(capital, tasa, periodos):
+    """
+    Calcula el valor futuro de una inversión.
+    
+    Parámetros:
+    -----------
+    capital : float — Monto inicial invertido
+    tasa : float — Tasa de interés por período
+    periodos : int — Número de períodos
+    
+    Retorna:
+    --------
+    float — Valor futuro
+    """
+    return capital * (1 + tasa) ** periodos
+
+# Uso
+vf = valor_futuro(100_000, 0.08, 10)
+print(f"Valor futuro: ${vf:,.2f}")
+```
+
+## Parámetros por Defecto
+
+```{python}
+#| label: params-default
+def valor_presente(flujo_futuro, tasa, periodos=1):
+    """Calcula el valor presente. Por defecto, 1 período."""
+    return flujo_futuro / (1 + tasa) ** periodos
+
+# Con y sin el parámetro por defecto
+vp1 = valor_presente(1000, 0.10)       # 1 período (default)
+vp2 = valor_presente(1000, 0.10, 5)    # 5 períodos
+
+print(f"VP a 1 año: ${vp1:,.2f}")
+print(f"VP a 5 años: ${vp2:,.2f}")
+```
+
+## Argumentos Variables (`*args`)
+
+```{python}
+#| label: args
+def sumar_flujos(*flujos):
+    """Suma una cantidad variable de flujos de fondos."""
+    total = 0
+    for f in flujos:
+        total += f
+    return total
+
+# Podemos pasar cualquier cantidad de argumentos
+total = sumar_flujos(80, 80, 80, 80, 1080)
+print(f"Total de flujos: ${total:,}")
+```
+
+---
+
+# Scope de Variables
+
+Las variables definidas dentro de una función son **locales**: no existen fuera de ella.
+
+```{python}
+#| label: scope
+tasa_global = 0.10  # Variable global
+
+def calcular_interes(capital):
+    tasa_local = 0.05  # Variable local
+    return capital * tasa_local
+
+resultado = calcular_interes(1000)
+print(f"Interés: ${resultado}")
+
+# tasa_local no existe aquí fuera
+# print(tasa_local)  # → NameError
+```
+
+::: {.callout-warning title="Buena Práctica"}
+Evitar usar variables globales dentro de funciones. Pasar siempre los datos como parámetros para que la función sea **predecible y testeable**.
+:::
+
+---
+
+# Manejo de Errores: `try` / `except`
+
+En el mundo real, los datos pueden ser inválidos. El manejo de excepciones permite que el programa sea **robusto** ante entradas inesperadas.
+
+```{python}
+#| label: try-except
+def calcular_vpn(flujos, tasa):
+    """
+    Calcula el Valor Presente Neto con validación de inputs.
+    
+    Raises:
+    -------
+    ValueError: si la tasa es negativa o los flujos están vacíos
+    TypeError: si los flujos no son una lista
+    """
+    # Validaciones
+    if not isinstance(flujos, list):
+        raise TypeError("'flujos' debe ser una lista")
+    if len(flujos) == 0:
+        raise ValueError("La lista de flujos no puede estar vacía")
+    if tasa < -1:
+        raise ValueError(f"Tasa inválida: {tasa}. Debe ser mayor a -100%")
+    
+    vpn = 0
+    for t, cf in enumerate(flujos):
+        vpn += cf / (1 + tasa) ** t
+    return vpn
+
+# Caso exitoso
+print(calcular_vpn([-1000, 300, 400, 500], 0.10))
+
+# Caso con error controlado
+try:
+    resultado = calcular_vpn([-1000, 300], -2.0)
+except ValueError as e:
+    print(f"Error capturado: {e}")
+
+try:
+    resultado = calcular_vpn("no soy una lista", 0.10)
+except TypeError as e:
+    print(f"Error capturado: {e}")
+```
+
+---
+
+# Problemática Financiera: Librería `finanzas_basicas.py`
+
+Vamos a construir una librería con funciones financieras reutilizables. En un entorno real, este archivo se importaría con `from finanzas_basicas import *`.
+
+## Funciones de la Librería
+
+```{python}
+#| label: libreria
+# === finanzas_basicas.py ===
+# TODO: Guardar este código como un archivo .py separado para importarlo
+
+def valor_futuro(capital, tasa, periodos):
+    """Calcula VF = C × (1 + r)^n"""
+    if tasa < -1:
+        raise ValueError("La tasa no puede ser menor a -100%")
+    return capital * (1 + tasa) ** periodos
+
+
+def valor_presente_neto(flujos, tasa):
+    """
+    Calcula el VPN de una serie de flujos.
+    El flujo en t=0 se incluye sin descontar.
+    """
+    if not flujos:
+        raise ValueError("Lista de flujos vacía")
+    
+    vpn = 0
+    for t, cf in enumerate(flujos):
+        vpn += cf / (1 + tasa) ** t
+    return vpn
+
+
+def valuacion_bono(valor_nominal, cupon, yield_req, periodos):
+    """
+    Calcula el precio de un bono bullet.
+    
+    Parámetros:
+    -----------
+    valor_nominal : float — Valor par del bono
+    cupon : float — Tasa cupón (ej: 0.08 para 8%)
+    yield_req : float — Yield requerido por el mercado
+    periodos : int — Número de períodos hasta vencimiento
+    """
+    flujo_cupon = valor_nominal * cupon
+    precio = 0
+    
+    for t in range(1, periodos + 1):
+        # Cupones
+        precio += flujo_cupon / (1 + yield_req) ** t
+    
+    # Devolución de capital
+    precio += valor_nominal / (1 + yield_req) ** periodos
+    
+    return precio
+
+
+def tir_busqueda(flujos, tolerancia=0.01, paso=0.0001):
+    """
+    Busca la TIR por método de tanteo (búsqueda incremental).
+    
+    Parámetros:
+    -----------
+    flujos : list — Flujos de fondos (el primero suele ser negativo)
+    tolerancia : float — Error máximo aceptable en el VPN
+    paso : float — Incremento de la tasa en cada iteración
+    """
+    tasa = 0.001
+    max_iter = 200_000
+    
+    for i in range(max_iter):
+        vpn = valor_presente_neto(flujos, tasa)
+        if abs(vpn) < tolerancia:
+            return tasa
+        tasa += paso
+    
+    raise RuntimeError(f"TIR no encontrada después de {max_iter} iteraciones")
+
+
+def convertir_tasa(tasa, de="TNA", a="TEA", n=12):
+    """
+    Convierte entre TNA y TEA.
+    
+    Parámetros:
+    -----------
+    tasa : float — Tasa a convertir
+    de : str — Tipo de origen ('TNA' o 'TEA')
+    a : str — Tipo de destino ('TNA' o 'TEA')
+    n : int — Frecuencia de capitalización (default: 12 = mensual)
+    """
+    if de == "TNA" and a == "TEA":
+        return (1 + tasa / n) ** n - 1
+    elif de == "TEA" and a == "TNA":
+        return ((1 + tasa) ** (1 / n) - 1) * n
+    else:
+        raise ValueError(f"Conversión '{de}' → '{a}' no soportada")
+```
+
+## Usando la Librería
+
+```{python}
+#| label: uso-libreria
+# === Uso de las funciones ===
+
+# Valuación de bono
+precio = valuacion_bono(
+    valor_nominal=1000,
+    cupon=0.08,
+    yield_req=0.10,
+    periodos=5
+)
+print(f"Precio del bono: ${precio:,.2f}")
+
+# Búsqueda de TIR
+flujos = [-precio, 80, 80, 80, 80, 1080]
+tir = tir_busqueda(flujos)
+print(f"TIR: {tir:.4%}")
+
+# Conversión de tasas
+tea = convertir_tasa(0.48, de="TNA", a="TEA", n=12)
+print(f"TNA 48% → TEA {tea:.2%}")
+```
+
+---
+
+# Principio DRY: Don't Repeat Yourself
+
+::: {.callout-tip title="DRY en la Práctica"}
+Antes de copiar y pegar código, preguntate: *¿puedo hacer una función?*
+
+**Sin DRY** (malo):
+```python
+precio_a = 80/(1.1) + 80/(1.1**2) + 1080/(1.1**3)
+precio_b = 60/(1.08) + 60/(1.08**2) + 1060/(1.08**3)
+```
+
+**Con DRY** (bueno):
+```python
+precio_a = valuacion_bono(1000, 0.08, 0.10, 3)
+precio_b = valuacion_bono(1000, 0.06, 0.08, 3)
+```
+:::
+
+---
+
+# Ejercicios Propuestos
+
+::: {.callout-important title="Ejercicios"}
+1. **Función de amortización francesa**: Crear una función `cuota_francesa(capital, tasa, periodos)` que calcule la cuota fija de un préstamo sistema francés. Validar que los inputs sean positivos.
+
+2. **Tabla de sensibilidad**: Usar la función `valuacion_bono()` para crear una tabla que muestre el precio del bono para distintas combinaciones de yield (filas) y maturity (columnas).
+
+3. **Extender la librería**: Agregar una función `duration_macaulay(flujos, tasa)` que calcule la duración de Macaulay:
+$$D = \frac{\sum_{t=1}^{n} t \cdot \frac{CF_t}{(1+r)^t}}{P}$$
+
+4. **Manejo de errores robusto**: Crear una función que lea datos de un bono ingresados por el usuario (`input()`) y maneje todos los posibles errores: texto en lugar de números, tasas fuera de rango, plazos negativos, etc.
+:::
+
+---
+
+# Referencias
+
+* Lutz, M. (2013). *Learning Python*. O'Reilly Media.
+* Fabozzi, F. J. (2015). *Bond Markets, Analysis, and Strategies*. Pearson.

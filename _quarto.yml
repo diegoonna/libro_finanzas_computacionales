@@ -1,0 +1,89 @@
+project:
+  type: book
+  output-dir: _book
+
+book:
+  title: "Finanzas Computacionales"
+  subtitle: "De los Fundamentos a los Derivados: Un Enfoque Práctico"
+  author: "Diego Onna"
+  date: last-modified
+  date-format: "DD/MM/YYYY"
+  language: es
+  
+  cover-image: cover.png
+  favicon: cover.png
+  reader-mode: true
+  search: true
+  repo-url: https://github.com/uade-finanzas-computacionales/libro
+  repo-actions: [edit, issue]
+
+  page-footer:
+    left: "Finanzas Computacionales con Python fue escrito por la Cátedra de Finanzas Computacionales — UADE."
+    right: "Este libro fue construido con <a href='https://quarto.org/'>Quarto</a>."
+
+  sidebar:
+    style: docked
+    background: light
+    collapse-level: 1
+
+  chapters:
+    - index.qmd
+    - part: "Módulo 1: Fundamentos y Renta Fija"
+      chapters:
+        - unidad1/_intro_mod1.qmd
+        - unidad1/semana01_pensamiento_computacional.qmd
+        # - unidad1/semana02_iteraciones_estructuras.qmd
+        # - unidad1/semana03_funciones_modularizacion.qmd
+        # - unidad1/semana04_poo.qmd
+        # - unidad1/semana05_series_tiempo_pandas.qmd
+    # - part: "Módulo 2: Teoría de Portafolios y Optimización"
+    #   chapters:
+    #     - unidad2/_intro_mod2.qmd
+    #     - unidad2/semana06_estadistica_optimizacion.qmd
+    #     - unidad2/semana07_markowitz.qmd
+    # - part: "Módulo 3: Riesgo, Simulación y Estadística Bayesiana"
+    #   chapters:
+    #     - unidad3/_intro_mod3.qmd
+    #     - unidad3/semana09_var_distribuciones.qmd
+    #     - unidad3/semana10_monte_carlo.qmd
+    #     - unidad3/semana11_estadistica_bayesiana.qmd
+    #     - unidad3/semana12_econometria_capm.qmd
+    # - part: "Módulo 4: Derivados Financieros"
+    #   chapters:
+    #     - unidad4/_intro_mod4.qmd
+    #     - unidad4/semana14_derivados_vol_implicita.qmd
+    #     - unidad4/semana15_delta_hedging.qmd
+
+format:
+  html:
+    theme: [cosmo, custom.scss]
+    toc: true
+    toc-title: "En esta página"
+    toc-depth: 3
+    number-sections: true
+    code-fold: false
+    code-tools: true
+    code-copy: true
+    code-overflow: wrap
+    highlight-style: github
+    callout-appearance: simple
+    lang: es
+    fig-align: center
+    fig-cap-location: bottom
+    fig-responsive: true
+    smooth-scroll: true
+    link-external-newwindow: true
+
+crossref:
+  fig-title: "Figura"
+  tbl-title: "Tabla"
+  eq-prefix: "Ec."
+
+filters:
+  - pyodide
+
+jupyter: python3
+
+execute:
+  warning: false
+  message: false

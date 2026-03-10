@@ -1,0 +1,241 @@
+---
+title: "Semana 5: Series de Tiempo y Curvas"
+subtitle: "Pandas, DataFrames, Bootstrapping y Análisis de Datos Financieros"
+abstract: |
+  Introducción a pandas para datos financieros: DataFrames, retornos simples vs.
+  logarítmicos, limpieza de datos, bootstrapping de curvas spot, duración y convexidad.
+---
+
+# Introducción
+
+Esta semana incorporamos **pandas**, la librería fundamental para manipulación de datos tabulares. Aprenderemos a cargar datos históricos de precios, calcular retornos, y construir la Estructura Temporal de Tasas de Interés (ETTI).
+
+---
+
+# Introducción a Pandas
+
+```{python}
+#| label: pandas-intro
+import pandas as pd
+import matplotlib.pyplot as plt
+
+# Crear un DataFrame desde un diccionario
+datos_bonos = {
+    "Ticker": ["GD30", "GD35", "GD38", "GD41", "GD46"],
+    "Cupón": [0.08, 0.07, 0.065, 0.06, 0.055],
+    "Maturity": [5, 10, 13, 16, 21],
+    "Precio": [92.5, 85.3, 78.1, 72.4, 65.8],
+}
+
+df = pd.DataFrame(datos_bonos)
+print(df.to_string(index=False))
+```
+
+## DataFrames como Diccionarios de Series
+
+```{python}
+#| label: series
+# Cada columna es una Serie
+precios = df["Precio"]
+print(f"Tipo: {type(precios)}")
+print(f"Media: {precios.mean():.2f}")
+print(f"Desvío: {precios.std():.2f}")
+```
+
+---
+
+# Carga de Datos Históricos
+
+```{python}
+#| label: carga-datos
+# TODO: Reemplazar con datos reales (CSV o Yahoo Finance)
+# Simulamos datos históricos de precios
+import numpy as np
+
+np.random.seed(42)
+fechas = pd.date_range("2023-01-01", periods=252, freq="B")  # Días bursátiles
+precio_inicial = 100
+retornos_diarios = np.random.normal(0.0003, 0.015, 252)
+precios = precio_inicial * np.cumprod(1 + retornos_diarios)
+
+df_precios = pd.DataFrame({"Fecha": fechas, "Precio": precios})
+df_precios.set_index("Fecha", inplace=True)
+
+print(df_precios.head(10))
+```
+
+## Visualización de Precios
+
+```{python}
+#| label: plot-precios
+fig, ax = plt.subplots(figsize=(10, 4))
+ax.plot(df_precios.index, df_precios["Precio"], linewidth=1)
+ax.set_title("Precio Histórico (simulado)")
+ax.set_xlabel("Fecha")
+ax.set_ylabel("Precio ($)")
+ax.grid(True, alpha=0.3)
+plt.tight_layout()
+plt.show()
+```
+
+---
+
+# Cálculo de Retornos
+
+## Retornos Simples vs. Logarítmicos
+
+$$r_t^{simple} = \frac{P_t - P_{t-1}}{P_{t-1}} = \frac{P_t}{P_{t-1}} - 1$$
+
+$$r_t^{log} = \ln\left(\frac{P_t}{P_{t-1}}\right)$$
+
+```{python}
+#| label: retornos
+# Retornos simples
+df_precios["Ret_Simple"] = df_precios["Precio"].pct_change()
+
+# Retornos logarítmicos
+df_precios["Ret_Log"] = np.log(df_precios["Precio"] / df_precios["Precio"].shift(1))
+
+print(df_precios.dropna().head())
+```
+
+::: {.callout-tip title="¿Cuándo usar cada uno?"}
+- **Retornos simples**: Para calcular el retorno de un portafolio (son aditivos entre activos).
+- **Retornos logarítmicos**: Para análisis estadístico (son aditivos en el tiempo y más cercanos a una distribución normal).
+:::
+
+---
+
+# Limpieza de Datos (Data Cleaning)
+
+```{python}
+#| label: data-cleaning
+# Simular datos sucios
+df_sucio = df_precios.copy()
+df_sucio.loc["2023-03-15":"2023-03-20", "Precio"] = np.nan
+df_sucio.loc["2023-06-01", "Precio"] = -999  # Valor absurdo
+
+print(f"Valores nulos: {df_sucio['Precio'].isna().sum()}")
+print(f"Valores negativos: {(df_sucio['Precio'] < 0).sum()}")
+
+# Limpieza
+df_limpio = df_sucio.copy()
+df_limpio.loc[df_limpio["Precio"] < 0, "Precio"] = np.nan  # Reemplazar absurdos
+df_limpio["Precio"] = df_limpio["Precio"].ffill()  # Forward fill
+
+print(f"Nulos después de limpieza: {df_limpio['Precio'].isna().sum()}")
+```
+
+---
+
+# Estructura Temporal de Tasas (ETTI)
+
+## Bootstrapping de la Curva
+
+El **bootstrapping** permite extraer tasas spot (cupón cero) a partir de precios de bonos con cupón observados en el mercado.
+
+$$P = \sum_{t=1}^{n-1} \frac{C}{(1 + z_t)^t} + \frac{C + VN}{(1 + z_n)^n}$$
+
+Despejando $z_n$ secuencialmente:
+
+```{python}
+#| label: bootstrapping
+# TODO: Implementar bootstrapping completo
+# Datos de mercado simplificados
+bonos_mercado = [
+    {"maturity": 1, "cupon": 0.05, "precio": 100.0},
+    {"maturity": 2, "cupon": 0.06, "precio": 100.5},
+    {"maturity": 3, "cupon": 0.065, "precio": 99.8},
+    {"maturity": 4, "cupon": 0.07, "precio": 100.2},
+    {"maturity": 5, "cupon": 0.075, "precio": 99.5},
+]
+
+# Bootstrapping secuencial
+tasas_spot = {}
+VN = 100
+
+for bono in bonos_mercado:
+    n = bono["maturity"]
+    C = VN * bono["cupon"]
+    P = bono["precio"]
+    
+    # Descontar cupones anteriores con tasas spot ya conocidas
+    vp_cupones = 0
+    for t in range(1, n):
+        vp_cupones += C / (1 + tasas_spot[t]) ** t
+    
+    # Despejar z_n del último flujo
+    flujo_final = C + VN
+    z_n = (flujo_final / (P - vp_cupones)) ** (1 / n) - 1
+    tasas_spot[n] = z_n
+
+# Mostrar curva
+print("Estructura Temporal de Tasas (Spot)")
+print("-" * 35)
+for t, z in tasas_spot.items():
+    print(f"  z({t}) = {z:.4%}")
+```
+
+## Gráfico de la Curva
+
+```{python}
+#| label: plot-curva
+plazos = list(tasas_spot.keys())
+tasas = [tasas_spot[t] * 100 for t in plazos]
+
+fig, ax = plt.subplots(figsize=(8, 4))
+ax.plot(plazos, tasas, "o-", color="steelblue", linewidth=2, markersize=8)
+ax.set_title("Estructura Temporal de Tasas de Interés (Bootstrapping)")
+ax.set_xlabel("Plazo (años)")
+ax.set_ylabel("Tasa Spot (%)")
+ax.grid(True, alpha=0.3)
+plt.tight_layout()
+plt.show()
+```
+
+---
+
+# Duración y Convexidad con Derivadas Numéricas
+
+```{python}
+#| label: derivadas-numericas
+# Duración y convexidad via derivadas numéricas (diferencias finitas)
+def precio_bono(yield_req, flujos):
+    return sum(cf / (1 + yield_req) ** t for t, cf in enumerate(flujos, 1))
+
+flujos = [80, 80, 80, 80, 1080]
+y = 0.10
+dy = 0.0001  # Perturbación
+
+P = precio_bono(y, flujos)
+P_up = precio_bono(y + dy, flujos)
+P_down = precio_bono(y - dy, flujos)
+
+# Duración modificada ≈ -(1/P) × dP/dy
+duracion_mod = -(P_up - P_down) / (2 * dy * P)
+
+# Convexidad ≈ (1/P) × d²P/dy²
+convexidad = (P_up - 2 * P + P_down) / (dy ** 2 * P)
+
+print(f"Precio:    ${P:,.2f}")
+print(f"Dur. Mod.: {duracion_mod:.4f}")
+print(f"Convexidad: {convexidad:.2f}")
+```
+
+---
+
+# Ejercicios Propuestos
+
+::: {.callout-important title="Ejercicios"}
+1. **Carga real de datos**: Usar `yfinance` para descargar precios de AAPL y calcular retornos diarios, mensuales y anualizados.
+2. **Tasas forward**: A partir de las tasas spot del bootstrapping, calcular las tasas forward implícitas: $f(t_1, t_2)$.
+3. **Análisis de retornos**: Graficar histograma de retornos logarítmicos y comparar con una distribución normal teórica.
+4. **Sensibilidad con pandas**: Crear un DataFrame de sensibilidad con yields como índice y maturities como columnas.
+:::
+
+---
+
+# Referencias
+
+* McKinney, W. (2017). *Python for Data Analysis*. O'Reilly Media.
+* Tuckman, B. (2011). *Fixed Income Securities*. Wiley.

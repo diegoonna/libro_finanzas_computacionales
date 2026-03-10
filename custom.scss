@@ -1,0 +1,82 @@
+/*-- scss:defaults --*/
+
+// 1. IMPORTAR LAS FUENTES (Fundamental para el look moderno)
+@import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500&family=Inter:wght@400;600;700;800&display=swap');
+
+// 2. PALETA DE COLORES
+$primary: #1e3a5f !default;
+$secondary: #637238 !default;
+
+// 3. TIPOGRAFÍA
+$font-family-sans-serif: 'Inter', system-ui, -apple-system, sans-serif !default;
+$font-family-monospace: 'Fira Code', monospace !default;
+$font-size-root: 18px !default;
+$line-height-base: 1.6 !default;
+
+// 4. ESTILOS DE BLOQUES DE CÓDIGO (Variables nativas en lugar de CSS puro)
+$code-bg: #f8f9fa !default;
+$code-color: #212529 !default;
+$pre-border-color: #e2e8f0 !default;
+
+// 5. ESTILOS DE TABLAS
+$table-border-color: #e2e8f0 !default;
+$table-cell-padding-y: 0.75rem !default;
+$table-cell-padding-x: 0.75rem !default;
+
+
+/*-- scss:rules --*/
+
+// Ajustes finos de tipografía
+body {
+  font-feature-settings: 'liga' 1, 'calt' 1;
+  color: #333333; // Un gris muy oscuro es mejor que negro puro
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  color: $primary;
+}
+
+h1.title {
+  font-weight: 800;
+  margin-bottom: 0.5rem;
+}
+
+h2 {
+  margin-top: 2.5rem;
+  margin-bottom: 1rem;
+  font-size: 1.75rem;
+  font-weight: 700;
+  border-bottom: 1px solid #e2e8f0; // Línea sutil debajo de los títulos principales como en R4DS
+  padding-bottom: 0.3rem;
+}
+
+h3 {
+  margin-top: 2rem;
+  font-size: 1.3rem;
+  font-weight: 600;
+}
+
+// Estilizar la barra lateral para que se vea más limpia
+.sidebar-title {
+  color: $primary;
+  font-weight: 700;
+}
+
+div.sidebar-item-container .active {
+  font-weight: 700;
+  color: $primary;
+  border-left: 3px solid $primary;
+  padding-left: 5px;
+}
+
+// Sombra para la imagen de portada
+img.quarto-cover-image {
+  box-shadow: 0 .5rem 1rem rgba(0, 0, 0, .15);
+  margin-bottom: 2rem;
+  border-radius: 4px;
+}
