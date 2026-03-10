@@ -28,7 +28,9 @@ Representan números del conjunto $\mathbb{Z}$. En Python 3, tienen precisión a
 
 **Aplicación Financiera:** Cantidades discretas como número de acciones, días al vencimiento, iteraciones de simulación.
 
-```{pyodide-python}
+```{shinylive-python}
+#| standalone: true
+
 #| label: tipos-int
 # TODO: Definir variables enteras para un contexto financiero
 # Ejemplo: cantidad de bonos, días al vencimiento, lotes de acciones
@@ -47,7 +49,9 @@ Representan números reales mediante el estándar **IEEE 754**. Es el tipo está
 Los números decimales como 0.1 no tienen representación binaria exacta. Para sistemas contables, usar la librería `decimal`.
 :::
 
-```{pyodide-python}
+```{shinylive-python}
+#| standalone: true
+
 #| label: tipos-float
 # Demostración del error de punto flotante
 precio_a = 0.1
@@ -62,7 +66,9 @@ print(f"¿Es exactamente 0.3? {resultado == 0.3}")
 
 Valores lógicos `True` y `False`. Son la base de los algoritmos de decisión.
 
-```{pyodide-python}
+```{shinylive-python}
+#| standalone: true
+
 #| label: tipos-bool
 mercado_abierto = True
 volatilidad_alta = False
@@ -76,7 +82,9 @@ print(f"Señales de compra activas: {señales_activas}")
 
 Secuencias inmutables de caracteres. Esenciales para tickers, códigos ISIN y limpieza de datos.
 
-```{pyodide-python}
+```{shinylive-python}
+#| standalone: true
+
 #| label: tipos-str
 ticker = "GGAL"
 mercado = "BYMA"
@@ -90,7 +98,9 @@ print(f"Instrumento: {instrumento}")
 
 Los datos del mundo real frecuentemente llegan como texto (desde CSVs o APIs). Es necesario convertirlos explícitamente.
 
-```{pyodide-python}
+```{shinylive-python}
+#| standalone: true
+
 #| label: casting
 # Dato que llega como string desde una fuente externa
 volumen_str = "5000"
@@ -109,7 +119,9 @@ print(f"Monto operado: ${monto_operado:,.2f}")
 
 ## Operadores Aritméticos
 
-```{pyodide-python}
+```{shinylive-python}
+#| standalone: true
+
 #| label: operadores-aritmeticos
 capital = 1_000_000
 tasa = 0.08
@@ -132,7 +144,9 @@ print(f"Valor futuro a {periodos} años: ${valor_futuro:,.2f}")
 | `>`, `<`, `>=`, `<=` | Comparaciones |
 | `and`, `or`, `not` | Lógica booleana |
 
-```{pyodide-python}
+```{shinylive-python}
+#| standalone: true
+
 #| label: operadores-logicos
 precio = 150
 media_movil = 140
@@ -148,7 +162,9 @@ print(f"¿Señal de compra? {señal_compra}")
 
 ## F-Strings (Formato Moderno)
 
-```{pyodide-python}
+```{shinylive-python}
+#| standalone: true
+
 #| label: f-strings
 tasa = 0.05238
 capital = 1_000_000
@@ -179,7 +195,9 @@ Los algoritmos financieros requieren tomar decisiones basadas en condiciones de 
 
 ## Caso Práctico: Algoritmo de Decisión de Inversión
 
-```{pyodide-python}
+```{shinylive-python}
+#| standalone: true
+
 #| label: decision-inversion
 # --- Parámetros de dos proyectos ---
 vpn_proyecto_a = 150_000
@@ -219,7 +237,9 @@ Donde:
 - $r$: Tasa de interés por período
 - $n$: Número de períodos
 
-```{pyodide-python}
+```{shinylive-python}
+#| standalone: true
+
 #| label: interes-compuesto
 # TODO: Implementar cálculo de interés compuesto
 capital_inicial = 100_000
@@ -238,7 +258,9 @@ print(f"Interés ganado:   ${interes_ganado:,.2f}")
 
 ## Conversión de Tasas
 
-```{pyodide-python}
+```{shinylive-python}
+#| standalone: true
+
 #| label: conversion-tasas
 # TODO: Implementar conversiones entre tasas
 # TNA → TEA, TEA → TNA, tasas continuas
@@ -260,7 +282,9 @@ print(f"TEA: {tea:.2%} → Tasa continua: {tasa_continua:.4f}")
 
 $$VP = \frac{VF}{(1 + r)^n}$$
 
-```{pyodide-python}
+```{shinylive-python}
+#| standalone: true
+
 #| label: valor-presente
 # TODO: Calcular el valor presente de un flujo futuro
 flujo_futuro = 1_000_000
