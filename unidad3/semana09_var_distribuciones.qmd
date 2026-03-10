@@ -1,0 +1,315 @@
+---
+title: "Semana 9: Valor en Riesgo (VaR) y Distribuciones"
+subtitle: "Medición de Riesgo de Mercado: VaR Paramétrico, Histórico y CVaR"
+abstract: |
+  Introducimos las herramientas fundamentales de medición de riesgo: VaR paramétrico 
+  e histórico, Expected Shortfall (CVaR), volatilidad EWMA, y tests de normalidad
+  para entender las limitaciones de los modelos gaussianos.
+---
+
+# Introducción
+
+El **Value at Risk (VaR)** responde a la pregunta más importante en gestión de riesgo:
+
+> *¿Cuál es la máxima pérdida esperada en un horizonte dado, con un nivel de confianza determinado?*
+
+::: {.callout-note title="Ejemplo intuitivo"}
+Si el VaR diario al 95% de un portafolio es $150,000, significa que **en 19 de cada 20 días**, la pérdida no superará esa cifra. Pero en 1 de cada 20 días, sí podría.
+:::
+
+---
+
+# Generación de Datos
+
+Antes de calcular el VaR, necesitamos retornos. Simulamos un año de retornos diarios:
+
+```{python}
+#| label: datos
+import numpy as np
+import matplotlib.pyplot as plt
+from scipy import stats
+
+# Configuración
+np.random.seed(42)
+valor_portafolio = 10_000_000  # $10M
+
+# Simular retornos diarios (252 días hábiles)
+retornos = np.random.normal(0.0004, 0.015, 252)
+
+mu = np.mean(retornos)
+sigma = np.std(retornos)
+
+print(f"Retornos diarios simulados: {len(retornos)} observaciones")
+print(f"Media diaria: {mu:.6f} ({mu * 252:.2%} anualizada)")
+print(f"Volatilidad diaria: {sigma:.6f} ({sigma * np.sqrt(252):.2%} anualizada)")
+```
+
+---
+
+# VaR Paramétrico (Normal)
+
+Asume que los retornos siguen una distribución normal:
+
+$$VaR_{\alpha} = -(\mu + z_\alpha \cdot \sigma) \cdot W$$
+
+donde $z_\alpha$ es el cuantil de la distribución normal estándar.
+
+```{python}
+#| label: var-parametrico
+confianza = 0.95
+
+# Z-score para 95%
+z = stats.norm.ppf(1 - confianza)
+
+# VaR paramétrico (1 día)
+var_param_95 = -(mu + z * sigma) * valor_portafolio
+
+# También al 99%
+z_99 = stats.norm.ppf(0.01)
+var_param_99 = -(mu + z_99 * sigma) * valor_portafolio
+
+print(f"VaR Paramétrico (95%, 1 día): ${var_param_95:>12,.2f}")
+print(f"VaR Paramétrico (99%, 1 día): ${var_param_99:>12,.2f}")
+print(f"Como % del portafolio (95%):  {var_param_95 / valor_portafolio:.4%}")
+print(f"Como % del portafolio (99%):  {var_param_99 / valor_portafolio:.4%}")
+```
+
+---
+
+# VaR Histórico
+
+No asume distribución. Usa directamente el percentil de los retornos observados.
+
+```{python}
+#| label: var-historico
+# VaR Histórico: percentil de los retornos reales
+percentil_5 = np.percentile(retornos, 5)
+percentil_1 = np.percentile(retornos, 1)
+
+var_hist_95 = -percentil_5 * valor_portafolio
+var_hist_99 = -percentil_1 * valor_portafolio
+
+print(f"VaR Histórico (95%, 1 día): ${var_hist_95:>12,.2f}")
+print(f"VaR Histórico (99%, 1 día): ${var_hist_99:>12,.2f}")
+```
+
+---
+
+# Comparación Visual: Paramétrico vs. Histórico
+
+```{python}
+#| label: comparacion-var
+fig, ax = plt.subplots(figsize=(10, 5))
+
+# Histograma de retornos
+ax.hist(retornos, bins=40, density=True, alpha=0.6, color="#2d6a9f", 
+        edgecolor="white", label="Retornos observados")
+
+# Curva normal teórica
+x = np.linspace(retornos.min(), retornos.max(), 200)
+ax.plot(x, stats.norm.pdf(x, mu, sigma), color="#1e3a5f", linewidth=2, 
+        label="Normal teórica")
+
+# Líneas de VaR
+ax.axvline(percentil_5, color="#ef4444", linewidth=2, linestyle="--", 
+           label=f"VaR Hist 95% ({percentil_5:.4f})")
+ax.axvline(mu + z * sigma, color="#f59e0b", linewidth=2, linestyle=":", 
+           label=f"VaR Param 95% ({mu + z * sigma:.4f})")
+
+ax.set_xlabel("Retorno Diario")
+ax.set_ylabel("Densidad")
+ax.set_title("Distribución de Retornos con Líneas de VaR")
+ax.legend(fontsize=9)
+ax.grid(True, alpha=0.3)
+plt.tight_layout()
+plt.show()
+```
+
+::: {.callout-warning title="Diferencias entre métodos"}
+El VaR paramétrico y el histórico **no necesariamente coinciden**. La diferencia se agranda cuando la distribución real se desvía de la normal (colas pesadas, asimetría).
+:::
+
+---
+
+# CVaR (Expected Shortfall)
+
+El VaR nos dice *dónde* está el límite, pero no *qué pasa* cuando se cruza. El **CVaR** (o Expected Shortfall) calcula la pérdida promedio en los días que **superan** el VaR.
+
+$$CVaR_\alpha = -E[r \mid r < -VaR_\alpha]$$
+
+```{python}
+#| label: cvar
+# CVaR: media de los retornos que están por debajo del percentil 5%
+retornos_cola = retornos[retornos < percentil_5]
+cvar_95 = -np.mean(retornos_cola) * valor_portafolio
+
+retornos_cola_99 = retornos[retornos < percentil_1]
+cvar_99 = -np.mean(retornos_cola_99) * valor_portafolio
+
+print(f"CVaR (95%, 1 día): ${cvar_95:>12,.2f}")
+print(f"CVaR (99%, 1 día): ${cvar_99:>12,.2f}")
+print(f"")
+print(f"El CVaR 95% es {cvar_95/var_hist_95:.1%} del VaR 95%")
+print(f"→ En promedio, cuando se pierde más que el VaR, la pérdida es {cvar_95/var_hist_95:.0%} del VaR")
+```
+
+::: {.callout-important title="VaR vs. CVaR"}
+| Métrica | Pregunta que responde | Propiedad |
+|---------|----------------------|-----------|
+| **VaR** | ¿Cuál es la pérdida máxima "normal"? | No subadditiva |
+| **CVaR** | ¿Cuánto se pierde "en promedio" cuando todo sale mal? | Coherente |
+
+El CVaR es preferido por reguladores (Basilea III) porque es una **medida de riesgo coherente**.
+:::
+
+---
+
+# Backtesting de VaR
+
+¿Nuestro modelo de VaR es preciso? El **backtesting** verifica si la tasa de excepciones observada coincide con la esperada.
+
+```{python}
+#| label: backtesting
+# Contar cuántos días la pérdida real superó al VaR
+var_limite = mu + z * sigma  # VaR paramétrico como retorno
+excepciones = np.sum(retornos < var_limite)
+tasa_excepciones = excepciones / len(retornos)
+
+print(f"Excepciones: {excepciones} de {len(retornos)} días")
+print(f"Tasa de excepciones: {tasa_excepciones:.2%}")
+print(f"Tasa esperada:       {1 - confianza:.2%}")
+
+# Test de Kupiec (proporción de fallas)
+from scipy.stats import binom
+p_value = 1 - binom.cdf(excepciones - 1, len(retornos), 1 - confianza)
+print(f"p-value (Kupiec): {p_value:.4f} {'✓ Aprobado' if p_value > 0.05 else '✗ Rechazado'}")
+```
+
+---
+
+# EWMA (Volatilidad Ponderada Exponencialmente)
+
+La volatilidad no es constante. El modelo **EWMA** de RiskMetrics da más peso a las observaciones recientes:
+
+$$\sigma_t^2 = \lambda \sigma_{t-1}^2 + (1-\lambda) r_{t-1}^2$$
+
+```{python}
+#| label: ewma
+lambd = 0.94  # Factor de decaimiento (RiskMetrics)
+
+# Calcular varianza EWMA
+varianza_ewma = np.zeros(len(retornos))
+varianza_ewma[0] = retornos[0] ** 2
+
+for t in range(1, len(retornos)):
+    varianza_ewma[t] = lambd * varianza_ewma[t-1] + (1 - lambd) * retornos[t-1] ** 2
+
+vol_ewma = np.sqrt(varianza_ewma)
+
+# VaR dinámico con EWMA
+var_ewma = -(mu + z * vol_ewma) * valor_portafolio
+
+fig, axes = plt.subplots(2, 1, figsize=(10, 7), sharex=True)
+
+# Panel superior: volatilidad
+ax = axes[0]
+ax.plot(vol_ewma * np.sqrt(252) * 100, linewidth=1.5, color="#2d6a9f", label="EWMA (λ=0.94)")
+ax.axhline(sigma * np.sqrt(252) * 100, color="#ef4444", linestyle="--", alpha=0.7, label="Vol constante")
+ax.set_ylabel("Volatilidad Anualizada (%)")
+ax.set_title("Comparación: Volatilidad Constante vs. EWMA")
+ax.legend()
+ax.grid(True, alpha=0.3)
+
+# Panel inferior: VaR dinámico vs constante
+ax = axes[1]
+ax.fill_between(range(len(var_ewma)), var_ewma, alpha=0.3, color="#ef4444", label="VaR EWMA")
+ax.axhline(var_param_95, color="#1e3a5f", linestyle="--", label="VaR constante")
+ax.set_xlabel("Día")
+ax.set_ylabel("VaR ($)")
+ax.set_title("VaR Dinámico (EWMA) vs. Constante")
+ax.legend()
+ax.grid(True, alpha=0.3)
+
+plt.tight_layout()
+plt.show()
+```
+
+---
+
+# Test de Normalidad
+
+Los modelos paramétricos asumen normalidad. ¿Es válido? El **test de Jarque-Bera** contrasta:
+
+- $H_0$: Los retornos son normales (skewness = 0, curtosis = 3)
+- $H_1$: No son normales
+
+```{python}
+#| label: normalidad
+from scipy.stats import jarque_bera, skew, kurtosis
+
+jb_stat, jb_pvalue = jarque_bera(retornos)
+s = skew(retornos)
+k = kurtosis(retornos, fisher=True)  # Exceso de curtosis
+
+print(f"Skewness (asimetría):    {s:>+.4f}  (normal = 0)")
+print(f"Exc. Curtosis:           {k:>+.4f}  (normal = 0)")
+print(f"Jarque-Bera stat:        {jb_stat:>.4f}")
+print(f"p-value:                 {jb_pvalue:>.4f}")
+print(f"{'→ No se rechaza normalidad ✓' if jb_pvalue > 0.05 else '→ Se rechaza normalidad ✗'}")
+```
+
+::: {.callout-warning title="En datos reales..."}
+Los retornos financieros reales típicamente **rechazan** la normalidad. Presentan:
+
+- **Curtosis excesiva** (colas pesadas → más eventos extremos que la normal)
+- **Asimetría negativa** (más crashes que rallies)
+
+Esto hace que el VaR paramétrico normal **subestime** el riesgo verdadero.
+:::
+
+---
+
+# Resumen de Métricas
+
+```{python}
+#| label: resumen
+import pandas as pd
+
+resumen = pd.DataFrame({
+    "Métrica": ["VaR Paramétrico 95%", "VaR Paramétrico 99%", 
+                "VaR Histórico 95%", "VaR Histórico 99%",
+                "CVaR 95%", "CVaR 99%"],
+    "Valor ($)": [var_param_95, var_param_99, var_hist_95, var_hist_99, 
+                  cvar_95, cvar_99],
+    "% Portafolio": [var_param_95/valor_portafolio, var_param_99/valor_portafolio,
+                     var_hist_95/valor_portafolio, var_hist_99/valor_portafolio,
+                     cvar_95/valor_portafolio, cvar_99/valor_portafolio],
+})
+
+resumen["Valor ($)"] = resumen["Valor ($)"].apply(lambda x: f"${x:,.2f}")
+resumen["% Portafolio"] = resumen["% Portafolio"].apply(lambda x: f"{x:.4%}")
+
+print(resumen.to_string(index=False))
+```
+
+---
+
+# Ejercicios Propuestos
+
+::: {.callout-important title="Ejercicios"}
+1. **VaR a 10 días**: Escalar el VaR diario a 10 días usando la regla de la raíz cuadrada: $VaR_{10d} = VaR_{1d} \times \sqrt{10}$. ¿Es válida esta aproximación? ¿Bajo qué supuestos?
+
+2. **Backtesting rolling**: Implementar un backtesting con ventana móvil de 60 días. Graficar la tasa de excepciones a lo largo del tiempo.
+
+3. **VaR con distribución t-Student**: Reemplazar la distribución normal por una t-Student con `df` grados de libertad estimados de los datos. Comparar con el VaR normal.
+
+4. **Stress testing**: Calcular el VaR condicional asumiendo que la volatilidad se duplica (escenario de estrés). ¿Cuánto aumenta el VaR?
+:::
+
+---
+
+# Referencias
+
+* Jorion, P. (2006). *Value at Risk*. McGraw-Hill.
+* Hull, J. (2018). *Risk Management and Financial Institutions*. Wiley.
+* McNeil, A. et al. (2015). *Quantitative Risk Management*. Princeton University Press.

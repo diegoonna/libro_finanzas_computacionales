@@ -1,0 +1,216 @@
+---
+title: "Semana 12: Econometría Financiera y CAPM Bayesiano"
+subtitle: "Regresión Lineal, Beta, Black-Litterman"
+abstract: |
+  CAPM y estimación del beta por MCO, beta bayesiano con prior del sector,
+  introducción al modelo Black-Litterman, y clase `RegresionLineal` from scratch.
+---
+
+# Introducción
+
+Combinamos econometría clásica (MCO) con el enfoque bayesiano para estimar el **Beta del CAPM** e introducimos el modelo de **Black-Litterman**.
+
+---
+
+# CAPM: Capital Asset Pricing Model
+
+$$E[R_i] - R_f = \beta_i (E[R_m] - R_f)$$
+
+$$R_i - R_f = \alpha + \beta (R_m - R_f) + \epsilon$$
+
+```{python}
+#| label: capm-datos
+import numpy as np
+from scipy import stats
+import matplotlib.pyplot as plt
+
+# Simular datos de retornos
+np.random.seed(42)
+n = 120  # 10 años de datos mensuales
+
+beta_real = 1.3
+alpha_real = 0.002
+sigma_eps = 0.03
+
+ret_mercado = np.random.normal(0.008, 0.04, n)
+rf = 0.003
+exceso_mercado = ret_mercado - rf
+epsilon = np.random.normal(0, sigma_eps, n)
+
+exceso_activo = alpha_real + beta_real * exceso_mercado + epsilon
+```
+
+---
+
+# Regresión por MCO
+
+```{python}
+#| label: mco
+# scipy.stats.linregress
+slope, intercept, r_value, p_value, std_err = stats.linregress(
+    exceso_mercado, exceso_activo
+)
+
+print("=== Regresión CAPM (MCO) ===")
+print(f"Alpha (α): {intercept:.6f} (p-value: {p_value:.4f})")
+print(f"Beta (β):  {slope:.4f} ± {std_err:.4f}")
+print(f"R²:        {r_value**2:.4f}")
+
+# Gráfico
+fig, ax = plt.subplots(figsize=(8, 6))
+ax.scatter(exceso_mercado * 100, exceso_activo * 100, alpha=0.5, s=20)
+x_line = np.linspace(exceso_mercado.min(), exceso_mercado.max(), 100)
+ax.plot(x_line * 100, (intercept + slope * x_line) * 100, "r-", linewidth=2)
+ax.set_xlabel("Exceso de Retorno del Mercado (%)")
+ax.set_ylabel("Exceso de Retorno del Activo (%)")
+ax.set_title(f"CAPM: β = {slope:.2f}, R² = {r_value**2:.2f}")
+ax.grid(True, alpha=0.3)
+plt.tight_layout()
+plt.show()
+```
+
+---
+
+# Beta Bayesiano
+
+Incorporamos un **prior** sobre el Beta basado en el sector:
+
+```{python}
+#| label: beta-bayesiano
+# Prior: Beta del sector es ~1.2 con incertidumbre
+mu_prior = 1.2
+sigma_prior = 0.3
+
+# Likelihood: datos observados
+mu_likelihood = slope
+sigma_likelihood = std_err
+
+# Posterior (conjugada Normal-Normal)
+precision_prior = 1 / sigma_prior**2
+precision_lik = 1 / sigma_likelihood**2
+
+mu_posterior = (mu_prior * precision_prior + mu_likelihood * precision_lik) / (precision_prior + precision_lik)
+sigma_posterior = np.sqrt(1 / (precision_prior + precision_lik))
+
+print("=== Comparación de Betas ===")
+print(f"Prior (sector):    {mu_prior:.4f} ± {sigma_prior:.4f}")
+print(f"MCO (datos):       {mu_likelihood:.4f} ± {sigma_likelihood:.4f}")
+print(f"Posterior (bayes):  {mu_posterior:.4f} ± {sigma_posterior:.4f}")
+
+# Gráfico
+x = np.linspace(0.5, 2.0, 200)
+fig, ax = plt.subplots(figsize=(10, 5))
+ax.plot(x, stats.norm.pdf(x, mu_prior, sigma_prior), "b--", label="Prior")
+ax.plot(x, stats.norm.pdf(x, mu_likelihood, sigma_likelihood), "g--", label="Likelihood")
+ax.plot(x, stats.norm.pdf(x, mu_posterior, sigma_posterior), "r-", linewidth=2, label="Posterior")
+ax.axvline(beta_real, color="black", linestyle=":", label=f"β real = {beta_real}")
+ax.set_xlabel("Beta")
+ax.set_ylabel("Densidad")
+ax.set_title("Estimación Bayesiana del Beta")
+ax.legend()
+ax.grid(True, alpha=0.3)
+plt.tight_layout()
+plt.show()
+```
+
+---
+
+# Black-Litterman (Introducción)
+
+El modelo combina el **equilibrio de mercado** (Prior) con **views del inversor** (Likelihood) para obtener retornos esperados ajustados.
+
+$$\Pi = \delta \Sigma w_{mkt}$$
+
+```{python}
+#| label: black-litterman
+# TODO: Implementar Black-Litterman completo
+# Equilibrio de mercado (Prior)
+Sigma = np.array([[0.04, 0.01], [0.01, 0.02]])  # 2 activos
+w_mkt = np.array([0.6, 0.4])
+delta = 2.5  # Aversión al riesgo del mercado
+
+Pi = delta * Sigma @ w_mkt  # Retornos implícitos de equilibrio
+print("Retornos de equilibrio (Prior):")
+for i, pi in enumerate(Pi):
+    print(f"  Activo {i+1}: {pi:.4%}")
+
+# View del inversor: "Activo 1 va a rendir 15%"
+P = np.array([[1, 0]])  # View sobre activo 1
+Q = np.array([0.15])     # Retorno esperado
+Omega = np.array([[0.001]])  # Incertidumbre de la view
+
+# Posterior (Black-Litterman)
+tau = 0.05
+inv_tau_sigma = np.linalg.inv(tau * Sigma)
+inv_omega = np.linalg.inv(Omega)
+
+mu_bl = np.linalg.inv(inv_tau_sigma + P.T @ inv_omega @ P) @ \
+        (inv_tau_sigma @ Pi + P.T @ inv_omega @ Q)
+
+print("\nRetornos Black-Litterman (Posterior):")
+for i, r in enumerate(mu_bl):
+    print(f"  Activo {i+1}: {r:.4%}")
+```
+
+---
+
+# Clase RegresionLineal
+
+```{python}
+#| label: clase-regresion
+class RegresionLineal:
+    """Regresión lineal simple usando numpy internamente."""
+    
+    def __init__(self):
+        self.beta = None
+        self.alpha = None
+        self.r_squared = None
+        self._fitted = False
+    
+    def fit(self, X, y):
+        """Ajusta el modelo por MCO."""
+        n = len(X)
+        x_mean, y_mean = np.mean(X), np.mean(y)
+        self.beta = np.sum((X - x_mean) * (y - y_mean)) / np.sum((X - x_mean)**2)
+        self.alpha = y_mean - self.beta * x_mean
+        y_hat = self.predict(X)
+        ss_res = np.sum((y - y_hat)**2)
+        ss_tot = np.sum((y - y_mean)**2)
+        self.r_squared = 1 - ss_res / ss_tot
+        self._fitted = True
+        return self
+    
+    def predict(self, X):
+        return self.alpha + self.beta * X
+    
+    def summary(self):
+        if not self._fitted:
+            print("Modelo no ajustado. Ejecutar .fit() primero.")
+            return
+        print(f"α = {self.alpha:.6f}")
+        print(f"β = {self.beta:.4f}")
+        print(f"R² = {self.r_squared:.4f}")
+
+# Uso
+modelo = RegresionLineal()
+modelo.fit(exceso_mercado, exceso_activo)
+modelo.summary()
+```
+
+---
+
+# Ejercicios Propuestos
+
+::: {.callout-important title="Ejercicios"}
+1. **CAPM con datos reales**: Descargar datos de una acción y el S&P 500, estimar el beta por MCO.
+2. **Rolling beta**: Calcular el beta con ventana móvil de 24 meses y graficar su evolución.
+3. **Black-Litterman 3 activos**: Extender el modelo BL con 3 activos y 2 views.
+4. **Clase RegresionMultiple**: Extender la clase para soportar múltiples variables independientes.
+:::
+
+---
+
+# Referencias
+
+* Sharpe, W. (1964). *Capital Asset Prices: A Theory of Market Equilibrium*. Journal of Finance.
+* Black, F., & Litterman, R. (1992). *Global Portfolio Optimization*. Financial Analysts Journal.

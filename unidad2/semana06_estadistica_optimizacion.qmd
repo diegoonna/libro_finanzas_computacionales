@@ -1,0 +1,165 @@
+---
+title: "Semana 6: Estadística Descriptiva y Optimización Matemática"
+subtitle: "Distribuciones de Retornos, scipy.stats y scipy.optimize"
+abstract: |
+  Análisis estadístico de retornos (media, varianza, skewness, curtosis),
+  test de normalidad Jarque-Bera, funciones lambda y optimización con scipy.
+---
+
+# Introducción
+
+Esta semana analizamos estadísticamente los retornos de activos financieros e introducimos la **optimización matemática**, reemplazando el "Solver" de Excel con herramientas de Python.
+
+---
+
+# Estadística Descriptiva de Retornos
+
+```{python}
+#| label: estadistica
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+from scipy import stats
+
+# Simular retornos diarios de una acción
+np.random.seed(42)
+n_dias = 252
+retornos = np.random.normal(0.0004, 0.018, n_dias)
+
+print("Estadísticas Descriptivas de Retornos:")
+print(f"  Media diaria:       {np.mean(retornos):.6f}")
+print(f"  Media anualizada:   {np.mean(retornos) * 252:.4%}")
+print(f"  Volatilidad diaria: {np.std(retornos):.6f}")
+print(f"  Vol. anualizada:    {np.std(retornos) * np.sqrt(252):.4%}")
+print(f"  Skewness:           {stats.skew(retornos):.4f}")
+print(f"  Kurtosis (exceso):  {stats.kurtosis(retornos):.4f}")
+```
+
+## Histograma de Retornos
+
+```{python}
+#| label: histograma
+fig, ax = plt.subplots(figsize=(10, 5))
+ax.hist(retornos, bins=40, density=True, alpha=0.7, color="steelblue", edgecolor="white")
+
+# Superponer distribución normal teórica
+x = np.linspace(retornos.min(), retornos.max(), 100)
+ax.plot(x, stats.norm.pdf(x, np.mean(retornos), np.std(retornos)), 
+        "r-", linewidth=2, label="Normal teórica")
+
+ax.set_title("Distribución de Retornos Diarios")
+ax.set_xlabel("Retorno")
+ax.set_ylabel("Densidad")
+ax.legend()
+ax.grid(True, alpha=0.3)
+plt.tight_layout()
+plt.show()
+```
+
+## Test de Normalidad (Jarque-Bera)
+
+```{python}
+#| label: jarque-bera
+stat_jb, p_value = stats.jarque_bera(retornos)
+print(f"Estadístico Jarque-Bera: {stat_jb:.4f}")
+print(f"P-value: {p_value:.4f}")
+
+alpha = 0.05
+if p_value < alpha:
+    print(f"→ Rechazamos H₀: los retornos NO son normales (α={alpha})")
+else:
+    print(f"→ No rechazamos H₀: no hay evidencia contra normalidad (α={alpha})")
+```
+
+---
+
+# Funciones Lambda
+
+Las funciones **lambda** son funciones anónimas de una línea, útiles para pasar a optimizadores.
+
+```{python}
+#| label: lambda
+# Función objetivo: minimizar el error cuadrático
+funcion_error = lambda x: (x - 3.5) ** 2 + 2
+
+# Evaluar en varios puntos
+for x in [0, 1, 2, 3, 3.5, 4, 5]:
+    print(f"f({x}) = {funcion_error(x):.2f}")
+```
+
+---
+
+# Optimización con `scipy.optimize`
+
+## Minimización Básica
+
+```{python}
+#| label: minimize-basico
+from scipy.optimize import minimize
+
+# Función a minimizar
+def funcion_objetivo(x):
+    return (x[0] - 3) ** 2 + (x[1] - 5) ** 2
+
+# Punto inicial
+x0 = [0, 0]
+resultado = minimize(funcion_objetivo, x0, method="SLSQP")
+
+print(f"Mínimo encontrado en: x={resultado.x[0]:.4f}, y={resultado.x[1]:.4f}")
+print(f"Valor mínimo: {resultado.fun:.6f}")
+print(f"Éxito: {resultado.success}")
+```
+
+## Minimización con Restricciones
+
+```{python}
+#| label: minimize-restricciones
+# Maximizar utilidad = E[r] - 0.5 * λ * σ²
+# Equivalente a minimizar su negativo
+
+def utilidad_negativa(w, retornos_esperados, cov_matrix, aversion):
+    """Función de utilidad negativa (para minimizar)."""
+    ret_port = np.dot(w, retornos_esperados)
+    var_port = np.dot(w, np.dot(cov_matrix, w))
+    return -(ret_port - 0.5 * aversion * var_port)
+
+# TODO: Expandir con datos reales de múltiples activos
+# Ejemplo simple con 2 activos
+ret_esperados = np.array([0.10, 0.06])
+cov = np.array([[0.04, 0.005], [0.005, 0.01]])
+aversion = 3
+
+# Restricción: pesos suman 1
+restricciones = {"type": "eq", "fun": lambda w: np.sum(w) - 1}
+# Bounds: entre 0% y 100%
+bounds = [(0, 1)] * 2
+
+resultado = minimize(
+    utilidad_negativa, [0.5, 0.5],
+    args=(ret_esperados, cov, aversion),
+    method="SLSQP",
+    bounds=bounds,
+    constraints=restricciones,
+)
+
+w_opt = resultado.x
+print(f"Pesos óptimos: Activo 1={w_opt[0]:.2%}, Activo 2={w_opt[1]:.2%}")
+```
+
+---
+
+# Ejercicios Propuestos
+
+::: {.callout-important title="Ejercicios"}
+1. **Análisis completo**: Descargar datos de 3 acciones y comparar sus estadísticas descriptivas.
+2. **Q-Q Plot**: Graficar un Q-Q plot para evaluar visualmente la normalidad de los retornos.
+3. **Optimización de portafolio 3 activos**: Extender el ejemplo de maximización de utilidad para 3 activos.
+4. **Comparar tests**: Aplicar Shapiro-Wilk además de Jarque-Bera y comparar resultados.
+:::
+
+---
+
+# Referencias
+
+* Ruppert, D. (2011). *Statistics and Data Analysis for Financial Engineering*. Springer.
+* Virtanen, P. et al. (2020). *SciPy 1.0*. Nature Methods.

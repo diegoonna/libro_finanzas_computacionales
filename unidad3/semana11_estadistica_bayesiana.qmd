@@ -1,0 +1,148 @@
+---
+title: "Semana 11: Introducción a la Estadística Bayesiana"
+subtitle: "Priors, Likelihood, Posteriors y Estimación de Parámetros"
+abstract: |
+  Teorema de Bayes, priors conjugados (Beta-Binomial), actualización secuencial,
+  diferencias frecuentista vs. bayesiana, e introducción a PyMC para MCMC.
+---
+
+# Introducción
+
+La estadística bayesiana permite **combinar conocimiento previo** (prior) con datos observados (likelihood) para obtener una estimación actualizada (posterior). Es especialmente útil cuando hay **pocos datos históricos**.
+
+---
+
+# Teorema de Bayes
+
+$$P(\theta | D) = \frac{P(D | \theta) \cdot P(\theta)}{P(D)}$$
+
+| Término | Nombre | Significado |
+|---------|--------|-------------|
+| $P(\theta)$ | **Prior** | Creencia inicial sobre el parámetro |
+| $P(D\|\theta)$ | **Likelihood** | Probabilidad de observar los datos dado θ |
+| $P(\theta\|D)$ | **Posterior** | Creencia actualizada |
+
+---
+
+# Ejemplo: Estimación Bayesiana de Probabilidad de Default
+
+```{python}
+#| label: bayes-default
+import numpy as np
+from scipy import stats
+import matplotlib.pyplot as plt
+
+# Prior: creemos que la prob. de default es ~5% (Beta distribution)
+a_prior, b_prior = 2, 38  # Beta(2, 38): media = 2/40 = 5%
+
+# Datos observados: 3 defaults en 50 empresas
+defaults_obs = 3
+no_defaults = 47
+
+# Posterior: Beta(a + defaults, b + no_defaults) — conjugada
+a_posterior = a_prior + defaults_obs
+b_posterior = b_prior + no_defaults
+
+# Comparar
+x = np.linspace(0, 0.20, 200)
+
+fig, ax = plt.subplots(figsize=(10, 5))
+ax.plot(x, stats.beta.pdf(x, a_prior, b_prior), 
+        "b--", linewidth=2, label=f"Prior: Beta({a_prior},{b_prior})")
+ax.plot(x, stats.beta.pdf(x, a_posterior, b_posterior), 
+        "r-", linewidth=2, label=f"Posterior: Beta({a_posterior},{b_posterior})")
+ax.axvline(defaults_obs / (defaults_obs + no_defaults), 
+           color="green", linestyle=":", label=f"MLE (frecuentista): {defaults_obs/50:.0%}")
+
+ax.set_xlabel("Probabilidad de Default")
+ax.set_ylabel("Densidad")
+ax.set_title("Estimación Bayesiana de Probabilidad de Default")
+ax.legend()
+ax.grid(True, alpha=0.3)
+plt.tight_layout()
+plt.show()
+
+print(f"Prior mean:     {a_prior / (a_prior + b_prior):.4%}")
+print(f"Posterior mean:  {a_posterior / (a_posterior + b_posterior):.4%}")
+print(f"MLE:            {defaults_obs / 50:.4%}")
+```
+
+---
+
+# Diferencia Frecuentista vs. Bayesiana
+
+::: {.callout-note title="Comparación"}
+| Aspecto | Frecuentista | Bayesiano |
+|---------|-------------|-----------|
+| Parámetro | Fijo, desconocido | Variable aleatoria |
+| Datos | Aleatorios | Fijos (observados) |
+| Resultado | Estimador puntual + IC | Distribución posterior |
+| Pocos datos | Problemático | Incorpora prior |
+:::
+
+---
+
+# Actualización Secuencial
+
+```{python}
+#| label: actualizacion
+# Cada trimestre llega nueva información
+datos_trimestrales = [
+    {"defaults": 1, "total": 20},
+    {"defaults": 0, "total": 25},
+    {"defaults": 2, "total": 30},
+    {"defaults": 1, "total": 22},
+]
+
+a, b = 2, 38  # Prior inicial
+print(f"{'Trimestre':<12} {'Posterior':>15} {'Media':>10}")
+print("-" * 40)
+
+for i, d in enumerate(datos_trimestrales, 1):
+    a += d["defaults"]
+    b += d["total"] - d["defaults"]
+    media = a / (a + b)
+    print(f"  Q{i}          Beta({a:>3},{b:>3})    {media:.4%}")
+```
+
+---
+
+# Introducción a PyMC (MCMC)
+
+```python
+# TODO: Instalar pymc y ejecutar en Jupyter
+# pip install pymc
+
+import pymc as pm
+
+with pm.Model() as modelo:
+    # Prior
+    prob_default = pm.Beta("prob_default", alpha=2, beta=38)
+    
+    # Likelihood
+    obs = pm.Binomial("obs", n=50, p=prob_default, observed=3)
+    
+    # Inferencia (MCMC)
+    trace = pm.sample(2000, return_inferencedata=True)
+
+# Resumen
+pm.summary(trace)
+```
+
+---
+
+# Ejercicios Propuestos
+
+::: {.callout-important title="Ejercicios"}
+1. **Prior informativo vs. difuso**: Comparar posteriors con prior Beta(2,38) vs. Beta(1,1) (uniforme).
+2. **Estimación de media de retornos**: Usar un prior Normal sobre la media y actualizar con datos.
+3. **Credible interval**: Calcular el intervalo de credibilidad del 95% para la posterior.
+4. **PyMC**: Implementar el modelo completo en PyMC y graficar el trace.
+:::
+
+---
+
+# Referencias
+
+* Kruschke, J. (2015). *Doing Bayesian Data Analysis*. Academic Press.
+* Gelman, A. et al. (2013). *Bayesian Data Analysis*. CRC Press.

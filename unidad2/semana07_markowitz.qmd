@@ -1,0 +1,222 @@
+---
+title: "Semana 7: Teoría Moderna de Portafolios (Markowitz)"
+subtitle: "Frontera Eficiente, Álgebra Matricial y Optimización con scipy"
+abstract: |
+  Vectorización con NumPy, matriz de covarianzas, frontera eficiente de Markowitz,
+  ratio de Sharpe, portafolio tangente y limitaciones del modelo media-varianza.
+---
+
+# Introducción
+
+Implementamos la **Teoría Moderna de Portafolios** de Markowitz: construir la frontera eficiente usando álgebra matricial (`numpy`) y optimización (`scipy.optimize`).
+
+---
+
+# Vectorización y NumPy
+
+## ¿Por qué evitar bucles `for`?
+
+```{python}
+#| label: vectorizacion
+import numpy as np
+import time
+
+n = 1_000_000
+
+# Con bucle (lento)
+lista = list(range(n))
+t0 = time.time()
+resultado_loop = [x ** 2 for x in lista]
+t_loop = time.time() - t0
+
+# Vectorizado con numpy (rápido)
+arr = np.arange(n)
+t0 = time.time()
+resultado_np = arr ** 2
+t_np = time.time() - t0
+
+print(f"Bucle for:    {t_loop:.4f} seg")
+print(f"Vectorizado:  {t_np:.4f} seg")
+print(f"Speedup:      {t_loop / t_np:.0f}x más rápido")
+```
+
+## Álgebra Matricial para Portafolios
+
+```{python}
+#| label: algebra
+# Retornos esperados (vector)
+mu = np.array([0.12, 0.08, 0.05])  # 3 activos
+
+# Pesos del portafolio
+w = np.array([0.4, 0.35, 0.25])
+
+# Retorno esperado del portafolio: w^T × μ
+ret_port = w @ mu  # Producto punto
+print(f"E[Rp] = {ret_port:.4%}")
+```
+
+---
+
+# Matriz de Varianzas y Covarianzas
+
+```{python}
+#| label: covarianza
+# Simular retornos de 3 activos
+np.random.seed(42)
+n_obs = 252
+retornos = np.random.multivariate_normal(
+    mean=[0.0005, 0.0003, 0.0002],
+    cov=[[0.0004, 0.0001, 0.00005],
+         [0.0001, 0.0002, 0.00008],
+         [0.00005, 0.00008, 0.0001]],
+    size=n_obs
+)
+
+# Matriz de covarianzas
+Sigma = np.cov(retornos, rowvar=False) * 252  # Anualizada
+print("Matriz de Covarianzas (anualizada):")
+print(np.round(Sigma, 6))
+```
+
+## Riesgo del Portafolio
+
+$$\sigma_p^2 = \mathbf{w}^T \boldsymbol{\Sigma} \mathbf{w}$$
+
+```{python}
+#| label: riesgo-portafolio
+w = np.array([0.4, 0.35, 0.25])
+
+varianza_port = w @ Sigma @ w
+volatilidad_port = np.sqrt(varianza_port)
+
+print(f"Varianza del portafolio:    {varianza_port:.6f}")
+print(f"Volatilidad del portafolio: {volatilidad_port:.4%}")
+```
+
+---
+
+# Frontera Eficiente
+
+```{python}
+#| label: frontera-eficiente
+from scipy.optimize import minimize
+import matplotlib.pyplot as plt
+
+mu_anual = np.mean(retornos, axis=0) * 252
+n_activos = len(mu_anual)
+
+def volatilidad_portafolio(w, Sigma):
+    return np.sqrt(w @ Sigma @ w)
+
+def retorno_portafolio(w, mu):
+    return w @ mu
+
+# Generar frontera eficiente
+retornos_objetivo = np.linspace(mu_anual.min(), mu_anual.max(), 50)
+volatilidades = []
+
+for ret_obj in retornos_objetivo:
+    restricciones = [
+        {"type": "eq", "fun": lambda w: np.sum(w) - 1},
+        {"type": "eq", "fun": lambda w, r=ret_obj: w @ mu_anual - r},
+    ]
+    bounds = [(0, 1)] * n_activos
+    
+    resultado = minimize(
+        volatilidad_portafolio, 
+        np.ones(n_activos) / n_activos,
+        args=(Sigma,),
+        method="SLSQP",
+        bounds=bounds,
+        constraints=restricciones,
+    )
+    volatilidades.append(resultado.fun if resultado.success else np.nan)
+
+# Gráfico
+fig, ax = plt.subplots(figsize=(10, 6))
+ax.plot([v * 100 for v in volatilidades], 
+        [r * 100 for r in retornos_objetivo], 
+        "b-", linewidth=2, label="Frontera Eficiente")
+
+# Activos individuales
+vols_ind = [np.sqrt(Sigma[i, i]) * 100 for i in range(n_activos)]
+rets_ind = [mu_anual[i] * 100 for i in range(n_activos)]
+ax.scatter(vols_ind, rets_ind, s=100, c="red", zorder=5, label="Activos individuales")
+
+ax.set_xlabel("Volatilidad (%)")
+ax.set_ylabel("Retorno Esperado (%)")
+ax.set_title("Frontera Eficiente de Markowitz")
+ax.legend()
+ax.grid(True, alpha=0.3)
+plt.tight_layout()
+plt.show()
+```
+
+---
+
+# Ratio de Sharpe y Portafolio Tangente
+
+$$Sharpe = \frac{E[R_p] - R_f}{\sigma_p}$$
+
+```{python}
+#| label: sharpe
+rf = 0.03  # Tasa libre de riesgo
+
+def neg_sharpe(w, mu, Sigma, rf):
+    ret = w @ mu
+    vol = np.sqrt(w @ Sigma @ w)
+    return -(ret - rf) / vol
+
+restricciones = [{"type": "eq", "fun": lambda w: np.sum(w) - 1}]
+bounds = [(0, 1)] * n_activos
+
+resultado = minimize(
+    neg_sharpe,
+    np.ones(n_activos) / n_activos,
+    args=(mu_anual, Sigma, rf),
+    method="SLSQP",
+    bounds=bounds,
+    constraints=restricciones,
+)
+
+w_tangente = resultado.x
+ret_tangente = w_tangente @ mu_anual
+vol_tangente = np.sqrt(w_tangente @ Sigma @ w_tangente)
+sharpe = (ret_tangente - rf) / vol_tangente
+
+print("Portafolio Tangente (Máximo Sharpe):")
+for i, w in enumerate(w_tangente):
+    print(f"  Activo {i+1}: {w:.2%}")
+print(f"  Retorno: {ret_tangente:.4%}")
+print(f"  Volatilidad: {vol_tangente:.4%}")
+print(f"  Sharpe Ratio: {sharpe:.4f}")
+```
+
+---
+
+# Limitaciones de Markowitz
+
+::: {.callout-warning title="Limitaciones del Modelo"}
+1. **Sensibilidad a inputs**: Pequeños cambios en retornos esperados producen grandes cambios en los pesos.
+2. **Retornos no normales**: Asume distribución normal; ignora colas pesadas.
+3. **Estimación de μ**: El retorno esperado es muy difícil de estimar con precisión.
+4. **Costos de transacción**: No los considera.
+:::
+
+---
+
+# Ejercicios Propuestos
+
+::: {.callout-important title="Ejercicios"}
+1. **Portafolio de mínima varianza global**: Encontrar el portafolio con menor volatilidad sin restricción de retorno.
+2. **Capital Market Line**: Graficar la CML junto con la frontera eficiente.
+3. **Sin short-selling vs. con short-selling**: Comparar la frontera con y sin restricción de pesos no negativos.
+4. **5 activos reales**: Descargar datos de 5 acciones y construir la frontera eficiente.
+:::
+
+---
+
+# Referencias
+
+* Markowitz, H. (1952). *Portfolio Selection*. The Journal of Finance.
+* Elton, E. et al. (2014). *Modern Portfolio Theory*. Wiley.

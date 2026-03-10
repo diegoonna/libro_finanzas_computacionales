@@ -1,0 +1,85 @@
+---
+title: "Módulo 3: Riesgo, Simulación y Estadística Bayesiana"
+subtitle: "Semanas 9–12 · Medir, simular y modelar la incertidumbre financiera"
+number-sections: false
+---
+
+::: {.callout-note title="Visión General" appearance="simple"}
+Este es el módulo más largo y diverso del libro. Cubrimos tres pilares de las finanzas cuantitativas modernas: **medición de riesgo** (VaR), **simulación estocástica** (Monte Carlo) y **inferencia bayesiana** aplicada a modelos financieros como CAPM y Black-Litterman.
+:::
+
+---
+
+## 🎯 Objetivos de Aprendizaje {.unnumbered}
+
+Al completar este módulo, serás capaz de:
+
+1. **Calcular Value at Risk** (VaR) con métodos paramétrico, histórico y por Monte Carlo.
+2. **Simular trayectorias de precios** usando Movimiento Browniano Geométrico (GBM).
+3. **Implementar volatilidad dinámica** con EWMA (RiskMetrics).
+4. **Aplicar inferencia bayesiana** para estimar parámetros con incertidumbre.
+5. **Estimar betas** del CAPM por MCO y por métodos bayesianos.
+6. **Entender el modelo Black-Litterman** como extensión bayesiana de Markowitz.
+
+---
+
+## 🗓️ Recorrido Semana a Semana {.unnumbered}
+
+| Semana | Tema | Python | Finanzas |
+|:------:|------|--------|----------|
+| **9** | VaR y Distribuciones | `scipy.stats`, `np.percentile` | VaR paramétrico/histórico, EWMA, CVaR |
+| **10** | Monte Carlo | Simulación vectorizada, `np.random` | GBM, pricing por MC, convergencia |
+| **11** | Estadística Bayesiana | `pymc`, priors, posteriors, MCMC | Bayes vs. frecuentista, estimación |
+| **12** | Econometría y CAPM | MCO, regresión, `statsmodels` | CAPM, beta, Black-Litterman |
+
+---
+
+## 🧰 Herramientas y Librerías {.unnumbered}
+
+::: {style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;"}
+
+::: {style="padding: 0.75rem; background: #f0f9ff; border-radius: 8px; text-align: center;"}
+**NumPy**
+
+Simulación vectorizada
+:::
+
+::: {style="padding: 0.75rem; background: #f0fdf4; border-radius: 8px; text-align: center;"}
+**SciPy**
+
+Distribuciones y tests
+:::
+
+::: {style="padding: 0.75rem; background: #fffbeb; border-radius: 8px; text-align: center;"}
+**PyMC**
+
+Inferencia bayesiana
+:::
+
+::: {style="padding: 0.75rem; background: #fdf2f8; border-radius: 8px; text-align: center;"}
+**Statsmodels**
+
+Regresión y econometría
+:::
+
+:::
+
+---
+
+## 🔑 Concepto Clave: VaR {.unnumbered}
+
+::: {.callout-important appearance="simple"}
+El **Value at Risk** al nivel de confianza $\alpha$ responde: *¿Cuál es la máxima pérdida esperada en un horizonte dado, tal que solo se excede el $(1-\alpha)\%$ de las veces?*
+
+$$VaR_\alpha = -(\mu + z_\alpha \cdot \sigma) \cdot W$$
+
+donde $z_\alpha$ es el cuantil de la distribución normal estándar y $W$ es el valor del portafolio.
+:::
+
+---
+
+## 📚 Lecturas Recomendadas {.unnumbered}
+
+- Jorion, P. (2006). *Value at Risk*. McGraw-Hill.
+- Glasserman, P. (2003). *Monte Carlo Methods in Financial Engineering*. Springer.
+- Gelman, A. et al. (2013). *Bayesian Data Analysis*. CRC Press.
