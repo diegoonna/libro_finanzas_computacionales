@@ -1,0 +1,138 @@
+---
+title: "Semana 10: Simulación de Monte Carlo"
+subtitle: "Movimiento Browniano Geométrico y Simulación de Precios"
+abstract: |
+  Simulación de Monte Carlo con GBM: generación de caminos de precios,
+  distribución de precios finales, VaR por simulación y análisis de convergencia.
+---
+
+# Introducción
+
+La simulación de **Monte Carlo** permite modelar la incertidumbre generando miles de escenarios posibles. Simulamos trayectorias de precios usando el **Movimiento Browniano Geométrico (GBM)**.
+
+---
+
+# Movimiento Browniano Geométrico
+
+$$S_t = S_{t-1} \cdot e^{(\mu - \frac{\sigma^2}{2})\Delta t + \sigma \sqrt{\Delta t} \cdot Z}$$
+
+donde $Z \sim N(0,1)$.
+
+```{python}
+#| label: gbm
+import numpy as np
+import matplotlib.pyplot as plt
+
+# Parámetros
+S0 = 100         # Precio inicial
+mu = 0.10        # Drift (retorno esperado anual)
+sigma = 0.25     # Volatilidad anual
+T = 1.0          # Horizonte (1 año)
+n_pasos = 252    # Pasos (días hábiles)
+n_sims = 10_000  # Simulaciones
+
+dt = T / n_pasos
+np.random.seed(42)
+
+# Generar caminos
+Z = np.random.standard_normal((n_pasos, n_sims))
+S = np.zeros((n_pasos + 1, n_sims))
+S[0] = S0
+
+for t in range(1, n_pasos + 1):
+    S[t] = S[t-1] * np.exp((mu - 0.5 * sigma**2) * dt + sigma * np.sqrt(dt) * Z[t-1])
+
+print(f"Precio medio final: ${np.mean(S[-1]):,.2f}")
+print(f"Precio mediano final: ${np.median(S[-1]):,.2f}")
+print(f"Mín: ${np.min(S[-1]):,.2f} | Máx: ${np.max(S[-1]):,.2f}")
+```
+
+## Visualización de Caminos
+
+```{python}
+#| label: plot-caminos
+fig, axes = plt.subplots(1, 2, figsize=(14, 5))
+
+# Algunos caminos
+ax = axes[0]
+for i in range(100):
+    ax.plot(S[:, i], alpha=0.3, linewidth=0.5)
+ax.set_title(f"100 Caminos Simulados (de {n_sims:,})")
+ax.set_xlabel("Día")
+ax.set_ylabel("Precio ($)")
+ax.grid(True, alpha=0.3)
+
+# Distribución de precios finales
+ax = axes[1]
+ax.hist(S[-1], bins=80, density=True, alpha=0.7, color="steelblue", edgecolor="white")
+ax.axvline(S0, color="red", linestyle="--", label=f"S₀ = ${S0}")
+ax.axvline(np.mean(S[-1]), color="green", linestyle="--", label=f"E[S_T] = ${np.mean(S[-1]):,.2f}")
+ax.set_title("Distribución de Precios Finales")
+ax.set_xlabel("Precio ($)")
+ax.legend()
+ax.grid(True, alpha=0.3)
+
+plt.tight_layout()
+plt.show()
+```
+
+---
+
+# VaR por Monte Carlo
+
+```{python}
+#| label: var-montecarlo
+# Retornos simulados a 1 año
+retornos_sim = S[-1] / S0 - 1
+
+# VaR al 95%
+var_mc_95 = -np.percentile(retornos_sim, 5) * 10_000_000
+var_mc_99 = -np.percentile(retornos_sim, 1) * 10_000_000
+
+print(f"VaR Monte Carlo (95%, 1 año): ${var_mc_95:,.2f}")
+print(f"VaR Monte Carlo (99%, 1 año): ${var_mc_99:,.2f}")
+```
+
+---
+
+# Convergencia
+
+```{python}
+#| label: convergencia
+# ¿Cuántas simulaciones son suficientes?
+medias = []
+ns = [100, 500, 1000, 2500, 5000, 7500, 10000]
+
+for n in ns:
+    media_parcial = np.mean(S[-1, :n])
+    medias.append(media_parcial)
+
+fig, ax = plt.subplots(figsize=(8, 4))
+ax.plot(ns, medias, "o-", color="steelblue")
+ax.axhline(np.mean(S[-1]), color="red", linestyle="--", label="Media total")
+ax.set_xlabel("Número de simulaciones")
+ax.set_ylabel("Precio medio final ($)")
+ax.set_title("Convergencia de Monte Carlo")
+ax.legend()
+ax.grid(True, alpha=0.3)
+plt.tight_layout()
+plt.show()
+```
+
+---
+
+# Ejercicios Propuestos
+
+::: {.callout-important title="Ejercicios"}
+1. **Variación de parámetros**: Simular con distintas volatilidades (20%, 30%, 50%) y comparar distribuciones.
+2. **Pricing de opciones**: Usar Monte Carlo para estimar el precio de una call europea: $C = e^{-rT} \cdot E[\max(S_T - K, 0)]$.
+3. **Simulación correlacionada**: Simular 2 activos con correlación $\rho$ usando descomposición de Cholesky.
+4. **Anti-thetic variates**: Implementar reducción de varianza usando variables antitéticas.
+:::
+
+---
+
+# Referencias
+
+* Glasserman, P. (2003). *Monte Carlo Methods in Financial Engineering*. Springer.
+* Hull, J. (2018). *Options, Futures, and Other Derivatives*. Pearson.

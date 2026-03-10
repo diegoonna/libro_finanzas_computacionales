@@ -1,0 +1,84 @@
+---
+title: "Módulo 4: Derivados Financieros"
+subtitle: "Semanas 14–15 · Opciones, Black-Scholes, griegas y cobertura dinámica"
+number-sections: false
+---
+
+::: {.callout-note title="Visión General" appearance="simple"}
+El módulo final aplica todas las herramientas construidas durante el curso a la **valuación y cobertura de opciones**. Implementamos Black-Scholes, extraemos volatilidad implícita con Newton-Raphson, calculamos griegas por diferencias finitas y simulamos estrategias de delta hedging.
+:::
+
+---
+
+## 🎯 Objetivos de Aprendizaje {.unnumbered}
+
+Al completar este módulo, serás capaz de:
+
+1. **Implementar la fórmula de Black-Scholes** para calls y puts europeas.
+2. **Extraer volatilidad implícita** de precios de mercado usando Newton-Raphson.
+3. **Visualizar la sonrisa de volatilidad** y entender sus implicancias.
+4. **Calcular las griegas** (Delta, Gamma, Vega, Theta) analítica y numéricamente.
+5. **Simular delta hedging dinámico** y analizar su P&L.
+
+---
+
+## 🗓️ Recorrido Semana a Semana {.unnumbered}
+
+| Semana | Tema | Python | Finanzas |
+|:------:|------|--------|----------|
+| **14** | Derivados y Vol Implícita | `scipy.stats.norm`, iteración numérica | Black-Scholes, smile, griegas |
+| **15** | Delta Hedging | Simulación de trading, DataFrames | Cobertura dinámica, P&L, riesgo gamma |
+
+---
+
+## 🧰 Herramientas y Librerías {.unnumbered}
+
+::: {style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;"}
+
+::: {style="padding: 0.75rem; background: #f0f9ff; border-radius: 8px; text-align: center;"}
+**SciPy**
+
+`norm.cdf`, `norm.pdf`
+:::
+
+::: {style="padding: 0.75rem; background: #f0fdf4; border-radius: 8px; text-align: center;"}
+**NumPy**
+
+Simulación vectorizada
+:::
+
+::: {style="padding: 0.75rem; background: #fffbeb; border-radius: 8px; text-align: center;"}
+**Pandas**
+
+Logging de operaciones
+:::
+
+::: {style="padding: 0.75rem; background: #fdf2f8; border-radius: 8px; text-align: center;"}
+**Matplotlib**
+
+Payoffs, smile, P&L
+:::
+
+:::
+
+---
+
+## 🔑 Concepto Clave: Black-Scholes {.unnumbered}
+
+::: {.callout-important appearance="simple"}
+La fórmula de **Black-Scholes** para una call europea:
+
+$$C = S_0 \, N(d_1) - K \, e^{-rT} \, N(d_2)$$
+
+$$d_1 = \frac{\ln(S_0/K) + (r + \sigma^2/2)T}{\sigma\sqrt{T}}, \quad d_2 = d_1 - \sigma\sqrt{T}$$
+
+Black-Scholes asume volatilidad constante, pero el mercado revela una **sonrisa de volatilidad** que contradice este supuesto.
+:::
+
+---
+
+## 📚 Lecturas Recomendadas {.unnumbered}
+
+- Hull, J. (2018). *Options, Futures, and Other Derivatives*. Pearson.
+- Wilmott, P. (2006). *Paul Wilmott on Quantitative Finance*. Wiley.
+- Taleb, N. N. (2007). *Dynamic Hedging*. Wiley.

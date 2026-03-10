@@ -1,0 +1,241 @@
+---
+title: "Semana 15: Simulación de Cobertura Dinámica (Delta Hedging)"
+subtitle: "Monte Carlo + Derivados + Pandas: Simulación de Trading"
+abstract: |
+  Simulación completa de delta hedging: GBM, rebalanceo diario de posiciones,
+  análisis de P&L, error de cobertura, y simulación de múltiples caminos.
+---
+
+# Introducción
+
+Unificamos los conceptos del curso: simulamos la **cobertura dinámica (delta hedging)** de una call vendida. Cada día recalculamos la Delta y ajustamos la posición en acciones.
+
+---
+
+# Configuración del Problema
+
+```{python}
+#| label: setup
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+from scipy.stats import norm
+
+# Parámetros
+S0 = 100      # Precio inicial
+K = 100       # Strike
+T = 1.0       # 1 año
+r = 0.05      # Tasa libre de riesgo
+sigma = 0.25  # Volatilidad
+n_dias = 252  # Días hábiles
+dt = T / n_dias
+
+# Funciones BSM
+def bs_call(S, K, T, r, sigma):
+    if T <= 0:
+        return max(S - K, 0)
+    d1 = (np.log(S / K) + (r + 0.5 * sigma**2) * T) / (sigma * np.sqrt(T))
+    d2 = d1 - sigma * np.sqrt(T)
+    return S * norm.cdf(d1) - K * np.exp(-r * T) * norm.cdf(d2)
+
+def bs_delta(S, K, T, r, sigma):
+    if T <= 0:
+        return 1.0 if S > K else 0.0
+    d1 = (np.log(S / K) + (r + 0.5 * sigma**2) * T) / (sigma * np.sqrt(T))
+    return norm.cdf(d1)
+```
+
+---
+
+# Simular Camino de Precio (GBM)
+
+```{python}
+#| label: simular-camino
+np.random.seed(42)
+Z = np.random.standard_normal(n_dias)
+S = np.zeros(n_dias + 1)
+S[0] = S0
+
+for t in range(1, n_dias + 1):
+    S[t] = S[t-1] * np.exp((r - 0.5 * sigma**2) * dt + sigma * np.sqrt(dt) * Z[t-1])
+
+print(f"Precio final: ${S[-1]:.2f}")
+print(f"Opción en el dinero: {'Sí (ITM)' if S[-1] > K else 'No (OTM)'}")
+```
+
+---
+
+# Simulación de Delta Hedging
+
+```{python}
+#| label: delta-hedging
+# Registro diario de posiciones
+registros = []
+
+# Prima recibida al vender la call
+prima = bs_call(S0, K, T, r, sigma)
+cash = prima  # Cash inicial = prima cobrada
+
+# Posición en acciones (empezamos sin nada)
+acciones = 0.0
+
+for t in range(n_dias + 1):
+    tiempo_restante = T - t * dt
+    
+    # Delta actual
+    delta = bs_delta(S[t], K, tiempo_restante, r, sigma)
+    
+    # Rebalancear: comprar/vender acciones para igualar delta
+    acciones_prev = acciones
+    acciones = delta  # Queremos tener delta acciones
+    
+    # Flujo de cash por compra/venta de acciones
+    trade = acciones - acciones_prev
+    cash -= trade * S[t]
+    
+    # Interés sobre cash (diario)
+    cash *= np.exp(r * dt)
+    
+    # Valor de la opción (mark-to-market)
+    valor_opcion = bs_call(S[t], K, tiempo_restante, r, sigma)
+    
+    # PnL del hedge
+    valor_portafolio = acciones * S[t] + cash
+    pnl = valor_portafolio - valor_opcion
+    
+    registros.append({
+        "dia": t,
+        "precio": S[t],
+        "delta": delta,
+        "acciones": acciones,
+        "trade": trade,
+        "cash": cash,
+        "valor_opcion": valor_opcion,
+        "valor_portfolio": valor_portafolio,
+        "pnl_hedge": pnl,
+    })
+
+df = pd.DataFrame(registros)
+```
+
+---
+
+# Análisis de Resultados
+
+```{python}
+#| label: resultados
+# Payoff final
+payoff_final = max(S[-1] - K, 0)
+pnl_final = df.iloc[-1]["valor_portfolio"] - payoff_final
+
+print("=" * 50)
+print("RESULTADO DEL DELTA HEDGING")
+print("=" * 50)
+print(f"Prima cobrada:         ${prima:>10,.2f}")
+print(f"Precio final acción:   ${S[-1]:>10,.2f}")
+print(f"Payoff de la call:     ${payoff_final:>10,.2f}")
+print(f"Valor del portafolio:  ${df.iloc[-1]['valor_portfolio']:>10,.2f}")
+print(f"PnL del hedge:         ${pnl_final:>10,.2f}")
+print(f"Error de hedging:      ${abs(pnl_final):>10,.2f}")
+```
+
+## Visualización
+
+```{python}
+#| label: plots
+fig, axes = plt.subplots(2, 2, figsize=(14, 10))
+
+# Precio
+ax = axes[0, 0]
+ax.plot(df["dia"], df["precio"], linewidth=1)
+ax.axhline(K, color="red", linestyle="--", alpha=0.5, label=f"Strike K={K}")
+ax.set_title("Precio de la Acción")
+ax.set_ylabel("Precio ($)")
+ax.legend()
+ax.grid(True, alpha=0.3)
+
+# Delta
+ax = axes[0, 1]
+ax.plot(df["dia"], df["delta"], color="green", linewidth=1)
+ax.set_title("Delta (posición en acciones)")
+ax.set_ylabel("Delta")
+ax.grid(True, alpha=0.3)
+
+# PnL del hedge
+ax = axes[1, 0]
+ax.plot(df["dia"], df["pnl_hedge"], color="purple", linewidth=1)
+ax.axhline(0, color="black", linestyle="-", alpha=0.3)
+ax.set_title("PnL del Hedge (acumulado)")
+ax.set_xlabel("Día"); ax.set_ylabel("PnL ($)")
+ax.grid(True, alpha=0.3)
+
+# Trades diarios
+ax = axes[1, 1]
+ax.bar(df["dia"], df["trade"], color="steelblue", alpha=0.6, width=1)
+ax.set_title("Rebalanceos Diarios")
+ax.set_xlabel("Día"); ax.set_ylabel("Acciones compradas/vendidas")
+ax.grid(True, alpha=0.3)
+
+plt.tight_layout()
+plt.show()
+```
+
+---
+
+# Error de Hedging: ¿Por qué no es perfecto?
+
+::: {.callout-warning title="Fuentes de Error"}
+1. **Rebalanceo discreto**: Ajustamos 1 vez al día, no continuamente.
+2. **Gamma**: Cambios grandes en el precio causan errores en la aproximación lineal.
+3. **Costos de transacción**: No modelados aquí, pero relevantes en la práctica.
+:::
+
+```{python}
+#| label: multiple-sims
+# Repetir con múltiples caminos
+np.random.seed(0)
+n_sims = 500
+errores = []
+
+for sim in range(n_sims):
+    Z = np.random.standard_normal(n_dias)
+    S_sim = np.zeros(n_dias + 1)
+    S_sim[0] = S0
+    for t in range(1, n_dias + 1):
+        S_sim[t] = S_sim[t-1] * np.exp((r - 0.5*sigma**2)*dt + sigma*np.sqrt(dt)*Z[t-1])
+    
+    cash = prima
+    acciones = 0.0
+    for t in range(n_dias + 1):
+        tr = T - t * dt
+        delta = bs_delta(S_sim[t], K, tr, r, sigma)
+        trade = delta - acciones
+        cash -= trade * S_sim[t]
+        cash *= np.exp(r * dt)
+        acciones = delta
+    
+    payoff = max(S_sim[-1] - K, 0)
+    error = (acciones * S_sim[-1] + cash) - payoff
+    errores.append(error)
+
+print(f"Error medio: ${np.mean(errores):,.2f}")
+print(f"Error std:   ${np.std(errores):,.2f}")
+```
+
+---
+
+# Ejercicios Propuestos
+
+::: {.callout-important title="Ejercicios"}
+1. **Frecuencia de rebalanceo**: Comparar error de hedging con rebalanceo diario, semanal y mensual.
+2. **Delta-Gamma hedging**: Agregar una segunda opción para también neutralizar Gamma.
+3. **Costos de transacción**: Agregar un costo de 0.1% por trade y analizar su impacto.
+4. **Put hedging**: Repetir el ejercicio vendiendo una Put en vez de una Call.
+:::
+
+---
+
+# Referencias
+
+* Hull, J. (2018). *Options, Futures, and Other Derivatives*. Pearson.
+* Taleb, N. (2007). *Dynamic Hedging*. Wiley.

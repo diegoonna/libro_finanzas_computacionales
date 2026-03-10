@@ -1,0 +1,168 @@
+---
+title: "Semana 14: Derivados — Volatilidad Implícita"
+subtitle: "Black-Scholes, Newton-Raphson, Sonrisa de Volatilidad y Griegas"
+abstract: |
+  Fórmula de Black-Scholes para calls y puts, extracción de volatilidad implícita
+  por Newton-Raphson, sonrisa de volatilidad, y griegas por diferencias finitas.
+---
+
+# Introducción
+
+En el mercado real de opciones, los precios se **observan** (no se calculan). Lo que se calcula es la **volatilidad implícita**: la $\sigma$ que, puesta en Black-Scholes, reproduce el precio de mercado.
+
+---
+
+# Fórmula de Black-Scholes
+
+$$C = S_0 N(d_1) - K e^{-rT} N(d_2)$$
+
+$$d_1 = \frac{\ln(S_0/K) + (r + \sigma^2/2)T}{\sigma\sqrt{T}}, \quad d_2 = d_1 - \sigma\sqrt{T}$$
+
+```{python}
+#| label: bsm
+import numpy as np
+from scipy.stats import norm
+
+def bs_call(S, K, T, r, sigma):
+    """Precio de una Call Europea (Black-Scholes)."""
+    d1 = (np.log(S / K) + (r + 0.5 * sigma**2) * T) / (sigma * np.sqrt(T))
+    d2 = d1 - sigma * np.sqrt(T)
+    return S * norm.cdf(d1) - K * np.exp(-r * T) * norm.cdf(d2)
+
+def bs_put(S, K, T, r, sigma):
+    """Precio de una Put Europea (Black-Scholes)."""
+    d1 = (np.log(S / K) + (r + 0.5 * sigma**2) * T) / (sigma * np.sqrt(T))
+    d2 = d1 - sigma * np.sqrt(T)
+    return K * np.exp(-r * T) * norm.cdf(-d2) - S * norm.cdf(-d1)
+
+# Ejemplo
+S, K, T, r, sigma = 100, 100, 0.5, 0.05, 0.25
+
+precio_call = bs_call(S, K, T, r, sigma)
+precio_put = bs_put(S, K, T, r, sigma)
+
+print(f"Call: ${precio_call:.4f}")
+print(f"Put:  ${precio_put:.4f}")
+print(f"Paridad Put-Call: C - P = {precio_call - precio_put:.4f} vs S - Ke^(-rT) = {S - K*np.exp(-r*T):.4f}")
+```
+
+---
+
+# Volatilidad Implícita: Newton-Raphson
+
+Si conocemos $C_{mkt}$, despejamos $\sigma$ iterativamente:
+
+$$\sigma_{n+1} = \sigma_n - \frac{f(\sigma_n)}{f'(\sigma_n)}$$
+
+donde $f(\sigma) = C_{BSM}(\sigma) - C_{mkt}$ y $f'(\sigma) = \text{Vega}$.
+
+```{python}
+#| label: vol-implicita
+def vega(S, K, T, r, sigma):
+    """Vega: sensibilidad del precio a σ."""
+    d1 = (np.log(S / K) + (r + 0.5 * sigma**2) * T) / (sigma * np.sqrt(T))
+    return S * np.sqrt(T) * norm.pdf(d1)
+
+def implied_vol(market_price, S, K, T, r, tol=1e-6, max_iter=100):
+    """Calcula la volatilidad implícita por Newton-Raphson."""
+    sigma = 0.3  # Guess inicial
+    
+    for i in range(max_iter):
+        precio_bsm = bs_call(S, K, T, r, sigma)
+        v = vega(S, K, T, r, sigma)
+        
+        if v < 1e-12:
+            break
+        
+        diff = precio_bsm - market_price
+        sigma -= diff / v
+        
+        if abs(diff) < tol:
+            return sigma
+    
+    raise RuntimeError("No converge")
+
+# Test: calcular precio con σ=30%, luego recuperar σ
+precio_mercado = bs_call(100, 100, 0.5, 0.05, 0.30)
+vol_recuperada = implied_vol(precio_mercado, 100, 100, 0.5, 0.05)
+print(f"Vol original: 30.00% → Vol recuperada: {vol_recuperada:.2%}")
+```
+
+---
+
+# Sonrisa de Volatilidad (Smile)
+
+```{python}
+#| label: smile
+import matplotlib.pyplot as plt
+
+# Simular precios de mercado con vol que varía por strike
+strikes = np.arange(80, 121, 2)
+S, T, r = 100, 0.5, 0.05
+
+# Vol "real" del mercado: forma de sonrisa
+vols_reales = 0.20 + 0.001 * (strikes - 100)**2
+
+# Precios de mercado observados
+precios_mkt = [bs_call(S, K, T, r, v) for K, v in zip(strikes, vols_reales)]
+
+# Calcular vol implícita de cada precio
+vols_implicitas = [implied_vol(p, S, K, T, r) for p, K in zip(precios_mkt, strikes)]
+
+# Gráfico
+fig, ax = plt.subplots(figsize=(10, 5))
+ax.plot(strikes, [v * 100 for v in vols_implicitas], "o-", color="steelblue", label="Vol Implícita")
+ax.axhline(20, color="red", linestyle="--", alpha=0.5, label="BSM asume σ constante")
+ax.set_xlabel("Strike (K)")
+ax.set_ylabel("Volatilidad Implícita (%)")
+ax.set_title("Sonrisa de Volatilidad (Volatility Smile)")
+ax.legend()
+ax.grid(True, alpha=0.3)
+plt.tight_layout()
+plt.show()
+```
+
+::: {.callout-important}
+Black-Scholes asume $\sigma$ constante. El mercado **no**: la sonrisa de volatilidad evidencia que el mercado premia el riesgo de colas.
+:::
+
+---
+
+# Las Griegas (Diferenciación Finita)
+
+```{python}
+#| label: griegas
+def griegas_finitas(S, K, T, r, sigma, dS=0.01, dsigma=0.001, dT=1/365):
+    """Calcula griegas por diferencias finitas."""
+    P = bs_call(S, K, T, r, sigma)
+    
+    delta = (bs_call(S + dS, K, T, r, sigma) - bs_call(S - dS, K, T, r, sigma)) / (2 * dS)
+    gamma = (bs_call(S + dS, K, T, r, sigma) - 2 * P + bs_call(S - dS, K, T, r, sigma)) / (dS ** 2)
+    vega_val = (bs_call(S, K, T, r, sigma + dsigma) - bs_call(S, K, T, r, sigma - dsigma)) / (2 * dsigma)
+    theta = (bs_call(S, K, T - dT, r, sigma) - P) / dT
+    
+    return {"Delta": delta, "Gamma": gamma, "Vega": vega_val, "Theta": theta}
+
+greeks = griegas_finitas(100, 100, 0.5, 0.05, 0.25)
+print("Griegas (diferencias finitas):")
+for nombre, valor in greeks.items():
+    print(f"  {nombre:>6}: {valor:>+.6f}")
+```
+
+---
+
+# Ejercicios Propuestos
+
+::: {.callout-important title="Ejercicios"}
+1. **Superficie de volatilidad**: Graficar la vol implícita como función de Strike y Maturity (3D).
+2. **Comparar métodos**: Comparar Newton-Raphson con `scipy.optimize.brentq` para calcular vol implícita.
+3. **Put implita**: Implementar `implied_vol` para puts.
+4. **Griegas analíticas vs. finitas**: Calcular Delta y Vega analíticamente y comparar con las aproximaciones finitas.
+:::
+
+---
+
+# Referencias
+
+* Hull, J. (2018). *Options, Futures, and Other Derivatives*. Pearson.
+* Wilmott, P. (2006). *Paul Wilmott on Quantitative Finance*. Wiley.
