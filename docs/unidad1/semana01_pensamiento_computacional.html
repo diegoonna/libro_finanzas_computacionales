@@ -78,6 +78,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
 <link href="../site_libs/bootstrap/bootstrap-45eb837c8527f1bf59b19d4e11f24f85.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<meta name="shinylive:serviceworker_dir" content="..">
+<script src="../site_libs/quarto-contrib/shinylive-0.10.7/shinylive/load-shinylive-sw.js" type="module"></script>
+<script src="../site_libs/quarto-contrib/shinylive-0.10.7/shinylive/run-python-blocks.js" type="module"></script>
+<link href="../site_libs/quarto-contrib/shinylive-0.10.7/shinylive/shinylive.css" rel="stylesheet">
+<link href="../site_libs/quarto-contrib/shinylive-quarto-css/shinylive-quarto.css" rel="stylesheet">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -313,7 +318,12 @@ window.Quarto = {
 <h3 data-number="4.1.1" class="anchored" data-anchor-id="enteros-int"><span class="header-section-number">4.1.1</span> Enteros (<code>int</code>)</h3>
 <p>Representan números del conjunto <span class="math inline">\(\mathbb{Z}\)</span>. En Python 3, tienen precisión arbitraria.</p>
 <p><strong>Aplicación Financiera:</strong> Cantidades discretas como número de acciones, días al vencimiento, iteraciones de simulación.</p>
-<pre class="{pyodide-python}"><code>#| label: tipos-int
+<pre class="shinylive-python" data-engine="python"><code>#| '!! shinylive warning !!': |
+#|   shinylive does not work in self-contained HTML documents.
+#|   Please set `embed-resources: false` in your metadata.
+#| standalone: true
+
+#| label: tipos-int
 # TODO: Definir variables enteras para un contexto financiero
 # Ejemplo: cantidad de bonos, días al vencimiento, lotes de acciones
 dias_vencimiento = 365
@@ -338,7 +348,12 @@ print(f"Días al vencimiento: {dias_vencimiento} | Tipo: {type(dias_vencimiento)
 <p>Los números decimales como 0.1 no tienen representación binaria exacta. Para sistemas contables, usar la librería <code>decimal</code>.</p>
 </div>
 </div>
-<pre class="{pyodide-python}"><code>#| label: tipos-float
+<pre class="shinylive-python" data-engine="python"><code>#| '!! shinylive warning !!': |
+#|   shinylive does not work in self-contained HTML documents.
+#|   Please set `embed-resources: false` in your metadata.
+#| standalone: true
+
+#| label: tipos-float
 # Demostración del error de punto flotante
 precio_a = 0.1
 precio_b = 0.2
@@ -350,7 +365,12 @@ print(f"¿Es exactamente 0.3? {resultado == 0.3}")</code></pre>
 <section id="booleanos-bool" class="level3" data-number="4.1.3">
 <h3 data-number="4.1.3" class="anchored" data-anchor-id="booleanos-bool"><span class="header-section-number">4.1.3</span> Booleanos (<code>bool</code>)</h3>
 <p>Valores lógicos <code>True</code> y <code>False</code>. Son la base de los algoritmos de decisión.</p>
-<pre class="{pyodide-python}"><code>#| label: tipos-bool
+<pre class="shinylive-python" data-engine="python"><code>#| '!! shinylive warning !!': |
+#|   shinylive does not work in self-contained HTML documents.
+#|   Please set `embed-resources: false` in your metadata.
+#| standalone: true
+
+#| label: tipos-bool
 mercado_abierto = True
 volatilidad_alta = False
 
@@ -361,7 +381,12 @@ print(f"Señales de compra activas: {señales_activas}")</code></pre>
 <section id="cadenas-de-texto-str" class="level3" data-number="4.1.4">
 <h3 data-number="4.1.4" class="anchored" data-anchor-id="cadenas-de-texto-str"><span class="header-section-number">4.1.4</span> Cadenas de Texto (<code>str</code>)</h3>
 <p>Secuencias inmutables de caracteres. Esenciales para tickers, códigos ISIN y limpieza de datos.</p>
-<pre class="{pyodide-python}"><code>#| label: tipos-str
+<pre class="shinylive-python" data-engine="python"><code>#| '!! shinylive warning !!': |
+#|   shinylive does not work in self-contained HTML documents.
+#|   Please set `embed-resources: false` in your metadata.
+#| standalone: true
+
+#| label: tipos-str
 ticker = "GGAL"
 mercado = "BYMA"
 instrumento = f"{ticker}.{mercado}"
@@ -373,7 +398,12 @@ print(f"Instrumento: {instrumento}")</code></pre>
 <section id="conversión-de-tipos-casting" class="level1" data-number="5">
 <h1 data-number="5"><span class="header-section-number">5</span> Conversión de Tipos (Casting)</h1>
 <p>Los datos del mundo real frecuentemente llegan como texto (desde CSVs o APIs). Es necesario convertirlos explícitamente.</p>
-<pre class="{pyodide-python}"><code>#| label: casting
+<pre class="shinylive-python" data-engine="python"><code>#| '!! shinylive warning !!': |
+#|   shinylive does not work in self-contained HTML documents.
+#|   Please set `embed-resources: false` in your metadata.
+#| standalone: true
+
+#| label: casting
 # Dato que llega como string desde una fuente externa
 volumen_str = "5000"
 precio_cierre = 150.50
@@ -389,7 +419,12 @@ print(f"Monto operado: ${monto_operado:,.2f}")</code></pre>
 <h1 data-number="6"><span class="header-section-number">6</span> Operadores</h1>
 <section id="operadores-aritméticos" class="level2" data-number="6.1">
 <h2 data-number="6.1" class="anchored" data-anchor-id="operadores-aritméticos"><span class="header-section-number">6.1</span> Operadores Aritméticos</h2>
-<pre class="{pyodide-python}"><code>#| label: operadores-aritmeticos
+<pre class="shinylive-python" data-engine="python"><code>#| '!! shinylive warning !!': |
+#|   shinylive does not work in self-contained HTML documents.
+#|   Please set `embed-resources: false` in your metadata.
+#| standalone: true
+
+#| label: operadores-aritmeticos
 capital = 1_000_000
 tasa = 0.08
 
@@ -426,7 +461,12 @@ print(f"Valor futuro a {periodos} años: ${valor_futuro:,.2f}")</code></pre>
 </tr>
 </tbody>
 </table>
-<pre class="{pyodide-python}"><code>#| label: operadores-logicos
+<pre class="shinylive-python" data-engine="python"><code>#| '!! shinylive warning !!': |
+#|   shinylive does not work in self-contained HTML documents.
+#|   Please set `embed-resources: false` in your metadata.
+#| standalone: true
+
+#| label: operadores-logicos
 precio = 150
 media_movil = 140
 rsi = 65
@@ -440,7 +480,12 @@ print(f"¿Señal de compra? {señal_compra}")</code></pre>
 <h1 data-number="7"><span class="header-section-number">7</span> Entrada y Salida de Datos</h1>
 <section id="f-strings-formato-moderno" class="level2" data-number="7.1">
 <h2 data-number="7.1" class="anchored" data-anchor-id="f-strings-formato-moderno"><span class="header-section-number">7.1</span> F-Strings (Formato Moderno)</h2>
-<pre class="{pyodide-python}"><code>#| label: f-strings
+<pre class="shinylive-python" data-engine="python"><code>#| '!! shinylive warning !!': |
+#|   shinylive does not work in self-contained HTML documents.
+#|   Please set `embed-resources: false` in your metadata.
+#| standalone: true
+
+#| label: f-strings
 tasa = 0.05238
 capital = 1_000_000
 interes = capital * tasa
@@ -472,7 +517,12 @@ print(f"Interés generado: ${interes:,.2f}")</code></pre>
 <p>Los algoritmos financieros requieren tomar decisiones basadas en condiciones de mercado.</p>
 <section id="caso-práctico-algoritmo-de-decisión-de-inversión" class="level2" data-number="8.1">
 <h2 data-number="8.1" class="anchored" data-anchor-id="caso-práctico-algoritmo-de-decisión-de-inversión"><span class="header-section-number">8.1</span> Caso Práctico: Algoritmo de Decisión de Inversión</h2>
-<pre class="{pyodide-python}"><code>#| label: decision-inversion
+<pre class="shinylive-python" data-engine="python"><code>#| '!! shinylive warning !!': |
+#|   shinylive does not work in self-contained HTML documents.
+#|   Please set `embed-resources: false` in your metadata.
+#| standalone: true
+
+#| label: decision-inversion
 # --- Parámetros de dos proyectos ---
 vpn_proyecto_a = 150_000
 vpn_proyecto_b = 120_000
@@ -508,7 +558,12 @@ else:
 <li><span class="math inline">\(r\)</span>: Tasa de interés por período</li>
 <li><span class="math inline">\(n\)</span>: Número de períodos</li>
 </ul>
-<pre class="{pyodide-python}"><code>#| label: interes-compuesto
+<pre class="shinylive-python" data-engine="python"><code>#| '!! shinylive warning !!': |
+#|   shinylive does not work in self-contained HTML documents.
+#|   Please set `embed-resources: false` in your metadata.
+#| standalone: true
+
+#| label: interes-compuesto
 # TODO: Implementar cálculo de interés compuesto
 capital_inicial = 100_000
 tasa_anual = 0.10
@@ -525,7 +580,12 @@ print(f"Interés ganado:   ${interes_ganado:,.2f}")</code></pre>
 </section>
 <section id="conversión-de-tasas" class="level2" data-number="9.2">
 <h2 data-number="9.2" class="anchored" data-anchor-id="conversión-de-tasas"><span class="header-section-number">9.2</span> Conversión de Tasas</h2>
-<pre class="{pyodide-python}"><code>#| label: conversion-tasas
+<pre class="shinylive-python" data-engine="python"><code>#| '!! shinylive warning !!': |
+#|   shinylive does not work in self-contained HTML documents.
+#|   Please set `embed-resources: false` in your metadata.
+#| standalone: true
+
+#| label: conversion-tasas
 # TODO: Implementar conversiones entre tasas
 # TNA → TEA, TEA → TNA, tasas continuas
 
@@ -544,7 +604,12 @@ print(f"TEA: {tea:.2%} → Tasa continua: {tasa_continua:.4f}")</code></pre>
 <section id="valor-presente" class="level2" data-number="9.3">
 <h2 data-number="9.3" class="anchored" data-anchor-id="valor-presente"><span class="header-section-number">9.3</span> Valor Presente</h2>
 <p><span class="math display">\[VP = \frac{VF}{(1 + r)^n}\]</span></p>
-<pre class="{pyodide-python}"><code>#| label: valor-presente
+<pre class="shinylive-python" data-engine="python"><code>#| '!! shinylive warning !!': |
+#|   shinylive does not work in self-contained HTML documents.
+#|   Please set `embed-resources: false` in your metadata.
+#| standalone: true
+
+#| label: valor-presente
 # TODO: Calcular el valor presente de un flujo futuro
 flujo_futuro = 1_000_000
 tasa = 0.08
@@ -1087,271 +1152,295 @@ print(f"equivale a ${valor_presente:,.2f} hoy (al {tasa:.0%})")</code></pre>
 <span id="cb14-28"><a href="#cb14-28" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb14-29"><a href="#cb14-29" aria-hidden="true" tabindex="-1"></a>**Aplicación Financiera:** Cantidades discretas como número de acciones, días al vencimiento, iteraciones de simulación.</span>
 <span id="cb14-30"><a href="#cb14-30" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-31"><a href="#cb14-31" aria-hidden="true" tabindex="-1"></a><span class="in">```{pyodide-python}</span></span>
-<span id="cb14-32"><a href="#cb14-32" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: tipos-int</span></span>
-<span id="cb14-33"><a href="#cb14-33" aria-hidden="true" tabindex="-1"></a><span class="co"># </span><span class="al">TODO</span><span class="co">: Definir variables enteras para un contexto financiero</span></span>
-<span id="cb14-34"><a href="#cb14-34" aria-hidden="true" tabindex="-1"></a><span class="co"># Ejemplo: cantidad de bonos, días al vencimiento, lotes de acciones</span></span>
-<span id="cb14-35"><a href="#cb14-35" aria-hidden="true" tabindex="-1"></a>dias_vencimiento <span class="op">=</span> <span class="dv">365</span></span>
-<span id="cb14-36"><a href="#cb14-36" aria-hidden="true" tabindex="-1"></a>cantidad_bonos <span class="op">=</span> <span class="dv">100</span></span>
-<span id="cb14-37"><a href="#cb14-37" aria-hidden="true" tabindex="-1"></a>lotes <span class="op">=</span> <span class="dv">10</span></span>
-<span id="cb14-38"><a href="#cb14-38" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-39"><a href="#cb14-39" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Días al vencimiento: </span><span class="sc">{</span>dias_vencimiento<span class="sc">}</span><span class="ss"> | Tipo: </span><span class="sc">{</span><span class="bu">type</span>(dias_vencimiento)<span class="sc">}</span><span class="ss">"</span>)</span>
-<span id="cb14-40"><a href="#cb14-40" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb14-41"><a href="#cb14-41" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-42"><a href="#cb14-42" aria-hidden="true" tabindex="-1"></a><span class="fu">### Punto Flotante (`float`)</span></span>
+<span id="cb14-31"><a href="#cb14-31" aria-hidden="true" tabindex="-1"></a><span class="in">```{shinylive-python}</span></span>
+<span id="cb14-32"><a href="#cb14-32" aria-hidden="true" tabindex="-1"></a><span class="co">#| standalone: true</span></span>
+<span id="cb14-33"><a href="#cb14-33" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-34"><a href="#cb14-34" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: tipos-int</span></span>
+<span id="cb14-35"><a href="#cb14-35" aria-hidden="true" tabindex="-1"></a><span class="co"># </span><span class="al">TODO</span><span class="co">: Definir variables enteras para un contexto financiero</span></span>
+<span id="cb14-36"><a href="#cb14-36" aria-hidden="true" tabindex="-1"></a><span class="co"># Ejemplo: cantidad de bonos, días al vencimiento, lotes de acciones</span></span>
+<span id="cb14-37"><a href="#cb14-37" aria-hidden="true" tabindex="-1"></a><span class="ex">dias_vencimiento</span> = 365</span>
+<span id="cb14-38"><a href="#cb14-38" aria-hidden="true" tabindex="-1"></a><span class="ex">cantidad_bonos</span> = 100</span>
+<span id="cb14-39"><a href="#cb14-39" aria-hidden="true" tabindex="-1"></a><span class="ex">lotes</span> = 10</span>
+<span id="cb14-40"><a href="#cb14-40" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-41"><a href="#cb14-41" aria-hidden="true" tabindex="-1"></a><span class="ex">print</span><span class="er">(</span><span class="ex">f</span><span class="st">"Días al vencimiento: {dias_vencimiento} | Tipo: {type(dias_vencimiento)}"</span><span class="kw">)</span></span>
+<span id="cb14-42"><a href="#cb14-42" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb14-43"><a href="#cb14-43" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-44"><a href="#cb14-44" aria-hidden="true" tabindex="-1"></a>Representan números reales mediante el estándar **IEEE 754**. Es el tipo estándar para precios, tasas y rendimientos.</span>
+<span id="cb14-44"><a href="#cb14-44" aria-hidden="true" tabindex="-1"></a><span class="fu">### Punto Flotante (`float`)</span></span>
 <span id="cb14-45"><a href="#cb14-45" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-46"><a href="#cb14-46" aria-hidden="true" tabindex="-1"></a>::: {.callout-warning title="Error de Punto Flotante"}</span>
-<span id="cb14-47"><a href="#cb14-47" aria-hidden="true" tabindex="-1"></a>Los números decimales como 0.1 no tienen representación binaria exacta. Para sistemas contables, usar la librería <span class="in">`decimal`</span>.</span>
-<span id="cb14-48"><a href="#cb14-48" aria-hidden="true" tabindex="-1"></a>:::</span>
-<span id="cb14-49"><a href="#cb14-49" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-50"><a href="#cb14-50" aria-hidden="true" tabindex="-1"></a><span class="in">```{pyodide-python}</span></span>
-<span id="cb14-51"><a href="#cb14-51" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: tipos-float</span></span>
-<span id="cb14-52"><a href="#cb14-52" aria-hidden="true" tabindex="-1"></a><span class="co"># Demostración del error de punto flotante</span></span>
-<span id="cb14-53"><a href="#cb14-53" aria-hidden="true" tabindex="-1"></a>precio_a <span class="op">=</span> <span class="fl">0.1</span></span>
-<span id="cb14-54"><a href="#cb14-54" aria-hidden="true" tabindex="-1"></a>precio_b <span class="op">=</span> <span class="fl">0.2</span></span>
-<span id="cb14-55"><a href="#cb14-55" aria-hidden="true" tabindex="-1"></a>resultado <span class="op">=</span> precio_a <span class="op">+</span> precio_b</span>
-<span id="cb14-56"><a href="#cb14-56" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-57"><a href="#cb14-57" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"0.1 + 0.2 = </span><span class="sc">{</span>resultado<span class="sc">}</span><span class="ss">"</span>)</span>
-<span id="cb14-58"><a href="#cb14-58" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"¿Es exactamente 0.3? </span><span class="sc">{</span>resultado <span class="op">==</span> <span class="fl">0.3</span><span class="sc">}</span><span class="ss">"</span>)</span>
-<span id="cb14-59"><a href="#cb14-59" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb14-46"><a href="#cb14-46" aria-hidden="true" tabindex="-1"></a>Representan números reales mediante el estándar **IEEE 754**. Es el tipo estándar para precios, tasas y rendimientos.</span>
+<span id="cb14-47"><a href="#cb14-47" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-48"><a href="#cb14-48" aria-hidden="true" tabindex="-1"></a>::: {.callout-warning title="Error de Punto Flotante"}</span>
+<span id="cb14-49"><a href="#cb14-49" aria-hidden="true" tabindex="-1"></a>Los números decimales como 0.1 no tienen representación binaria exacta. Para sistemas contables, usar la librería <span class="in">`decimal`</span>.</span>
+<span id="cb14-50"><a href="#cb14-50" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb14-51"><a href="#cb14-51" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-52"><a href="#cb14-52" aria-hidden="true" tabindex="-1"></a><span class="in">```{shinylive-python}</span></span>
+<span id="cb14-53"><a href="#cb14-53" aria-hidden="true" tabindex="-1"></a><span class="co">#| standalone: true</span></span>
+<span id="cb14-54"><a href="#cb14-54" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-55"><a href="#cb14-55" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: tipos-float</span></span>
+<span id="cb14-56"><a href="#cb14-56" aria-hidden="true" tabindex="-1"></a><span class="co"># Demostración del error de punto flotante</span></span>
+<span id="cb14-57"><a href="#cb14-57" aria-hidden="true" tabindex="-1"></a><span class="ex">precio_a</span> = 0.1</span>
+<span id="cb14-58"><a href="#cb14-58" aria-hidden="true" tabindex="-1"></a><span class="ex">precio_b</span> = 0.2</span>
+<span id="cb14-59"><a href="#cb14-59" aria-hidden="true" tabindex="-1"></a><span class="ex">resultado</span> = precio_a + precio_b</span>
 <span id="cb14-60"><a href="#cb14-60" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-61"><a href="#cb14-61" aria-hidden="true" tabindex="-1"></a><span class="fu">### Booleanos (`bool`)</span></span>
-<span id="cb14-62"><a href="#cb14-62" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-63"><a href="#cb14-63" aria-hidden="true" tabindex="-1"></a>Valores lógicos <span class="in">`True`</span> y <span class="in">`False`</span>. Son la base de los algoritmos de decisión.</span>
+<span id="cb14-61"><a href="#cb14-61" aria-hidden="true" tabindex="-1"></a><span class="ex">print</span><span class="er">(</span><span class="ex">f</span><span class="st">"0.1 + 0.2 = {resultado}"</span><span class="kw">)</span></span>
+<span id="cb14-62"><a href="#cb14-62" aria-hidden="true" tabindex="-1"></a><span class="ex">print</span><span class="er">(</span><span class="ex">f</span><span class="st">"¿Es exactamente 0.3? {resultado == 0.3}"</span><span class="kw">)</span></span>
+<span id="cb14-63"><a href="#cb14-63" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb14-64"><a href="#cb14-64" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-65"><a href="#cb14-65" aria-hidden="true" tabindex="-1"></a><span class="in">```{pyodide-python}</span></span>
-<span id="cb14-66"><a href="#cb14-66" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: tipos-bool</span></span>
-<span id="cb14-67"><a href="#cb14-67" aria-hidden="true" tabindex="-1"></a>mercado_abierto <span class="op">=</span> <span class="va">True</span></span>
-<span id="cb14-68"><a href="#cb14-68" aria-hidden="true" tabindex="-1"></a>volatilidad_alta <span class="op">=</span> <span class="va">False</span></span>
-<span id="cb14-69"><a href="#cb14-69" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-70"><a href="#cb14-70" aria-hidden="true" tabindex="-1"></a><span class="co"># True se comporta como 1, False como 0</span></span>
-<span id="cb14-71"><a href="#cb14-71" aria-hidden="true" tabindex="-1"></a>señales_activas <span class="op">=</span> <span class="va">True</span> <span class="op">+</span> <span class="va">True</span> <span class="op">+</span> <span class="va">False</span></span>
-<span id="cb14-72"><a href="#cb14-72" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Señales de compra activas: </span><span class="sc">{</span>se<span class="sc">ñ</span>ales_activas<span class="sc">}</span><span class="ss">"</span>)</span>
-<span id="cb14-73"><a href="#cb14-73" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb14-74"><a href="#cb14-74" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-75"><a href="#cb14-75" aria-hidden="true" tabindex="-1"></a><span class="fu">### Cadenas de Texto (`str`)</span></span>
-<span id="cb14-76"><a href="#cb14-76" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-77"><a href="#cb14-77" aria-hidden="true" tabindex="-1"></a>Secuencias inmutables de caracteres. Esenciales para tickers, códigos ISIN y limpieza de datos.</span>
-<span id="cb14-78"><a href="#cb14-78" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-79"><a href="#cb14-79" aria-hidden="true" tabindex="-1"></a><span class="in">```{pyodide-python}</span></span>
-<span id="cb14-80"><a href="#cb14-80" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: tipos-str</span></span>
-<span id="cb14-81"><a href="#cb14-81" aria-hidden="true" tabindex="-1"></a>ticker <span class="op">=</span> <span class="st">"GGAL"</span></span>
-<span id="cb14-82"><a href="#cb14-82" aria-hidden="true" tabindex="-1"></a>mercado <span class="op">=</span> <span class="st">"BYMA"</span></span>
-<span id="cb14-83"><a href="#cb14-83" aria-hidden="true" tabindex="-1"></a>instrumento <span class="op">=</span> <span class="ss">f"</span><span class="sc">{</span>ticker<span class="sc">}</span><span class="ss">.</span><span class="sc">{</span>mercado<span class="sc">}</span><span class="ss">"</span></span>
-<span id="cb14-84"><a href="#cb14-84" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Instrumento: </span><span class="sc">{</span>instrumento<span class="sc">}</span><span class="ss">"</span>)</span>
-<span id="cb14-85"><a href="#cb14-85" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb14-86"><a href="#cb14-86" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-87"><a href="#cb14-87" aria-hidden="true" tabindex="-1"></a>---</span>
-<span id="cb14-88"><a href="#cb14-88" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-89"><a href="#cb14-89" aria-hidden="true" tabindex="-1"></a><span class="fu"># Conversión de Tipos (Casting)</span></span>
-<span id="cb14-90"><a href="#cb14-90" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-91"><a href="#cb14-91" aria-hidden="true" tabindex="-1"></a>Los datos del mundo real frecuentemente llegan como texto (desde CSVs o APIs). Es necesario convertirlos explícitamente.</span>
-<span id="cb14-92"><a href="#cb14-92" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-93"><a href="#cb14-93" aria-hidden="true" tabindex="-1"></a><span class="in">```{pyodide-python}</span></span>
-<span id="cb14-94"><a href="#cb14-94" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: casting</span></span>
-<span id="cb14-95"><a href="#cb14-95" aria-hidden="true" tabindex="-1"></a><span class="co"># Dato que llega como string desde una fuente externa</span></span>
-<span id="cb14-96"><a href="#cb14-96" aria-hidden="true" tabindex="-1"></a>volumen_str <span class="op">=</span> <span class="st">"5000"</span></span>
-<span id="cb14-97"><a href="#cb14-97" aria-hidden="true" tabindex="-1"></a>precio_cierre <span class="op">=</span> <span class="fl">150.50</span></span>
+<span id="cb14-65"><a href="#cb14-65" aria-hidden="true" tabindex="-1"></a><span class="fu">### Booleanos (`bool`)</span></span>
+<span id="cb14-66"><a href="#cb14-66" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-67"><a href="#cb14-67" aria-hidden="true" tabindex="-1"></a>Valores lógicos <span class="in">`True`</span> y <span class="in">`False`</span>. Son la base de los algoritmos de decisión.</span>
+<span id="cb14-68"><a href="#cb14-68" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-69"><a href="#cb14-69" aria-hidden="true" tabindex="-1"></a><span class="in">```{shinylive-python}</span></span>
+<span id="cb14-70"><a href="#cb14-70" aria-hidden="true" tabindex="-1"></a><span class="co">#| standalone: true</span></span>
+<span id="cb14-71"><a href="#cb14-71" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-72"><a href="#cb14-72" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: tipos-bool</span></span>
+<span id="cb14-73"><a href="#cb14-73" aria-hidden="true" tabindex="-1"></a><span class="ex">mercado_abierto</span> = True</span>
+<span id="cb14-74"><a href="#cb14-74" aria-hidden="true" tabindex="-1"></a><span class="ex">volatilidad_alta</span> = False</span>
+<span id="cb14-75"><a href="#cb14-75" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-76"><a href="#cb14-76" aria-hidden="true" tabindex="-1"></a><span class="co"># True se comporta como 1, False como 0</span></span>
+<span id="cb14-77"><a href="#cb14-77" aria-hidden="true" tabindex="-1"></a><span class="ex">señales_activas</span> = True + True + False</span>
+<span id="cb14-78"><a href="#cb14-78" aria-hidden="true" tabindex="-1"></a><span class="ex">print</span><span class="er">(</span><span class="ex">f</span><span class="st">"Señales de compra activas: {señales_activas}"</span><span class="kw">)</span></span>
+<span id="cb14-79"><a href="#cb14-79" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb14-80"><a href="#cb14-80" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-81"><a href="#cb14-81" aria-hidden="true" tabindex="-1"></a><span class="fu">### Cadenas de Texto (`str`)</span></span>
+<span id="cb14-82"><a href="#cb14-82" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-83"><a href="#cb14-83" aria-hidden="true" tabindex="-1"></a>Secuencias inmutables de caracteres. Esenciales para tickers, códigos ISIN y limpieza de datos.</span>
+<span id="cb14-84"><a href="#cb14-84" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-85"><a href="#cb14-85" aria-hidden="true" tabindex="-1"></a><span class="in">```{shinylive-python}</span></span>
+<span id="cb14-86"><a href="#cb14-86" aria-hidden="true" tabindex="-1"></a><span class="co">#| standalone: true</span></span>
+<span id="cb14-87"><a href="#cb14-87" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-88"><a href="#cb14-88" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: tipos-str</span></span>
+<span id="cb14-89"><a href="#cb14-89" aria-hidden="true" tabindex="-1"></a><span class="ex">ticker</span> = <span class="st">"GGAL"</span></span>
+<span id="cb14-90"><a href="#cb14-90" aria-hidden="true" tabindex="-1"></a><span class="ex">mercado</span> = <span class="st">"BYMA"</span></span>
+<span id="cb14-91"><a href="#cb14-91" aria-hidden="true" tabindex="-1"></a><span class="ex">instrumento</span> = f<span class="st">"{ticker}.{mercado}"</span></span>
+<span id="cb14-92"><a href="#cb14-92" aria-hidden="true" tabindex="-1"></a><span class="ex">print</span><span class="er">(</span><span class="ex">f</span><span class="st">"Instrumento: {instrumento}"</span><span class="kw">)</span></span>
+<span id="cb14-93"><a href="#cb14-93" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb14-94"><a href="#cb14-94" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-95"><a href="#cb14-95" aria-hidden="true" tabindex="-1"></a>---</span>
+<span id="cb14-96"><a href="#cb14-96" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-97"><a href="#cb14-97" aria-hidden="true" tabindex="-1"></a><span class="fu"># Conversión de Tipos (Casting)</span></span>
 <span id="cb14-98"><a href="#cb14-98" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-99"><a href="#cb14-99" aria-hidden="true" tabindex="-1"></a><span class="co"># Conversión y operación</span></span>
-<span id="cb14-100"><a href="#cb14-100" aria-hidden="true" tabindex="-1"></a>volumen <span class="op">=</span> <span class="bu">int</span>(volumen_str)</span>
-<span id="cb14-101"><a href="#cb14-101" aria-hidden="true" tabindex="-1"></a>monto_operado <span class="op">=</span> volumen <span class="op">*</span> precio_cierre</span>
-<span id="cb14-102"><a href="#cb14-102" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-103"><a href="#cb14-103" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Monto operado: $</span><span class="sc">{</span>monto_operado<span class="sc">:,.2f}</span><span class="ss">"</span>)</span>
-<span id="cb14-104"><a href="#cb14-104" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb14-105"><a href="#cb14-105" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-106"><a href="#cb14-106" aria-hidden="true" tabindex="-1"></a>---</span>
-<span id="cb14-107"><a href="#cb14-107" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-108"><a href="#cb14-108" aria-hidden="true" tabindex="-1"></a><span class="fu"># Operadores</span></span>
-<span id="cb14-109"><a href="#cb14-109" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-110"><a href="#cb14-110" aria-hidden="true" tabindex="-1"></a><span class="fu">## Operadores Aritméticos</span></span>
-<span id="cb14-111"><a href="#cb14-111" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-112"><a href="#cb14-112" aria-hidden="true" tabindex="-1"></a><span class="in">```{pyodide-python}</span></span>
-<span id="cb14-113"><a href="#cb14-113" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: operadores-aritmeticos</span></span>
-<span id="cb14-114"><a href="#cb14-114" aria-hidden="true" tabindex="-1"></a>capital <span class="op">=</span> <span class="dv">1_000_000</span></span>
-<span id="cb14-115"><a href="#cb14-115" aria-hidden="true" tabindex="-1"></a>tasa <span class="op">=</span> <span class="fl">0.08</span></span>
-<span id="cb14-116"><a href="#cb14-116" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-117"><a href="#cb14-117" aria-hidden="true" tabindex="-1"></a><span class="co"># Operadores básicos</span></span>
-<span id="cb14-118"><a href="#cb14-118" aria-hidden="true" tabindex="-1"></a>interes <span class="op">=</span> capital <span class="op">*</span> tasa</span>
-<span id="cb14-119"><a href="#cb14-119" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Interés simple: $</span><span class="sc">{</span>interes<span class="sc">:,.2f}</span><span class="ss">"</span>)</span>
-<span id="cb14-120"><a href="#cb14-120" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-121"><a href="#cb14-121" aria-hidden="true" tabindex="-1"></a><span class="co"># Potencia (**) — útil para interés compuesto</span></span>
-<span id="cb14-122"><a href="#cb14-122" aria-hidden="true" tabindex="-1"></a>periodos <span class="op">=</span> <span class="dv">5</span></span>
-<span id="cb14-123"><a href="#cb14-123" aria-hidden="true" tabindex="-1"></a>valor_futuro <span class="op">=</span> capital <span class="op">*</span> (<span class="dv">1</span> <span class="op">+</span> tasa) <span class="op">**</span> periodos</span>
-<span id="cb14-124"><a href="#cb14-124" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Valor futuro a </span><span class="sc">{</span>periodos<span class="sc">}</span><span class="ss"> años: $</span><span class="sc">{</span>valor_futuro<span class="sc">:,.2f}</span><span class="ss">"</span>)</span>
-<span id="cb14-125"><a href="#cb14-125" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb14-126"><a href="#cb14-126" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-127"><a href="#cb14-127" aria-hidden="true" tabindex="-1"></a><span class="fu">## Operadores de Comparación y Lógicos</span></span>
+<span id="cb14-99"><a href="#cb14-99" aria-hidden="true" tabindex="-1"></a>Los datos del mundo real frecuentemente llegan como texto (desde CSVs o APIs). Es necesario convertirlos explícitamente.</span>
+<span id="cb14-100"><a href="#cb14-100" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-101"><a href="#cb14-101" aria-hidden="true" tabindex="-1"></a><span class="in">```{shinylive-python}</span></span>
+<span id="cb14-102"><a href="#cb14-102" aria-hidden="true" tabindex="-1"></a><span class="co">#| standalone: true</span></span>
+<span id="cb14-103"><a href="#cb14-103" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-104"><a href="#cb14-104" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: casting</span></span>
+<span id="cb14-105"><a href="#cb14-105" aria-hidden="true" tabindex="-1"></a><span class="co"># Dato que llega como string desde una fuente externa</span></span>
+<span id="cb14-106"><a href="#cb14-106" aria-hidden="true" tabindex="-1"></a><span class="ex">volumen_str</span> = <span class="st">"5000"</span></span>
+<span id="cb14-107"><a href="#cb14-107" aria-hidden="true" tabindex="-1"></a><span class="ex">precio_cierre</span> = 150.50</span>
+<span id="cb14-108"><a href="#cb14-108" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-109"><a href="#cb14-109" aria-hidden="true" tabindex="-1"></a><span class="co"># Conversión y operación</span></span>
+<span id="cb14-110"><a href="#cb14-110" aria-hidden="true" tabindex="-1"></a><span class="ex">volumen</span> = int<span class="er">(</span><span class="ex">volumen_str</span><span class="kw">)</span></span>
+<span id="cb14-111"><a href="#cb14-111" aria-hidden="true" tabindex="-1"></a><span class="ex">monto_operado</span> = volumen <span class="pp">*</span> precio_cierre</span>
+<span id="cb14-112"><a href="#cb14-112" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-113"><a href="#cb14-113" aria-hidden="true" tabindex="-1"></a><span class="ex">print</span><span class="er">(</span><span class="ex">f</span><span class="st">"Monto operado: </span><span class="va">${monto_operado</span><span class="op">:</span>,.<span class="dv">2</span>f<span class="va">}</span><span class="st">"</span><span class="kw">)</span></span>
+<span id="cb14-114"><a href="#cb14-114" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb14-115"><a href="#cb14-115" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-116"><a href="#cb14-116" aria-hidden="true" tabindex="-1"></a>---</span>
+<span id="cb14-117"><a href="#cb14-117" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-118"><a href="#cb14-118" aria-hidden="true" tabindex="-1"></a><span class="fu"># Operadores</span></span>
+<span id="cb14-119"><a href="#cb14-119" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-120"><a href="#cb14-120" aria-hidden="true" tabindex="-1"></a><span class="fu">## Operadores Aritméticos</span></span>
+<span id="cb14-121"><a href="#cb14-121" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-122"><a href="#cb14-122" aria-hidden="true" tabindex="-1"></a><span class="in">```{shinylive-python}</span></span>
+<span id="cb14-123"><a href="#cb14-123" aria-hidden="true" tabindex="-1"></a><span class="co">#| standalone: true</span></span>
+<span id="cb14-124"><a href="#cb14-124" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-125"><a href="#cb14-125" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: operadores-aritmeticos</span></span>
+<span id="cb14-126"><a href="#cb14-126" aria-hidden="true" tabindex="-1"></a><span class="ex">capital</span> = 1_000_000</span>
+<span id="cb14-127"><a href="#cb14-127" aria-hidden="true" tabindex="-1"></a><span class="ex">tasa</span> = 0.08</span>
 <span id="cb14-128"><a href="#cb14-128" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-129"><a href="#cb14-129" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Operador <span class="pp">|</span> Significado <span class="pp">|</span></span>
-<span id="cb14-130"><a href="#cb14-130" aria-hidden="true" tabindex="-1"></a><span class="pp">|----------|-------------|</span></span>
-<span id="cb14-131"><a href="#cb14-131" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> <span class="in">`==`</span>, <span class="in">`!=`</span> <span class="pp">|</span> Igualdad / Desigualdad <span class="pp">|</span></span>
-<span id="cb14-132"><a href="#cb14-132" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> <span class="in">`&gt;`</span>, <span class="in">`&lt;`</span>, <span class="in">`&gt;=`</span>, <span class="in">`&lt;=`</span> <span class="pp">|</span> Comparaciones <span class="pp">|</span></span>
-<span id="cb14-133"><a href="#cb14-133" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> <span class="in">`and`</span>, <span class="in">`or`</span>, <span class="in">`not`</span> <span class="pp">|</span> Lógica booleana <span class="pp">|</span></span>
-<span id="cb14-134"><a href="#cb14-134" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-135"><a href="#cb14-135" aria-hidden="true" tabindex="-1"></a><span class="in">```{pyodide-python}</span></span>
-<span id="cb14-136"><a href="#cb14-136" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: operadores-logicos</span></span>
-<span id="cb14-137"><a href="#cb14-137" aria-hidden="true" tabindex="-1"></a>precio <span class="op">=</span> <span class="dv">150</span></span>
-<span id="cb14-138"><a href="#cb14-138" aria-hidden="true" tabindex="-1"></a>media_movil <span class="op">=</span> <span class="dv">140</span></span>
-<span id="cb14-139"><a href="#cb14-139" aria-hidden="true" tabindex="-1"></a>rsi <span class="op">=</span> <span class="dv">65</span></span>
+<span id="cb14-129"><a href="#cb14-129" aria-hidden="true" tabindex="-1"></a><span class="co"># Operadores básicos</span></span>
+<span id="cb14-130"><a href="#cb14-130" aria-hidden="true" tabindex="-1"></a><span class="ex">interes</span> = capital <span class="pp">*</span> tasa</span>
+<span id="cb14-131"><a href="#cb14-131" aria-hidden="true" tabindex="-1"></a><span class="ex">print</span><span class="er">(</span><span class="ex">f</span><span class="st">"Interés simple: </span><span class="va">${interes</span><span class="op">:</span>,.<span class="dv">2</span>f<span class="va">}</span><span class="st">"</span><span class="kw">)</span></span>
+<span id="cb14-132"><a href="#cb14-132" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-133"><a href="#cb14-133" aria-hidden="true" tabindex="-1"></a><span class="co"># Potencia (**) — útil para interés compuesto</span></span>
+<span id="cb14-134"><a href="#cb14-134" aria-hidden="true" tabindex="-1"></a><span class="ex">periodos</span> = 5</span>
+<span id="cb14-135"><a href="#cb14-135" aria-hidden="true" tabindex="-1"></a><span class="ex">valor_futuro</span> = capital <span class="pp">*</span> <span class="er">(</span><span class="ex">1</span> + tasa<span class="kw">)</span> <span class="ex">**</span> periodos</span>
+<span id="cb14-136"><a href="#cb14-136" aria-hidden="true" tabindex="-1"></a><span class="ex">print</span><span class="er">(</span><span class="ex">f</span><span class="st">"Valor futuro a {periodos} años: </span><span class="va">${valor_futuro</span><span class="op">:</span>,.<span class="dv">2</span>f<span class="va">}</span><span class="st">"</span><span class="kw">)</span></span>
+<span id="cb14-137"><a href="#cb14-137" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb14-138"><a href="#cb14-138" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-139"><a href="#cb14-139" aria-hidden="true" tabindex="-1"></a><span class="fu">## Operadores de Comparación y Lógicos</span></span>
 <span id="cb14-140"><a href="#cb14-140" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-141"><a href="#cb14-141" aria-hidden="true" tabindex="-1"></a>señal_compra <span class="op">=</span> precio <span class="op">&gt;</span> media_movil <span class="kw">and</span> rsi <span class="op">&lt;</span> <span class="dv">70</span></span>
-<span id="cb14-142"><a href="#cb14-142" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"¿Señal de compra? </span><span class="sc">{</span>se<span class="sc">ñ</span>al_compra<span class="sc">}</span><span class="ss">"</span>)</span>
-<span id="cb14-143"><a href="#cb14-143" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb14-144"><a href="#cb14-144" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-145"><a href="#cb14-145" aria-hidden="true" tabindex="-1"></a>---</span>
+<span id="cb14-141"><a href="#cb14-141" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Operador <span class="pp">|</span> Significado <span class="pp">|</span></span>
+<span id="cb14-142"><a href="#cb14-142" aria-hidden="true" tabindex="-1"></a><span class="pp">|----------|-------------|</span></span>
+<span id="cb14-143"><a href="#cb14-143" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> <span class="in">`==`</span>, <span class="in">`!=`</span> <span class="pp">|</span> Igualdad / Desigualdad <span class="pp">|</span></span>
+<span id="cb14-144"><a href="#cb14-144" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> <span class="in">`&gt;`</span>, <span class="in">`&lt;`</span>, <span class="in">`&gt;=`</span>, <span class="in">`&lt;=`</span> <span class="pp">|</span> Comparaciones <span class="pp">|</span></span>
+<span id="cb14-145"><a href="#cb14-145" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> <span class="in">`and`</span>, <span class="in">`or`</span>, <span class="in">`not`</span> <span class="pp">|</span> Lógica booleana <span class="pp">|</span></span>
 <span id="cb14-146"><a href="#cb14-146" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-147"><a href="#cb14-147" aria-hidden="true" tabindex="-1"></a><span class="fu"># Entrada y Salida de Datos</span></span>
-<span id="cb14-148"><a href="#cb14-148" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-149"><a href="#cb14-149" aria-hidden="true" tabindex="-1"></a><span class="fu">## F-Strings (Formato Moderno)</span></span>
-<span id="cb14-150"><a href="#cb14-150" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-151"><a href="#cb14-151" aria-hidden="true" tabindex="-1"></a><span class="in">```{pyodide-python}</span></span>
-<span id="cb14-152"><a href="#cb14-152" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: f-strings</span></span>
-<span id="cb14-153"><a href="#cb14-153" aria-hidden="true" tabindex="-1"></a>tasa <span class="op">=</span> <span class="fl">0.05238</span></span>
-<span id="cb14-154"><a href="#cb14-154" aria-hidden="true" tabindex="-1"></a>capital <span class="op">=</span> <span class="dv">1_000_000</span></span>
-<span id="cb14-155"><a href="#cb14-155" aria-hidden="true" tabindex="-1"></a>interes <span class="op">=</span> capital <span class="op">*</span> tasa</span>
-<span id="cb14-156"><a href="#cb14-156" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-157"><a href="#cb14-157" aria-hidden="true" tabindex="-1"></a><span class="co"># Formatos: :.2% (porcentaje), :, (miles), :,.2f (decimal con miles)</span></span>
-<span id="cb14-158"><a href="#cb14-158" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Tasa: </span><span class="sc">{</span>tasa<span class="sc">:.2%}</span><span class="ss">"</span>)</span>
-<span id="cb14-159"><a href="#cb14-159" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Capital: $</span><span class="sc">{</span>capital<span class="sc">:,}</span><span class="ss">"</span>)</span>
-<span id="cb14-160"><a href="#cb14-160" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Interés generado: $</span><span class="sc">{</span>interes<span class="sc">:,.2f}</span><span class="ss">"</span>)</span>
-<span id="cb14-161"><a href="#cb14-161" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb14-147"><a href="#cb14-147" aria-hidden="true" tabindex="-1"></a><span class="in">```{shinylive-python}</span></span>
+<span id="cb14-148"><a href="#cb14-148" aria-hidden="true" tabindex="-1"></a><span class="co">#| standalone: true</span></span>
+<span id="cb14-149"><a href="#cb14-149" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-150"><a href="#cb14-150" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: operadores-logicos</span></span>
+<span id="cb14-151"><a href="#cb14-151" aria-hidden="true" tabindex="-1"></a><span class="ex">precio</span> = 150</span>
+<span id="cb14-152"><a href="#cb14-152" aria-hidden="true" tabindex="-1"></a><span class="ex">media_movil</span> = 140</span>
+<span id="cb14-153"><a href="#cb14-153" aria-hidden="true" tabindex="-1"></a><span class="ex">rsi</span> = 65</span>
+<span id="cb14-154"><a href="#cb14-154" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-155"><a href="#cb14-155" aria-hidden="true" tabindex="-1"></a><span class="ex">señal_compra</span> = precio <span class="op">&gt;</span> media_movil and rsi <span class="op">&lt;</span> 70</span>
+<span id="cb14-156"><a href="#cb14-156" aria-hidden="true" tabindex="-1"></a><span class="ex">print</span><span class="er">(</span><span class="ex">f</span><span class="st">"¿Señal de compra? {señal_compra}"</span><span class="kw">)</span></span>
+<span id="cb14-157"><a href="#cb14-157" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb14-158"><a href="#cb14-158" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-159"><a href="#cb14-159" aria-hidden="true" tabindex="-1"></a>---</span>
+<span id="cb14-160"><a href="#cb14-160" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-161"><a href="#cb14-161" aria-hidden="true" tabindex="-1"></a><span class="fu"># Entrada y Salida de Datos</span></span>
 <span id="cb14-162"><a href="#cb14-162" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-163"><a href="#cb14-163" aria-hidden="true" tabindex="-1"></a><span class="fu">## Input del Usuario</span></span>
+<span id="cb14-163"><a href="#cb14-163" aria-hidden="true" tabindex="-1"></a><span class="fu">## F-Strings (Formato Moderno)</span></span>
 <span id="cb14-164"><a href="#cb14-164" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-165"><a href="#cb14-165" aria-hidden="true" tabindex="-1"></a>::: {.callout-note}</span>
-<span id="cb14-166"><a href="#cb14-166" aria-hidden="true" tabindex="-1"></a><span class="in">`input()`</span> siempre devuelve un <span class="in">`str`</span>. Debe combinarse con <span class="in">`float()`</span> o <span class="in">`int()`</span> para obtener números.</span>
-<span id="cb14-167"><a href="#cb14-167" aria-hidden="true" tabindex="-1"></a>:::</span>
-<span id="cb14-168"><a href="#cb14-168" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-169"><a href="#cb14-169" aria-hidden="true" tabindex="-1"></a><span class="in">```python</span></span>
-<span id="cb14-170"><a href="#cb14-170" aria-hidden="true" tabindex="-1"></a><span class="co"># Ejemplo interactivo (no se ejecuta en renderizado estático)</span></span>
-<span id="cb14-171"><a href="#cb14-171" aria-hidden="true" tabindex="-1"></a><span class="co"># tasa_input = float(input("Ingrese la tasa anual (%): ")) / 100</span></span>
-<span id="cb14-172"><a href="#cb14-172" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb14-173"><a href="#cb14-173" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-174"><a href="#cb14-174" aria-hidden="true" tabindex="-1"></a>---</span>
-<span id="cb14-175"><a href="#cb14-175" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-176"><a href="#cb14-176" aria-hidden="true" tabindex="-1"></a><span class="fu"># Estructuras de Control: `if` / `elif` / `else`</span></span>
-<span id="cb14-177"><a href="#cb14-177" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-178"><a href="#cb14-178" aria-hidden="true" tabindex="-1"></a>Los algoritmos financieros requieren tomar decisiones basadas en condiciones de mercado.</span>
-<span id="cb14-179"><a href="#cb14-179" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-180"><a href="#cb14-180" aria-hidden="true" tabindex="-1"></a><span class="fu">## Caso Práctico: Algoritmo de Decisión de Inversión</span></span>
-<span id="cb14-181"><a href="#cb14-181" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-182"><a href="#cb14-182" aria-hidden="true" tabindex="-1"></a><span class="in">```{pyodide-python}</span></span>
-<span id="cb14-183"><a href="#cb14-183" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: decision-inversion</span></span>
-<span id="cb14-184"><a href="#cb14-184" aria-hidden="true" tabindex="-1"></a><span class="co"># --- Parámetros de dos proyectos ---</span></span>
-<span id="cb14-185"><a href="#cb14-185" aria-hidden="true" tabindex="-1"></a>vpn_proyecto_a <span class="op">=</span> <span class="dv">150_000</span></span>
-<span id="cb14-186"><a href="#cb14-186" aria-hidden="true" tabindex="-1"></a>vpn_proyecto_b <span class="op">=</span> <span class="dv">120_000</span></span>
-<span id="cb14-187"><a href="#cb14-187" aria-hidden="true" tabindex="-1"></a>riesgo_a <span class="op">=</span> <span class="st">"alto"</span></span>
-<span id="cb14-188"><a href="#cb14-188" aria-hidden="true" tabindex="-1"></a>riesgo_b <span class="op">=</span> <span class="st">"bajo"</span></span>
-<span id="cb14-189"><a href="#cb14-189" aria-hidden="true" tabindex="-1"></a>umbral_riesgo <span class="op">=</span> <span class="st">"medio"</span>  <span class="co"># tolerancia del inversor</span></span>
-<span id="cb14-190"><a href="#cb14-190" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-191"><a href="#cb14-191" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"="</span> <span class="op">*</span> <span class="dv">50</span>)</span>
-<span id="cb14-192"><a href="#cb14-192" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"ALGORITMO DE DECISIÓN DE INVERSIÓN"</span>)</span>
-<span id="cb14-193"><a href="#cb14-193" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"="</span> <span class="op">*</span> <span class="dv">50</span>)</span>
-<span id="cb14-194"><a href="#cb14-194" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-195"><a href="#cb14-195" aria-hidden="true" tabindex="-1"></a><span class="co"># </span><span class="al">TODO</span><span class="co">: Implementar lógica de decisión basada en VPN y riesgo</span></span>
-<span id="cb14-196"><a href="#cb14-196" aria-hidden="true" tabindex="-1"></a><span class="co"># Considerar: ¿qué pasa si ambos VPN son negativos?</span></span>
-<span id="cb14-197"><a href="#cb14-197" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> vpn_proyecto_a <span class="op">&gt;</span> vpn_proyecto_b <span class="kw">and</span> riesgo_a <span class="op">!=</span> <span class="st">"alto"</span>:</span>
-<span id="cb14-198"><a href="#cb14-198" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"→ Invertir en Proyecto A (VPN: $</span><span class="sc">{</span>vpn_proyecto_a<span class="sc">:,}</span><span class="ss">)"</span>)</span>
-<span id="cb14-199"><a href="#cb14-199" aria-hidden="true" tabindex="-1"></a><span class="cf">elif</span> vpn_proyecto_b <span class="op">&gt;</span> <span class="dv">0</span>:</span>
-<span id="cb14-200"><a href="#cb14-200" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"→ Invertir en Proyecto B (VPN: $</span><span class="sc">{</span>vpn_proyecto_b<span class="sc">:,}</span><span class="ss">, riesgo </span><span class="sc">{</span>riesgo_b<span class="sc">}</span><span class="ss">)"</span>)</span>
-<span id="cb14-201"><a href="#cb14-201" aria-hidden="true" tabindex="-1"></a><span class="cf">else</span>:</span>
-<span id="cb14-202"><a href="#cb14-202" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="st">"→ No invertir en ningún proyecto"</span>)</span>
-<span id="cb14-203"><a href="#cb14-203" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb14-204"><a href="#cb14-204" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-205"><a href="#cb14-205" aria-hidden="true" tabindex="-1"></a>---</span>
-<span id="cb14-206"><a href="#cb14-206" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-207"><a href="#cb14-207" aria-hidden="true" tabindex="-1"></a><span class="fu"># Problemática Financiera: Valor Tiempo del Dinero (TVM)</span></span>
+<span id="cb14-165"><a href="#cb14-165" aria-hidden="true" tabindex="-1"></a><span class="in">```{shinylive-python}</span></span>
+<span id="cb14-166"><a href="#cb14-166" aria-hidden="true" tabindex="-1"></a><span class="co">#| standalone: true</span></span>
+<span id="cb14-167"><a href="#cb14-167" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-168"><a href="#cb14-168" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: f-strings</span></span>
+<span id="cb14-169"><a href="#cb14-169" aria-hidden="true" tabindex="-1"></a><span class="ex">tasa</span> = 0.05238</span>
+<span id="cb14-170"><a href="#cb14-170" aria-hidden="true" tabindex="-1"></a><span class="ex">capital</span> = 1_000_000</span>
+<span id="cb14-171"><a href="#cb14-171" aria-hidden="true" tabindex="-1"></a><span class="ex">interes</span> = capital <span class="pp">*</span> tasa</span>
+<span id="cb14-172"><a href="#cb14-172" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-173"><a href="#cb14-173" aria-hidden="true" tabindex="-1"></a><span class="co"># Formatos: :.2% (porcentaje), :, (miles), :,.2f (decimal con miles)</span></span>
+<span id="cb14-174"><a href="#cb14-174" aria-hidden="true" tabindex="-1"></a><span class="ex">print</span><span class="er">(</span><span class="ex">f</span><span class="st">"Tasa: {tasa:.2%}"</span><span class="kw">)</span></span>
+<span id="cb14-175"><a href="#cb14-175" aria-hidden="true" tabindex="-1"></a><span class="ex">print</span><span class="er">(</span><span class="ex">f</span><span class="st">"Capital: </span><span class="va">${capital</span><span class="op">:</span>,<span class="va">}</span><span class="st">"</span><span class="kw">)</span></span>
+<span id="cb14-176"><a href="#cb14-176" aria-hidden="true" tabindex="-1"></a><span class="ex">print</span><span class="er">(</span><span class="ex">f</span><span class="st">"Interés generado: </span><span class="va">${interes</span><span class="op">:</span>,.<span class="dv">2</span>f<span class="va">}</span><span class="st">"</span><span class="kw">)</span></span>
+<span id="cb14-177"><a href="#cb14-177" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb14-178"><a href="#cb14-178" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-179"><a href="#cb14-179" aria-hidden="true" tabindex="-1"></a><span class="fu">## Input del Usuario</span></span>
+<span id="cb14-180"><a href="#cb14-180" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-181"><a href="#cb14-181" aria-hidden="true" tabindex="-1"></a>::: {.callout-note}</span>
+<span id="cb14-182"><a href="#cb14-182" aria-hidden="true" tabindex="-1"></a><span class="in">`input()`</span> siempre devuelve un <span class="in">`str`</span>. Debe combinarse con <span class="in">`float()`</span> o <span class="in">`int()`</span> para obtener números.</span>
+<span id="cb14-183"><a href="#cb14-183" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb14-184"><a href="#cb14-184" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-185"><a href="#cb14-185" aria-hidden="true" tabindex="-1"></a><span class="in">```python</span></span>
+<span id="cb14-186"><a href="#cb14-186" aria-hidden="true" tabindex="-1"></a><span class="co"># Ejemplo interactivo (no se ejecuta en renderizado estático)</span></span>
+<span id="cb14-187"><a href="#cb14-187" aria-hidden="true" tabindex="-1"></a><span class="co"># tasa_input = float(input("Ingrese la tasa anual (%): ")) / 100</span></span>
+<span id="cb14-188"><a href="#cb14-188" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb14-189"><a href="#cb14-189" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-190"><a href="#cb14-190" aria-hidden="true" tabindex="-1"></a>---</span>
+<span id="cb14-191"><a href="#cb14-191" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-192"><a href="#cb14-192" aria-hidden="true" tabindex="-1"></a><span class="fu"># Estructuras de Control: `if` / `elif` / `else`</span></span>
+<span id="cb14-193"><a href="#cb14-193" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-194"><a href="#cb14-194" aria-hidden="true" tabindex="-1"></a>Los algoritmos financieros requieren tomar decisiones basadas en condiciones de mercado.</span>
+<span id="cb14-195"><a href="#cb14-195" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-196"><a href="#cb14-196" aria-hidden="true" tabindex="-1"></a><span class="fu">## Caso Práctico: Algoritmo de Decisión de Inversión</span></span>
+<span id="cb14-197"><a href="#cb14-197" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-198"><a href="#cb14-198" aria-hidden="true" tabindex="-1"></a><span class="in">```{shinylive-python}</span></span>
+<span id="cb14-199"><a href="#cb14-199" aria-hidden="true" tabindex="-1"></a><span class="co">#| standalone: true</span></span>
+<span id="cb14-200"><a href="#cb14-200" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-201"><a href="#cb14-201" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: decision-inversion</span></span>
+<span id="cb14-202"><a href="#cb14-202" aria-hidden="true" tabindex="-1"></a><span class="co"># --- Parámetros de dos proyectos ---</span></span>
+<span id="cb14-203"><a href="#cb14-203" aria-hidden="true" tabindex="-1"></a><span class="ex">vpn_proyecto_a</span> = 150_000</span>
+<span id="cb14-204"><a href="#cb14-204" aria-hidden="true" tabindex="-1"></a><span class="ex">vpn_proyecto_b</span> = 120_000</span>
+<span id="cb14-205"><a href="#cb14-205" aria-hidden="true" tabindex="-1"></a><span class="ex">riesgo_a</span> = <span class="st">"alto"</span></span>
+<span id="cb14-206"><a href="#cb14-206" aria-hidden="true" tabindex="-1"></a><span class="ex">riesgo_b</span> = <span class="st">"bajo"</span></span>
+<span id="cb14-207"><a href="#cb14-207" aria-hidden="true" tabindex="-1"></a><span class="ex">umbral_riesgo</span> = <span class="st">"medio"</span>  <span class="co"># tolerancia del inversor</span></span>
 <span id="cb14-208"><a href="#cb14-208" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-209"><a href="#cb14-209" aria-hidden="true" tabindex="-1"></a><span class="fu">## Interés Compuesto</span></span>
-<span id="cb14-210"><a href="#cb14-210" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-211"><a href="#cb14-211" aria-hidden="true" tabindex="-1"></a>La fórmula fundamental:</span>
+<span id="cb14-209"><a href="#cb14-209" aria-hidden="true" tabindex="-1"></a><span class="ex">print</span><span class="er">(</span><span class="st">"="</span> <span class="pp">*</span> 50<span class="kw">)</span></span>
+<span id="cb14-210"><a href="#cb14-210" aria-hidden="true" tabindex="-1"></a><span class="ex">print</span><span class="er">(</span><span class="st">"ALGORITMO DE DECISIÓN DE INVERSIÓN"</span><span class="kw">)</span></span>
+<span id="cb14-211"><a href="#cb14-211" aria-hidden="true" tabindex="-1"></a><span class="ex">print</span><span class="er">(</span><span class="st">"="</span> <span class="pp">*</span> 50<span class="kw">)</span></span>
 <span id="cb14-212"><a href="#cb14-212" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-213"><a href="#cb14-213" aria-hidden="true" tabindex="-1"></a>$$VF = VP \cdot (1 + r)^n$$</span>
-<span id="cb14-214"><a href="#cb14-214" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-215"><a href="#cb14-215" aria-hidden="true" tabindex="-1"></a>Donde:</span>
-<span id="cb14-216"><a href="#cb14-216" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-217"><a href="#cb14-217" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>$VF$: Valor Futuro</span>
-<span id="cb14-218"><a href="#cb14-218" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>$VP$: Valor Presente</span>
-<span id="cb14-219"><a href="#cb14-219" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>$r$: Tasa de interés por período</span>
-<span id="cb14-220"><a href="#cb14-220" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>$n$: Número de períodos</span>
-<span id="cb14-221"><a href="#cb14-221" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-222"><a href="#cb14-222" aria-hidden="true" tabindex="-1"></a><span class="in">```{pyodide-python}</span></span>
-<span id="cb14-223"><a href="#cb14-223" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: interes-compuesto</span></span>
-<span id="cb14-224"><a href="#cb14-224" aria-hidden="true" tabindex="-1"></a><span class="co"># </span><span class="al">TODO</span><span class="co">: Implementar cálculo de interés compuesto</span></span>
-<span id="cb14-225"><a href="#cb14-225" aria-hidden="true" tabindex="-1"></a>capital_inicial <span class="op">=</span> <span class="dv">100_000</span></span>
-<span id="cb14-226"><a href="#cb14-226" aria-hidden="true" tabindex="-1"></a>tasa_anual <span class="op">=</span> <span class="fl">0.10</span></span>
-<span id="cb14-227"><a href="#cb14-227" aria-hidden="true" tabindex="-1"></a>años <span class="op">=</span> <span class="dv">10</span></span>
+<span id="cb14-213"><a href="#cb14-213" aria-hidden="true" tabindex="-1"></a><span class="co"># </span><span class="al">TODO</span><span class="co">: Implementar lógica de decisión basada en VPN y riesgo</span></span>
+<span id="cb14-214"><a href="#cb14-214" aria-hidden="true" tabindex="-1"></a><span class="co"># Considerar: ¿qué pasa si ambos VPN son negativos?</span></span>
+<span id="cb14-215"><a href="#cb14-215" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> <span class="ex">vpn_proyecto_a</span> <span class="op">&gt;</span> vpn_proyecto_b and riesgo_a != <span class="st">"alto"</span>:</span>
+<span id="cb14-216"><a href="#cb14-216" aria-hidden="true" tabindex="-1"></a>    <span class="ex">print</span><span class="er">(</span><span class="ex">f</span><span class="st">"→ Invertir en Proyecto A (VPN: </span><span class="va">${vpn_proyecto_a</span><span class="op">:</span>,<span class="va">}</span><span class="st">)"</span><span class="kw">)</span></span>
+<span id="cb14-217"><a href="#cb14-217" aria-hidden="true" tabindex="-1"></a><span class="cf">elif</span> <span class="ex">vpn_proyecto_b</span> <span class="op">&gt;</span> 0:</span>
+<span id="cb14-218"><a href="#cb14-218" aria-hidden="true" tabindex="-1"></a>    <span class="ex">print</span><span class="er">(</span><span class="ex">f</span><span class="st">"→ Invertir en Proyecto B (VPN: </span><span class="va">${vpn_proyecto_b</span><span class="op">:</span>,<span class="va">}</span><span class="st">, riesgo {riesgo_b})"</span><span class="kw">)</span></span>
+<span id="cb14-219"><a href="#cb14-219" aria-hidden="true" tabindex="-1"></a><span class="ex">else:</span></span>
+<span id="cb14-220"><a href="#cb14-220" aria-hidden="true" tabindex="-1"></a>    <span class="ex">print</span><span class="er">(</span><span class="st">"→ No invertir en ningún proyecto"</span><span class="kw">)</span></span>
+<span id="cb14-221"><a href="#cb14-221" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb14-222"><a href="#cb14-222" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-223"><a href="#cb14-223" aria-hidden="true" tabindex="-1"></a>---</span>
+<span id="cb14-224"><a href="#cb14-224" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-225"><a href="#cb14-225" aria-hidden="true" tabindex="-1"></a><span class="fu"># Problemática Financiera: Valor Tiempo del Dinero (TVM)</span></span>
+<span id="cb14-226"><a href="#cb14-226" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-227"><a href="#cb14-227" aria-hidden="true" tabindex="-1"></a><span class="fu">## Interés Compuesto</span></span>
 <span id="cb14-228"><a href="#cb14-228" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-229"><a href="#cb14-229" aria-hidden="true" tabindex="-1"></a>valor_futuro <span class="op">=</span> capital_inicial <span class="op">*</span> (<span class="dv">1</span> <span class="op">+</span> tasa_anual) <span class="op">**</span> años</span>
-<span id="cb14-230"><a href="#cb14-230" aria-hidden="true" tabindex="-1"></a>interes_ganado <span class="op">=</span> valor_futuro <span class="op">-</span> capital_inicial</span>
-<span id="cb14-231"><a href="#cb14-231" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-232"><a href="#cb14-232" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Capital inicial:  $</span><span class="sc">{</span>capital_inicial<span class="sc">:,.2f}</span><span class="ss">"</span>)</span>
-<span id="cb14-233"><a href="#cb14-233" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Tasa anual:       </span><span class="sc">{</span>tasa_anual<span class="sc">:.2%}</span><span class="ss">"</span>)</span>
-<span id="cb14-234"><a href="#cb14-234" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Plazo:            </span><span class="sc">{</span>a<span class="sc">ñ</span>os<span class="sc">}</span><span class="ss"> años"</span>)</span>
-<span id="cb14-235"><a href="#cb14-235" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Valor futuro:     $</span><span class="sc">{</span>valor_futuro<span class="sc">:,.2f}</span><span class="ss">"</span>)</span>
-<span id="cb14-236"><a href="#cb14-236" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Interés ganado:   $</span><span class="sc">{</span>interes_ganado<span class="sc">:,.2f}</span><span class="ss">"</span>)</span>
-<span id="cb14-237"><a href="#cb14-237" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb14-238"><a href="#cb14-238" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-239"><a href="#cb14-239" aria-hidden="true" tabindex="-1"></a><span class="fu">## Conversión de Tasas</span></span>
-<span id="cb14-240"><a href="#cb14-240" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-241"><a href="#cb14-241" aria-hidden="true" tabindex="-1"></a><span class="in">```{pyodide-python}</span></span>
-<span id="cb14-242"><a href="#cb14-242" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: conversion-tasas</span></span>
-<span id="cb14-243"><a href="#cb14-243" aria-hidden="true" tabindex="-1"></a><span class="co"># </span><span class="al">TODO</span><span class="co">: Implementar conversiones entre tasas</span></span>
-<span id="cb14-244"><a href="#cb14-244" aria-hidden="true" tabindex="-1"></a><span class="co"># TNA → TEA, TEA → TNA, tasas continuas</span></span>
-<span id="cb14-245"><a href="#cb14-245" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-246"><a href="#cb14-246" aria-hidden="true" tabindex="-1"></a>tna <span class="op">=</span> <span class="fl">0.48</span>  <span class="co"># Tasa Nominal Anual</span></span>
-<span id="cb14-247"><a href="#cb14-247" aria-hidden="true" tabindex="-1"></a>n <span class="op">=</span> <span class="dv">12</span>      <span class="co"># capitalización mensual</span></span>
+<span id="cb14-229"><a href="#cb14-229" aria-hidden="true" tabindex="-1"></a>La fórmula fundamental:</span>
+<span id="cb14-230"><a href="#cb14-230" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-231"><a href="#cb14-231" aria-hidden="true" tabindex="-1"></a>$$VF = VP \cdot (1 + r)^n$$</span>
+<span id="cb14-232"><a href="#cb14-232" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-233"><a href="#cb14-233" aria-hidden="true" tabindex="-1"></a>Donde:</span>
+<span id="cb14-234"><a href="#cb14-234" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-235"><a href="#cb14-235" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>$VF$: Valor Futuro</span>
+<span id="cb14-236"><a href="#cb14-236" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>$VP$: Valor Presente</span>
+<span id="cb14-237"><a href="#cb14-237" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>$r$: Tasa de interés por período</span>
+<span id="cb14-238"><a href="#cb14-238" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>$n$: Número de períodos</span>
+<span id="cb14-239"><a href="#cb14-239" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-240"><a href="#cb14-240" aria-hidden="true" tabindex="-1"></a><span class="in">```{shinylive-python}</span></span>
+<span id="cb14-241"><a href="#cb14-241" aria-hidden="true" tabindex="-1"></a><span class="co">#| standalone: true</span></span>
+<span id="cb14-242"><a href="#cb14-242" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-243"><a href="#cb14-243" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: interes-compuesto</span></span>
+<span id="cb14-244"><a href="#cb14-244" aria-hidden="true" tabindex="-1"></a><span class="co"># </span><span class="al">TODO</span><span class="co">: Implementar cálculo de interés compuesto</span></span>
+<span id="cb14-245"><a href="#cb14-245" aria-hidden="true" tabindex="-1"></a><span class="ex">capital_inicial</span> = 100_000</span>
+<span id="cb14-246"><a href="#cb14-246" aria-hidden="true" tabindex="-1"></a><span class="ex">tasa_anual</span> = 0.10</span>
+<span id="cb14-247"><a href="#cb14-247" aria-hidden="true" tabindex="-1"></a><span class="ex">años</span> = 10</span>
 <span id="cb14-248"><a href="#cb14-248" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-249"><a href="#cb14-249" aria-hidden="true" tabindex="-1"></a><span class="co"># TNA a TEA</span></span>
-<span id="cb14-250"><a href="#cb14-250" aria-hidden="true" tabindex="-1"></a>tea <span class="op">=</span> (<span class="dv">1</span> <span class="op">+</span> tna <span class="op">/</span> n) <span class="op">**</span> n <span class="op">-</span> <span class="dv">1</span></span>
-<span id="cb14-251"><a href="#cb14-251" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"TNA: </span><span class="sc">{</span>tna<span class="sc">:.2%}</span><span class="ss"> → TEA: </span><span class="sc">{</span>tea<span class="sc">:.2%}</span><span class="ss">"</span>)</span>
-<span id="cb14-252"><a href="#cb14-252" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-253"><a href="#cb14-253" aria-hidden="true" tabindex="-1"></a><span class="co"># TEA a tasa continua</span></span>
-<span id="cb14-254"><a href="#cb14-254" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> math</span>
-<span id="cb14-255"><a href="#cb14-255" aria-hidden="true" tabindex="-1"></a>tasa_continua <span class="op">=</span> math.log(<span class="dv">1</span> <span class="op">+</span> tea)</span>
-<span id="cb14-256"><a href="#cb14-256" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"TEA: </span><span class="sc">{</span>tea<span class="sc">:.2%}</span><span class="ss"> → Tasa continua: </span><span class="sc">{</span>tasa_continua<span class="sc">:.4f}</span><span class="ss">"</span>)</span>
+<span id="cb14-249"><a href="#cb14-249" aria-hidden="true" tabindex="-1"></a><span class="ex">valor_futuro</span> = capital_inicial <span class="pp">*</span> <span class="er">(</span><span class="ex">1</span> + tasa_anual<span class="kw">)</span> <span class="ex">**</span> años</span>
+<span id="cb14-250"><a href="#cb14-250" aria-hidden="true" tabindex="-1"></a><span class="ex">interes_ganado</span> = valor_futuro <span class="at">-</span> capital_inicial</span>
+<span id="cb14-251"><a href="#cb14-251" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-252"><a href="#cb14-252" aria-hidden="true" tabindex="-1"></a><span class="ex">print</span><span class="er">(</span><span class="ex">f</span><span class="st">"Capital inicial:  </span><span class="va">${capital_inicial</span><span class="op">:</span>,.<span class="dv">2</span>f<span class="va">}</span><span class="st">"</span><span class="kw">)</span></span>
+<span id="cb14-253"><a href="#cb14-253" aria-hidden="true" tabindex="-1"></a><span class="ex">print</span><span class="er">(</span><span class="ex">f</span><span class="st">"Tasa anual:       {tasa_anual:.2%}"</span><span class="kw">)</span></span>
+<span id="cb14-254"><a href="#cb14-254" aria-hidden="true" tabindex="-1"></a><span class="ex">print</span><span class="er">(</span><span class="ex">f</span><span class="st">"Plazo:            {años} años"</span><span class="kw">)</span></span>
+<span id="cb14-255"><a href="#cb14-255" aria-hidden="true" tabindex="-1"></a><span class="ex">print</span><span class="er">(</span><span class="ex">f</span><span class="st">"Valor futuro:     </span><span class="va">${valor_futuro</span><span class="op">:</span>,.<span class="dv">2</span>f<span class="va">}</span><span class="st">"</span><span class="kw">)</span></span>
+<span id="cb14-256"><a href="#cb14-256" aria-hidden="true" tabindex="-1"></a><span class="ex">print</span><span class="er">(</span><span class="ex">f</span><span class="st">"Interés ganado:   </span><span class="va">${interes_ganado</span><span class="op">:</span>,.<span class="dv">2</span>f<span class="va">}</span><span class="st">"</span><span class="kw">)</span></span>
 <span id="cb14-257"><a href="#cb14-257" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb14-258"><a href="#cb14-258" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-259"><a href="#cb14-259" aria-hidden="true" tabindex="-1"></a><span class="fu">## Valor Presente</span></span>
+<span id="cb14-259"><a href="#cb14-259" aria-hidden="true" tabindex="-1"></a><span class="fu">## Conversión de Tasas</span></span>
 <span id="cb14-260"><a href="#cb14-260" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-261"><a href="#cb14-261" aria-hidden="true" tabindex="-1"></a>$$VP = \frac{VF}{(1 + r)^n}$$</span>
-<span id="cb14-262"><a href="#cb14-262" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-263"><a href="#cb14-263" aria-hidden="true" tabindex="-1"></a><span class="in">```{pyodide-python}</span></span>
-<span id="cb14-264"><a href="#cb14-264" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: valor-presente</span></span>
-<span id="cb14-265"><a href="#cb14-265" aria-hidden="true" tabindex="-1"></a><span class="co"># </span><span class="al">TODO</span><span class="co">: Calcular el valor presente de un flujo futuro</span></span>
-<span id="cb14-266"><a href="#cb14-266" aria-hidden="true" tabindex="-1"></a>flujo_futuro <span class="op">=</span> <span class="dv">1_000_000</span></span>
-<span id="cb14-267"><a href="#cb14-267" aria-hidden="true" tabindex="-1"></a>tasa <span class="op">=</span> <span class="fl">0.08</span></span>
-<span id="cb14-268"><a href="#cb14-268" aria-hidden="true" tabindex="-1"></a>años <span class="op">=</span> <span class="dv">5</span></span>
-<span id="cb14-269"><a href="#cb14-269" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-270"><a href="#cb14-270" aria-hidden="true" tabindex="-1"></a>valor_presente <span class="op">=</span> flujo_futuro <span class="op">/</span> (<span class="dv">1</span> <span class="op">+</span> tasa) <span class="op">**</span> años</span>
-<span id="cb14-271"><a href="#cb14-271" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Recibir $</span><span class="sc">{</span>flujo_futuro<span class="sc">:,}</span><span class="ss"> en </span><span class="sc">{</span>a<span class="sc">ñ</span>os<span class="sc">}</span><span class="ss"> años"</span>)</span>
-<span id="cb14-272"><a href="#cb14-272" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"equivale a $</span><span class="sc">{</span>valor_presente<span class="sc">:,.2f}</span><span class="ss"> hoy (al </span><span class="sc">{</span>tasa<span class="sc">:.0%}</span><span class="ss">)"</span>)</span>
-<span id="cb14-273"><a href="#cb14-273" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb14-261"><a href="#cb14-261" aria-hidden="true" tabindex="-1"></a><span class="in">```{shinylive-python}</span></span>
+<span id="cb14-262"><a href="#cb14-262" aria-hidden="true" tabindex="-1"></a><span class="co">#| standalone: true</span></span>
+<span id="cb14-263"><a href="#cb14-263" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-264"><a href="#cb14-264" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: conversion-tasas</span></span>
+<span id="cb14-265"><a href="#cb14-265" aria-hidden="true" tabindex="-1"></a><span class="co"># </span><span class="al">TODO</span><span class="co">: Implementar conversiones entre tasas</span></span>
+<span id="cb14-266"><a href="#cb14-266" aria-hidden="true" tabindex="-1"></a><span class="co"># TNA → TEA, TEA → TNA, tasas continuas</span></span>
+<span id="cb14-267"><a href="#cb14-267" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-268"><a href="#cb14-268" aria-hidden="true" tabindex="-1"></a><span class="ex">tna</span> = 0.48  <span class="co"># Tasa Nominal Anual</span></span>
+<span id="cb14-269"><a href="#cb14-269" aria-hidden="true" tabindex="-1"></a><span class="ex">n</span> = 12      <span class="co"># capitalización mensual</span></span>
+<span id="cb14-270"><a href="#cb14-270" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-271"><a href="#cb14-271" aria-hidden="true" tabindex="-1"></a><span class="co"># TNA a TEA</span></span>
+<span id="cb14-272"><a href="#cb14-272" aria-hidden="true" tabindex="-1"></a><span class="ex">tea</span> = <span class="er">(</span><span class="ex">1</span> + tna / n<span class="kw">)</span> <span class="ex">**</span> n <span class="at">-</span> 1</span>
+<span id="cb14-273"><a href="#cb14-273" aria-hidden="true" tabindex="-1"></a><span class="ex">print</span><span class="er">(</span><span class="ex">f</span><span class="st">"TNA: {tna:.2%} → TEA: {tea:.2%}"</span><span class="kw">)</span></span>
 <span id="cb14-274"><a href="#cb14-274" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-275"><a href="#cb14-275" aria-hidden="true" tabindex="-1"></a>---</span>
-<span id="cb14-276"><a href="#cb14-276" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-277"><a href="#cb14-277" aria-hidden="true" tabindex="-1"></a><span class="fu"># Ejercicios Propuestos</span></span>
-<span id="cb14-278"><a href="#cb14-278" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-279"><a href="#cb14-279" aria-hidden="true" tabindex="-1"></a>::: {.callout-important title="Ejercicios"}</span>
-<span id="cb14-280"><a href="#cb14-280" aria-hidden="true" tabindex="-1"></a><span class="ss">1. </span>**Interés compuesto con capitalización variable**: Escribir un programa que calcule el valor futuro para capitalización anual, semestral, trimestral, mensual y diaria. Comparar los resultados.</span>
-<span id="cb14-281"><a href="#cb14-281" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-282"><a href="#cb14-282" aria-hidden="true" tabindex="-1"></a><span class="ss">2. </span>**Algoritmo de decisión**: Dado un bono con TIR del 8% y un plazo fijo con tasa del 6%, crear un algoritmo que recomiende la inversión considerando también el horizonte temporal y la tolerancia al riesgo del inversor.</span>
-<span id="cb14-283"><a href="#cb14-283" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-284"><a href="#cb14-284" aria-hidden="true" tabindex="-1"></a><span class="ss">3. </span>**Conversión de tasas**: Crear un programa que convierta entre TNA, TEA, tasa efectiva mensual y tasa continua. El usuario debe poder elegir qué conversión realizar.</span>
-<span id="cb14-285"><a href="#cb14-285" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-286"><a href="#cb14-286" aria-hidden="true" tabindex="-1"></a><span class="ss">4. </span>**Valor presente neto simple**: Dados tres flujos futuros de $10,000, $15,000 y $20,000 a recibir en los años 1, 2 y 3 respectivamente, calcular el VPN con una tasa de descuento del 10%.</span>
-<span id="cb14-287"><a href="#cb14-287" aria-hidden="true" tabindex="-1"></a>:::</span>
-<span id="cb14-288"><a href="#cb14-288" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-289"><a href="#cb14-289" aria-hidden="true" tabindex="-1"></a>---</span>
-<span id="cb14-290"><a href="#cb14-290" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-291"><a href="#cb14-291" aria-hidden="true" tabindex="-1"></a><span class="fu"># Referencias</span></span>
-<span id="cb14-292"><a href="#cb14-292" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-293"><a href="#cb14-293" aria-hidden="true" tabindex="-1"></a><span class="ss">* </span>Van Rossum, G., &amp; Drake, F. L. (2009). *Python 3 Reference Manual*. CreateSpace.</span>
-<span id="cb14-294"><a href="#cb14-294" aria-hidden="true" tabindex="-1"></a><span class="ss">* </span>Benninga, S. (2014). *Financial Modeling*. MIT Press.</span>
-<span id="cb14-295"><a href="#cb14-295" aria-hidden="true" tabindex="-1"></a><span class="ss">* </span>Brealey, R., Myers, S., &amp; Allen, F. (2020). *Principles of Corporate Finance*. McGraw-Hill.</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></div>
+<span id="cb14-275"><a href="#cb14-275" aria-hidden="true" tabindex="-1"></a><span class="co"># TEA a tasa continua</span></span>
+<span id="cb14-276"><a href="#cb14-276" aria-hidden="true" tabindex="-1"></a><span class="ex">import</span> math</span>
+<span id="cb14-277"><a href="#cb14-277" aria-hidden="true" tabindex="-1"></a><span class="ex">tasa_continua</span> = math.log<span class="er">(</span><span class="ex">1</span> + tea<span class="kw">)</span></span>
+<span id="cb14-278"><a href="#cb14-278" aria-hidden="true" tabindex="-1"></a><span class="ex">print</span><span class="er">(</span><span class="ex">f</span><span class="st">"TEA: {tea:.2%} → Tasa continua: {tasa_continua:.4f}"</span><span class="kw">)</span></span>
+<span id="cb14-279"><a href="#cb14-279" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb14-280"><a href="#cb14-280" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-281"><a href="#cb14-281" aria-hidden="true" tabindex="-1"></a><span class="fu">## Valor Presente</span></span>
+<span id="cb14-282"><a href="#cb14-282" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-283"><a href="#cb14-283" aria-hidden="true" tabindex="-1"></a>$$VP = \frac{VF}{(1 + r)^n}$$</span>
+<span id="cb14-284"><a href="#cb14-284" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-285"><a href="#cb14-285" aria-hidden="true" tabindex="-1"></a><span class="in">```{shinylive-python}</span></span>
+<span id="cb14-286"><a href="#cb14-286" aria-hidden="true" tabindex="-1"></a><span class="co">#| standalone: true</span></span>
+<span id="cb14-287"><a href="#cb14-287" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-288"><a href="#cb14-288" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: valor-presente</span></span>
+<span id="cb14-289"><a href="#cb14-289" aria-hidden="true" tabindex="-1"></a><span class="co"># </span><span class="al">TODO</span><span class="co">: Calcular el valor presente de un flujo futuro</span></span>
+<span id="cb14-290"><a href="#cb14-290" aria-hidden="true" tabindex="-1"></a><span class="ex">flujo_futuro</span> = 1_000_000</span>
+<span id="cb14-291"><a href="#cb14-291" aria-hidden="true" tabindex="-1"></a><span class="ex">tasa</span> = 0.08</span>
+<span id="cb14-292"><a href="#cb14-292" aria-hidden="true" tabindex="-1"></a><span class="ex">años</span> = 5</span>
+<span id="cb14-293"><a href="#cb14-293" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-294"><a href="#cb14-294" aria-hidden="true" tabindex="-1"></a><span class="ex">valor_presente</span> = flujo_futuro / <span class="er">(</span><span class="ex">1</span> + tasa<span class="kw">)</span> <span class="ex">**</span> años</span>
+<span id="cb14-295"><a href="#cb14-295" aria-hidden="true" tabindex="-1"></a><span class="ex">print</span><span class="er">(</span><span class="ex">f</span><span class="st">"Recibir </span><span class="va">${flujo_futuro</span><span class="op">:</span>,<span class="va">}</span><span class="st"> en {años} años"</span><span class="kw">)</span></span>
+<span id="cb14-296"><a href="#cb14-296" aria-hidden="true" tabindex="-1"></a><span class="ex">print</span><span class="er">(</span><span class="ex">f</span><span class="st">"equivale a </span><span class="va">${valor_presente</span><span class="op">:</span>,.<span class="dv">2</span>f<span class="va">}</span><span class="st"> hoy (al {tasa:.0%})"</span><span class="kw">)</span></span>
+<span id="cb14-297"><a href="#cb14-297" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb14-298"><a href="#cb14-298" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-299"><a href="#cb14-299" aria-hidden="true" tabindex="-1"></a>---</span>
+<span id="cb14-300"><a href="#cb14-300" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-301"><a href="#cb14-301" aria-hidden="true" tabindex="-1"></a><span class="fu"># Ejercicios Propuestos</span></span>
+<span id="cb14-302"><a href="#cb14-302" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-303"><a href="#cb14-303" aria-hidden="true" tabindex="-1"></a>::: {.callout-important title="Ejercicios"}</span>
+<span id="cb14-304"><a href="#cb14-304" aria-hidden="true" tabindex="-1"></a><span class="ss">1. </span>**Interés compuesto con capitalización variable**: Escribir un programa que calcule el valor futuro para capitalización anual, semestral, trimestral, mensual y diaria. Comparar los resultados.</span>
+<span id="cb14-305"><a href="#cb14-305" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-306"><a href="#cb14-306" aria-hidden="true" tabindex="-1"></a><span class="ss">2. </span>**Algoritmo de decisión**: Dado un bono con TIR del 8% y un plazo fijo con tasa del 6%, crear un algoritmo que recomiende la inversión considerando también el horizonte temporal y la tolerancia al riesgo del inversor.</span>
+<span id="cb14-307"><a href="#cb14-307" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-308"><a href="#cb14-308" aria-hidden="true" tabindex="-1"></a><span class="ss">3. </span>**Conversión de tasas**: Crear un programa que convierta entre TNA, TEA, tasa efectiva mensual y tasa continua. El usuario debe poder elegir qué conversión realizar.</span>
+<span id="cb14-309"><a href="#cb14-309" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-310"><a href="#cb14-310" aria-hidden="true" tabindex="-1"></a><span class="ss">4. </span>**Valor presente neto simple**: Dados tres flujos futuros de $10,000, $15,000 y $20,000 a recibir en los años 1, 2 y 3 respectivamente, calcular el VPN con una tasa de descuento del 10%.</span>
+<span id="cb14-311"><a href="#cb14-311" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb14-312"><a href="#cb14-312" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-313"><a href="#cb14-313" aria-hidden="true" tabindex="-1"></a>---</span>
+<span id="cb14-314"><a href="#cb14-314" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-315"><a href="#cb14-315" aria-hidden="true" tabindex="-1"></a><span class="fu"># Referencias</span></span>
+<span id="cb14-316"><a href="#cb14-316" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-317"><a href="#cb14-317" aria-hidden="true" tabindex="-1"></a><span class="ss">* </span>Van Rossum, G., &amp; Drake, F. L. (2009). *Python 3 Reference Manual*. CreateSpace.</span>
+<span id="cb14-318"><a href="#cb14-318" aria-hidden="true" tabindex="-1"></a><span class="ss">* </span>Benninga, S. (2014). *Financial Modeling*. MIT Press.</span>
+<span id="cb14-319"><a href="#cb14-319" aria-hidden="true" tabindex="-1"></a><span class="ss">* </span>Brealey, R., Myers, S., &amp; Allen, F. (2020). *Principles of Corporate Finance*. McGraw-Hill.</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></div>
 </div></div></div></div></div>
 </div> <!-- /content -->
 <footer class="footer">
