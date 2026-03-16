@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>3&nbsp; Capítulo 2: Iteraciones y Estructuras de Datos Nativas – Finanzas Computacionales</title>
+<title>4&nbsp; Iteraciones y Estructuras de Datos Nativas – Finanzas Computacionales</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -269,7 +269,7 @@ globalThis.qpyodideCustomizedPyodideOptions = {
 }
 
 // Store cell data
-globalThis.qpyodideCellDetails = [{"code":"# Ejemplo: Búsqueda incremental (Aproximación por tanteo)\n# Supongamos que queremos saber cuántos meses necesitamos ahorrar $150 para alcanzar o superar los $1000, \n# asumiendo que no hay interés.\n\nahorro_mensual = 150\nobjetivo = 1000\n\n# Inicializamos nuestras variables\ncapital_acumulado = 0  # Esto es un ACUMULADOR\nmeses = 0              # Esto es un CONTADOR\n\nprint(\"--- Inicio del ahorro ---\")\nwhile capital_acumulado < objetivo:\n    capital_acumulado = capital_acumulado + ahorro_mensual\n    meses = meses + 1\n    print(f\"Mes {meses}: Acumulado = ${capital_acumulado}\")\n\nprint(f\"Tomó {meses} meses alcanzar el objetivo de ${objetivo}.\")","id":1,"options":{"autorun":"","classes":"","comment":"","context":"interactive","dpi":72,"fig-cap":"","fig-height":5,"fig-width":7,"label":"while-ahorro","message":"true","out-height":"","out-width":"700px","output":"true","read-only":"false","results":"markup","warning":"true"}},{"code":"# Ejemplo: Proyección de un capital con interés simple\n# Queremos ver cómo crece una inversión inicial de $500 a una tasa del 5% anual durante 4 años.\n\ncapital_inicial = 500\ntasa_anual = 0.05\nanios = 4\n\nprint(f\"Capital inicial: ${capital_inicial}\")\n\n# range(1, anios + 1) generará los números: 1, 2, 3, 4\nfor anio in range(1, anios + 1):\n    # Calculamos el interés generado en el año (interés simple)\n    interes_generado = capital_inicial * tasa_anual\n    \n    # En el interés simple, el capital total es el inicial más los intereses acumulados\n    capital_total = capital_inicial + (interes_generado * anio)\n    \n    print(f\"Fin del Año {anio}: El capital total es ${capital_total}\")","id":2,"options":{"autorun":"","classes":"","comment":"","context":"interactive","dpi":72,"fig-cap":"","fig-height":5,"fig-width":7,"label":"for-interes-simple","message":"true","out-height":"","out-width":"700px","output":"true","read-only":"false","results":"markup","warning":"true"}},{"code":"# Ejemplo A: Filtrado de datos en listas\n# Tenemos una lista con las cotizaciones históricas de un tipo de cambio.\n# Queremos crear una nueva lista SOLO con los días en que la cotización superó los $1000.\n\ncotizaciones = [980.5, 995.0, 1005.2, 1010.0, 998.0, 1020.5]\ncotizaciones_altas = [] # Creamos una lista vacía usando corchetes\n\nfor precio in cotizaciones:\n    if precio > 1000:\n        cotizaciones_altas.append(precio) # Añade el elemento al final de la lista [cite: 204, 216]\n\nprint(\"Cotizaciones originales:\", cotizaciones)\nprint(\"Cotizaciones altas (mayores a 1000):\", cotizaciones_altas)","id":3,"options":{"autorun":"","classes":"","comment":"","context":"interactive","dpi":72,"fig-cap":"","fig-height":5,"fig-width":7,"label":"listas-filtrado","message":"true","out-height":"","out-width":"700px","output":"true","read-only":"false","results":"markup","warning":"true"}},{"code":"# Ejemplo B: Operaciones secuenciales (diferencias de precios)\n# A veces necesitamos comparar un elemento de la lista con el anterior.\nprecios_accion = [50.0, 52.0, 51.0, 55.0]\nvariaciones = []\n\n# Iteramos usando índices. Usamos len() - 1 porque compararemos el día actual con el siguiente.\nfor i in range(len(precios_accion) - 1):\n    precio_hoy = precios_accion[i]\n    precio_manana = precios_accion[i + 1]\n    \n    variacion_absoluta = precio_manana - precio_hoy\n    variaciones.append(variacion_absoluta)\n\nprint(\"Precios diarios:\", precios_accion)\nprint(\"Variaciones absolutas diarias:\", variaciones)","id":4,"options":{"autorun":"","classes":"","comment":"","context":"interactive","dpi":72,"fig-cap":"","fig-height":5,"fig-width":7,"label":"listas-variaciones","message":"true","out-height":"","out-width":"700px","output":"true","read-only":"false","results":"markup","warning":"true"}},{"code":"# Ejemplo A: Mapeo de información de un activo\n# Creamos un diccionario vacío usando dict() o llaves {}[cite: 404].\nbono_soberano = dict()\n\n# Agregamos elementos clave-valor\nbono_soberano['ticker'] = 'AL30'\nbono_soberano['paridad'] = 45.5\nbono_soberano['legislacion'] = 'Local'\n\nprint(\"Datos del bono:\", bono_soberano)\nprint(\"Ticker específico:\", bono_soberano['ticker'])\n\n# Actualizamos un valor existente\nbono_soberano['paridad'] = 48.2\nprint(\"Paridad actualizada:\", bono_soberano['paridad'])","id":5,"options":{"autorun":"","classes":"","comment":"","context":"interactive","dpi":72,"fig-cap":"","fig-height":5,"fig-width":7,"label":"dict-bono","message":"true","out-height":"","out-width":"700px","output":"true","read-only":"false","results":"markup","warning":"true"}},{"code":"# Ejemplo B: Frecuencias y el método .get()\n# Queremos contar cuántos activos tenemos agrupados por su nivel de riesgo.\n# El método .get(clave, valor_por_defecto) es ideal para esto[cite: 475, 477].\n\nactivos = [\"Bajo\", \"Alto\", \"Medio\", \"Bajo\", \"Bajo\", \"Medio\", \"Alto\", \"Bajo\"]\nconteo_riesgos = {}\n\nfor nivel in activos:\n    # Si 'nivel' ya está en el diccionario, toma su valor actual.\n    # Si no está, devuelve 0. A eso le sumamos 1.\n    conteo_riesgos[nivel] = conteo_riesgos.get(nivel, 0) + 1 # [cite: 481]\n\nprint(\"Distribución de riesgos de la cartera:\")\nprint(conteo_riesgos)","id":6,"options":{"autorun":"","classes":"","comment":"","context":"interactive","dpi":72,"fig-cap":"","fig-height":5,"fig-width":7,"label":"dict-riesgos","message":"true","out-height":"","out-width":"700px","output":"true","read-only":"false","results":"markup","warning":"true"}},{"code":"# Ejemplo C: Combinando diccionarios (Valuación de inventario)\n# Tenemos un inventario físico de commodities y sus precios de mercado.\n# Queremos calcular el valor total del inventario.\n\ncantidades = {'Soja': 150, 'Maiz': 300, 'Trigo': 200}\nprecios_mercado = {'Soja': 350.0, 'Trigo': 210.5, 'Maiz': 180.0}\n\nvalor_total_inventario = 0 # Acumulador\n\n# Recorremos las claves del diccionario de cantidades [cite: 508]\nfor commodity in cantidades:\n    cantidad_toneladas = cantidades[commodity]\n    precio_tonelada = precios_mercado[commodity]\n    \n    valor_parcial = cantidad_toneladas * precio_tonelada\n    valor_total_inventario = valor_total_inventario + valor_parcial\n\nprint(f\"El valor total del inventario agrícola es: ${valor_total_inventario}\")","id":7,"options":{"autorun":"","classes":"","comment":"","context":"interactive","dpi":72,"fig-cap":"","fig-height":5,"fig-width":7,"label":"dict-inventario","message":"true","out-height":"","out-width":"700px","output":"true","read-only":"false","results":"markup","warning":"true"}}];
+globalThis.qpyodideCellDetails = [{"code":"# Ejemplo: Búsqueda incremental (Aproximación por tanteo)\n# Supongamos que queremos saber cuántos meses necesitamos ahorrar $150 para alcanzar o superar los $1000, \n# asumiendo que no hay interés.\n\nahorro_mensual = 150\nobjetivo = 1000\n\n# Inicializamos nuestras variables\ncapital_acumulado = 0  # Esto es un ACUMULADOR\nmeses = 0              # Esto es un CONTADOR\n\nprint(\"--- Inicio del ahorro ---\")\nwhile capital_acumulado < objetivo:\n    capital_acumulado = capital_acumulado + ahorro_mensual\n    meses = meses + 1\n    print(f\"Mes {meses}: Acumulado = ${capital_acumulado}\")\n\nprint(f\"Tomó {meses} meses alcanzar el objetivo de ${objetivo}.\")","id":1,"options":{"autorun":"","classes":"","comment":"","context":"interactive","dpi":72,"fig-cap":"","fig-height":5,"fig-width":7,"label":"while-ahorro","message":"true","out-height":"","out-width":"700px","output":"true","read-only":"false","results":"markup","warning":"true"}},{"code":"# Ejemplo: Proyección de un capital con interés simple\n# Queremos ver cómo crece una inversión inicial de $500 a una tasa del 5% anual durante 4 años.\n\ncapital_inicial = 500\ntasa_anual = 0.05\nanios = 4\n\nprint(f\"Capital inicial: ${capital_inicial}\")\n\n# range(1, anios + 1) generará los números: 1, 2, 3, 4\nfor anio in range(1, anios + 1):\n    # Calculamos el interés generado en el año (interés simple)\n    interes_generado = capital_inicial * tasa_anual\n    \n    # En el interés simple, el capital total es el inicial más los intereses acumulados\n    capital_total = capital_inicial + (interes_generado * anio)\n    \n    print(f\"Fin del Año {anio}: El capital total es ${capital_total}\")","id":2,"options":{"autorun":"","classes":"","comment":"","context":"interactive","dpi":72,"fig-cap":"","fig-height":5,"fig-width":7,"label":"for-interes-simple","message":"true","out-height":"","out-width":"700px","output":"true","read-only":"false","results":"markup","warning":"true"}},{"code":"# Ejemplo A: Filtrado de datos en listas\n# Tenemos una lista con las cotizaciones históricas de un tipo de cambio.\n# Queremos crear una nueva lista SOLO con los días en que la cotización superó los $1000.\n\ncotizaciones = [980.5, 995.0, 1005.2, 1010.0, 998.0, 1020.5]\ncotizaciones_altas = [] # Creamos una lista vacía usando corchetes\n\nfor precio in cotizaciones:\n    if precio > 1000:\n        cotizaciones_altas.append(precio) # Añade el elemento al final de la lista\n\nprint(\"Cotizaciones originales:\", cotizaciones)\nprint(\"Cotizaciones altas (mayores a 1000):\", cotizaciones_altas)","id":3,"options":{"autorun":"","classes":"","comment":"","context":"interactive","dpi":72,"fig-cap":"","fig-height":5,"fig-width":7,"label":"listas-filtrado","message":"true","out-height":"","out-width":"700px","output":"true","read-only":"false","results":"markup","warning":"true"}},{"code":"# Ejemplo B: Operaciones secuenciales (diferencias de precios)\n# A veces necesitamos comparar un elemento de la lista con el anterior.\nprecios_accion = [50.0, 52.0, 51.0, 55.0]\nvariaciones = []\n\n# Iteramos usando índices. Usamos len() - 1 porque compararemos el día actual con el siguiente.\nfor i in range(len(precios_accion) - 1):\n    precio_hoy = precios_accion[i]\n    precio_manana = precios_accion[i + 1]\n    \n    variacion_absoluta = precio_manana - precio_hoy\n    variaciones.append(variacion_absoluta)\n\nprint(\"Precios diarios:\", precios_accion)\nprint(\"Variaciones absolutas diarias:\", variaciones)","id":4,"options":{"autorun":"","classes":"","comment":"","context":"interactive","dpi":72,"fig-cap":"","fig-height":5,"fig-width":7,"label":"listas-variaciones","message":"true","out-height":"","out-width":"700px","output":"true","read-only":"false","results":"markup","warning":"true"}},{"code":"# Ejemplo: Matriz de precios de 3 activos durante 3 días\n# Cada fila representa un activo: [Día 1, Día 2, Día 3]\nprecios_activos = [\n    [100.5, 101.2, 100.8],  # Activo A\n    [45.0, 45.5, 46.2],     # Activo B\n    [210.3, 209.5, 211.0]   # Activo C\n]\n\nprint(\"Matriz completa de precios:\")\nfor fila in precios_activos:\n    print(fila)\n\n# Podemos acceder a un elemento específico usando dos índices: [fila][columna]\n# Ejemplo: Precio del Activo B (índice 1) en el Día 2 (índice 1)\nprecio_b_dia2 = precios_activos[1][1]\nprint(f\"\\nPrecio del Activo B en el Día 2: ${precio_b_dia2}\")\n\n# También podemos recorrerla con bucles anidados\nprint(\"\\nAcceso individual a cada precio:\")\nfor i in range(len(precios_activos)):\n    for j in range(len(precios_activos[i])):\n        print(f\"Activo {i}, Día {j}: ${precios_activos[i][j]}\")","id":5,"options":{"autorun":"","classes":"","comment":"","context":"interactive","dpi":72,"fig-cap":"","fig-height":5,"fig-width":7,"label":"listas-anidadas-matriz","message":"true","out-height":"","out-width":"700px","output":"true","read-only":"false","results":"markup","warning":"true"}},{"code":"# Ejemplo A: Mapeo de información de un activo\n# Creamos un diccionario vacío usando dict() o llaves {}.\nbono_soberano = dict()\n\n# Agregamos elementos clave-valor\nbono_soberano['ticker'] = 'AL30'\nbono_soberano['paridad'] = 45.5\nbono_soberano['legislacion'] = 'Local'\n\nprint(\"Datos del bono:\", bono_soberano)\nprint(\"Ticker específico:\", bono_soberano['ticker'])\n\n# Actualizamos un valor existente\nbono_soberano['paridad'] = 48.2\nprint(\"Paridad actualizada:\", bono_soberano['paridad'])","id":6,"options":{"autorun":"","classes":"","comment":"","context":"interactive","dpi":72,"fig-cap":"","fig-height":5,"fig-width":7,"label":"dict-bono","message":"true","out-height":"","out-width":"700px","output":"true","read-only":"false","results":"markup","warning":"true"}},{"code":"# Ejemplo B: Frecuencias y el método .get()\n# Queremos contar cuántos activos tenemos agrupados por su nivel de riesgo.\n# El método .get(clave, valor_por_defecto) es ideal para esto.\n\nactivos = [\"Bajo\", \"Alto\", \"Medio\", \"Bajo\", \"Bajo\", \"Medio\", \"Alto\", \"Bajo\"]\nconteo_riesgos = {}\n\nfor nivel in activos:\n    # Si 'nivel' ya está en el diccionario, toma su valor actual.\n    # Si no está, devuelve 0. A eso le sumamos 1.\n    conteo_riesgos[nivel] = conteo_riesgos.get(nivel, 0) + 1\n\nprint(\"Distribución de riesgos de la cartera:\")\nprint(conteo_riesgos)","id":7,"options":{"autorun":"","classes":"","comment":"","context":"interactive","dpi":72,"fig-cap":"","fig-height":5,"fig-width":7,"label":"dict-riesgos","message":"true","out-height":"","out-width":"700px","output":"true","read-only":"false","results":"markup","warning":"true"}},{"code":"# Ejemplo C: Combinando diccionarios (Valuación de inventario)\n# Tenemos un inventario físico de commodities y sus precios de mercado.\n# Queremos calcular el valor total del inventario.\n\ncantidades = {'Soja': 150, 'Maiz': 300, 'Trigo': 200}\nprecios_mercado = {'Soja': 350.0, 'Trigo': 210.5, 'Maiz': 180.0}\n\nvalor_total_inventario = 0 # Acumulador\n\n# Recorremos las claves del diccionario de cantidades\nfor commodity in cantidades:\n    cantidad_toneladas = cantidades[commodity]\n    precio_tonelada = precios_mercado[commodity]\n    \n    valor_parcial = cantidad_toneladas * precio_tonelada\n    valor_total_inventario = valor_total_inventario + valor_parcial\n\nprint(f\"El valor total del inventario agrícola es: ${valor_total_inventario}\")","id":8,"options":{"autorun":"","classes":"","comment":"","context":"interactive","dpi":72,"fig-cap":"","fig-height":5,"fig-width":7,"label":"dict-inventario","message":"true","out-height":"","out-width":"700px","output":"true","read-only":"false","results":"markup","warning":"true"}}];
 
 
 </script>
@@ -472,7 +472,7 @@ globalThis._qpyodideGetInstance = function() {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Alternar barra lateral" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../unidad1/_intro_mod1.html">Módulo 1: Fundamentos y Renta Fija</a></li><li class="breadcrumb-item"><a href="../unidad1/cap02_iteraciones_estructuras.html"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Iteraciones y Estructuras de Datos Nativas</span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../unidad1/_intro_mod1.html">Módulo 1: Fundamentos y Renta Fija</a></li><li class="breadcrumb-item"><a href="../unidad1/cap02_iteraciones_estructuras.html"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Iteraciones y Estructuras de Datos Nativas</span></a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Alternar barra lateral" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Buscar" onclick="window.quartoOpenSearch();">
@@ -508,7 +508,7 @@ globalThis._qpyodideGetInstance = function() {
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../index.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Bienvenida</span></a>
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Bienvenida</span></span></a>
   </div>
 </li>
         <li class="sidebar-item sidebar-item-section">
@@ -523,19 +523,19 @@ globalThis._qpyodideGetInstance = function() {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../unidad1/_intro_mod1.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Módulo 1: Fundamentos y Renta Fija</span></span></a>
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Introducción al Módulo 1</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../unidad1/cap01_pensamiento_computacional.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Pensamiento Computacional en Finanzas</span></span></a>
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Pensamiento Computacional en Finanzas</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../unidad1/cap02_iteraciones_estructuras.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Iteraciones y Estructuras de Datos Nativas</span></span></a>
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Iteraciones y Estructuras de Datos Nativas</span></span></a>
   </div>
 </li>
       </ul>
@@ -567,12 +567,16 @@ globalThis._qpyodideGetInstance = function() {
     <h2 id="toc-title">En esta página</h2>
    
   <ul>
-  <li><a href="#introducción" id="toc-introducción" class="nav-link active" data-scroll-target="#introducción"><span class="header-section-number">4</span> Introducción</a></li>
-  <li><a href="#bucles-while-contadores-y-acumuladores" id="toc-bucles-while-contadores-y-acumuladores" class="nav-link" data-scroll-target="#bucles-while-contadores-y-acumuladores"><span class="header-section-number">5</span> 1. Bucles <code>while</code>, Contadores y Acumuladores</a></li>
-  <li><a href="#bucles-for-y-la-función-range" id="toc-bucles-for-y-la-función-range" class="nav-link" data-scroll-target="#bucles-for-y-la-función-range"><span class="header-section-number">6</span> 2. Bucles <code>for</code> y la función <code>range()</code></a></li>
-  <li><a href="#listas-almacenando-múltiples-valores" id="toc-listas-almacenando-múltiples-valores" class="nav-link" data-scroll-target="#listas-almacenando-múltiples-valores"><span class="header-section-number">7</span> 3. Listas: Almacenando múltiples valores</a></li>
-  <li><a href="#diccionarios-datos-etiquetados" id="toc-diccionarios-datos-etiquetados" class="nav-link" data-scroll-target="#diccionarios-datos-etiquetados"><span class="header-section-number">8</span> 4. Diccionarios: Datos etiquetados</a></li>
-  <li><a href="#referencias" id="toc-referencias" class="nav-link" data-scroll-target="#referencias"><span class="header-section-number">9</span> Referencias</a></li>
+  <li><a href="#introducción" id="toc-introducción" class="nav-link active" data-scroll-target="#introducción">Introducción</a>
+  <ul class="collapse">
+  <li><a href="#bucles-while-contadores-y-acumuladores" id="toc-bucles-while-contadores-y-acumuladores" class="nav-link" data-scroll-target="#bucles-while-contadores-y-acumuladores"><span class="header-section-number">4.1</span> Bucles <code>while</code>, Contadores y Acumuladores</a></li>
+  <li><a href="#bucles-for-y-la-función-range" id="toc-bucles-for-y-la-función-range" class="nav-link" data-scroll-target="#bucles-for-y-la-función-range"><span class="header-section-number">4.2</span> Bucles <code>for</code> y la función <code>range()</code></a></li>
+  <li><a href="#listas-almacenando-múltiples-valores" id="toc-listas-almacenando-múltiples-valores" class="nav-link" data-scroll-target="#listas-almacenando-múltiples-valores"><span class="header-section-number">4.3</span> Listas: Almacenando múltiples valores</a>
+  <ul class="collapse">
+  <li><a href="#listas-anidadas-representando-matrices" id="toc-listas-anidadas-representando-matrices" class="nav-link" data-scroll-target="#listas-anidadas-representando-matrices"><span class="header-section-number">4.3.1</span> Listas anidadas: Representando matrices</a></li>
+  </ul></li>
+  <li><a href="#diccionarios-datos-etiquetados" id="toc-diccionarios-datos-etiquetados" class="nav-link" data-scroll-target="#diccionarios-datos-etiquetados"><span class="header-section-number">4.4</span> Diccionarios: Datos etiquetados</a></li>
+  </ul></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/uade-finanzas-computacionales/libro/edit/main/unidad1/cap02_iteraciones_estructuras.qmd" class="toc-action"><i class="bi bi-github"></i>Editar esta página</a></li><li><a href="https://github.com/uade-finanzas-computacionales/libro/issues/new" class="toc-action"><i class="bi empty"></i>Informar sobre problema</a></li></ul></div></nav>
     </div>
@@ -589,10 +593,10 @@ globalThis._qpyodideGetInstance = function() {
   });
 </script>
 
-<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../unidad1/_intro_mod1.html">Módulo 1: Fundamentos y Renta Fija</a></li><li class="breadcrumb-item"><a href="../unidad1/cap02_iteraciones_estructuras.html"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Iteraciones y Estructuras de Datos Nativas</span></a></li></ol></nav>
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../unidad1/_intro_mod1.html">Módulo 1: Fundamentos y Renta Fija</a></li><li class="breadcrumb-item"><a href="../unidad1/cap02_iteraciones_estructuras.html"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Iteraciones y Estructuras de Datos Nativas</span></a></li></ol></nav>
 <div class="quarto-title">
-<div class="quarto-title-block"><div><h1 class="title"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Capítulo 2: Iteraciones y Estructuras de Datos Nativas</span></h1><button type="button" class="btn code-tools-button" id="quarto-code-tools-source"><i class="bi"></i> Código</button></div></div>
-<p class="subtitle lead">Cuaderno de Práctica - Finanzas Computacionales</p>
+<div class="quarto-title-block"><div><h1 class="title"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Iteraciones y Estructuras de Datos Nativas</span></h1><button type="button" class="btn code-tools-button" id="quarto-code-tools-source"><i class="bi"></i> Código</button></div></div>
+<p class="subtitle lead">Bucles, Listas y Diccionarios</p>
 </div>
 
 
@@ -607,7 +611,7 @@ globalThis._qpyodideGetInstance = function() {
 <div>
   <div class="abstract">
     <div class="block-title">Resumen</div>
-    <p>Este script está diseñado con formato de celdas interactivas para practicar bucles while, for, listas y diccionarios aplicados a finanzas.</p>
+    <p>Este capítulo desarrolla los conceptos de bucles, contadores, acumuladores, listas y diccionarios.</p>
   </div>
 </div>
 
@@ -615,59 +619,58 @@ globalThis._qpyodideGetInstance = function() {
 </header>
 
 
-<section id="introducción" class="level1" data-number="4">
-<h1 data-number="4"><span class="header-section-number">4</span> Introducción</h1>
-<p>Este capítulo está diseñado con formato de celdas interactivas. Si usas VS Code o Jupyter, puedes ejecutar cada bloque delimitado por <code># %%</code> de forma independiente. En este libro, los bloques son ejecutables directamente en el navegador.</p>
+<section id="introducción" class="level1 unnumbered">
+<h1 class="unnumbered">Introducción</h1>
+<p>En este capítulo exploraremos los pilares fundamentales para lograr las <strong>estructuras iterativas</strong> (bucles <code>while</code> y <code>for</code>) y las <strong>estructuras de datos</strong> (listas y diccionarios) que permitan almacenar cantidades variables de datos. A través de casos prácticos, dejaremos atrás el cálculo manual de rendimientos aislados para aprender a procesar y organizar series de precios y carteras de inversión en milisegundos.</p>
 <hr>
-</section>
-<section id="bucles-while-contadores-y-acumuladores" class="level1" data-number="5">
-<h1 data-number="5"><span class="header-section-number">5</span> 1. Bucles <code>while</code>, Contadores y Acumuladores</h1>
-<p>La estructura <code>while</code> repite las instrucciones mientras una condición sea evaluada como verdadera (<code>True</code>)[cite: 30, 31]. Se le conoce como “bucle indefinido” porque no sabemos de antemano cuántas veces se ejecutará[cite: 86].</p>
+<section id="bucles-while-contadores-y-acumuladores" class="level2" data-number="4.1">
+<h2 data-number="4.1" class="anchored" data-anchor-id="bucles-while-contadores-y-acumuladores"><span class="header-section-number">4.1</span> Bucles <code>while</code>, Contadores y Acumuladores</h2>
+<p>La estructura <code>while</code> repite las instrucciones mientras una condición sea evaluada como verdadera (<code>True</code>). Se le conoce como “bucle indefinido” porque no sabemos de antemano cuántas veces se ejecutará.</p>
 <p><strong>Conceptos clave:</strong></p>
 <ul>
-<li><strong>Contador:</strong> Una variable que suma un valor constante en cada iteración (ej: <code>i = i + 1</code>)[cite: 58].</li>
+<li><strong>Contador:</strong> Una variable que suma un valor constante en cada iteración (ej: <code>i = i + 1</code>).</li>
 <li><strong>Acumulador:</strong> Una variable que suma un valor variable en cada iteración (muy usado para sumar flujos, capitales, etc.).</li>
 </ul>
 <div id="qpyodide-insertion-location-1"></div>
 <noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
 <hr>
 </section>
-<section id="bucles-for-y-la-función-range" class="level1" data-number="6">
-<h1 data-number="6"><span class="header-section-number">6</span> 2. Bucles <code>for</code> y la función <code>range()</code></h1>
-<p>La estructura <code>for</code> permite realizar una cantidad definida de iteraciones[cite: 90]. Itera sobre cada elemento de una secuencia (como una lista o un rango de números)[cite: 103]. La función <code>range()</code> se utiliza frecuentemente para construir estos bucles[cite: 172].</p>
+<section id="bucles-for-y-la-función-range" class="level2" data-number="4.2">
+<h2 data-number="4.2" class="anchored" data-anchor-id="bucles-for-y-la-función-range"><span class="header-section-number">4.2</span> Bucles <code>for</code> y la función <code>range()</code></h2>
+<p>La estructura <code>for</code> permite realizar una cantidad definida de iteraciones. Itera sobre cada elemento de una secuencia (como una lista o un rango de números). La función <code>range()</code> se utiliza frecuentemente para construir estos bucles.</p>
 <div id="qpyodide-insertion-location-2"></div>
 <noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
 <hr>
 </section>
-<section id="listas-almacenando-múltiples-valores" class="level1" data-number="7">
-<h1 data-number="7"><span class="header-section-number">7</span> 3. Listas: Almacenando múltiples valores</h1>
-<p>Las listas nos permiten guardar varios elementos en una sola variable, manteniendo el orden[cite: 115, 207]. Podemos acceder a ellos mediante su índice (que empieza en 0) [cite: 122, 129] y modificarlas con métodos como <code>.append()</code>, <code>.pop()</code> o <code>del</code>[cite: 216, 218].</p>
+<section id="listas-almacenando-múltiples-valores" class="level2" data-number="4.3">
+<h2 data-number="4.3" class="anchored" data-anchor-id="listas-almacenando-múltiples-valores"><span class="header-section-number">4.3</span> Listas: Almacenando múltiples valores</h2>
+<p>Las listas nos permiten guardar varios elementos en una sola variable, manteniendo el orden. Podemos acceder a ellos mediante su índice (que empieza en 0) y modificarlas con métodos como <code>.append()</code>, <code>.pop()</code> o <code>del</code>.</p>
 <div id="qpyodide-insertion-location-3"></div>
 <noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
 <div id="qpyodide-insertion-location-4"></div>
 <noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
-<hr>
-</section>
-<section id="diccionarios-datos-etiquetados" class="level1" data-number="8">
-<h1 data-number="8"><span class="header-section-number">8</span> 4. Diccionarios: Datos etiquetados</h1>
-<p>A diferencia de las listas, los diccionarios no tienen un orden secuencial (son como una bolsa)[cite: 402]. Los elementos se guardan y se buscan utilizando “claves” (keys) en lugar de índices numéricos[cite: 403, 438].</p>
+<section id="listas-anidadas-representando-matrices" class="level3" data-number="4.3.1">
+<h3 data-number="4.3.1" class="anchored" data-anchor-id="listas-anidadas-representando-matrices"><span class="header-section-number">4.3.1</span> Listas anidadas: Representando matrices</h3>
+<p>Cuando necesitamos representar datos en filas y columnas (por ejemplo, los precios de varios activos a lo largo del tiempo), podemos utilizar <strong>listas de listas</strong>. Cada elemento de la lista principal es, a su vez, una lista que representa una fila.</p>
 <div id="qpyodide-insertion-location-5"></div>
 <noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
+<hr>
+</section>
+</section>
+<section id="diccionarios-datos-etiquetados" class="level2" data-number="4.4">
+<h2 data-number="4.4" class="anchored" data-anchor-id="diccionarios-datos-etiquetados"><span class="header-section-number">4.4</span> Diccionarios: Datos etiquetados</h2>
+<p>A diferencia de las listas, los diccionarios no tienen un orden secuencial (son como una bolsa). Los elementos se guardan y se buscan utilizando “claves” (keys) en lugar de índices numéricos.</p>
 <div id="qpyodide-insertion-location-6"></div>
 <noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
 <div id="qpyodide-insertion-location-7"></div>
 <noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
-<hr>
-</section>
-<section id="referencias" class="level1" data-number="9">
-<h1 data-number="9"><span class="header-section-number">9</span> Referencias</h1>
-<ul>
-<li>[cite: 30, 31, 86, 58, 90, 103, 172, 115, 207, 122, 129, 216, 218, 402, 403, 438, 404, 475, 477, 481, 508] - Referencias del material original. ormen, T. H. et al.&nbsp;(2009). <em>Introduction to Algorithms</em>. MIT Press.</li>
-</ul>
+<div id="qpyodide-insertion-location-8"></div>
+<noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
 
 
 <!-- -->
 
+</section>
 </section>
 
 </main> <!-- /main -->
@@ -1130,7 +1133,7 @@ globalThis._qpyodideGetInstance = function() {
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
       <a href="../unidad1/cap01_pensamiento_computacional.html" class="pagination-link" aria-label="Pensamiento Computacional en Finanzas">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Pensamiento Computacional en Finanzas</span></span>
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Pensamiento Computacional en Finanzas</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
@@ -1143,189 +1146,211 @@ globalThis._qpyodideGetInstance = function() {
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="an">title:</span><span class="co"> "Iteraciones y Estructuras de Datos Nativas"</span></span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="an">subtitle:</span><span class="co"> "Bucles, Listas y Diccionarios"</span></span>
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="an">abstract:</span><span class="co"> |</span></span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="co">  Este script está diseñado con formato de celdas interactivas para practicar</span></span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="co">  bucles while, for, listas y diccionarios aplicados a finanzas.</span></span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="fu"># Introducción {.unnumbered}</span></span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>Este capítulo está diseñado con formato de celdas interactivas. Si usas VS Code o Jupyter, puedes ejecutar cada bloque delimitado por <span class="in">`# %%`</span> de forma independiente. En este libro, los bloques son ejecutables directamente en el navegador.</span>
-<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>---</span>
-<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a><span class="fu"># Bucles `while`, Contadores y Acumuladores</span></span>
-<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>La estructura <span class="in">`while`</span> repite las instrucciones mientras una condición sea evaluada como verdadera (<span class="in">`True`</span>)<span class="co">[</span><span class="ot">cite: 30, 31</span><span class="co">]</span>. Se le conoce como "bucle indefinido" porque no sabemos de antemano cuántas veces se ejecutará<span class="co">[</span><span class="ot">cite: 86</span><span class="co">]</span>.</span>
-<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>**Conceptos clave:**</span>
-<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a><span class="ss">* </span>**Contador:** Una variable que suma un valor constante en cada iteración (ej: <span class="in">`i = i + 1`</span>)<span class="co">[</span><span class="ot">cite: 58</span><span class="co">]</span>.</span>
-<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a><span class="ss">* </span>**Acumulador:** Una variable que suma un valor variable en cada iteración (muy usado para sumar flujos, capitales, etc.).</span>
-<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a><span class="in">```{pyodide-python}</span></span>
-<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: while-ahorro</span></span>
-<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a><span class="co"># Ejemplo: Búsqueda incremental (Aproximación por tanteo)</span></span>
-<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a><span class="co"># Supongamos que queremos saber cuántos meses necesitamos ahorrar $150 para alcanzar o superar los $1000, </span></span>
-<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a><span class="co"># asumiendo que no hay interés.</span></span>
-<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a>ahorro_mensual <span class="op">=</span> <span class="dv">150</span></span>
-<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a>objetivo <span class="op">=</span> <span class="dv">1000</span></span>
-<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a><span class="co"># Inicializamos nuestras variables</span></span>
-<span id="cb1-34"><a href="#cb1-34" aria-hidden="true" tabindex="-1"></a>capital_acumulado <span class="op">=</span> <span class="dv">0</span>  <span class="co"># Esto es un ACUMULADOR</span></span>
-<span id="cb1-35"><a href="#cb1-35" aria-hidden="true" tabindex="-1"></a>meses <span class="op">=</span> <span class="dv">0</span>              <span class="co"># Esto es un CONTADOR</span></span>
-<span id="cb1-36"><a href="#cb1-36" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-37"><a href="#cb1-37" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"--- Inicio del ahorro ---"</span>)</span>
-<span id="cb1-38"><a href="#cb1-38" aria-hidden="true" tabindex="-1"></a><span class="cf">while</span> capital_acumulado <span class="op">&lt;</span> objetivo:</span>
-<span id="cb1-39"><a href="#cb1-39" aria-hidden="true" tabindex="-1"></a>    capital_acumulado <span class="op">=</span> capital_acumulado <span class="op">+</span> ahorro_mensual</span>
-<span id="cb1-40"><a href="#cb1-40" aria-hidden="true" tabindex="-1"></a>    meses <span class="op">=</span> meses <span class="op">+</span> <span class="dv">1</span></span>
-<span id="cb1-41"><a href="#cb1-41" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"Mes </span><span class="sc">{</span>meses<span class="sc">}</span><span class="ss">: Acumulado = $</span><span class="sc">{</span>capital_acumulado<span class="sc">}</span><span class="ss">"</span>)</span>
-<span id="cb1-42"><a href="#cb1-42" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-43"><a href="#cb1-43" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Tomó </span><span class="sc">{</span>meses<span class="sc">}</span><span class="ss"> meses alcanzar el objetivo de $</span><span class="sc">{</span>objetivo<span class="sc">}</span><span class="ss">."</span>)</span>
-<span id="cb1-44"><a href="#cb1-44" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb1-45"><a href="#cb1-45" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-46"><a href="#cb1-46" aria-hidden="true" tabindex="-1"></a>---</span>
-<span id="cb1-47"><a href="#cb1-47" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-48"><a href="#cb1-48" aria-hidden="true" tabindex="-1"></a><span class="fu"># Bucles `for` y la función `range()`</span></span>
-<span id="cb1-49"><a href="#cb1-49" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-50"><a href="#cb1-50" aria-hidden="true" tabindex="-1"></a>La estructura <span class="in">`for`</span> permite realizar una cantidad definida de iteraciones<span class="co">[</span><span class="ot">cite: 90</span><span class="co">]</span>. Itera sobre cada elemento de una secuencia (como una lista o un rango de números)<span class="co">[</span><span class="ot">cite: 103</span><span class="co">]</span>. La función <span class="in">`range()`</span> se utiliza frecuentemente para construir estos bucles<span class="co">[</span><span class="ot">cite: 172</span><span class="co">]</span>.</span>
-<span id="cb1-51"><a href="#cb1-51" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-52"><a href="#cb1-52" aria-hidden="true" tabindex="-1"></a><span class="in">```{pyodide-python}</span></span>
-<span id="cb1-53"><a href="#cb1-53" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: for-interes-simple</span></span>
-<span id="cb1-54"><a href="#cb1-54" aria-hidden="true" tabindex="-1"></a><span class="co"># Ejemplo: Proyección de un capital con interés simple</span></span>
-<span id="cb1-55"><a href="#cb1-55" aria-hidden="true" tabindex="-1"></a><span class="co"># Queremos ver cómo crece una inversión inicial de $500 a una tasa del 5% anual durante 4 años.</span></span>
-<span id="cb1-56"><a href="#cb1-56" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-57"><a href="#cb1-57" aria-hidden="true" tabindex="-1"></a>capital_inicial <span class="op">=</span> <span class="dv">500</span></span>
-<span id="cb1-58"><a href="#cb1-58" aria-hidden="true" tabindex="-1"></a>tasa_anual <span class="op">=</span> <span class="fl">0.05</span></span>
-<span id="cb1-59"><a href="#cb1-59" aria-hidden="true" tabindex="-1"></a>anios <span class="op">=</span> <span class="dv">4</span></span>
-<span id="cb1-60"><a href="#cb1-60" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-61"><a href="#cb1-61" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Capital inicial: $</span><span class="sc">{</span>capital_inicial<span class="sc">}</span><span class="ss">"</span>)</span>
-<span id="cb1-62"><a href="#cb1-62" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-63"><a href="#cb1-63" aria-hidden="true" tabindex="-1"></a><span class="co"># range(1, anios + 1) generará los números: 1, 2, 3, 4</span></span>
-<span id="cb1-64"><a href="#cb1-64" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> anio <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">1</span>, anios <span class="op">+</span> <span class="dv">1</span>):</span>
-<span id="cb1-65"><a href="#cb1-65" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Calculamos el interés generado en el año (interés simple)</span></span>
-<span id="cb1-66"><a href="#cb1-66" aria-hidden="true" tabindex="-1"></a>    interes_generado <span class="op">=</span> capital_inicial <span class="op">*</span> tasa_anual</span>
-<span id="cb1-67"><a href="#cb1-67" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb1-68"><a href="#cb1-68" aria-hidden="true" tabindex="-1"></a>    <span class="co"># En el interés simple, el capital total es el inicial más los intereses acumulados</span></span>
-<span id="cb1-69"><a href="#cb1-69" aria-hidden="true" tabindex="-1"></a>    capital_total <span class="op">=</span> capital_inicial <span class="op">+</span> (interes_generado <span class="op">*</span> anio)</span>
-<span id="cb1-70"><a href="#cb1-70" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb1-71"><a href="#cb1-71" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"Fin del Año </span><span class="sc">{</span>anio<span class="sc">}</span><span class="ss">: El capital total es $</span><span class="sc">{</span>capital_total<span class="sc">}</span><span class="ss">"</span>)</span>
-<span id="cb1-72"><a href="#cb1-72" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb1-73"><a href="#cb1-73" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-74"><a href="#cb1-74" aria-hidden="true" tabindex="-1"></a>---</span>
-<span id="cb1-75"><a href="#cb1-75" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-76"><a href="#cb1-76" aria-hidden="true" tabindex="-1"></a><span class="fu"># Listas: Almacenando múltiples valores</span></span>
-<span id="cb1-77"><a href="#cb1-77" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-78"><a href="#cb1-78" aria-hidden="true" tabindex="-1"></a>Las listas nos permiten guardar varios elementos en una sola variable, manteniendo el orden<span class="co">[</span><span class="ot">cite: 115, 207</span><span class="co">]</span>. Podemos acceder a ellos mediante su índice (que empieza en 0) <span class="co">[</span><span class="ot">cite: 122, 129</span><span class="co">]</span> y modificarlas con métodos como <span class="in">`.append()`</span>, <span class="in">`.pop()`</span> o <span class="in">`del`</span><span class="co">[</span><span class="ot">cite: 216, 218</span><span class="co">]</span>.</span>
-<span id="cb1-79"><a href="#cb1-79" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-80"><a href="#cb1-80" aria-hidden="true" tabindex="-1"></a><span class="in">```{pyodide-python}</span></span>
-<span id="cb1-81"><a href="#cb1-81" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: listas-filtrado</span></span>
-<span id="cb1-82"><a href="#cb1-82" aria-hidden="true" tabindex="-1"></a><span class="co"># Ejemplo A: Filtrado de datos en listas</span></span>
-<span id="cb1-83"><a href="#cb1-83" aria-hidden="true" tabindex="-1"></a><span class="co"># Tenemos una lista con las cotizaciones históricas de un tipo de cambio.</span></span>
-<span id="cb1-84"><a href="#cb1-84" aria-hidden="true" tabindex="-1"></a><span class="co"># Queremos crear una nueva lista SOLO con los días en que la cotización superó los $1000.</span></span>
-<span id="cb1-85"><a href="#cb1-85" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-86"><a href="#cb1-86" aria-hidden="true" tabindex="-1"></a>cotizaciones <span class="op">=</span> [<span class="fl">980.5</span>, <span class="fl">995.0</span>, <span class="fl">1005.2</span>, <span class="fl">1010.0</span>, <span class="fl">998.0</span>, <span class="fl">1020.5</span>]</span>
-<span id="cb1-87"><a href="#cb1-87" aria-hidden="true" tabindex="-1"></a>cotizaciones_altas <span class="op">=</span> [] <span class="co"># Creamos una lista vacía usando corchetes</span></span>
-<span id="cb1-88"><a href="#cb1-88" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-89"><a href="#cb1-89" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> precio <span class="kw">in</span> cotizaciones:</span>
-<span id="cb1-90"><a href="#cb1-90" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> precio <span class="op">&gt;</span> <span class="dv">1000</span>:</span>
-<span id="cb1-91"><a href="#cb1-91" aria-hidden="true" tabindex="-1"></a>        cotizaciones_altas.append(precio) <span class="co"># Añade el elemento al final de la lista [cite: 204, 216]</span></span>
-<span id="cb1-92"><a href="#cb1-92" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-93"><a href="#cb1-93" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Cotizaciones originales:"</span>, cotizaciones)</span>
-<span id="cb1-94"><a href="#cb1-94" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Cotizaciones altas (mayores a 1000):"</span>, cotizaciones_altas)</span>
-<span id="cb1-95"><a href="#cb1-95" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb1-96"><a href="#cb1-96" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-97"><a href="#cb1-97" aria-hidden="true" tabindex="-1"></a><span class="in">```{pyodide-python}</span></span>
-<span id="cb1-98"><a href="#cb1-98" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: listas-variaciones</span></span>
-<span id="cb1-99"><a href="#cb1-99" aria-hidden="true" tabindex="-1"></a><span class="co"># Ejemplo B: Operaciones secuenciales (diferencias de precios)</span></span>
-<span id="cb1-100"><a href="#cb1-100" aria-hidden="true" tabindex="-1"></a><span class="co"># A veces necesitamos comparar un elemento de la lista con el anterior.</span></span>
-<span id="cb1-101"><a href="#cb1-101" aria-hidden="true" tabindex="-1"></a>precios_accion <span class="op">=</span> [<span class="fl">50.0</span>, <span class="fl">52.0</span>, <span class="fl">51.0</span>, <span class="fl">55.0</span>]</span>
-<span id="cb1-102"><a href="#cb1-102" aria-hidden="true" tabindex="-1"></a>variaciones <span class="op">=</span> []</span>
-<span id="cb1-103"><a href="#cb1-103" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-104"><a href="#cb1-104" aria-hidden="true" tabindex="-1"></a><span class="co"># Iteramos usando índices. Usamos len() - 1 porque compararemos el día actual con el siguiente.</span></span>
-<span id="cb1-105"><a href="#cb1-105" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="bu">len</span>(precios_accion) <span class="op">-</span> <span class="dv">1</span>):</span>
-<span id="cb1-106"><a href="#cb1-106" aria-hidden="true" tabindex="-1"></a>    precio_hoy <span class="op">=</span> precios_accion[i]</span>
-<span id="cb1-107"><a href="#cb1-107" aria-hidden="true" tabindex="-1"></a>    precio_manana <span class="op">=</span> precios_accion[i <span class="op">+</span> <span class="dv">1</span>]</span>
-<span id="cb1-108"><a href="#cb1-108" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb1-109"><a href="#cb1-109" aria-hidden="true" tabindex="-1"></a>    variacion_absoluta <span class="op">=</span> precio_manana <span class="op">-</span> precio_hoy</span>
-<span id="cb1-110"><a href="#cb1-110" aria-hidden="true" tabindex="-1"></a>    variaciones.append(variacion_absoluta)</span>
-<span id="cb1-111"><a href="#cb1-111" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-112"><a href="#cb1-112" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Precios diarios:"</span>, precios_accion)</span>
-<span id="cb1-113"><a href="#cb1-113" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Variaciones absolutas diarias:"</span>, variaciones)</span>
-<span id="cb1-114"><a href="#cb1-114" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb1-115"><a href="#cb1-115" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-116"><a href="#cb1-116" aria-hidden="true" tabindex="-1"></a>---</span>
-<span id="cb1-117"><a href="#cb1-117" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-118"><a href="#cb1-118" aria-hidden="true" tabindex="-1"></a><span class="fu"># Diccionarios: Datos etiquetados</span></span>
-<span id="cb1-119"><a href="#cb1-119" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-120"><a href="#cb1-120" aria-hidden="true" tabindex="-1"></a>A diferencia de las listas, los diccionarios no tienen un orden secuencial (son como una bolsa)<span class="co">[</span><span class="ot">cite: 402</span><span class="co">]</span>. Los elementos se guardan y se buscan utilizando "claves" (keys) en lugar de índices numéricos<span class="co">[</span><span class="ot">cite: 403, 438</span><span class="co">]</span>.</span>
-<span id="cb1-121"><a href="#cb1-121" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-122"><a href="#cb1-122" aria-hidden="true" tabindex="-1"></a><span class="in">```{pyodide-python}</span></span>
-<span id="cb1-123"><a href="#cb1-123" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: dict-bono</span></span>
-<span id="cb1-124"><a href="#cb1-124" aria-hidden="true" tabindex="-1"></a><span class="co"># Ejemplo A: Mapeo de información de un activo</span></span>
-<span id="cb1-125"><a href="#cb1-125" aria-hidden="true" tabindex="-1"></a><span class="co"># Creamos un diccionario vacío usando dict() o llaves {}[cite: 404].</span></span>
-<span id="cb1-126"><a href="#cb1-126" aria-hidden="true" tabindex="-1"></a>bono_soberano <span class="op">=</span> <span class="bu">dict</span>()</span>
-<span id="cb1-127"><a href="#cb1-127" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-128"><a href="#cb1-128" aria-hidden="true" tabindex="-1"></a><span class="co"># Agregamos elementos clave-valor</span></span>
-<span id="cb1-129"><a href="#cb1-129" aria-hidden="true" tabindex="-1"></a>bono_soberano[<span class="st">'ticker'</span>] <span class="op">=</span> <span class="st">'AL30'</span></span>
-<span id="cb1-130"><a href="#cb1-130" aria-hidden="true" tabindex="-1"></a>bono_soberano[<span class="st">'paridad'</span>] <span class="op">=</span> <span class="fl">45.5</span></span>
-<span id="cb1-131"><a href="#cb1-131" aria-hidden="true" tabindex="-1"></a>bono_soberano[<span class="st">'legislacion'</span>] <span class="op">=</span> <span class="st">'Local'</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="co">  Este capítulo desarrolla los conceptos de bucles, contadores, acumuladores, listas y diccionarios.</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="fu"># Introducción {.unnumbered}</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>En este capítulo exploraremos los pilares fundamentales para lograr las **estructuras iterativas** (bucles `while` y `for`) y las **estructuras de datos** (listas y diccionarios) que permitan almacenar cantidades variables de datos. A través de casos prácticos, dejaremos atrás el cálculo manual de rendimientos aislados para aprender a procesar y organizar series de precios y carteras de inversión en milisegundos.</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>---</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a><span class="fu">## Bucles `while`, Contadores y Acumuladores</span></span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>La estructura <span class="in">`while`</span> repite las instrucciones mientras una condición sea evaluada como verdadera (<span class="in">`True`</span>). Se le conoce como "bucle indefinido" porque no sabemos de antemano cuántas veces se ejecutará.</span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>**Conceptos clave:**</span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a><span class="ss">* </span>**Contador:** Una variable que suma un valor constante en cada iteración (ej: <span class="in">`i = i + 1`</span>).</span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a><span class="ss">* </span>**Acumulador:** Una variable que suma un valor variable en cada iteración (muy usado para sumar flujos, capitales, etc.).</span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a><span class="in">```{pyodide-python}</span></span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: while-ahorro</span></span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a><span class="co"># Ejemplo: Búsqueda incremental (Aproximación por tanteo)</span></span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a><span class="co"># Supongamos que queremos saber cuántos meses necesitamos ahorrar $150 para alcanzar o superar los $1000, </span></span>
+<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a><span class="co"># asumiendo que no hay interés.</span></span>
+<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a>ahorro_mensual <span class="op">=</span> <span class="dv">150</span></span>
+<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a>objetivo <span class="op">=</span> <span class="dv">1000</span></span>
+<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a><span class="co"># Inicializamos nuestras variables</span></span>
+<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a>capital_acumulado <span class="op">=</span> <span class="dv">0</span>  <span class="co"># Esto es un ACUMULADOR</span></span>
+<span id="cb1-34"><a href="#cb1-34" aria-hidden="true" tabindex="-1"></a>meses <span class="op">=</span> <span class="dv">0</span>              <span class="co"># Esto es un CONTADOR</span></span>
+<span id="cb1-35"><a href="#cb1-35" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-36"><a href="#cb1-36" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"--- Inicio del ahorro ---"</span>)</span>
+<span id="cb1-37"><a href="#cb1-37" aria-hidden="true" tabindex="-1"></a><span class="cf">while</span> capital_acumulado <span class="op">&lt;</span> objetivo:</span>
+<span id="cb1-38"><a href="#cb1-38" aria-hidden="true" tabindex="-1"></a>    capital_acumulado <span class="op">=</span> capital_acumulado <span class="op">+</span> ahorro_mensual</span>
+<span id="cb1-39"><a href="#cb1-39" aria-hidden="true" tabindex="-1"></a>    meses <span class="op">=</span> meses <span class="op">+</span> <span class="dv">1</span></span>
+<span id="cb1-40"><a href="#cb1-40" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"Mes </span><span class="sc">{</span>meses<span class="sc">}</span><span class="ss">: Acumulado = $</span><span class="sc">{</span>capital_acumulado<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb1-41"><a href="#cb1-41" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-42"><a href="#cb1-42" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Tomó </span><span class="sc">{</span>meses<span class="sc">}</span><span class="ss"> meses alcanzar el objetivo de $</span><span class="sc">{</span>objetivo<span class="sc">}</span><span class="ss">."</span>)</span>
+<span id="cb1-43"><a href="#cb1-43" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb1-44"><a href="#cb1-44" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-45"><a href="#cb1-45" aria-hidden="true" tabindex="-1"></a>---</span>
+<span id="cb1-46"><a href="#cb1-46" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-47"><a href="#cb1-47" aria-hidden="true" tabindex="-1"></a><span class="fu">## Bucles `for` y la función `range()`</span></span>
+<span id="cb1-48"><a href="#cb1-48" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-49"><a href="#cb1-49" aria-hidden="true" tabindex="-1"></a>La estructura <span class="in">`for`</span> permite realizar una cantidad definida de iteraciones. Itera sobre cada elemento de una secuencia (como una lista o un rango de números). La función <span class="in">`range()`</span> se utiliza frecuentemente para construir estos bucles.</span>
+<span id="cb1-50"><a href="#cb1-50" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-51"><a href="#cb1-51" aria-hidden="true" tabindex="-1"></a><span class="in">```{pyodide-python}</span></span>
+<span id="cb1-52"><a href="#cb1-52" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: for-interes-simple</span></span>
+<span id="cb1-53"><a href="#cb1-53" aria-hidden="true" tabindex="-1"></a><span class="co"># Ejemplo: Proyección de un capital con interés simple</span></span>
+<span id="cb1-54"><a href="#cb1-54" aria-hidden="true" tabindex="-1"></a><span class="co"># Queremos ver cómo crece una inversión inicial de $500 a una tasa del 5% anual durante 4 años.</span></span>
+<span id="cb1-55"><a href="#cb1-55" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-56"><a href="#cb1-56" aria-hidden="true" tabindex="-1"></a>capital_inicial <span class="op">=</span> <span class="dv">500</span></span>
+<span id="cb1-57"><a href="#cb1-57" aria-hidden="true" tabindex="-1"></a>tasa_anual <span class="op">=</span> <span class="fl">0.05</span></span>
+<span id="cb1-58"><a href="#cb1-58" aria-hidden="true" tabindex="-1"></a>anios <span class="op">=</span> <span class="dv">4</span></span>
+<span id="cb1-59"><a href="#cb1-59" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-60"><a href="#cb1-60" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Capital inicial: $</span><span class="sc">{</span>capital_inicial<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb1-61"><a href="#cb1-61" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-62"><a href="#cb1-62" aria-hidden="true" tabindex="-1"></a><span class="co"># range(1, anios + 1) generará los números: 1, 2, 3, 4</span></span>
+<span id="cb1-63"><a href="#cb1-63" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> anio <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">1</span>, anios <span class="op">+</span> <span class="dv">1</span>):</span>
+<span id="cb1-64"><a href="#cb1-64" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Calculamos el interés generado en el año (interés simple)</span></span>
+<span id="cb1-65"><a href="#cb1-65" aria-hidden="true" tabindex="-1"></a>    interes_generado <span class="op">=</span> capital_inicial <span class="op">*</span> tasa_anual</span>
+<span id="cb1-66"><a href="#cb1-66" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb1-67"><a href="#cb1-67" aria-hidden="true" tabindex="-1"></a>    <span class="co"># En el interés simple, el capital total es el inicial más los intereses acumulados</span></span>
+<span id="cb1-68"><a href="#cb1-68" aria-hidden="true" tabindex="-1"></a>    capital_total <span class="op">=</span> capital_inicial <span class="op">+</span> (interes_generado <span class="op">*</span> anio)</span>
+<span id="cb1-69"><a href="#cb1-69" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb1-70"><a href="#cb1-70" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"Fin del Año </span><span class="sc">{</span>anio<span class="sc">}</span><span class="ss">: El capital total es $</span><span class="sc">{</span>capital_total<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb1-71"><a href="#cb1-71" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb1-72"><a href="#cb1-72" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-73"><a href="#cb1-73" aria-hidden="true" tabindex="-1"></a>---</span>
+<span id="cb1-74"><a href="#cb1-74" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-75"><a href="#cb1-75" aria-hidden="true" tabindex="-1"></a><span class="fu">## Listas: Almacenando múltiples valores</span></span>
+<span id="cb1-76"><a href="#cb1-76" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-77"><a href="#cb1-77" aria-hidden="true" tabindex="-1"></a>Las listas nos permiten guardar varios elementos en una sola variable, manteniendo el orden. Podemos acceder a ellos mediante su índice (que empieza en 0) y modificarlas con métodos como <span class="in">`.append()`</span>, <span class="in">`.pop()`</span> o <span class="in">`del`</span>.</span>
+<span id="cb1-78"><a href="#cb1-78" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-79"><a href="#cb1-79" aria-hidden="true" tabindex="-1"></a><span class="in">```{pyodide-python}</span></span>
+<span id="cb1-80"><a href="#cb1-80" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: listas-filtrado</span></span>
+<span id="cb1-81"><a href="#cb1-81" aria-hidden="true" tabindex="-1"></a><span class="co"># Ejemplo A: Filtrado de datos en listas</span></span>
+<span id="cb1-82"><a href="#cb1-82" aria-hidden="true" tabindex="-1"></a><span class="co"># Tenemos una lista con las cotizaciones históricas de un tipo de cambio.</span></span>
+<span id="cb1-83"><a href="#cb1-83" aria-hidden="true" tabindex="-1"></a><span class="co"># Queremos crear una nueva lista SOLO con los días en que la cotización superó los $1000.</span></span>
+<span id="cb1-84"><a href="#cb1-84" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-85"><a href="#cb1-85" aria-hidden="true" tabindex="-1"></a>cotizaciones <span class="op">=</span> [<span class="fl">980.5</span>, <span class="fl">995.0</span>, <span class="fl">1005.2</span>, <span class="fl">1010.0</span>, <span class="fl">998.0</span>, <span class="fl">1020.5</span>]</span>
+<span id="cb1-86"><a href="#cb1-86" aria-hidden="true" tabindex="-1"></a>cotizaciones_altas <span class="op">=</span> [] <span class="co"># Creamos una lista vacía usando corchetes</span></span>
+<span id="cb1-87"><a href="#cb1-87" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-88"><a href="#cb1-88" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> precio <span class="kw">in</span> cotizaciones:</span>
+<span id="cb1-89"><a href="#cb1-89" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> precio <span class="op">&gt;</span> <span class="dv">1000</span>:</span>
+<span id="cb1-90"><a href="#cb1-90" aria-hidden="true" tabindex="-1"></a>        cotizaciones_altas.append(precio) <span class="co"># Añade el elemento al final de la lista</span></span>
+<span id="cb1-91"><a href="#cb1-91" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-92"><a href="#cb1-92" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Cotizaciones originales:"</span>, cotizaciones)</span>
+<span id="cb1-93"><a href="#cb1-93" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Cotizaciones altas (mayores a 1000):"</span>, cotizaciones_altas)</span>
+<span id="cb1-94"><a href="#cb1-94" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb1-95"><a href="#cb1-95" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-96"><a href="#cb1-96" aria-hidden="true" tabindex="-1"></a><span class="in">```{pyodide-python}</span></span>
+<span id="cb1-97"><a href="#cb1-97" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: listas-variaciones</span></span>
+<span id="cb1-98"><a href="#cb1-98" aria-hidden="true" tabindex="-1"></a><span class="co"># Ejemplo B: Operaciones secuenciales (diferencias de precios)</span></span>
+<span id="cb1-99"><a href="#cb1-99" aria-hidden="true" tabindex="-1"></a><span class="co"># A veces necesitamos comparar un elemento de la lista con el anterior.</span></span>
+<span id="cb1-100"><a href="#cb1-100" aria-hidden="true" tabindex="-1"></a>precios_accion <span class="op">=</span> [<span class="fl">50.0</span>, <span class="fl">52.0</span>, <span class="fl">51.0</span>, <span class="fl">55.0</span>]</span>
+<span id="cb1-101"><a href="#cb1-101" aria-hidden="true" tabindex="-1"></a>variaciones <span class="op">=</span> []</span>
+<span id="cb1-102"><a href="#cb1-102" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-103"><a href="#cb1-103" aria-hidden="true" tabindex="-1"></a><span class="co"># Iteramos usando índices. Usamos len() - 1 porque compararemos el día actual con el siguiente.</span></span>
+<span id="cb1-104"><a href="#cb1-104" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="bu">len</span>(precios_accion) <span class="op">-</span> <span class="dv">1</span>):</span>
+<span id="cb1-105"><a href="#cb1-105" aria-hidden="true" tabindex="-1"></a>    precio_hoy <span class="op">=</span> precios_accion[i]</span>
+<span id="cb1-106"><a href="#cb1-106" aria-hidden="true" tabindex="-1"></a>    precio_manana <span class="op">=</span> precios_accion[i <span class="op">+</span> <span class="dv">1</span>]</span>
+<span id="cb1-107"><a href="#cb1-107" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb1-108"><a href="#cb1-108" aria-hidden="true" tabindex="-1"></a>    variacion_absoluta <span class="op">=</span> precio_manana <span class="op">-</span> precio_hoy</span>
+<span id="cb1-109"><a href="#cb1-109" aria-hidden="true" tabindex="-1"></a>    variaciones.append(variacion_absoluta)</span>
+<span id="cb1-110"><a href="#cb1-110" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-111"><a href="#cb1-111" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Precios diarios:"</span>, precios_accion)</span>
+<span id="cb1-112"><a href="#cb1-112" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Variaciones absolutas diarias:"</span>, variaciones)</span>
+<span id="cb1-113"><a href="#cb1-113" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb1-114"><a href="#cb1-114" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-115"><a href="#cb1-115" aria-hidden="true" tabindex="-1"></a><span class="fu">### Listas anidadas: Representando matrices</span></span>
+<span id="cb1-116"><a href="#cb1-116" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-117"><a href="#cb1-117" aria-hidden="true" tabindex="-1"></a>Cuando necesitamos representar datos en filas y columnas (por ejemplo, los precios de varios activos a lo largo del tiempo), podemos utilizar **listas de listas**. Cada elemento de la lista principal es, a su vez, una lista que representa una fila.</span>
+<span id="cb1-118"><a href="#cb1-118" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-119"><a href="#cb1-119" aria-hidden="true" tabindex="-1"></a><span class="in">```{pyodide-python}</span></span>
+<span id="cb1-120"><a href="#cb1-120" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: listas-anidadas-matriz</span></span>
+<span id="cb1-121"><a href="#cb1-121" aria-hidden="true" tabindex="-1"></a><span class="co"># Ejemplo: Matriz de precios de 3 activos durante 3 días</span></span>
+<span id="cb1-122"><a href="#cb1-122" aria-hidden="true" tabindex="-1"></a><span class="co"># Cada fila representa un activo: [Día 1, Día 2, Día 3]</span></span>
+<span id="cb1-123"><a href="#cb1-123" aria-hidden="true" tabindex="-1"></a>precios_activos <span class="op">=</span> [</span>
+<span id="cb1-124"><a href="#cb1-124" aria-hidden="true" tabindex="-1"></a>    [<span class="fl">100.5</span>, <span class="fl">101.2</span>, <span class="fl">100.8</span>],  <span class="co"># Activo A</span></span>
+<span id="cb1-125"><a href="#cb1-125" aria-hidden="true" tabindex="-1"></a>    [<span class="fl">45.0</span>, <span class="fl">45.5</span>, <span class="fl">46.2</span>],     <span class="co"># Activo B</span></span>
+<span id="cb1-126"><a href="#cb1-126" aria-hidden="true" tabindex="-1"></a>    [<span class="fl">210.3</span>, <span class="fl">209.5</span>, <span class="fl">211.0</span>]   <span class="co"># Activo C</span></span>
+<span id="cb1-127"><a href="#cb1-127" aria-hidden="true" tabindex="-1"></a>]</span>
+<span id="cb1-128"><a href="#cb1-128" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-129"><a href="#cb1-129" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Matriz completa de precios:"</span>)</span>
+<span id="cb1-130"><a href="#cb1-130" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> fila <span class="kw">in</span> precios_activos:</span>
+<span id="cb1-131"><a href="#cb1-131" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(fila)</span>
 <span id="cb1-132"><a href="#cb1-132" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-133"><a href="#cb1-133" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Datos del bono:"</span>, bono_soberano)</span>
-<span id="cb1-134"><a href="#cb1-134" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Ticker específico:"</span>, bono_soberano[<span class="st">'ticker'</span>])</span>
-<span id="cb1-135"><a href="#cb1-135" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-136"><a href="#cb1-136" aria-hidden="true" tabindex="-1"></a><span class="co"># Actualizamos un valor existente</span></span>
-<span id="cb1-137"><a href="#cb1-137" aria-hidden="true" tabindex="-1"></a>bono_soberano[<span class="st">'paridad'</span>] <span class="op">=</span> <span class="fl">48.2</span></span>
-<span id="cb1-138"><a href="#cb1-138" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Paridad actualizada:"</span>, bono_soberano[<span class="st">'paridad'</span>])</span>
-<span id="cb1-139"><a href="#cb1-139" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb1-140"><a href="#cb1-140" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-141"><a href="#cb1-141" aria-hidden="true" tabindex="-1"></a><span class="in">```{pyodide-python}</span></span>
-<span id="cb1-142"><a href="#cb1-142" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: dict-riesgos</span></span>
-<span id="cb1-143"><a href="#cb1-143" aria-hidden="true" tabindex="-1"></a><span class="co"># Ejemplo B: Frecuencias y el método .get()</span></span>
-<span id="cb1-144"><a href="#cb1-144" aria-hidden="true" tabindex="-1"></a><span class="co"># Queremos contar cuántos activos tenemos agrupados por su nivel de riesgo.</span></span>
-<span id="cb1-145"><a href="#cb1-145" aria-hidden="true" tabindex="-1"></a><span class="co"># El método .get(clave, valor_por_defecto) es ideal para esto[cite: 475, 477].</span></span>
+<span id="cb1-133"><a href="#cb1-133" aria-hidden="true" tabindex="-1"></a><span class="co"># Podemos acceder a un elemento específico usando dos índices: [fila][columna]</span></span>
+<span id="cb1-134"><a href="#cb1-134" aria-hidden="true" tabindex="-1"></a><span class="co"># Ejemplo: Precio del Activo B (índice 1) en el Día 2 (índice 1)</span></span>
+<span id="cb1-135"><a href="#cb1-135" aria-hidden="true" tabindex="-1"></a>precio_b_dia2 <span class="op">=</span> precios_activos[<span class="dv">1</span>][<span class="dv">1</span>]</span>
+<span id="cb1-136"><a href="#cb1-136" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"</span><span class="ch">\n</span><span class="ss">Precio del Activo B en el Día 2: $</span><span class="sc">{</span>precio_b_dia2<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb1-137"><a href="#cb1-137" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-138"><a href="#cb1-138" aria-hidden="true" tabindex="-1"></a><span class="co"># También podemos recorrerla con bucles anidados</span></span>
+<span id="cb1-139"><a href="#cb1-139" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"</span><span class="ch">\n</span><span class="st">Acceso individual a cada precio:"</span>)</span>
+<span id="cb1-140"><a href="#cb1-140" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="bu">len</span>(precios_activos)):</span>
+<span id="cb1-141"><a href="#cb1-141" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> j <span class="kw">in</span> <span class="bu">range</span>(<span class="bu">len</span>(precios_activos[i])):</span>
+<span id="cb1-142"><a href="#cb1-142" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="ss">f"Activo </span><span class="sc">{</span>i<span class="sc">}</span><span class="ss">, Día </span><span class="sc">{</span>j<span class="sc">}</span><span class="ss">: $</span><span class="sc">{</span>precios_activos[i][j]<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb1-143"><a href="#cb1-143" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb1-144"><a href="#cb1-144" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-145"><a href="#cb1-145" aria-hidden="true" tabindex="-1"></a>---</span>
 <span id="cb1-146"><a href="#cb1-146" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-147"><a href="#cb1-147" aria-hidden="true" tabindex="-1"></a>activos <span class="op">=</span> [<span class="st">"Bajo"</span>, <span class="st">"Alto"</span>, <span class="st">"Medio"</span>, <span class="st">"Bajo"</span>, <span class="st">"Bajo"</span>, <span class="st">"Medio"</span>, <span class="st">"Alto"</span>, <span class="st">"Bajo"</span>]</span>
-<span id="cb1-148"><a href="#cb1-148" aria-hidden="true" tabindex="-1"></a>conteo_riesgos <span class="op">=</span> {}</span>
-<span id="cb1-149"><a href="#cb1-149" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-150"><a href="#cb1-150" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> nivel <span class="kw">in</span> activos:</span>
-<span id="cb1-151"><a href="#cb1-151" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Si 'nivel' ya está en el diccionario, toma su valor actual.</span></span>
-<span id="cb1-152"><a href="#cb1-152" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Si no está, devuelve 0. A eso le sumamos 1.</span></span>
-<span id="cb1-153"><a href="#cb1-153" aria-hidden="true" tabindex="-1"></a>    conteo_riesgos[nivel] <span class="op">=</span> conteo_riesgos.get(nivel, <span class="dv">0</span>) <span class="op">+</span> <span class="dv">1</span> <span class="co"># [cite: 481]</span></span>
-<span id="cb1-154"><a href="#cb1-154" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-155"><a href="#cb1-155" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Distribución de riesgos de la cartera:"</span>)</span>
-<span id="cb1-156"><a href="#cb1-156" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(conteo_riesgos)</span>
-<span id="cb1-157"><a href="#cb1-157" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb1-158"><a href="#cb1-158" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-159"><a href="#cb1-159" aria-hidden="true" tabindex="-1"></a><span class="in">```{pyodide-python}</span></span>
-<span id="cb1-160"><a href="#cb1-160" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: dict-inventario</span></span>
-<span id="cb1-161"><a href="#cb1-161" aria-hidden="true" tabindex="-1"></a><span class="co"># Ejemplo C: Combinando diccionarios (Valuación de inventario)</span></span>
-<span id="cb1-162"><a href="#cb1-162" aria-hidden="true" tabindex="-1"></a><span class="co"># Tenemos un inventario físico de commodities y sus precios de mercado.</span></span>
-<span id="cb1-163"><a href="#cb1-163" aria-hidden="true" tabindex="-1"></a><span class="co"># Queremos calcular el valor total del inventario.</span></span>
+<span id="cb1-147"><a href="#cb1-147" aria-hidden="true" tabindex="-1"></a><span class="fu">## Diccionarios: Datos etiquetados</span></span>
+<span id="cb1-148"><a href="#cb1-148" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-149"><a href="#cb1-149" aria-hidden="true" tabindex="-1"></a>A diferencia de las listas, los diccionarios no tienen un orden secuencial (son como una bolsa). Los elementos se guardan y se buscan utilizando "claves" (keys) en lugar de índices numéricos.</span>
+<span id="cb1-150"><a href="#cb1-150" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-151"><a href="#cb1-151" aria-hidden="true" tabindex="-1"></a><span class="in">```{pyodide-python}</span></span>
+<span id="cb1-152"><a href="#cb1-152" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: dict-bono</span></span>
+<span id="cb1-153"><a href="#cb1-153" aria-hidden="true" tabindex="-1"></a><span class="co"># Ejemplo A: Mapeo de información de un activo</span></span>
+<span id="cb1-154"><a href="#cb1-154" aria-hidden="true" tabindex="-1"></a><span class="co"># Creamos un diccionario vacío usando dict() o llaves {}.</span></span>
+<span id="cb1-155"><a href="#cb1-155" aria-hidden="true" tabindex="-1"></a>bono_soberano <span class="op">=</span> <span class="bu">dict</span>()</span>
+<span id="cb1-156"><a href="#cb1-156" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-157"><a href="#cb1-157" aria-hidden="true" tabindex="-1"></a><span class="co"># Agregamos elementos clave-valor</span></span>
+<span id="cb1-158"><a href="#cb1-158" aria-hidden="true" tabindex="-1"></a>bono_soberano[<span class="st">'ticker'</span>] <span class="op">=</span> <span class="st">'AL30'</span></span>
+<span id="cb1-159"><a href="#cb1-159" aria-hidden="true" tabindex="-1"></a>bono_soberano[<span class="st">'paridad'</span>] <span class="op">=</span> <span class="fl">45.5</span></span>
+<span id="cb1-160"><a href="#cb1-160" aria-hidden="true" tabindex="-1"></a>bono_soberano[<span class="st">'legislacion'</span>] <span class="op">=</span> <span class="st">'Local'</span></span>
+<span id="cb1-161"><a href="#cb1-161" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-162"><a href="#cb1-162" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Datos del bono:"</span>, bono_soberano)</span>
+<span id="cb1-163"><a href="#cb1-163" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Ticker específico:"</span>, bono_soberano[<span class="st">'ticker'</span>])</span>
 <span id="cb1-164"><a href="#cb1-164" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-165"><a href="#cb1-165" aria-hidden="true" tabindex="-1"></a>cantidades <span class="op">=</span> {<span class="st">'Soja'</span>: <span class="dv">150</span>, <span class="st">'Maiz'</span>: <span class="dv">300</span>, <span class="st">'Trigo'</span>: <span class="dv">200</span>}</span>
-<span id="cb1-166"><a href="#cb1-166" aria-hidden="true" tabindex="-1"></a>precios_mercado <span class="op">=</span> {<span class="st">'Soja'</span>: <span class="fl">350.0</span>, <span class="st">'Trigo'</span>: <span class="fl">210.5</span>, <span class="st">'Maiz'</span>: <span class="fl">180.0</span>}</span>
-<span id="cb1-167"><a href="#cb1-167" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-168"><a href="#cb1-168" aria-hidden="true" tabindex="-1"></a>valor_total_inventario <span class="op">=</span> <span class="dv">0</span> <span class="co"># Acumulador</span></span>
+<span id="cb1-165"><a href="#cb1-165" aria-hidden="true" tabindex="-1"></a><span class="co"># Actualizamos un valor existente</span></span>
+<span id="cb1-166"><a href="#cb1-166" aria-hidden="true" tabindex="-1"></a>bono_soberano[<span class="st">'paridad'</span>] <span class="op">=</span> <span class="fl">48.2</span></span>
+<span id="cb1-167"><a href="#cb1-167" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Paridad actualizada:"</span>, bono_soberano[<span class="st">'paridad'</span>])</span>
+<span id="cb1-168"><a href="#cb1-168" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb1-169"><a href="#cb1-169" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-170"><a href="#cb1-170" aria-hidden="true" tabindex="-1"></a><span class="co"># Recorremos las claves del diccionario de cantidades [cite: 508]</span></span>
-<span id="cb1-171"><a href="#cb1-171" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> commodity <span class="kw">in</span> cantidades:</span>
-<span id="cb1-172"><a href="#cb1-172" aria-hidden="true" tabindex="-1"></a>    cantidad_toneladas <span class="op">=</span> cantidades[commodity]</span>
-<span id="cb1-173"><a href="#cb1-173" aria-hidden="true" tabindex="-1"></a>    precio_tonelada <span class="op">=</span> precios_mercado[commodity]</span>
-<span id="cb1-174"><a href="#cb1-174" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb1-175"><a href="#cb1-175" aria-hidden="true" tabindex="-1"></a>    valor_parcial <span class="op">=</span> cantidad_toneladas <span class="op">*</span> precio_tonelada</span>
-<span id="cb1-176"><a href="#cb1-176" aria-hidden="true" tabindex="-1"></a>    valor_total_inventario <span class="op">=</span> valor_total_inventario <span class="op">+</span> valor_parcial</span>
-<span id="cb1-177"><a href="#cb1-177" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-178"><a href="#cb1-178" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"El valor total del inventario agrícola es: $</span><span class="sc">{</span>valor_total_inventario<span class="sc">}</span><span class="ss">"</span>)</span>
-<span id="cb1-179"><a href="#cb1-179" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb1-180"><a href="#cb1-180" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-181"><a href="#cb1-181" aria-hidden="true" tabindex="-1"></a>---</span>
-<span id="cb1-182"><a href="#cb1-182" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-183"><a href="#cb1-183" aria-hidden="true" tabindex="-1"></a><span class="fu"># Referencias</span></span>
-<span id="cb1-184"><a href="#cb1-184" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-185"><a href="#cb1-185" aria-hidden="true" tabindex="-1"></a><span class="ss">* </span>Fabozzi, F. J. (2015). *Bond Markets, Analysis, and Strategies*. Pearson.</span>
-<span id="cb1-186"><a href="#cb1-186" aria-hidden="true" tabindex="-1"></a><span class="ss">* </span>Benninga, S. (2014). *Financial Modeling*. MIT Press.</span>
-<span id="cb1-187"><a href="#cb1-187" aria-hidden="true" tabindex="-1"></a><span class="ss">* </span>Cormen, T. H. et al. (2009). *Introduction to Algorithms*. MIT Press.</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></div>
+<span id="cb1-170"><a href="#cb1-170" aria-hidden="true" tabindex="-1"></a><span class="in">```{pyodide-python}</span></span>
+<span id="cb1-171"><a href="#cb1-171" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: dict-riesgos</span></span>
+<span id="cb1-172"><a href="#cb1-172" aria-hidden="true" tabindex="-1"></a><span class="co"># Ejemplo B: Frecuencias y el método .get()</span></span>
+<span id="cb1-173"><a href="#cb1-173" aria-hidden="true" tabindex="-1"></a><span class="co"># Queremos contar cuántos activos tenemos agrupados por su nivel de riesgo.</span></span>
+<span id="cb1-174"><a href="#cb1-174" aria-hidden="true" tabindex="-1"></a><span class="co"># El método .get(clave, valor_por_defecto) es ideal para esto.</span></span>
+<span id="cb1-175"><a href="#cb1-175" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-176"><a href="#cb1-176" aria-hidden="true" tabindex="-1"></a>activos <span class="op">=</span> [<span class="st">"Bajo"</span>, <span class="st">"Alto"</span>, <span class="st">"Medio"</span>, <span class="st">"Bajo"</span>, <span class="st">"Bajo"</span>, <span class="st">"Medio"</span>, <span class="st">"Alto"</span>, <span class="st">"Bajo"</span>]</span>
+<span id="cb1-177"><a href="#cb1-177" aria-hidden="true" tabindex="-1"></a>conteo_riesgos <span class="op">=</span> {}</span>
+<span id="cb1-178"><a href="#cb1-178" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-179"><a href="#cb1-179" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> nivel <span class="kw">in</span> activos:</span>
+<span id="cb1-180"><a href="#cb1-180" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Si 'nivel' ya está en el diccionario, toma su valor actual.</span></span>
+<span id="cb1-181"><a href="#cb1-181" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Si no está, devuelve 0. A eso le sumamos 1.</span></span>
+<span id="cb1-182"><a href="#cb1-182" aria-hidden="true" tabindex="-1"></a>    conteo_riesgos[nivel] <span class="op">=</span> conteo_riesgos.get(nivel, <span class="dv">0</span>) <span class="op">+</span> <span class="dv">1</span></span>
+<span id="cb1-183"><a href="#cb1-183" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-184"><a href="#cb1-184" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Distribución de riesgos de la cartera:"</span>)</span>
+<span id="cb1-185"><a href="#cb1-185" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(conteo_riesgos)</span>
+<span id="cb1-186"><a href="#cb1-186" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb1-187"><a href="#cb1-187" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-188"><a href="#cb1-188" aria-hidden="true" tabindex="-1"></a><span class="in">```{pyodide-python}</span></span>
+<span id="cb1-189"><a href="#cb1-189" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: dict-inventario</span></span>
+<span id="cb1-190"><a href="#cb1-190" aria-hidden="true" tabindex="-1"></a><span class="co"># Ejemplo C: Combinando diccionarios (Valuación de inventario)</span></span>
+<span id="cb1-191"><a href="#cb1-191" aria-hidden="true" tabindex="-1"></a><span class="co"># Tenemos un inventario físico de commodities y sus precios de mercado.</span></span>
+<span id="cb1-192"><a href="#cb1-192" aria-hidden="true" tabindex="-1"></a><span class="co"># Queremos calcular el valor total del inventario.</span></span>
+<span id="cb1-193"><a href="#cb1-193" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-194"><a href="#cb1-194" aria-hidden="true" tabindex="-1"></a>cantidades <span class="op">=</span> {<span class="st">'Soja'</span>: <span class="dv">150</span>, <span class="st">'Maiz'</span>: <span class="dv">300</span>, <span class="st">'Trigo'</span>: <span class="dv">200</span>}</span>
+<span id="cb1-195"><a href="#cb1-195" aria-hidden="true" tabindex="-1"></a>precios_mercado <span class="op">=</span> {<span class="st">'Soja'</span>: <span class="fl">350.0</span>, <span class="st">'Trigo'</span>: <span class="fl">210.5</span>, <span class="st">'Maiz'</span>: <span class="fl">180.0</span>}</span>
+<span id="cb1-196"><a href="#cb1-196" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-197"><a href="#cb1-197" aria-hidden="true" tabindex="-1"></a>valor_total_inventario <span class="op">=</span> <span class="dv">0</span> <span class="co"># Acumulador</span></span>
+<span id="cb1-198"><a href="#cb1-198" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-199"><a href="#cb1-199" aria-hidden="true" tabindex="-1"></a><span class="co"># Recorremos las claves del diccionario de cantidades</span></span>
+<span id="cb1-200"><a href="#cb1-200" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> commodity <span class="kw">in</span> cantidades:</span>
+<span id="cb1-201"><a href="#cb1-201" aria-hidden="true" tabindex="-1"></a>    cantidad_toneladas <span class="op">=</span> cantidades[commodity]</span>
+<span id="cb1-202"><a href="#cb1-202" aria-hidden="true" tabindex="-1"></a>    precio_tonelada <span class="op">=</span> precios_mercado[commodity]</span>
+<span id="cb1-203"><a href="#cb1-203" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb1-204"><a href="#cb1-204" aria-hidden="true" tabindex="-1"></a>    valor_parcial <span class="op">=</span> cantidad_toneladas <span class="op">*</span> precio_tonelada</span>
+<span id="cb1-205"><a href="#cb1-205" aria-hidden="true" tabindex="-1"></a>    valor_total_inventario <span class="op">=</span> valor_total_inventario <span class="op">+</span> valor_parcial</span>
+<span id="cb1-206"><a href="#cb1-206" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-207"><a href="#cb1-207" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"El valor total del inventario agrícola es: $</span><span class="sc">{</span>valor_total_inventario<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb1-208"><a href="#cb1-208" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb1-209"><a href="#cb1-209" aria-hidden="true" tabindex="-1"></a></span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></div>
 </div></div></div></div></div>
 </div> <!-- /content -->
 <footer class="footer">
