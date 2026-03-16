@@ -7,7 +7,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="Diego Onna">
-<meta name="dcterms.date" content="2026-10-03">
 
 <title>Finanzas Computacionales</title>
 <style>
@@ -79,7 +78,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <link href="site_libs/quarto-html/quarto-syntax-highlighting-33f28b034f783b36ff4b46fdeb362ebb.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-45eb837c8527f1bf59b19d4e11f24f85.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-0fe704eaf70727ea88ef7dc66c2b4e01.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -177,8 +176,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./unidad1/semana01_pensamiento_computacional.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Semana 1: Pensamiento Computacional en Finanzas</span></span></a>
+  <a href="./unidad1/cap01_pensamiento_computacional.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Capítulo 1: Pensamiento Computacional en Finanzas</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./unidad1/cap02_iteraciones_estructuras.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Capítulo 2: Iteraciones y Estructuras de Datos Nativas</span></span></a>
   </div>
 </li>
       </ul>
@@ -195,7 +200,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <ul>
   <li><a href="#bienvenida" id="toc-bienvenida" class="nav-link active" data-scroll-target="#bienvenida">Bienvenida</a>
   <ul class="collapse">
-  <li><a href="#estructura-del-libro" id="toc-estructura-del-libro" class="nav-link" data-scroll-target="#estructura-del-libro">Estructura del Libro</a></li>
+  <li><a href="#estructura-del-libro" id="toc-estructura-del-libro" class="nav-link" data-scroll-target="#estructura-del-libro">Estructura del Libro</a>
+  <ul class="collapse">
+  <li><a href="#módulo-1-fundamentos-y-programación-capítulos-1-5" id="toc-módulo-1-fundamentos-y-programación-capítulos-1-5" class="nav-link" data-scroll-target="#módulo-1-fundamentos-y-programación-capítulos-1-5">Módulo 1: Fundamentos y Programación (Capítulos 1-5)</a></li>
+  <li><a href="#módulo-2-optimización-de-portafolios-capítulos-6-7" id="toc-módulo-2-optimización-de-portafolios-capítulos-6-7" class="nav-link" data-scroll-target="#módulo-2-optimización-de-portafolios-capítulos-6-7">Módulo 2: Optimización de Portafolios (Capítulos 6-7)</a></li>
+  <li><a href="#módulo-3-riesgo-y-estadística-avanzada-capítulos-8-11" id="toc-módulo-3-riesgo-y-estadística-avanzada-capítulos-8-11" class="nav-link" data-scroll-target="#módulo-3-riesgo-y-estadística-avanzada-capítulos-8-11">Módulo 3: Riesgo y Estadística Avanzada (Capítulos 8-11)</a></li>
+  <li><a href="#módulo-4-instrumentos-derivados-capítulos-12-13" id="toc-módulo-4-instrumentos-derivados-capítulos-12-13" class="nav-link" data-scroll-target="#módulo-4-instrumentos-derivados-capítulos-12-13">Módulo 4: Instrumentos Derivados (Capítulos 12-13)</a></li>
+  </ul></li>
   <li><a href="#a-quién-va-dirigido" id="toc-a-quién-va-dirigido" class="nav-link" data-scroll-target="#a-quién-va-dirigido">¿A quién va dirigido?</a></li>
   <li><a href="#convenciones" id="toc-convenciones" class="nav-link" data-scroll-target="#convenciones">Convenciones</a></li>
   </ul></li>
@@ -218,14 +229,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <div>
     <div class="quarto-title-meta-heading">Autor/a</div>
     <div class="quarto-title-meta-contents">
-             <p>Diego Onna </p>
+             <p><a href="https://diegoonna.github.io">Diego Onna</a> <a href="https://orcid.org/0000-0001-9003-4567" class="quarto-title-author-orcid"> <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAA2ZpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuMC1jMDYwIDYxLjEzNDc3NywgMjAxMC8wMi8xMi0xNzozMjowMCAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wTU09Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9tbS8iIHhtbG5zOnN0UmVmPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvc1R5cGUvUmVzb3VyY2VSZWYjIiB4bWxuczp4bXA9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC8iIHhtcE1NOk9yaWdpbmFsRG9jdW1lbnRJRD0ieG1wLmRpZDo1N0NEMjA4MDI1MjA2ODExOTk0QzkzNTEzRjZEQTg1NyIgeG1wTU06RG9jdW1lbnRJRD0ieG1wLmRpZDozM0NDOEJGNEZGNTcxMUUxODdBOEVCODg2RjdCQ0QwOSIgeG1wTU06SW5zdGFuY2VJRD0ieG1wLmlpZDozM0NDOEJGM0ZGNTcxMUUxODdBOEVCODg2RjdCQ0QwOSIgeG1wOkNyZWF0b3JUb29sPSJBZG9iZSBQaG90b3Nob3AgQ1M1IE1hY2ludG9zaCI+IDx4bXBNTTpEZXJpdmVkRnJvbSBzdFJlZjppbnN0YW5jZUlEPSJ4bXAuaWlkOkZDN0YxMTc0MDcyMDY4MTE5NUZFRDc5MUM2MUUwNEREIiBzdFJlZjpkb2N1bWVudElEPSJ4bXAuZGlkOjU3Q0QyMDgwMjUyMDY4MTE5OTRDOTM1MTNGNkRBODU3Ii8+IDwvcmRmOkRlc2NyaXB0aW9uPiA8L3JkZjpSREY+IDwveDp4bXBtZXRhPiA8P3hwYWNrZXQgZW5kPSJyIj8+84NovQAAAR1JREFUeNpiZEADy85ZJgCpeCB2QJM6AMQLo4yOL0AWZETSqACk1gOxAQN+cAGIA4EGPQBxmJA0nwdpjjQ8xqArmczw5tMHXAaALDgP1QMxAGqzAAPxQACqh4ER6uf5MBlkm0X4EGayMfMw/Pr7Bd2gRBZogMFBrv01hisv5jLsv9nLAPIOMnjy8RDDyYctyAbFM2EJbRQw+aAWw/LzVgx7b+cwCHKqMhjJFCBLOzAR6+lXX84xnHjYyqAo5IUizkRCwIENQQckGSDGY4TVgAPEaraQr2a4/24bSuoExcJCfAEJihXkWDj3ZAKy9EJGaEo8T0QSxkjSwORsCAuDQCD+QILmD1A9kECEZgxDaEZhICIzGcIyEyOl2RkgwAAhkmC+eAm0TAAAAABJRU5ErkJggg=="></a></p>
           </div>
   </div>
     
     <div>
     <div class="quarto-title-meta-heading">Fecha de publicación</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">10/03/2026</p>
+      <p class="date">16/03/2026</p>
     </div>
   </div>
   
@@ -252,15 +263,128 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </div>
+<hr>
+<div class="author-socials">
+<p><a href="https://github.com/diegoonna"><i class="bi bi-github"></i></a> &nbsp; <a href="https://www.linkedin.com/in/diego-onna"><i class="bi bi-linkedin"></i></a> &nbsp; <a href="https://scholar.google.com/citations?user=z6bA-2EAAAAJ"><i class="bi bi-google"></i></a></p>
+</div>
+<hr>
 <section id="estructura-del-libro" class="level2">
 <h2 class="anchored" data-anchor-id="estructura-del-libro">Estructura del Libro</h2>
 <p>El libro está organizado en cuatro módulos que siguen la progresión natural de la materia:</p>
-<ol type="1">
-<li><strong>Fundamentos y Renta Fija</strong>: Python base, estructuras de datos y valuación de bonos.</li>
-<li><strong>Portafolios y Optimización</strong>: Estadística de retornos, Markowitz y frontera eficiente.</li>
-<li><strong>Riesgo y Simulación</strong>: VaR, Monte Carlo y modelos bayesianos.</li>
-<li><strong>Derivados Financieros</strong>: Opciones, Black-Scholes y delta hedging.</li>
-</ol>
+<section id="módulo-1-fundamentos-y-programación-capítulos-1-5" class="level3">
+<h3 class="anchored" data-anchor-id="módulo-1-fundamentos-y-programación-capítulos-1-5">Módulo 1: Fundamentos y Programación (Capítulos 1-5)</h3>
+<ul>
+<li><strong>Capítulo 1: Pensamiento Computacional en Finanzas</strong>
+<ul>
+<li>Fundamentos de lógica de programación</li>
+<li>Tipos de datos y operadores financieros</li>
+<li>Flujos de control y toma de decisiones</li>
+<li>Interacción básica con el usuario</li>
+</ul></li>
+<li><strong>Capítulo 2: Estructuras de Datos y Algoritmos</strong>
+<ul>
+<li>Colecciones de datos lineales y asociativas</li>
+<li>Estructuras de repetición y automatización</li>
+<li>Lógica de acumulación de valores</li>
+<li>Introducción a la eficiencia de algoritmos</li>
+</ul></li>
+<li><strong>Capítulo 3: Modularización y Calidad de Código</strong>
+<ul>
+<li>Creación y reutilización de funciones</li>
+<li>Gestión de argumentos y retorno de información</li>
+<li>Organización del código en módulos</li>
+<li>Manejo y prevención de errores en ejecución</li>
+</ul></li>
+<li><strong>Capítulo 4: Programación Orientada a Objetos (POO)</strong>
+<ul>
+<li>Paradigmas de programación aplicados a finanzas</li>
+<li>Definición de clases y creación de ejemplares</li>
+<li>Atributos de estado y comportamiento de objetos</li>
+<li>Modelado de activos financieros como entidades</li>
+</ul></li>
+<li><strong>Capítulo 5: Análisis de Series de Tiempo</strong>
+<ul>
+<li>Estructuras de datos para análisis temporal</li>
+<li>Gestión de índices cronológicos</li>
+<li>Análisis de retornos y variaciones de precios</li>
+<li>Visualización gráfica de tendencias</li>
+</ul></li>
+</ul>
+<hr>
+</section>
+<section id="módulo-2-optimización-de-portafolios-capítulos-6-7" class="level3">
+<h3 class="anchored" data-anchor-id="módulo-2-optimización-de-portafolios-capítulos-6-7">Módulo 2: Optimización de Portafolios (Capítulos 6-7)</h3>
+<ul>
+<li><strong>Capítulo 6: Fundamentos de Optimización</strong>
+<ul>
+<li>Modelado matemático de problemas financieros</li>
+<li>Funciones de optimización y restricciones del mercado</li>
+<li>Programación funcional aplicada a modelos</li>
+<li>Herramientas computacionales para minimización de riesgos</li>
+</ul></li>
+<li><strong>Capítulo 7: Teoría Moderna de Portafolios</strong>
+<ul>
+<li>Estructuras matriciales para gestión de activos</li>
+<li>Relación entre retorno esperado y riesgo sistémico</li>
+<li>Eficiencia computacional y vectorización de cálculos</li>
+<li>Modelos de frontera eficiente y ratios de desempeño</li>
+</ul></li>
+</ul>
+<hr>
+</section>
+<section id="módulo-3-riesgo-y-estadística-avanzada-capítulos-8-11" class="level3">
+<h3 class="anchored" data-anchor-id="módulo-3-riesgo-y-estadística-avanzada-capítulos-8-11">Módulo 3: Riesgo y Estadística Avanzada (Capítulos 8-11)</h3>
+<ul>
+<li><strong>Capítulo 8: Medición de Riesgo de Mercado</strong>
+<ul>
+<li>Metodologías de cálculo del Valor en Riesgo (VaR)</li>
+<li>Modelado de distribuciones estadísticas</li>
+<li>Análisis histórico vs.&nbsp;modelos paramétricos</li>
+<li>Generación de variables aleatorias</li>
+</ul></li>
+<li><strong>Capítulo 9: Simulación Estocástica</strong>
+<ul>
+<li>Fundamentos de la Simulación de Monte Carlo</li>
+<li>Modelado de procesos aleatorios en el tiempo</li>
+<li>Proyecciones de trayectorias de precios</li>
+<li>Aplicaciones de probabilidad en la incertidumbre</li>
+</ul></li>
+<li><strong>Capítulo 10: Inferencia Bayesiana</strong>
+<ul>
+<li>Fundamentos de la probabilidad condicional</li>
+<li>Actualización de creencias con nueva información</li>
+<li>Contraste entre estadística clásica y bayesiana</li>
+<li>Aplicación de priors y posteriors en finanzas</li>
+</ul></li>
+<li><strong>Capítulo 11: Econometría y Modelos de Equilibrio</strong>
+<ul>
+<li>Regresión lineal aplicada a activos</li>
+<li>Estimación de parámetros de sensibilidad y exceso de retorno</li>
+<li>Integración de opiniones del inversor en modelos de mercado</li>
+<li>Modelos de avanzados de actualización de expectativas</li>
+</ul></li>
+</ul>
+<hr>
+</section>
+<section id="módulo-4-instrumentos-derivados-capítulos-12-13" class="level3">
+<h3 class="anchored" data-anchor-id="módulo-4-instrumentos-derivados-capítulos-12-13">Módulo 4: Instrumentos Derivados (Capítulos 12-13)</h3>
+<ul>
+<li><strong>Capítulo 12: Valuación Numérica de Opciones</strong>
+<ul>
+<li>Modelos teóricos de precio de opciones</li>
+<li>Algoritmos de resolución para variables implícitas</li>
+<li>Métodos numéricos de búsqueda de soluciones</li>
+<li>Relación entre precio de mercado y volatilidad</li>
+</ul></li>
+<li><strong>Capítulo 13: Gestión de Coberturas Dinámicas</strong>
+<ul>
+<li>Sensibilidades de las opciones (Griegas)</li>
+<li>Estrategias de inmunización de portafolios</li>
+<li>Simulación de estrategias de cobertura en tiempo real</li>
+<li>Rebalanceo de posiciones frente a cambios del mercado</li>
+</ul></li>
+</ul>
+</section>
 </section>
 <section id="a-quién-va-dirigido" class="level2">
 <h2 class="anchored" data-anchor-id="a-quién-va-dirigido">¿A quién va dirigido?</h2>
@@ -768,32 +892,127 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>Este material es dinámico y se actualiza periódicamente para reflejar las mejores prácticas de la industria y el entorno académico.</span>
 <span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>:::</span>
 <span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="fu">## Estructura del Libro</span></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>---</span>
 <span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>El libro está organizado en cuatro módulos que siguen la progresión natural de la materia:</span>
-<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a><span class="ss">1.  </span>**Fundamentos y Renta Fija**: Python base, estructuras de datos y valuación de bonos.</span>
-<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a><span class="ss">2.  </span>**Portafolios y Optimización**: Estadística de retornos, Markowitz y frontera eficiente.</span>
-<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a><span class="ss">3.  </span>**Riesgo y Simulación**: VaR, Monte Carlo y modelos bayesianos.</span>
-<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a><span class="ss">4.  </span>**Derivados Financieros**: Opciones, Black-Scholes y delta hedging.</span>
-<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a><span class="fu">## ¿A quién va dirigido?</span></span>
-<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>Este libro está diseñado para estudiantes de finanzas, economía y profesionales del sector que deseen transicionar hacia un enfoque más cuantitativo y computacional. No se requiere experiencia previa en programación, ya que empezamos desde los fundamentos.</span>
-<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a><span class="fu">## Convenciones</span></span>
-<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>Los bloques de código son totalmente ejecutables.</span>
-<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>Las fórmulas se presentan en LaTeX para mayor claridad.</span>
-<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>Usamos **callouts** para resaltar tips, advertencias y conceptos clave.</span>
-<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a>::: {.callout-tip appearance="simple"}</span>
-<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a>Recomendamos seguir el libro de forma secuencial, ejecutando los ejemplos en un entorno local o en Google Colab.</span>
-<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a>:::</span>
-<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-34"><a href="#cb1-34" aria-hidden="true" tabindex="-1"></a>---</span>
-<span id="cb1-35"><a href="#cb1-35" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-36"><a href="#cb1-36" aria-hidden="true" tabindex="-1"></a>Este sitio es y será siempre gratuito. Si encontrás algún error o tenés alguna sugerencia, podés abrir un *issue* en nuestro repositorio de GitHub.</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></div>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>::: {.author-socials}</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a><span class="co">[</span><span class="ot">&lt;i class="bi bi-github"&gt;&lt;/i&gt;</span><span class="co">](https://github.com/diegoonna)</span> <span class="dv">&amp;nbsp;</span> <span class="co">[</span><span class="ot">&lt;i class="bi bi-linkedin"&gt;&lt;/i&gt;</span><span class="co">](https://www.linkedin.com/in/diego-onna)</span> <span class="dv">&amp;nbsp;</span> <span class="co">[</span><span class="ot">&lt;i class="bi bi-google"&gt;&lt;/i&gt;</span><span class="co">](https://scholar.google.com/citations?user=z6bA-2EAAAAJ)</span></span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>---</span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a><span class="fu">## Estructura del Libro</span></span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>El libro está organizado en cuatro módulos que siguen la progresión natural de la materia:</span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a><span class="fu">### Módulo 1: Fundamentos y Programación (Capítulos 1-5)</span></span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Capítulo 1: Pensamiento Computacional en Finanzas**</span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a><span class="ss">    - </span>Fundamentos de lógica de programación</span>
+<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a><span class="ss">    - </span>Tipos de datos y operadores financieros</span>
+<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a><span class="ss">    - </span>Flujos de control y toma de decisiones</span>
+<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a><span class="ss">    - </span>Interacción básica con el usuario</span>
+<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Capítulo 2: Estructuras de Datos y Algoritmos**</span>
+<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a><span class="ss">    - </span>Colecciones de datos lineales y asociativas</span>
+<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a><span class="ss">    - </span>Estructuras de repetición y automatización</span>
+<span id="cb1-34"><a href="#cb1-34" aria-hidden="true" tabindex="-1"></a><span class="ss">    - </span>Lógica de acumulación de valores</span>
+<span id="cb1-35"><a href="#cb1-35" aria-hidden="true" tabindex="-1"></a><span class="ss">    - </span>Introducción a la eficiencia de algoritmos</span>
+<span id="cb1-36"><a href="#cb1-36" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-37"><a href="#cb1-37" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Capítulo 3: Modularización y Calidad de Código**</span>
+<span id="cb1-38"><a href="#cb1-38" aria-hidden="true" tabindex="-1"></a><span class="ss">    - </span>Creación y reutilización de funciones</span>
+<span id="cb1-39"><a href="#cb1-39" aria-hidden="true" tabindex="-1"></a><span class="ss">    - </span>Gestión de argumentos y retorno de información</span>
+<span id="cb1-40"><a href="#cb1-40" aria-hidden="true" tabindex="-1"></a><span class="ss">    - </span>Organización del código en módulos</span>
+<span id="cb1-41"><a href="#cb1-41" aria-hidden="true" tabindex="-1"></a><span class="ss">    - </span>Manejo y prevención de errores en ejecución</span>
+<span id="cb1-42"><a href="#cb1-42" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-43"><a href="#cb1-43" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Capítulo 4: Programación Orientada a Objetos (POO)**</span>
+<span id="cb1-44"><a href="#cb1-44" aria-hidden="true" tabindex="-1"></a><span class="ss">    - </span>Paradigmas de programación aplicados a finanzas</span>
+<span id="cb1-45"><a href="#cb1-45" aria-hidden="true" tabindex="-1"></a><span class="ss">    - </span>Definición de clases y creación de ejemplares</span>
+<span id="cb1-46"><a href="#cb1-46" aria-hidden="true" tabindex="-1"></a><span class="ss">    - </span>Atributos de estado y comportamiento de objetos</span>
+<span id="cb1-47"><a href="#cb1-47" aria-hidden="true" tabindex="-1"></a><span class="ss">    - </span>Modelado de activos financieros como entidades</span>
+<span id="cb1-48"><a href="#cb1-48" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-49"><a href="#cb1-49" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Capítulo 5: Análisis de Series de Tiempo**</span>
+<span id="cb1-50"><a href="#cb1-50" aria-hidden="true" tabindex="-1"></a><span class="ss">    - </span>Estructuras de datos para análisis temporal</span>
+<span id="cb1-51"><a href="#cb1-51" aria-hidden="true" tabindex="-1"></a><span class="ss">    - </span>Gestión de índices cronológicos</span>
+<span id="cb1-52"><a href="#cb1-52" aria-hidden="true" tabindex="-1"></a><span class="ss">    - </span>Análisis de retornos y variaciones de precios</span>
+<span id="cb1-53"><a href="#cb1-53" aria-hidden="true" tabindex="-1"></a><span class="ss">    - </span>Visualización gráfica de tendencias</span>
+<span id="cb1-54"><a href="#cb1-54" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-55"><a href="#cb1-55" aria-hidden="true" tabindex="-1"></a>---</span>
+<span id="cb1-56"><a href="#cb1-56" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-57"><a href="#cb1-57" aria-hidden="true" tabindex="-1"></a><span class="fu">### Módulo 2: Optimización de Portafolios (Capítulos 6-7)</span></span>
+<span id="cb1-58"><a href="#cb1-58" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-59"><a href="#cb1-59" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Capítulo 6: Fundamentos de Optimización**</span>
+<span id="cb1-60"><a href="#cb1-60" aria-hidden="true" tabindex="-1"></a><span class="ss">    - </span>Modelado matemático de problemas financieros</span>
+<span id="cb1-61"><a href="#cb1-61" aria-hidden="true" tabindex="-1"></a><span class="ss">    - </span>Funciones de optimización y restricciones del mercado</span>
+<span id="cb1-62"><a href="#cb1-62" aria-hidden="true" tabindex="-1"></a><span class="ss">    - </span>Programación funcional aplicada a modelos</span>
+<span id="cb1-63"><a href="#cb1-63" aria-hidden="true" tabindex="-1"></a><span class="ss">    - </span>Herramientas computacionales para minimización de riesgos</span>
+<span id="cb1-64"><a href="#cb1-64" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-65"><a href="#cb1-65" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Capítulo 7: Teoría Moderna de Portafolios**</span>
+<span id="cb1-66"><a href="#cb1-66" aria-hidden="true" tabindex="-1"></a><span class="ss">    - </span>Estructuras matriciales para gestión de activos</span>
+<span id="cb1-67"><a href="#cb1-67" aria-hidden="true" tabindex="-1"></a><span class="ss">    - </span>Relación entre retorno esperado y riesgo sistémico</span>
+<span id="cb1-68"><a href="#cb1-68" aria-hidden="true" tabindex="-1"></a><span class="ss">    - </span>Eficiencia computacional y vectorización de cálculos</span>
+<span id="cb1-69"><a href="#cb1-69" aria-hidden="true" tabindex="-1"></a><span class="ss">    - </span>Modelos de frontera eficiente y ratios de desempeño</span>
+<span id="cb1-70"><a href="#cb1-70" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-71"><a href="#cb1-71" aria-hidden="true" tabindex="-1"></a>---</span>
+<span id="cb1-72"><a href="#cb1-72" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-73"><a href="#cb1-73" aria-hidden="true" tabindex="-1"></a><span class="fu">### Módulo 3: Riesgo y Estadística Avanzada (Capítulos 8-11)</span></span>
+<span id="cb1-74"><a href="#cb1-74" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-75"><a href="#cb1-75" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Capítulo 8: Medición de Riesgo de Mercado**</span>
+<span id="cb1-76"><a href="#cb1-76" aria-hidden="true" tabindex="-1"></a><span class="ss">    - </span>Metodologías de cálculo del Valor en Riesgo (VaR)</span>
+<span id="cb1-77"><a href="#cb1-77" aria-hidden="true" tabindex="-1"></a><span class="ss">    - </span>Modelado de distribuciones estadísticas</span>
+<span id="cb1-78"><a href="#cb1-78" aria-hidden="true" tabindex="-1"></a><span class="ss">    - </span>Análisis histórico vs. modelos paramétricos</span>
+<span id="cb1-79"><a href="#cb1-79" aria-hidden="true" tabindex="-1"></a><span class="ss">    - </span>Generación de variables aleatorias</span>
+<span id="cb1-80"><a href="#cb1-80" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-81"><a href="#cb1-81" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Capítulo 9: Simulación Estocástica**</span>
+<span id="cb1-82"><a href="#cb1-82" aria-hidden="true" tabindex="-1"></a><span class="ss">    - </span>Fundamentos de la Simulación de Monte Carlo</span>
+<span id="cb1-83"><a href="#cb1-83" aria-hidden="true" tabindex="-1"></a><span class="ss">    - </span>Modelado de procesos aleatorios en el tiempo</span>
+<span id="cb1-84"><a href="#cb1-84" aria-hidden="true" tabindex="-1"></a><span class="ss">    - </span>Proyecciones de trayectorias de precios</span>
+<span id="cb1-85"><a href="#cb1-85" aria-hidden="true" tabindex="-1"></a><span class="ss">    - </span>Aplicaciones de probabilidad en la incertidumbre</span>
+<span id="cb1-86"><a href="#cb1-86" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-87"><a href="#cb1-87" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Capítulo 10: Inferencia Bayesiana**</span>
+<span id="cb1-88"><a href="#cb1-88" aria-hidden="true" tabindex="-1"></a><span class="ss">    - </span>Fundamentos de la probabilidad condicional</span>
+<span id="cb1-89"><a href="#cb1-89" aria-hidden="true" tabindex="-1"></a><span class="ss">    - </span>Actualización de creencias con nueva información</span>
+<span id="cb1-90"><a href="#cb1-90" aria-hidden="true" tabindex="-1"></a><span class="ss">    - </span>Contraste entre estadística clásica y bayesiana</span>
+<span id="cb1-91"><a href="#cb1-91" aria-hidden="true" tabindex="-1"></a><span class="ss">    - </span>Aplicación de priors y posteriors en finanzas</span>
+<span id="cb1-92"><a href="#cb1-92" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-93"><a href="#cb1-93" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Capítulo 11: Econometría y Modelos de Equilibrio**</span>
+<span id="cb1-94"><a href="#cb1-94" aria-hidden="true" tabindex="-1"></a><span class="ss">    - </span>Regresión lineal aplicada a activos</span>
+<span id="cb1-95"><a href="#cb1-95" aria-hidden="true" tabindex="-1"></a><span class="ss">    - </span>Estimación de parámetros de sensibilidad y exceso de retorno</span>
+<span id="cb1-96"><a href="#cb1-96" aria-hidden="true" tabindex="-1"></a><span class="ss">    - </span>Integración de opiniones del inversor en modelos de mercado</span>
+<span id="cb1-97"><a href="#cb1-97" aria-hidden="true" tabindex="-1"></a><span class="ss">    - </span>Modelos de avanzados de actualización de expectativas</span>
+<span id="cb1-98"><a href="#cb1-98" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-99"><a href="#cb1-99" aria-hidden="true" tabindex="-1"></a>---</span>
+<span id="cb1-100"><a href="#cb1-100" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-101"><a href="#cb1-101" aria-hidden="true" tabindex="-1"></a><span class="fu">### Módulo 4: Instrumentos Derivados (Capítulos 12-13)</span></span>
+<span id="cb1-102"><a href="#cb1-102" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-103"><a href="#cb1-103" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Capítulo 12: Valuación Numérica de Opciones**</span>
+<span id="cb1-104"><a href="#cb1-104" aria-hidden="true" tabindex="-1"></a><span class="ss">    - </span>Modelos teóricos de precio de opciones</span>
+<span id="cb1-105"><a href="#cb1-105" aria-hidden="true" tabindex="-1"></a><span class="ss">    - </span>Algoritmos de resolución para variables implícitas</span>
+<span id="cb1-106"><a href="#cb1-106" aria-hidden="true" tabindex="-1"></a><span class="ss">    - </span>Métodos numéricos de búsqueda de soluciones</span>
+<span id="cb1-107"><a href="#cb1-107" aria-hidden="true" tabindex="-1"></a><span class="ss">    - </span>Relación entre precio de mercado y volatilidad</span>
+<span id="cb1-108"><a href="#cb1-108" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-109"><a href="#cb1-109" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Capítulo 13: Gestión de Coberturas Dinámicas**</span>
+<span id="cb1-110"><a href="#cb1-110" aria-hidden="true" tabindex="-1"></a><span class="ss">    - </span>Sensibilidades de las opciones (Griegas)</span>
+<span id="cb1-111"><a href="#cb1-111" aria-hidden="true" tabindex="-1"></a><span class="ss">    - </span>Estrategias de inmunización de portafolios</span>
+<span id="cb1-112"><a href="#cb1-112" aria-hidden="true" tabindex="-1"></a><span class="ss">    - </span>Simulación de estrategias de cobertura en tiempo real</span>
+<span id="cb1-113"><a href="#cb1-113" aria-hidden="true" tabindex="-1"></a><span class="ss">    - </span>Rebalanceo de posiciones frente a cambios del mercado</span>
+<span id="cb1-114"><a href="#cb1-114" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-115"><a href="#cb1-115" aria-hidden="true" tabindex="-1"></a><span class="fu">## ¿A quién va dirigido?</span></span>
+<span id="cb1-116"><a href="#cb1-116" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-117"><a href="#cb1-117" aria-hidden="true" tabindex="-1"></a>Este libro está diseñado para estudiantes de finanzas, economía y profesionales del sector que deseen transicionar hacia un enfoque más cuantitativo y computacional. No se requiere experiencia previa en programación, ya que empezamos desde los fundamentos.</span>
+<span id="cb1-118"><a href="#cb1-118" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-119"><a href="#cb1-119" aria-hidden="true" tabindex="-1"></a><span class="fu">## Convenciones</span></span>
+<span id="cb1-120"><a href="#cb1-120" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-121"><a href="#cb1-121" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>Los bloques de código son totalmente ejecutables.</span>
+<span id="cb1-122"><a href="#cb1-122" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>Las fórmulas se presentan en LaTeX para mayor claridad.</span>
+<span id="cb1-123"><a href="#cb1-123" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>Usamos **callouts** para resaltar tips, advertencias y conceptos clave.</span>
+<span id="cb1-124"><a href="#cb1-124" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-125"><a href="#cb1-125" aria-hidden="true" tabindex="-1"></a>::: {.callout-tip appearance="simple"}</span>
+<span id="cb1-126"><a href="#cb1-126" aria-hidden="true" tabindex="-1"></a>Recomendamos seguir el libro de forma secuencial, ejecutando los ejemplos en un entorno local o en Google Colab.</span>
+<span id="cb1-127"><a href="#cb1-127" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb1-128"><a href="#cb1-128" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-129"><a href="#cb1-129" aria-hidden="true" tabindex="-1"></a>---</span>
+<span id="cb1-130"><a href="#cb1-130" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-131"><a href="#cb1-131" aria-hidden="true" tabindex="-1"></a>Este sitio es y será siempre gratuito. Si encontrás algún error o tenés alguna sugerencia, podés abrir un *issue* en nuestro repositorio de GitHub.</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></div>
 </div></div></div></div></div>
 </div> <!-- /content -->
 <footer class="footer">
