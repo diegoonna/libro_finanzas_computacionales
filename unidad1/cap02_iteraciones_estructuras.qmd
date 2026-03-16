@@ -2,23 +2,22 @@
 title: "Iteraciones y Estructuras de Datos Nativas"
 subtitle: "Bucles, Listas y Diccionarios"
 abstract: |
-  Este script está diseñado con formato de celdas interactivas para practicar
-  bucles while, for, listas y diccionarios aplicados a finanzas.
+  Este capítulo desarrolla los conceptos de bucles, contadores, acumuladores, listas y diccionarios.
 ---
 
 # Introducción {.unnumbered}
 
-Este capítulo está diseñado con formato de celdas interactivas. Si usas VS Code o Jupyter, puedes ejecutar cada bloque delimitado por `# %%` de forma independiente. En este libro, los bloques son ejecutables directamente en el navegador.
+En este capítulo exploraremos los pilares fundamentales para lograr las **estructuras iterativas** (bucles `while` y `for`) y las **estructuras de datos** (listas y diccionarios) que permitan almacenar cantidades variables de datos. A través de casos prácticos, dejaremos atrás el cálculo manual de rendimientos aislados para aprender a procesar y organizar series de precios y carteras de inversión en milisegundos.
 
 ---
 
-# Bucles `while`, Contadores y Acumuladores
+## Bucles `while`, Contadores y Acumuladores
 
-La estructura `while` repite las instrucciones mientras una condición sea evaluada como verdadera (`True`)[cite: 30, 31]. Se le conoce como "bucle indefinido" porque no sabemos de antemano cuántas veces se ejecutará[cite: 86].
+La estructura `while` repite las instrucciones mientras una condición sea evaluada como verdadera (`True`). Se le conoce como "bucle indefinido" porque no sabemos de antemano cuántas veces se ejecutará.
 
 **Conceptos clave:**
 
-* **Contador:** Una variable que suma un valor constante en cada iteración (ej: `i = i + 1`)[cite: 58].
+* **Contador:** Una variable que suma un valor constante en cada iteración (ej: `i = i + 1`).
 * **Acumulador:** Una variable que suma un valor variable en cada iteración (muy usado para sumar flujos, capitales, etc.).
 
 ```{pyodide-python}
@@ -45,9 +44,9 @@ print(f"Tomó {meses} meses alcanzar el objetivo de ${objetivo}.")
 
 ---
 
-# Bucles `for` y la función `range()`
+## Bucles `for` y la función `range()`
 
-La estructura `for` permite realizar una cantidad definida de iteraciones[cite: 90]. Itera sobre cada elemento de una secuencia (como una lista o un rango de números)[cite: 103]. La función `range()` se utiliza frecuentemente para construir estos bucles[cite: 172].
+La estructura `for` permite realizar una cantidad definida de iteraciones. Itera sobre cada elemento de una secuencia (como una lista o un rango de números). La función `range()` se utiliza frecuentemente para construir estos bucles.
 
 ```{pyodide-python}
 #| label: for-interes-simple
@@ -73,9 +72,9 @@ for anio in range(1, anios + 1):
 
 ---
 
-# Listas: Almacenando múltiples valores
+## Listas: Almacenando múltiples valores
 
-Las listas nos permiten guardar varios elementos en una sola variable, manteniendo el orden[cite: 115, 207]. Podemos acceder a ellos mediante su índice (que empieza en 0) [cite: 122, 129] y modificarlas con métodos como `.append()`, `.pop()` o `del`[cite: 216, 218].
+Las listas nos permiten guardar varios elementos en una sola variable, manteniendo el orden. Podemos acceder a ellos mediante su índice (que empieza en 0) y modificarlas con métodos como `.append()`, `.pop()` o `del`.
 
 ```{pyodide-python}
 #| label: listas-filtrado
@@ -88,7 +87,7 @@ cotizaciones_altas = [] # Creamos una lista vacía usando corchetes
 
 for precio in cotizaciones:
     if precio > 1000:
-        cotizaciones_altas.append(precio) # Añade el elemento al final de la lista [cite: 204, 216]
+        cotizaciones_altas.append(precio) # Añade el elemento al final de la lista
 
 print("Cotizaciones originales:", cotizaciones)
 print("Cotizaciones altas (mayores a 1000):", cotizaciones_altas)
@@ -113,16 +112,46 @@ print("Precios diarios:", precios_accion)
 print("Variaciones absolutas diarias:", variaciones)
 ```
 
+### Listas anidadas: Representando matrices
+
+Cuando necesitamos representar datos en filas y columnas (por ejemplo, los precios de varios activos a lo largo del tiempo), podemos utilizar **listas de listas**. Cada elemento de la lista principal es, a su vez, una lista que representa una fila.
+
+```{pyodide-python}
+#| label: listas-anidadas-matriz
+# Ejemplo: Matriz de precios de 3 activos durante 3 días
+# Cada fila representa un activo: [Día 1, Día 2, Día 3]
+precios_activos = [
+    [100.5, 101.2, 100.8],  # Activo A
+    [45.0, 45.5, 46.2],     # Activo B
+    [210.3, 209.5, 211.0]   # Activo C
+]
+
+print("Matriz completa de precios:")
+for fila in precios_activos:
+    print(fila)
+
+# Podemos acceder a un elemento específico usando dos índices: [fila][columna]
+# Ejemplo: Precio del Activo B (índice 1) en el Día 2 (índice 1)
+precio_b_dia2 = precios_activos[1][1]
+print(f"\nPrecio del Activo B en el Día 2: ${precio_b_dia2}")
+
+# También podemos recorrerla con bucles anidados
+print("\nAcceso individual a cada precio:")
+for i in range(len(precios_activos)):
+    for j in range(len(precios_activos[i])):
+        print(f"Activo {i}, Día {j}: ${precios_activos[i][j]}")
+```
+
 ---
 
-# Diccionarios: Datos etiquetados
+## Diccionarios: Datos etiquetados
 
-A diferencia de las listas, los diccionarios no tienen un orden secuencial (son como una bolsa)[cite: 402]. Los elementos se guardan y se buscan utilizando "claves" (keys) en lugar de índices numéricos[cite: 403, 438].
+A diferencia de las listas, los diccionarios no tienen un orden secuencial (son como una bolsa). Los elementos se guardan y se buscan utilizando "claves" (keys) en lugar de índices numéricos.
 
 ```{pyodide-python}
 #| label: dict-bono
 # Ejemplo A: Mapeo de información de un activo
-# Creamos un diccionario vacío usando dict() o llaves {}[cite: 404].
+# Creamos un diccionario vacío usando dict() o llaves {}.
 bono_soberano = dict()
 
 # Agregamos elementos clave-valor
@@ -142,7 +171,7 @@ print("Paridad actualizada:", bono_soberano['paridad'])
 #| label: dict-riesgos
 # Ejemplo B: Frecuencias y el método .get()
 # Queremos contar cuántos activos tenemos agrupados por su nivel de riesgo.
-# El método .get(clave, valor_por_defecto) es ideal para esto[cite: 475, 477].
+# El método .get(clave, valor_por_defecto) es ideal para esto.
 
 activos = ["Bajo", "Alto", "Medio", "Bajo", "Bajo", "Medio", "Alto", "Bajo"]
 conteo_riesgos = {}
@@ -150,7 +179,7 @@ conteo_riesgos = {}
 for nivel in activos:
     # Si 'nivel' ya está en el diccionario, toma su valor actual.
     # Si no está, devuelve 0. A eso le sumamos 1.
-    conteo_riesgos[nivel] = conteo_riesgos.get(nivel, 0) + 1 # [cite: 481]
+    conteo_riesgos[nivel] = conteo_riesgos.get(nivel, 0) + 1
 
 print("Distribución de riesgos de la cartera:")
 print(conteo_riesgos)
@@ -167,7 +196,7 @@ precios_mercado = {'Soja': 350.0, 'Trigo': 210.5, 'Maiz': 180.0}
 
 valor_total_inventario = 0 # Acumulador
 
-# Recorremos las claves del diccionario de cantidades [cite: 508]
+# Recorremos las claves del diccionario de cantidades
 for commodity in cantidades:
     cantidad_toneladas = cantidades[commodity]
     precio_tonelada = precios_mercado[commodity]
@@ -178,10 +207,4 @@ for commodity in cantidades:
 print(f"El valor total del inventario agrícola es: ${valor_total_inventario}")
 ```
 
----
 
-# Referencias
-
-* Fabozzi, F. J. (2015). *Bond Markets, Analysis, and Strategies*. Pearson.
-* Benninga, S. (2014). *Financial Modeling*. MIT Press.
-* Cormen, T. H. et al. (2009). *Introduction to Algorithms*. MIT Press.
