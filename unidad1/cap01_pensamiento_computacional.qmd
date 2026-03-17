@@ -1,5 +1,5 @@
 ---
-title: "Pensamiento Computacional en Finanzas"
+title: "Capítulo 1: Pensamiento Computacional en Finanzas"
 subtitle: "Variables, Tipos de Datos, Estructuras de Control y Valor Tiempo del Dinero"
 abstract: |
   Bases de Python aplicadas a finanzas: variables, tipos primitivos, operadores,
@@ -8,7 +8,7 @@ abstract: |
 
 # Introducción {.unnumbered}
 
-En esta primera semana establecemos las bases: cómo piensa una computadora y cómo traducir problemas financieros a instrucciones que Python pueda ejecutar. Aprenderemos sobre variables, tipos de datos, operadores y estructuras de control, aplicándolos al cálculo de interés compuesto y al análisis de valor presente.
+En este  primer capítulo se establecen las bases del pensamiento computacional y cómo traducir problemas financieros a instrucciones que Python pueda ejecutar. Se desarrollarán conceptos sobre variables, tipos de datos, operadores y estructuras de control, aplicándolos al cálculo de interés compuesto y al análisis de valor presente.
 
 ::: {.callout-tip title="Entorno de Trabajo"}
 Recomendamos usar **Jupyter Notebooks** (local) o **Google Colab** (en la nube). Ambos permiten ejecutar código Python de forma interactiva, celda por celda.
@@ -16,15 +16,45 @@ Recomendamos usar **Jupyter Notebooks** (local) o **Google Colab** (en la nube).
 
 ---
 
+
+## Concepto de Variable: Gestión de Memoria y Referencias
+
+Es importante no pensar en las variables simplemente solamente como cajas abstractas, sino comprender cómo la computadora administra sus recursos físicos (RAM). Cuando procesamos miles de datos financieros o realizamos millones de iteraciones en una simulación, la gestión de la memoria se vuelve un factor crítico para el rendimiento (latencia y capacidad).
+
+Una variable se define a través de tres componentes fundamentales:
+
+1. **Nombre (Identificador):** Es la etiqueta simbólica que el programador utiliza para referirse al dato (por ejemplo, `precio_bono` o `tasa_libre_riesgo`). Debe ser representativo del concepto financiero que modela.
+2. **Espacio en Memoria:** Es la cantidad de bytes que el objeto físico ocupa en la Memoria RAM. Un entero pequeño no ocupa el mismo espacio que una matriz de covarianzas $\Sigma$.
+3. **Dirección de Memoria:** Es el identificador único (una ubicación física o virtual en la RAM) donde residen los datos del objeto.
+
+En Python, las variables son simples etiquetas (**referencias**) que apuntan a objetos en la memoria. Si reasignamos un objeto inmutable (como un precio representado por un `int` o `float`), Python crea un nuevo objeto en un nuevo espacio de memoria y mueve la etiqueta hacia allí.
+
+```{pyodide-python}
+#| label: concepto-variable-memoria
+# Definimos una variable con un precio inicial
+precio = 150.50
+print(f"Precio inicial: {precio} | Dirección de memoria: {id(precio)}")
+
+# Reasignamos el valor (simulando un cambio de mercado)
+precio = 150.75
+print(f"Precio nuevo:   {precio} | Dirección de memoria: {id(precio)}")
+```
+
+::: {.callout-note title="Mutabilidad e Inmutabilidad"}
+Algunos objetos pueden ser modificados después de su creación (**mutables**, como las listas) y otros no (**inmutables**, como los números y strings). Desarrollaremos este concepto en profundidad al estudiar estructuras de datos más adelante.
+:::
+
+---
+
 ## Variables y Tipos de Datos Primitivos
 
-En Python, **todo es un objeto**. Una variable es simplemente una etiqueta que apunta a un objeto en memoria. Python utiliza **tipado dinámico**: no necesitamos declarar el tipo de dato explícitamente.
+Python utiliza **tipado dinámico**: no necesitamos declarar el tipo de dato explícitamente. A continuación, exploraremos algunos de los tipos de datos fundamentales que utilizaremos para modelar instrumentos y variables financieras.
 
 ## Tipos Numéricos
 
 ### Enteros (`int`)
 
-Representan números del conjunto $\mathbb{Z}$. En Python 3, tienen precisión arbitraria.
+Representan números del conjunto $\mathbb{Z}$ y tienen precisión arbitraria.
 
 **Aplicación Financiera:** Cantidades discretas como número de acciones, días al vencimiento, iteraciones de simulación.
 
@@ -88,7 +118,7 @@ print(f"Instrumento: {instrumento}")
 
 ## Conversión de Tipos (Casting)
 
-Los datos del mundo real frecuentemente llegan como texto (desde CSVs o APIs). Es necesario convertirlos explícitamente.
+Los datos del mundo real frecuentemente llegan como texto (desde CSVs o APIs). Tambie, los datos que ingresan los usuario. Por lo que es necesario convertirlos explícitamente.
 
 ```{pyodide-python}
 #| label: casting
