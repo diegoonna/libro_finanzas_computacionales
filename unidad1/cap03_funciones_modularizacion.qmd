@@ -16,7 +16,7 @@ Hasta ahora hemos escrito código de forma lineal. Esta semana aprendemos a **en
 
 Una función es un bloque de código reutilizable que recibe **parámetros** y devuelve un **resultado**.
 
-```{python}
+```{pyodide-python}
 #| label: funcion-basica
 def valor_futuro(capital, tasa, periodos):
     """
@@ -41,7 +41,7 @@ print(f"Valor futuro: ${vf:,.2f}")
 
 ## Parámetros por Defecto
 
-```{python}
+```{pyodide-python}
 #| label: params-default
 def valor_presente(flujo_futuro, tasa, periodos=1):
     """Calcula el valor presente. Por defecto, 1 período."""
@@ -57,7 +57,7 @@ print(f"VP a 5 años: ${vp2:,.2f}")
 
 ## Argumentos Variables (`*args`)
 
-```{python}
+```{pyodide-python}
 #| label: args
 def sumar_flujos(*flujos):
     """Suma una cantidad variable de flujos de fondos."""
@@ -73,27 +73,73 @@ print(f"Total de flujos: ${total:,}")
 
 ---
 
-# Scope de Variables
+# Scope (Alcance) de las Variables
 
-Las variables definidas dentro de una función son **locales**: no existen fuera de ella.
+El **scope** o alcance define en qué parte del programa una variable es "visible" y puede ser utilizada. En Python, distinguimos principalmente entre dos niveles:
 
-```{python}
-#| label: scope
-tasa_global = 0.10  # Variable global
+1.  **Scope Global (Main)**: Variables definidas fuera de cualquier función. Son visibles en todo el archivo, incluso dentro de las funciones.
+2.  **Scope Local**: Variables definidas dentro de una función. Solo existen mientras la función se está ejecutando y no pueden verse desde fuera.
 
-def calcular_interes(capital):
-    tasa_local = 0.05  # Variable local
-    return capital * tasa_local
+## Variables Globales vs. Locales
 
-resultado = calcular_interes(1000)
-print(f"Interés: ${resultado}")
+Una función puede leer una variable global, pero no puede modificarla directamente a menos que se indique explícitamente (lo cual es una mala práctica en finanzas, ya que resta predictibilidad al código).
 
-# tasa_local no existe aquí fuera
-# print(tasa_local)  # → NameError
+```{pyodide-python}
+#| label: scope-basico
+tasa_mercado = 0.05  # VARIABLE GLOBAL (Scope: Main)
+
+def calcular_rendimiento(monto):
+    # tasa_mercado es visible aquí porque es global
+    return monto * tasa_mercado
+
+def operacion_interna():
+    variable_interna = 100  # VARIABLE LOCAL (Scope: Función)
+    print(f"Dentro de la función: {variable_interna}")
+
+print(f"Rendimiento calculado: {calcular_rendimiento(1000)}")
+operacion_interna()
+
+# Intentar acceder a variable_interna aquí daría un NameError
+# print(variable_interna) 
 ```
 
-::: {.callout-warning title="Buena Práctica"}
-Evitar usar variables globales dentro de funciones. Pasar siempre los datos como parámetros para que la función sea **predecible y testeable**.
+## El concepto de "Shadowing" (Sombreado)
+
+Si definimos una variable dentro de una función con el mismo nombre que una global, la versión local "sombra" a la global durante la ejecución de esa función.
+
+```{pyodide-python}
+#| label: scope-shadowing
+ticker = "AAPL"
+
+def cambiar_ticker_local():
+    ticker = "GGAL"  # Esto crea una variable LOCAL, no cambia la global
+    print(f"Dentro de la función: {ticker}")
+
+cambiar_ticker_local()
+print(f"Fuera de la función (Global): {ticker}")
+```
+
+## ¿Por qué evitar las variables globales?
+
+En el desarrollo de software financiero, la **pureza** de las funciones es fundamental. Una función ideal es aquella que, para los mismos parámetros, siempre devuelve el mismo resultado sin depender de "estados externos".
+
+```{pyodide-python}
+#| label: scope-mala-practica
+# MALA PRÁCTICA (Dependencia global)
+tasa = 0.10
+def calcular_interes_malo(capital):
+    return capital * tasa
+
+# BUENA PRÁCTICA (Parámetros explícitos)
+def calcular_interes_bueno(capital, tasa_activa):
+    return capital * tasa_activa
+
+print(f"Malo: {calcular_interes_malo(100)}")
+print(f"Bueno: {calcular_interes_bueno(100, 0.12)}")
+```
+
+::: {.callout-important title="Regla de Oro"}
+Siempre que necesites un dato dentro de una función, **pásalo como parámetro**. Evita depender de variables definidas en el "main" para que tu código sea modular y fácil de testear.
 :::
 
 ---
@@ -102,7 +148,7 @@ Evitar usar variables globales dentro de funciones. Pasar siempre los datos como
 
 En el mundo real, los datos pueden ser inválidos. El manejo de excepciones permite que el programa sea **robusto** ante entradas inesperadas.
 
-```{python}
+```{pyodide-python}
 #| label: try-except
 def calcular_vpn(flujos, tasa):
     """
@@ -149,7 +195,7 @@ Vamos a construir una librería con funciones financieras reutilizables. En un e
 
 ## Funciones de la Librería
 
-```{python}
+```{pyodide-python}
 #| label: libreria
 # === finanzas_basicas.py ===
 # TODO: Guardar este código como un archivo .py separado para importarlo
@@ -242,7 +288,7 @@ def convertir_tasa(tasa, de="TNA", a="TEA", n=12):
 
 ## Usando la Librería
 
-```{python}
+```{pyodide-python}
 #| label: uso-libreria
 # === Uso de las funciones ===
 
