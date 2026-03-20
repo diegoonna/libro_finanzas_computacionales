@@ -42,6 +42,63 @@ while capital_acumulado < objetivo:
 print(f"Tomó {meses} meses alcanzar el objetivo de ${objetivo}.")
 ```
 
+### Control de Flujo: `break` y `continue`
+
+En ocasiones necesitamos alterar el flujo normal de un bucle. Python nos proporciona dos sentencias clave para esto:
+
+*   **`break`**: Termina el bucle inmediatamente, saltando a la primera línea de código después del bloque del bucle.
+*   **`continue`**: Salta el resto del código dentro del bucle para la iteración actual y vuelve al principio del bucle para evaluar la condición nuevamente.
+
+#### Ejemplo: Uso de `break` para detener una búsqueda
+
+Supongamos que estamos procesando una serie de precios y queremos detener el bucle apenas encontremos un valor que supere un umbral crítico.
+
+```{pyodide-python}
+#| label: break-ejemplo
+precio_objetivo = 120
+precios = [110, 115, 122, 118, 125]
+indice = 0
+
+print("Iniciando monitoreo de precios...")
+while indice < len(precios):
+    precio_actual = precios[indice]
+    if precio_actual > precio_objetivo:
+        print(f"¡Alerta! Precio de ${precio_actual} detectado. Deteniendo proceso.")
+        break  # Sale del bucle while
+    
+    print(f"Precio verificado: ${precio_actual} (Normal)")
+    indice = indice + 1
+
+print("Fin del monitoreo.")
+```
+
+#### Ejemplo: Uso de `continue` para omitir datos inválidos
+
+A menudo los datos financieros tienen errores o valores nulos. Podemos usar `continue` para ignorarlos y seguir con el siguiente elemento.
+
+```{pyodide-python}
+#| label: continue-ejemplo
+# Supongamos que 0 representa un error en la carga del dato
+precios_con_error = [105.0, 0, 106.5, 107.2, 0, 108.0]
+suma = 0
+contador_validos = 0
+i = 0
+
+while i < len(precios_con_error):
+    p = precios_con_error[i]
+    i = i + 1
+    
+    if p == 0:
+        print("Dato inválido detectado. Saltando...")
+        continue  # Vuelve al inicio del while para evaluar la siguiente iteración
+    
+    suma = suma + p
+    contador_validos = contador_validos + 1
+
+promedio = suma / contador_validos
+print(f"El promedio de los {contador_validos} precios válidos es: ${promedio:.2f}")
+```
+
 ---
 
 ## Bucles `for` y la función `range()`
