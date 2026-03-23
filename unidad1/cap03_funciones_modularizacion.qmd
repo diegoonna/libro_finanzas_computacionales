@@ -1,5 +1,5 @@
 ---
-title: "Capítulo 3: Funciones y Modularización"
+title: "Capítulo 3: Funciones, Excepciones y módulos"
 subtitle: "Creando una Librería Financiera Reutilizable"
 abstract: |
   Funciones con parámetros, `*args`, scope, manejo de errores. Construimos
@@ -39,6 +39,30 @@ vf = valor_futuro(100_000, 0.08, 10)
 print(f"Valor futuro: ${vf:,.2f}")
 ```
 
+## Recibir y devolver múltiples valores
+
+En Python, una función puede **recibir varios parámetros** y también **devolver más de un resultado**.
+Esto es útil en finanzas cuando, a partir de los mismos datos, queremos obtener más de un indicador.
+
+```{pyodide-python}
+#| label: multi-params-return
+def resumen_inversion(capital, tasa, periodos):
+    vf = capital * (1 + tasa) ** periodos
+    interes_ganado = vf - capital
+    rendimiento_total = interes_ganado / capital
+    return vf, interes_ganado, rendimiento_total
+
+# La función recibe 3 parámetros y devuelve 3 valores
+vf, interes, rendimiento = resumen_inversion(100_000, 0.08, 3)
+
+print(f"Valor futuro: ${vf:,.2f}")
+print(f"Interés ganado: ${interes:,.2f}")
+print(f"Rendimiento total: {rendimiento:.2%}")
+```
+
+Cuando devolvemos varios valores, Python los empaqueta en una tupla.
+Luego podemos "desempaquetarlos" en variables separadas para trabajar con cada resultado de forma clara.
+
 ## Parámetros por Defecto
 
 ```{pyodide-python}
@@ -57,6 +81,14 @@ print(f"VP a 5 años: ${vp2:,.2f}")
 
 ## Argumentos Variables (`*args`)
 
+Hasta ahora vimos funciones con una cantidad fija de parámetros.  
+Pero en problemas financieros muchas veces no sabemos de antemano cuántos valores vamos a procesar (por ejemplo, una serie de flujos que puede tener 3, 10 o 30 períodos).
+
+`*args` permite que una función reciba una **cantidad variable de argumentos posicionales**.
+Dentro de la función, esos argumentos se agrupan en una **tupla**.
+
+Esto nos da flexibilidad sin tener que escribir versiones distintas de la misma función.
+
 ```{pyodide-python}
 #| label: args
 def sumar_flujos(*flujos):
@@ -67,9 +99,27 @@ def sumar_flujos(*flujos):
     return total
 
 # Podemos pasar cualquier cantidad de argumentos
-total = sumar_flujos(80, 80, 80, 80, 1080)
-print(f"Total de flujos: ${total:,}")
+total_1 = sumar_flujos(100, 200, 300)
+total_2 = sumar_flujos(80, 80, 80, 80, 1080)
+
+print(f"Total 3 flujos: ${total_1:,}")
+print(f"Total 5 flujos: ${total_2:,}")
+
+# Si ya tenemos una lista, usamos * para desempaquetar
+serie = [-1000, 300, 400, 500]
+print(f"Suma serie: ${sumar_flujos(*serie):,}")
 ```
+
+Con esto:
+
+- `sumar_flujos(100, 200, 300)` envía 3 argumentos,
+- `sumar_flujos(80, 80, 80, 80, 1080)` envía 5,
+- y `sumar_flujos(*serie)` toma una lista y la transforma en argumentos separados.
+
+:::: {.callout-tip title="Cuándo usar *args"}
+Usá `*args` cuando la función necesite aceptar una cantidad variable de datos del mismo tipo (flujos, retornos, precios, etc.).  
+Si cada dato tiene un rol distinto y fijo (por ejemplo `capital`, `tasa`, `periodos`), conviene usar parámetros explícitos.
+::::
 
 ---
 
@@ -146,46 +196,189 @@ Siempre que necesites un dato dentro de una función, **pásalo como parámetro*
 
 # Manejo de Errores: `try` / `except`
 
-En el mundo real, los datos pueden ser inválidos. El manejo de excepciones permite que el programa sea **robusto** ante entradas inesperadas.
+En el mundo real, los datos financieros casi nunca llegan "perfectos": pueden venir incompletos, en formato incorrecto o fuera de rango.
+El manejo de excepciones con `try` / `except` permite que el programa sea **robusto**, evitando que se rompa ante errores esperables.
+
+## ¿Qué es una excepción?
+
+Una **excepción** es un error que ocurre durante la ejecución del programa (runtime), por ejemplo:
+
+- dividir por cero (`ZeroDivisionError`),
+- convertir texto a número cuando no se puede (`ValueError`),
+- acceder a una clave inexistente en un diccionario (`KeyError`),
+- o intentar usar un tipo de dato incorrecto (`TypeError`).
+
+Si no capturamos la excepción, el programa se detiene. Con `try` / `except`, podemos capturar el error y decidir cómo responder.
+
+## Flujo de `try` / `except`
+
+La estructura general es:
+
+```python
+try:
+    # código que puede fallar
+except TipoDeError:
+    # qué hacer si ocurre ese error
+```
+
+La idea clave es separar:
+
+- **camino normal** (cálculo esperado),
+- de **camino de error** (qué hacemos cuando algo falla).
+
+## Ejemplo base: validación y captura en VPN
 
 ```{pyodide-python}
 #| label: try-except
 def calcular_vpn(flujos, tasa):
-    """
-    Calcula el Valor Presente Neto con validación de inputs.
-    
-    Raises:
-    -------
-    ValueError: si la tasa es negativa o los flujos están vacíos
-    TypeError: si los flujos no son una lista
-    """
-    # Validaciones
-    if not isinstance(flujos, list):
-        raise TypeError("'flujos' debe ser una lista")
+    """Calcula el VPN de una serie de flujos."""
     if len(flujos) == 0:
         raise ValueError("La lista de flujos no puede estar vacía")
-    if tasa < -1:
-        raise ValueError(f"Tasa inválida: {tasa}. Debe ser mayor a -100%")
-    
+
     vpn = 0
     for t, cf in enumerate(flujos):
         vpn += cf / (1 + tasa) ** t
     return vpn
 
-# Caso exitoso
-print(calcular_vpn([-1000, 300, 400, 500], 0.10))
+# Caso normal
+print(f"VPN correcto: {calcular_vpn([-1000, 400, 400, 400], 0.10):.2f}")
 
-# Caso con error controlado
+# Caso con error controlado (lista vacía)
 try:
-    resultado = calcular_vpn([-1000, 300], -2.0)
+    resultado = calcular_vpn([], 0.10)
 except ValueError as e:
     print(f"Error capturado: {e}")
+```
+
+## Capturar múltiples excepciones
+
+Podemos manejar cada tipo de error de forma distinta:
+
+```{pyodide-python}
+#| label: try-except-multiple
+def ratio_cobertura(ebit, intereses):
+    return ebit / intereses
 
 try:
-    resultado = calcular_vpn("no soy una lista", 0.10)
-except TypeError as e:
-    print(f"Error capturado: {e}")
+    print(ratio_cobertura(500, 0))  # podría fallar por división por cero
+except ZeroDivisionError:
+    print("Error: intereses no puede ser 0")
+except TypeError:
+    print("Error: ebit e intereses deben ser numéricos")
 ```
+
+Esto es útil porque no todos los errores deben tener el mismo mensaje o tratamiento.
+
+## Uso de `else` y `finally`
+
+Además de `except`, Python ofrece dos bloques muy útiles:
+
+- `else`: se ejecuta si **no** hubo excepción en `try`.
+- `finally`: se ejecuta **siempre**, haya error o no.
+
+```{pyodide-python}
+#| label: try-except-else-finally
+def parse_tasa(texto):
+    return float(texto)
+
+entrada = "0.12"
+
+try:
+    tasa = parse_tasa(entrada)
+except ValueError:
+    print("No se pudo convertir la tasa a número")
+else:
+    print(f"Tasa válida: {tasa:.2%}")
+finally:
+    print("Fin de la validación")
+```
+
+En análisis financiero real, `finally` suele usarse para cerrar archivos, conexiones o liberar recursos.
+
+## `raise`: generar errores de negocio explícitos
+
+No solo capturamos errores: también podemos **lanzarlos** cuando una regla financiera no se cumple.
+
+```{pyodide-python}
+#| label: try-except-raise
+def cuota_francesa(capital, tasa, periodos):
+    if capital <= 0:
+        raise ValueError("El capital debe ser positivo")
+    if tasa <= 0:
+        raise ValueError("La tasa debe ser positiva")
+    if periodos <= 0:
+        raise ValueError("Los periodos deben ser mayores a 0")
+    return capital * (tasa * (1 + tasa) ** periodos) / ((1 + tasa) ** periodos - 1)
+
+try:
+    cuota = cuota_francesa(100000, 0.03, 24)
+    print(f"Cuota: ${cuota:,.2f}")
+except ValueError as e:
+    print(f"Dato inválido: {e}")
+```
+
+## Buenas prácticas en `try` / `except`
+
+1. Capturar errores **específicos** (`ValueError`, `TypeError`, etc.), no usar `except:` genérico salvo casos muy controlados.
+2. Mantener el bloque `try` **pequeño** (solo las líneas que pueden fallar).
+3. Dar mensajes claros para quien usa el programa.
+4. Validar supuestos de negocio con `raise` (tasas, plazos, signos de flujos).
+5. No ocultar errores silenciosamente (`pass`) si eso dificulta detectar problemas.
+
+:::: {.callout-important title="Idea clave"}
+`try` / `except` no reemplaza una buena lógica: la complementa.  
+Primero validamos reglas financieras, luego capturamos errores inevitables del mundo real.
+::::
+
+---
+
+# Módulos y librerías en Python
+
+Cuando un programa crece, no conviene dejar todo en un solo archivo. Python permite **organizar el código en módulos** para reutilizar funciones, mantener orden y facilitar el testing.
+
+## ¿Para qué sirve un módulo?
+
+Un **módulo** es, en la práctica, un archivo `.py` con funciones, variables o clases.
+
+Nos sirve para:
+
+- separar responsabilidades (por ejemplo, valuación de bonos en un archivo y conversión de tasas en otro),
+- reutilizar lógica en distintos scripts o notebooks,
+- evitar duplicación de código (principio DRY),
+- y mejorar mantenimiento y legibilidad.
+
+## Diferencia entre módulo y librería
+
+- **Módulo**: un archivo Python individual, por ejemplo `finanzas_basicas.py`.
+- **Librería**: un conjunto de módulos relacionados que resuelven un dominio o problema.  
+  Ejemplos: `numpy`, `pandas`, `matplotlib`.
+
+En cursos introductorios, a veces se dice "librería" para referirse a un solo archivo propio. Técnicamente, ese archivo es un **módulo**, aunque puede ser el primer paso para construir una librería más completa.
+
+## Formas de importar: `import`, `from`, `as`
+
+```{pyodide-python}
+# 1) import modulo
+import math
+print(math.sqrt(16))  # accedemos con prefijo math.
+
+# 2) import modulo as alias
+import math as m
+print(m.pi)  # mismo módulo, nombre corto
+
+# 3) from modulo import nombre
+from math import sqrt
+print(sqrt(25))  # usamos sqrt directamente
+
+# 4) from modulo import nombre as alias
+from math import factorial as fact
+print(fact(5))
+```
+
+:::: {.callout-note title="Buena práctica"}
+En general, preferí `import modulo` o `import modulo as alias` porque hacen explícito de dónde viene cada función (`modulo.funcion`).  
+`from modulo import *` no se recomienda en producción porque puede sobrescribir nombres y volver ambiguo el código.
+::::
 
 ---
 
@@ -201,89 +394,21 @@ Vamos a construir una librería con funciones financieras reutilizables. En un e
 # TODO: Guardar este código como un archivo .py separado para importarlo
 
 def valor_futuro(capital, tasa, periodos):
-    """Calcula VF = C × (1 + r)^n"""
+    """Calcula VF = C * (1 + r)^n."""
     if tasa < -1:
         raise ValueError("La tasa no puede ser menor a -100%")
     return capital * (1 + tasa) ** periodos
 
 
 def valor_presente_neto(flujos, tasa):
-    """
-    Calcula el VPN de una serie de flujos.
-    El flujo en t=0 se incluye sin descontar.
-    """
+    """Calcula el VPN de una serie de flujos."""
     if not flujos:
         raise ValueError("Lista de flujos vacía")
-    
+
     vpn = 0
     for t, cf in enumerate(flujos):
         vpn += cf / (1 + tasa) ** t
     return vpn
-
-
-def valuacion_bono(valor_nominal, cupon, yield_req, periodos):
-    """
-    Calcula el precio de un bono bullet.
-    
-    Parámetros:
-    -----------
-    valor_nominal : float — Valor par del bono
-    cupon : float — Tasa cupón (ej: 0.08 para 8%)
-    yield_req : float — Yield requerido por el mercado
-    periodos : int — Número de períodos hasta vencimiento
-    """
-    flujo_cupon = valor_nominal * cupon
-    precio = 0
-    
-    for t in range(1, periodos + 1):
-        # Cupones
-        precio += flujo_cupon / (1 + yield_req) ** t
-    
-    # Devolución de capital
-    precio += valor_nominal / (1 + yield_req) ** periodos
-    
-    return precio
-
-
-def tir_busqueda(flujos, tolerancia=0.01, paso=0.0001):
-    """
-    Busca la TIR por método de tanteo (búsqueda incremental).
-    
-    Parámetros:
-    -----------
-    flujos : list — Flujos de fondos (el primero suele ser negativo)
-    tolerancia : float — Error máximo aceptable en el VPN
-    paso : float — Incremento de la tasa en cada iteración
-    """
-    tasa = 0.001
-    max_iter = 200_000
-    
-    for i in range(max_iter):
-        vpn = valor_presente_neto(flujos, tasa)
-        if abs(vpn) < tolerancia:
-            return tasa
-        tasa += paso
-    
-    raise RuntimeError(f"TIR no encontrada después de {max_iter} iteraciones")
-
-
-def convertir_tasa(tasa, de="TNA", a="TEA", n=12):
-    """
-    Convierte entre TNA y TEA.
-    
-    Parámetros:
-    -----------
-    tasa : float — Tasa a convertir
-    de : str — Tipo de origen ('TNA' o 'TEA')
-    a : str — Tipo de destino ('TNA' o 'TEA')
-    n : int — Frecuencia de capitalización (default: 12 = mensual)
-    """
-    if de == "TNA" and a == "TEA":
-        return (1 + tasa / n) ** n - 1
-    elif de == "TEA" and a == "TNA":
-        return ((1 + tasa) ** (1 / n) - 1) * n
-    else:
-        raise ValueError(f"Conversión '{de}' → '{a}' no soportada")
 ```
 
 ## Usando la Librería
@@ -292,28 +417,28 @@ def convertir_tasa(tasa, de="TNA", a="TEA", n=12):
 #| label: uso-libreria
 # === Uso de las funciones ===
 
-# Valuación de bono
-precio = valuacion_bono(
-    valor_nominal=1000,
-    cupon=0.08,
-    yield_req=0.10,
-    periodos=5
-)
-print(f"Precio del bono: ${precio:,.2f}")
+# Ejemplo 1: valor futuro
+vf = valor_futuro(100_000, 0.08, 3)
+print(f"Valor futuro: ${vf:,.2f}")
 
-# Búsqueda de TIR
-flujos = [-precio, 80, 80, 80, 80, 1080]
-tir = tir_busqueda(flujos)
-print(f"TIR: {tir:.4%}")
-
-# Conversión de tasas
-tea = convertir_tasa(0.48, de="TNA", a="TEA", n=12)
-print(f"TNA 48% → TEA {tea:.2%}")
+# Ejemplo 2: VPN de un proyecto
+flujos = [-1000, 400, 400, 400]
+vpn = valor_presente_neto(flujos, 0.10)
+print(f"VPN: ${vpn:,.2f}")
 ```
 
 ---
 
 # Principio DRY: Don't Repeat Yourself
+El principio **DRY** (*Don't Repeat Yourself*) propone evitar duplicar la misma lógica en distintos lugares del código.
+Cuando repetimos fórmulas o bloques manualmente, aumentamos el riesgo de inconsistencias: si cambia un supuesto (por ejemplo, la tasa o la frecuencia), debemos corregir múltiples líneas y es fácil olvidar alguna.
+
+Aplicar DRY en finanzas significa **encapsular cálculos recurrentes en funciones** (por ejemplo, `valuacion_bono()` o `valor_presente_neto()`) para tener:
+
+- **menos errores** de mantenimiento,
+- **mayor claridad** del modelo,
+- **reutilización** en distintos ejercicios o casos,
+- y **validaciones centralizadas** en un solo lugar.
 
 ::: {.callout-tip title="DRY en la Práctica"}
 Antes de copiar y pegar código, preguntate: *¿puedo hacer una función?*
@@ -333,6 +458,7 @@ precio_b = valuacion_bono(1000, 0.06, 0.08, 3)
 
 ---
 
+<!--
 # Ejercicios Propuestos
 
 ::: {.callout-important title="Ejercicios"}
@@ -348,6 +474,7 @@ $$D = \frac{\sum_{t=1}^{n} t \cdot \frac{CF_t}{(1+r)^t}}{P}$$
 
 ---
 
+-->
 # Referencias
 
 * Lutz, M. (2013). *Learning Python*. O'Reilly Media.
