@@ -632,5 +632,258 @@
       "Módulo 1: Fundamentos y Renta Fija",
       "<span class='chapter-number'>5</span>  <span class='chapter-title'>Capítulo 3: Funciones, Excepciones y módulos</span>"
     ]
+  },
+  {
+    "objectID": "unidad1/cap05_series_tiempo_pandas.html",
+    "href": "unidad1/cap05_series_tiempo_pandas.html",
+    "title": "7  Capítulo 5: Series de Tiempo y Análisis de Datos con Pandas",
+    "section": "",
+    "text": "8 Introducción\nEn los capítulos anteriores, utilizamos listas y diccionarios para representar datos de instrumentos financieros. Sin embargo, en el mundo real, los datos suelen ser tabulares y masivos (decenas de miles de cotizaciones). Pandas es la librería estándar de Python diseñada específicamente para este propósito, ofreciendo estructuras de datos de alto rendimiento y herramientas de análisis intuitivas.",
+    "crumbs": [
+      "Módulo 1: Fundamentos y Renta Fija",
+      "<span class='chapter-number'>7</span>  <span class='chapter-title'>Capítulo 5: Series de Tiempo y Análisis de Datos con Pandas</span>"
+    ]
+  },
+  {
+    "objectID": "unidad1/cap05_series_tiempo_pandas.html#series-1d",
+    "href": "unidad1/cap05_series_tiempo_pandas.html#series-1d",
+    "title": "7  Capítulo 5: Series de Tiempo y Análisis de Datos con Pandas",
+    "section": "9.1 Series (1D)",
+    "text": "9.1 Series (1D)\nUna Serie es una estructura unidimensional etiquetada con un índice. Soporta operaciones vectorizadas y métodos estadísticos básicos.\n\nprecios_serie = pd.Series([110, 112, 108, 115, 120], \n                          index=[\"Lunes\", \"Martes\", \"Miércoles\", \"Jueves\", \"Viernes\"],\n                          name=\"Precios\")\n\nprint(precios_serie)\nprint(f\"\\nMedia: {precios_serie.mean():.2f}\")\nprint(f\"Desvío estándar: {precios_serie.std():.2f}\")\n\nLunes        110\nMartes       112\nMiércoles    108\nJueves       115\nViernes      120\nName: Precios, dtype: int64\n\nMedia: 113.00\nDesvío estándar: 4.69",
+    "crumbs": [
+      "Módulo 1: Fundamentos y Renta Fija",
+      "<span class='chapter-number'>7</span>  <span class='chapter-title'>Capítulo 5: Series de Tiempo y Análisis de Datos con Pandas</span>"
+    ]
+  },
+  {
+    "objectID": "unidad1/cap05_series_tiempo_pandas.html#dataframes-2d",
+    "href": "unidad1/cap05_series_tiempo_pandas.html#dataframes-2d",
+    "title": "7  Capítulo 5: Series de Tiempo y Análisis de Datos con Pandas",
+    "section": "9.2 DataFrames (2D)",
+    "text": "9.2 DataFrames (2D)\nUn DataFrame es una estructura tabular (filas y columnas) donde cada columna es, técnicamente, una Serie que comparte el mismo índice.\n\ndatos = {\n    \"Ticker\": [\"GD30\", \"GD35\", \"GD38\", \"GD41\", \"GD46\"],\n    \"Precio\": [92.5, 85.3, 78.1, 72.4, 65.8],\n    \"Cercanía\": [0.08, 0.07, 0.065, 0.06, 0.055]\n}\n\ndf = pd.DataFrame(datos)\nprint(df)\n\n  Ticker  Precio  Cercanía\n0   GD30    92.5     0.080\n1   GD35    85.3     0.070\n2   GD38    78.1     0.065\n3   GD41    72.4     0.060\n4   GD46    65.8     0.055",
+    "crumbs": [
+      "Módulo 1: Fundamentos y Renta Fija",
+      "<span class='chapter-number'>7</span>  <span class='chapter-title'>Capítulo 5: Series de Tiempo y Análisis de Datos con Pandas</span>"
+    ]
+  },
+  {
+    "objectID": "unidad1/cap05_series_tiempo_pandas.html#exploración-inicial",
+    "href": "unidad1/cap05_series_tiempo_pandas.html#exploración-inicial",
+    "title": "7  Capítulo 5: Series de Tiempo y Análisis de Datos con Pandas",
+    "section": "9.3 Exploración Inicial",
+    "text": "9.3 Exploración Inicial\nAntes de analizar datos, debemos inspeccionar su estructura mediante métodos clave:\n\nprint(f\"Dimensiones: {df.shape}\")\nprint(f\"Columnas: {df.columns.tolist()}\")\n\n# Métodos esenciales de inspección\n# df.head()      # Primeras 5 filas\n# df.tail()      # Últimas 5 filas\n# df.info()      # Resumen de tipos de datos y memoria\n# df.describe()  # Estadísticas descriptivas rápidas\n\nDimensiones: (5, 3)\nColumnas: ['Ticker', 'Precio', 'Cercanía']",
+    "crumbs": [
+      "Módulo 1: Fundamentos y Renta Fija",
+      "<span class='chapter-number'>7</span>  <span class='chapter-title'>Capítulo 5: Series de Tiempo y Análisis de Datos con Pandas</span>"
+    ]
+  },
+  {
+    "objectID": "unidad1/cap05_series_tiempo_pandas.html#io-de-archivos",
+    "href": "unidad1/cap05_series_tiempo_pandas.html#io-de-archivos",
+    "title": "7  Capítulo 5: Series de Tiempo y Análisis de Datos con Pandas",
+    "section": "10.1 I/O de Archivos",
+    "text": "10.1 I/O de Archivos\nPandas permite la ingesta de datos desde múltiples fuentes (read_csv, read_excel) y el guardado de resultados (to_csv, to_excel).\n\n# Ejemplo hipotético de lectura\n# df = pd.read_csv(\"historico.csv\", sep=\";\", encoding=\"utf-8\")\n\n# Parámetros útiles al leer:\n# parse_dates=['Fecha']: Convierte columnas a objetos Datetime directamente.\n# index_col='Fecha': Establece una columna como índice del DataFrame.",
+    "crumbs": [
+      "Módulo 1: Fundamentos y Renta Fija",
+      "<span class='chapter-number'>7</span>  <span class='chapter-title'>Capítulo 5: Series de Tiempo y Análisis de Datos con Pandas</span>"
+    ]
+  },
+  {
+    "objectID": "unidad1/cap05_series_tiempo_pandas.html#alineación-de-índices-e-integración-de-datos",
+    "href": "unidad1/cap05_series_tiempo_pandas.html#alineación-de-índices-e-integración-de-datos",
+    "title": "7  Capítulo 5: Series de Tiempo y Análisis de Datos con Pandas",
+    "section": "10.2 Alineación de Índices e Integración de Datos",
+    "text": "10.2 Alineación de Índices e Integración de Datos\nLa alineación automática es un concepto crítico en finanzas. Si combinamos dos activos que cotizan en días distintos (debido a feriados locales), Pandas se asegura de alinear las fechas correctamente.\nPara combinar datasets utilizamos: - merge(): Unión por columnas (similar a un JOIN de SQL). - join(): Unión eficiente usando el índice (ideal para DatetimeIndex). - concat(): Apilado vertical u horizontal.\nTipos de uniones: inner, outer (por defecto en concat), left y right.\n\ndf_a = pd.DataFrame({\"Ticker\": [\"GD30\", \"AL30\"], \"Tir\": [0.45, 0.52]})\ndf_b = pd.DataFrame({\"Ticker\": [\"GD30\", \"AL30\"], \"Paridad\": [0.35, 0.32]})\n\ndf_unido = pd.merge(df_a, df_b, on=\"Ticker\", how=\"inner\")\nprint(df_unido)\n\n  Ticker   Tir  Paridad\n0   GD30  0.45     0.35\n1   AL30  0.52     0.32",
+    "crumbs": [
+      "Módulo 1: Fundamentos y Renta Fija",
+      "<span class='chapter-number'>7</span>  <span class='chapter-title'>Capítulo 5: Series de Tiempo y Análisis de Datos con Pandas</span>"
+    ]
+  },
+  {
+    "objectID": "unidad1/cap05_series_tiempo_pandas.html#indexación-.loc-vs-.iloc",
+    "href": "unidad1/cap05_series_tiempo_pandas.html#indexación-.loc-vs-.iloc",
+    "title": "7  Capítulo 5: Series de Tiempo y Análisis de Datos con Pandas",
+    "section": "11.1 Indexación: .loc vs .iloc",
+    "text": "11.1 Indexación: .loc vs .iloc\n\n.loc: Busca por etiquetas de índice y nombres de columnas.\n.iloc: Busca por posición numérica (0-indexed).\n\n\n# Seleccionar fila 0 y columna 'Precio' por posición\nprint(f\"Precio GD30 (.iloc): {df.iloc[0, 1]}\")\n\n# Seleccionar por etiqueta (si el ticker fuera el índice)\ndf_idx = df.set_index(\"Ticker\")\nprint(f\"Precio GD30 (.loc):\\n{df_idx.loc['GD30', 'Precio']}\")\n\nPrecio GD30 (.iloc): 92.5\nPrecio GD30 (.loc):\n92.5",
+    "crumbs": [
+      "Módulo 1: Fundamentos y Renta Fija",
+      "<span class='chapter-number'>7</span>  <span class='chapter-title'>Capítulo 5: Series de Tiempo y Análisis de Datos con Pandas</span>"
+    ]
+  },
+  {
+    "objectID": "unidad1/cap05_series_tiempo_pandas.html#filtrado-booleano-y-máscaras",
+    "href": "unidad1/cap05_series_tiempo_pandas.html#filtrado-booleano-y-máscaras",
+    "title": "7  Capítulo 5: Series de Tiempo y Análisis de Datos con Pandas",
+    "section": "11.2 Filtrado Booleano y Máscaras",
+    "text": "11.2 Filtrado Booleano y Máscaras\nPermite filtrar filas según condiciones lógicas o pertenencia a listas mediante .isin().\n\n# Bonos con precio mayor a 80\nmascara = df[\"Precio\"] &gt; 80\nprint(df[mascara])\n\n# Filtrar por múltiples valores\ntickers_interes = [\"GD30\", \"GD46\"]\nprint(df[df[\"Ticker\"].isin(tickers_interes)])\n\n  Ticker  Precio  Cercanía\n0   GD30    92.5      0.08\n1   GD35    85.3      0.07\n  Ticker  Precio  Cercanía\n0   GD30    92.5     0.080\n4   GD46    65.8     0.055",
+    "crumbs": [
+      "Módulo 1: Fundamentos y Renta Fija",
+      "<span class='chapter-number'>7</span>  <span class='chapter-title'>Capítulo 5: Series de Tiempo y Análisis de Datos con Pandas</span>"
+    ]
+  },
+  {
+    "objectID": "unidad1/cap05_series_tiempo_pandas.html#resample-cambio-de-frecuencias",
+    "href": "unidad1/cap05_series_tiempo_pandas.html#resample-cambio-de-frecuencias",
+    "title": "7  Capítulo 5: Series de Tiempo y Análisis de Datos con Pandas",
+    "section": "12.1 Resample: Cambio de Frecuencias",
+    "text": "12.1 Resample: Cambio de Frecuencias\nEl método resample() permite agrupar datos por períodos (diario ‘D’, semanal ‘W’, mensual ‘M’) y aplicar funciones de agregación.\n\n# Simulamos una serie diaria para ejemplo\ndf_diario = pd.DataFrame({\n    \"Precio\": np.random.normal(100, 1, 100).cumsum()\n}, index=pd.date_range(\"2023-01-01\", periods=100, freq=\"B\"))\n\n# Cambiar de diario a mensual tomando el último valor\ndf_mensual = df_diario.resample(\"M\").last()\nprint(df_mensual.head(3))\n\n                 Precio\n2023-01-31  2207.953522\n2023-02-28  4205.099988\n2023-03-31  6509.008148",
+    "crumbs": [
+      "Módulo 1: Fundamentos y Renta Fija",
+      "<span class='chapter-number'>7</span>  <span class='chapter-title'>Capítulo 5: Series de Tiempo y Análisis de Datos con Pandas</span>"
+    ]
+  },
+  {
+    "objectID": "unidad1/cap05_series_tiempo_pandas.html#movimientos-y-variaciones",
+    "href": "unidad1/cap05_series_tiempo_pandas.html#movimientos-y-variaciones",
+    "title": "7  Capítulo 5: Series de Tiempo y Análisis de Datos con Pandas",
+    "section": "14.1 Movimientos y Variaciones",
+    "text": "14.1 Movimientos y Variaciones\n\n.shift(n): Desplaza los datos \\(n\\) posiciones (útil para comparar \\(P_t\\) vs \\(P_{t-1}\\)).\n.pct_change(): Calcula el retorno simple: \\((P_t / P_{t-1}) - 1\\).\n.diff(): Calcula la diferencia absoluta: \\(P_t - P_{t-1}\\).",
+    "crumbs": [
+      "Módulo 1: Fundamentos y Renta Fija",
+      "<span class='chapter-number'>7</span>  <span class='chapter-title'>Capítulo 5: Series de Tiempo y Análisis de Datos con Pandas</span>"
+    ]
+  },
+  {
+    "objectID": "unidad1/cap05_series_tiempo_pandas.html#tipos-de-retornos",
+    "href": "unidad1/cap05_series_tiempo_pandas.html#tipos-de-retornos",
+    "title": "7  Capítulo 5: Series de Tiempo y Análisis de Datos con Pandas",
+    "section": "14.2 Tipos de Retornos",
+    "text": "14.2 Tipos de Retornos\n\nRetorno Simple: \\(R = (P_t / P_{t-1}) - 1\\). Es aditivo entre activos en el mismo momento.\nRetorno Logarítmico: \\(r = \\ln(P_t / P_{t-1})\\). Es aditivo a lo largo del tiempo y simétrico.\n\n\ndf_diario[\"Ret_Simple\"] = df_diario[\"Precio\"].pct_change()\ndf_diario[\"Ret_Log\"] = np.log(df_diario[\"Precio\"] / df_diario[\"Precio\"].shift(1))",
+    "crumbs": [
+      "Módulo 1: Fundamentos y Renta Fija",
+      "<span class='chapter-number'>7</span>  <span class='chapter-title'>Capítulo 5: Series de Tiempo y Análisis de Datos con Pandas</span>"
+    ]
+  },
+  {
+    "objectID": "unidad1/cap05_series_tiempo_pandas.html#ventanas-móviles-rolling",
+    "href": "unidad1/cap05_series_tiempo_pandas.html#ventanas-móviles-rolling",
+    "title": "7  Capítulo 5: Series de Tiempo y Análisis de Datos con Pandas",
+    "section": "14.3 Ventanas Móviles (Rolling)",
+    "text": "14.3 Ventanas Móviles (Rolling)\nSe utiliza para indicadores técnicos como medias móviles simples (SMA) o volatilidad móvil.\n\n# Media móvil de 20 días\ndf_diario[\"SMA_20\"] = df_diario[\"Precio\"].rolling(window=20).mean()\n\n# Volatilidad móvil de 20 días (anualizada)\ndf_diario[\"Vol_20\"] = df_diario[\"Ret_Simple\"].rolling(window=20).std() * np.sqrt(252)",
+    "crumbs": [
+      "Módulo 1: Fundamentos y Renta Fija",
+      "<span class='chapter-number'>7</span>  <span class='chapter-title'>Capítulo 5: Series de Tiempo y Análisis de Datos con Pandas</span>"
+    ]
+  },
+  {
+    "objectID": "unidad1/cap04_poo.html",
+    "href": "unidad1/cap04_poo.html",
+    "title": "6  Capítulo 4: Programación Orientada a Objetos (POO)",
+    "section": "",
+    "text": "7 Paradigmas de Programación\nUn paradigma de programación es un enfoque o estilo fundamental para resolver problemas estructurando el código de una manera particular. No hay un paradigma “correcto”, sino diferentes herramientas para diferentes tareas.",
+    "crumbs": [
+      "Módulo 1: Fundamentos y Renta Fija",
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>Capítulo 4: Programación Orientada a Objetos (POO)</span>"
+    ]
+  },
+  {
+    "objectID": "unidad1/cap04_poo.html#tipos-principales",
+    "href": "unidad1/cap04_poo.html#tipos-principales",
+    "title": "6  Capítulo 4: Programación Orientada a Objetos (POO)",
+    "section": "7.1 Tipos Principales",
+    "text": "7.1 Tipos Principales\n\nParadigma Imperativo: Se basa en secuencias de instrucciones que modifican el estado del programa paso a paso (ej. bucles for y asignaciones directas).\nParadigma Funcional: Usa funciones puras, evitando estados mutables y datos que cambian (visto en el Capítulo 3 con recursión y funciones de orden superior).\nProgramación Orientada a Objetos (POO): Modela elementos del mundo real como entidades que agrupan datos y comportamiento.",
+    "crumbs": [
+      "Módulo 1: Fundamentos y Renta Fija",
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>Capítulo 4: Programación Orientada a Objetos (POO)</span>"
+    ]
+  },
+  {
+    "objectID": "unidad1/cap04_poo.html#motivación",
+    "href": "unidad1/cap04_poo.html#motivación",
+    "title": "6  Capítulo 4: Programación Orientada a Objetos (POO)",
+    "section": "8.1 Motivación",
+    "text": "8.1 Motivación\nResulta natural estructurar los programas pensando en elementos del mundo real (acciones, bonos, carteras) que tienen propiedades (nombre, precio) y comportamientos (valorizarse, pagar dividendos). Esta abstracción hace que el código sea más modular, intuitivo y fácil de reutilizar.",
+    "crumbs": [
+      "Módulo 1: Fundamentos y Renta Fija",
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>Capítulo 4: Programación Orientada a Objetos (POO)</span>"
+    ]
+  },
+  {
+    "objectID": "unidad1/cap04_poo.html#clases-y-objetos",
+    "href": "unidad1/cap04_poo.html#clases-y-objetos",
+    "title": "6  Capítulo 4: Programación Orientada a Objetos (POO)",
+    "section": "8.2 Clases y Objetos",
+    "text": "8.2 Clases y Objetos\n\nClase: Funciona como una plantilla o blueprint que define los atributos y acciones que tendrán en común los objetos.\nObjeto (Instancia): Son las representaciones concretas construidas a partir de una clase. Cada objeto tiene sus propios valores específicos.",
+    "crumbs": [
+      "Módulo 1: Fundamentos y Renta Fija",
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>Capítulo 4: Programación Orientada a Objetos (POO)</span>"
+    ]
+  },
+  {
+    "objectID": "unidad1/cap04_poo.html#diseño-ood",
+    "href": "unidad1/cap04_poo.html#diseño-ood",
+    "title": "6  Capítulo 4: Programación Orientada a Objetos (POO)",
+    "section": "10.1 Diseño (OOD)",
+    "text": "10.1 Diseño (OOD)\nConsiste en dividir un sistema complejo en componentes o “cajas negras” más pequeñas que se comunican entre sí a través de interfaces claras.",
+    "crumbs": [
+      "Módulo 1: Fundamentos y Renta Fija",
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>Capítulo 4: Programación Orientada a Objetos (POO)</span>"
+    ]
+  },
+  {
+    "objectID": "unidad1/cap04_poo.html#encapsulación",
+    "href": "unidad1/cap04_poo.html#encapsulación",
+    "title": "6  Capítulo 4: Programación Orientada a Objetos (POO)",
+    "section": "10.2 Encapsulación",
+    "text": "10.2 Encapsulación\nEs el concepto de ocultar la complejidad interna de la implementación y exponer al exterior únicamente los métodos necesarios para interactuar con la clase. Esto protege la integridad de los datos.\n\n\n\n\n\n\nEn Python, todo es un objeto. Un simple string (\"AAPL\"), un entero (100) o una lista ya vienen con sus propios métodos integrados (ej: .upper(), .append()).",
+    "crumbs": [
+      "Módulo 1: Fundamentos y Renta Fija",
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>Capítulo 4: Programación Orientada a Objetos (POO)</span>"
+    ]
+  },
+  {
+    "objectID": "unidad1/cap04_poo.html#el-parámetro-self",
+    "href": "unidad1/cap04_poo.html#el-parámetro-self",
+    "title": "6  Capítulo 4: Programación Orientada a Objetos (POO)",
+    "section": "11.1 El parámetro self",
+    "text": "11.1 El parámetro self\nEs indispensable en la definición de métodos de instancia. Funciona como una referencia al objeto particular que está ejecutando la acción, permitiéndole acceder a sus propios atributos y métodos.",
+    "crumbs": [
+      "Módulo 1: Fundamentos y Renta Fija",
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>Capítulo 4: Programación Orientada a Objetos (POO)</span>"
+    ]
+  },
+  {
+    "objectID": "unidad1/cap04_poo.html#interacción-entre-objetos",
+    "href": "unidad1/cap04_poo.html#interacción-entre-objetos",
+    "title": "6  Capítulo 4: Programación Orientada a Objetos (POO)",
+    "section": "11.2 Interacción entre Objetos",
+    "text": "11.2 Interacción entre Objetos\nEs posible pasar objetos como parámetros a los métodos de otros objetos, permitiendo que interactúen y modifiquen sus estados mutuamente.\n\nclass Orden:\n    def __init__(self, accion, cantidad):\n        self.accion = accion  # Recibe un objeto de tipo Accion\n        self.cantidad = cantidad\n    \n    def ejecutar(self):\n        monto = self.accion.precio * self.cantidad\n        print(f\"Ejecutando orden de {self.cantidad} {self.accion.ticker} por ${monto:,.2f}\")\n\napple = Accion(\"AAPL\", 175.50)\norden_compra = Orden(apple, 10)\norden_compra.ejecutar()\n\nEjecutando orden de 10 AAPL por $1,755.00",
+    "crumbs": [
+      "Módulo 1: Fundamentos y Renta Fija",
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>Capítulo 4: Programación Orientada a Objetos (POO)</span>"
+    ]
+  },
+  {
+    "objectID": "unidad1/cap04_poo.html#composición-tiene-un",
+    "href": "unidad1/cap04_poo.html#composición-tiene-un",
+    "title": "6  Capítulo 4: Programación Orientada a Objetos (POO)",
+    "section": "14.1 Composición (“Tiene un”)",
+    "text": "14.1 Composición (“Tiene un”)\nUn objeto guarda a otro objeto distinto como uno de sus atributos. Ejemplo: Un Portafolio tiene una lista de Acciones.",
+    "crumbs": [
+      "Módulo 1: Fundamentos y Renta Fija",
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>Capítulo 4: Programación Orientada a Objetos (POO)</span>"
+    ]
+  },
+  {
+    "objectID": "unidad1/cap04_poo.html#herencia-es-un",
+    "href": "unidad1/cap04_poo.html#herencia-es-un",
+    "title": "6  Capítulo 4: Programación Orientada a Objetos (POO)",
+    "section": "14.2 Herencia (“Es un”)",
+    "text": "14.2 Herencia (“Es un”)\nUna subclase toma prestados todos los métodos y atributos de una superclase. Evita duplicación de código. Ejemplo: Un Bono Corporate es un Bono.\n\n14.2.1 Función super()\nSe utiliza para invocar métodos de la clase padre (especialmente el constructor) sin tener que reescribirlo.",
+    "crumbs": [
+      "Módulo 1: Fundamentos y Renta Fija",
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>Capítulo 4: Programación Orientada a Objetos (POO)</span>"
+    ]
+  },
+  {
+    "objectID": "unidad1/cap04_poo.html#polimorfismo",
+    "href": "unidad1/cap04_poo.html#polimorfismo",
+    "title": "6  Capítulo 4: Programación Orientada a Objetos (POO)",
+    "section": "14.3 Polimorfismo",
+    "text": "14.3 Polimorfismo\nCapacidad del código para usar un mismo nombre de método pero ejecutar rutinas distintas según el tipo de objeto que realice la llamada.\n\nclass Instrumento:\n    def calcular_valor(self):\n        pass\n\nclass AccionFinanciera(Instrumento):\n    def __init__(self, ticker, precio):\n        self.ticker = ticker\n        self.precio = precio\n    def calcular_valor(self):\n        return self.precio\n\nclass BonoFinanciero(Instrumento):\n    def __init__(self, ticker, valor_nominal, paridad):\n        self.ticker = ticker\n        self.valor_nominal = valor_nominal\n        self.paridad = paridad\n    def calcular_valor(self):\n        return self.valor_nominal * self.paridad\n\n# Polimorfismo en acción\ncartera = [AccionFinanciera(\"AAPL\", 170), BonoFinanciero(\"GD30\", 100, 0.35)]\nfor i in cartera:\n    print(f\"Valor de {i.ticker}: ${i.calcular_valor():.2f}\")\n\nValor de AAPL: $170.00\nValor de GD30: $35.00",
+    "crumbs": [
+      "Módulo 1: Fundamentos y Renta Fija",
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>Capítulo 4: Programación Orientada a Objetos (POO)</span>"
+    ]
   }
 ]
