@@ -12,7 +12,7 @@ La configuracion principal vive en [`_quarto.yml`](./_quarto.yml) y el sitio ren
   - `pandas`
   - `matplotlib`
   - `scipy`
-  - `pymc`
+  - `statsmodels` (econometría y series temporales: ARIMA/VAR)
 
 ## Quick start (render local)
 
@@ -24,6 +24,17 @@ quarto render
 ```
 
 El sitio resultante se escribe en `docs/` (ver `output-dir: docs` en [`_quarto.yml`](./_quarto.yml)).
+
+> **Nota (Windows):** si Quarto no encuentra el interprete correcto, apunta `QUARTO_PYTHON`
+> al Python del entorno virtual antes de renderizar:
+>
+> ```powershell
+> $env:QUARTO_PYTHON = (Resolve-Path ..\.venv-win\Scripts\python.exe).Path
+> quarto render
+> ```
+>
+> El entorno `.venv-win` se crea con un CPython nativo de Windows (python.org) e
+> instala: `numpy pandas scipy matplotlib statsmodels ipykernel nbclient nbformat`.
 
 ## Preview local
 
@@ -44,10 +55,25 @@ Este libro mezcla dos tipos de bloques ejecutables:
 ## Estructura
 
 - `index.qmd`: entrada principal del libro
-- `unidad1/`, `unidad2/`, `unidad3/`, `unidad4/`: capitulos por modulo
+- `unidad1/`, `unidad2/`, `unidad3/`, `unidad4/`: capitulos por modulo (20 capitulos en 4 modulos)
 - `apendices/`: apendices del libro
 - `_extensions/`: extensiones de Quarto utilizadas por el proyecto (incluye `coatless-quarto/pyodide`)
 - `docs/`: salida generada por Quarto (`output-dir: docs`)
+- `_caso_practico_template.qmd`: plantilla para interludios aplicados (ver abajo)
+
+## Casos practicos (interludios aplicados)
+
+La plantilla [`_caso_practico_template.qmd`](./_caso_practico_template.qmd) define la estructura
+para insertar, entre capitulos, un caso practico que aplique la metodologia del capitulo
+anterior a una pregunta concreta (ej.: *"¿conviene invertir en cuchillos cayendo?"*).
+
+Para agregar uno:
+
+1. Copiar la plantilla con un nombre descriptivo, p. ej. `unidad3/caso_cuchillos_cayendo.qmd`
+   (sin guion bajo inicial: los archivos `_*.qmd` no se renderizan).
+2. Completar las seis secciones (pregunta → herramienta → datos → resolucion → matices → conclusion).
+3. Agregar la ruta en `_quarto.yml` inmediatamente despues del capitulo correspondiente y marcar
+   el primer encabezado con `{.unnumbered}` para no romper la numeracion de capitulos.
 
 ## Configuracion y assets (importante)
 

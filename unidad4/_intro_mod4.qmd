@@ -1,33 +1,40 @@
 ---
-title: "Módulo 4: Derivados Financieros"
-subtitle: "Semanas 14–15 · Opciones, Black-Scholes, griegas y cobertura dinámica"
+title: "Módulo 4: Derivados y Volatilidad"
+subtitle: "El examen final: los derivados usan todo el libro a la vez"
 number-sections: false
 ---
 
-::: {.callout-note title="Visión General" appearance="simple"}
-El módulo final aplica todas las herramientas construidas durante el curso a la **valuación y cobertura de opciones**. Implementamos Black-Scholes, extraemos volatilidad implícita con Newton-Raphson, calculamos griegas por diferencias finitas y simulamos estrategias de delta hedging.
+Los derivados tienen fama de ser el tema más difícil de las finanzas, y es una fama merecida — pero no porque las ideas sean oscuras, sino porque **usan todo a la vez**: probabilidad, simulación, métodos numéricos, optimización y estructura de mercado, operando juntos en un mismo instrumento. Por eso este módulo va al final: es el examen integrador de todo lo que construiste en los tres anteriores.
+
+La historia arranca con la pregunta más elegante de las finanzas del siglo XX: *¿cuánto vale el derecho de comprar algo en el futuro?* La respuesta de **Black-Scholes** (Capítulo 18) es sorprendente: no depende de lo que nadie opine sobre el mercado, porque la opción se puede *replicar* operando el activo subyacente. Implementamos la fórmula, la damos vuelta para extraer la **volatilidad implícita** de los precios reales, y nos topamos con el descubrimiento que cambió la industria: la **sonrisa de volatilidad**, la evidencia de que el mercado no le cree del todo al modelo.
+
+Después bajamos al llano: el **delta hedging** (Capítulo 19) es la réplica puesta en práctica, simulada día a día como la viviría un trader — con su error de cobertura, sus costos y el gamma mordiendo cerca del vencimiento. Es, en el fondo, la demostración experimental de Black-Scholes. Y el cierre (Capítulo 20) enfrenta lo que la sonrisa venía gritando: la volatilidad no es una constante, es un proceso con vida propia. Los modelos de **Heston** y **SABR** la tratan como tal, reproducen la sonrisa desde los fundamentos, y son la puerta de entrada al pricing profesional moderno.
+
+::: {.callout-note title="Qué necesitás tener fresco" appearance="simple"}
+Este módulo apoya todo su peso sobre la simulación de Monte Carlo y el GBM (Capítulo 13), los procesos con saltos (Capítulo 14) y las nociones de colas y curtosis (Capítulos 7 y 11). Si venís directo, perfecto; si no, un repaso rápido de esos capítulos hace que este módulo fluya.
 :::
 
 ---
 
 ## 🎯 Objetivos de Aprendizaje {.unnumbered}
 
-Al completar este módulo, serás capaz de:
+Al completar este módulo, vas a ser capaz de:
 
 1. **Implementar la fórmula de Black-Scholes** para calls y puts europeas.
 2. **Extraer volatilidad implícita** de precios de mercado usando Newton-Raphson.
-3. **Visualizar la sonrisa de volatilidad** y entender sus implicancias.
-4. **Calcular las griegas** (Delta, Gamma, Vega, Theta) analítica y numéricamente.
-5. **Simular delta hedging dinámico** y analizar su P&L.
+3. **Calcular las griegas** (Delta, Gamma, Vega, Theta) analítica y numéricamente.
+4. **Simular delta hedging dinámico** y analizar su P&L y su error de cobertura.
+5. **Modelar la volatilidad estocástica** con Heston y SABR para capturar la sonrisa.
 
 ---
 
-## 🗓️ Recorrido Semana a Semana {.unnumbered}
+## 🗓️ Recorrido Capítulo a Capítulo {.unnumbered}
 
-| Semana | Tema | Python | Finanzas |
+| Capítulo | Tema | Python | Finanzas |
 |:------:|------|--------|----------|
-| **14** | Derivados y Vol Implícita | `scipy.stats.norm`, iteración numérica | Black-Scholes, smile, griegas |
-| **15** | Delta Hedging | Simulación de trading, DataFrames | Cobertura dinámica, P&L, riesgo gamma |
+| **18** | Derivados y Vol Implícita | `scipy.stats.norm`, iteración numérica | Black-Scholes, smile, griegas |
+| **19** | Delta Hedging | Simulación de trading, DataFrames | Cobertura dinámica, P&L, riesgo gamma |
+| **20** | Volatilidad Estocástica | Simulación de procesos acoplados | Heston, SABR, superficie de volatilidad |
 
 ---
 
@@ -72,7 +79,7 @@ $$C = S_0 \, N(d_1) - K \, e^{-rT} \, N(d_2)$$
 
 $$d_1 = \frac{\ln(S_0/K) + (r + \sigma^2/2)T}{\sigma\sqrt{T}}, \quad d_2 = d_1 - \sigma\sqrt{T}$$
 
-Black-Scholes asume volatilidad constante, pero el mercado revela una **sonrisa de volatilidad** que contradice este supuesto.
+Black-Scholes asume volatilidad constante, pero el mercado revela una **sonrisa de volatilidad** que contradice ese supuesto. El módulo entero puede leerse como esa tensión: primero la fórmula, después su uso real, y al final los modelos que reparan lo que le falta.
 :::
 
 ---
@@ -81,4 +88,5 @@ Black-Scholes asume volatilidad constante, pero el mercado revela una **sonrisa 
 
 - Hull, J. (2018). *Options, Futures, and Other Derivatives*. Pearson.
 - Wilmott, P. (2006). *Paul Wilmott on Quantitative Finance*. Wiley.
-- Taleb, N. N. (2007). *Dynamic Hedging*. Wiley.
+- Taleb, N. N. (1997). *Dynamic Hedging*. Wiley.
+- Gatheral, J. (2006). *The Volatility Surface: A Practitioner's Guide*. Wiley.

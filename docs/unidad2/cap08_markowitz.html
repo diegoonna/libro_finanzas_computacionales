@@ -1,0 +1,1818 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="es" xml:lang="es"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.8.26">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>11&nbsp; Capítulo 8: Teoría Moderna de Portafolios (Markowitz) – Finanzas Computacionales</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<link href="../unidad2/cap09_hrp.html" rel="next">
+<link href="../unidad2/cap07_estadistica_optimizacion.html" rel="prev">
+<link href="../cover.png" rel="icon" type="image/png">
+<script src="../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../site_libs/quarto-html/axe/axe-check.js" type="module"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-33f28b034f783b36ff4b46fdeb362ebb.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap-495f0385760e8b3acd0ecbc251fe947a.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No se han encontrado resultados",
+    "search-matching-documents-text": "documentos encontrados",
+    "search-copy-link-title": "Copiar el enlace en la búsqueda",
+    "search-hide-matches-text": "Ocultar resultados adicionales",
+    "search-more-match-text": "resultado adicional en este documento",
+    "search-more-matches-text": "resultados adicionales en este documento",
+    "search-clear-button-title": "Borrar",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancelar",
+    "search-submit-button-title": "Enviar",
+    "search-label": "Buscar"
+  }
+}</script>
+<style>html{ scroll-behavior: smooth; }</style>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+</head>
+
+<body class="nav-sidebar docked quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Alternar barra lateral" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../unidad2/_intro_mod2.html">Módulo 2: Teoría de Portafolios y Optimización</a></li><li class="breadcrumb-item"><a href="../unidad2/cap08_markowitz.html"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Capítulo 8: Teoría Moderna de Portafolios (Markowitz)</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Alternar barra lateral" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Buscar" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation docked overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="../">Finanzas Computacionales</a> 
+        <div class="sidebar-tools-main">
+    <a href="https://github.com/uade-finanzas-computacionales/libro" title="Source Code" class="quarto-navigation-tool px-1" aria-label="Source Code"><i class="bi bi-github"></i></a>
+  <a href="" class="quarto-reader-toggle quarto-navigation-tool px-1" onclick="window.quartoToggleReader(); return false;" title="Alternar modo lector">
+  <div class="quarto-reader-toggle-btn">
+  <i class="bi"></i>
+  </div>
+</a>
+</div>
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Buscar"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Bienvenida</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="false">
+ <span class="menu-text">Módulo 1: Fundamentos y Renta Fija</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="false" aria-label="Alternar sección">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../unidad1/_intro_mod1.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Introducción al Módulo 1</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../unidad1/cap01_pensamiento_computacional.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Capítulo 1: Pensamiento Computacional en Finanzas</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../unidad1/cap02_iteraciones_estructuras.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Capítulo 2: Iteraciones y Estructuras de Datos Nativas</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../unidad1/cap03_funciones_modularizacion.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Capítulo 3: Funciones, Excepciones y módulos</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../unidad1/cap04_poo.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Capítulo 4: Programación Orientada a Objetos (POO)</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../unidad1/cap05_numpy.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Capítulo 5: NumPy y Cálculo Vectorizado</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../unidad1/cap06_series_tiempo_pandas.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Capítulo 6: Series de Tiempo y Análisis de Datos con Pandas</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true">
+ <span class="menu-text">Módulo 2: Teoría de Portafolios y Optimización</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Alternar sección">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../unidad2/_intro_mod2.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Módulo 2: Teoría de Portafolios y Optimización</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../unidad2/cap07_estadistica_optimizacion.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Capítulo 7: Estadística Descriptiva y Optimización Matemática</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../unidad2/cap08_markowitz.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Capítulo 8: Teoría Moderna de Portafolios (Markowitz)</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../unidad2/cap09_hrp.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Capítulo 9: Hierarchical Risk Parity (HRP)</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../unidad2/cap10_black_litterman.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Capítulo 10: El Modelo de Black-Litterman</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="false">
+ <span class="menu-text">Módulo 3: Riesgo, Simulación y Econometría</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="false" aria-label="Alternar sección">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../unidad3/_intro_mod3.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Módulo 3: Riesgo, Simulación y Econometría</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../unidad3/cap11_var_expected_shortfall.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Capítulo 11: Valor en Riesgo (VaR) y Expected Shortfall</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../unidad3/cap12_riesgo_regulacion.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Capítulo 12: Riesgo y Regulación</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../unidad3/cap13_monte_carlo.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Capítulo 13: Simulación de Monte Carlo</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../unidad3/cap14_procesos_estocasticos_activos.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Capítulo 14: Procesos Estocásticos del Precio de un Activo</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../unidad3/cap15_econometria_modelos_lineales.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Capítulo 15: Econometría y Modelos Lineales en Finanzas</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../unidad3/cap16_series_temporales_macro.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Capítulo 16: Series Temporales — ARIMA y VAR</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../unidad3/cap17_backtesting.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Capítulo 17: Backtesting de Estrategias</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="false">
+ <span class="menu-text">Módulo 4: Derivados y Volatilidad</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="false" aria-label="Alternar sección">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../unidad4/_intro_mod4.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">Módulo 4: Derivados y Volatilidad</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../unidad4/cap18_derivados_vol_implicita.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">Capítulo 18: Valuación de Opciones y Volatilidad Implícita</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../unidad4/cap19_delta_hedging.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">24</span>&nbsp; <span class="chapter-title">Capítulo 19: Simulación de Cobertura Dinámica (Delta Hedging)</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../unidad4/cap20_volatilidad_estocastica.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">25</span>&nbsp; <span class="chapter-title">Capítulo 20: Modelos de Volatilidad Estocástica</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="false">
+ <span class="menu-text">Appendices</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="false" aria-label="Alternar sección">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../apendices/python_intro.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">A</span>&nbsp; <span class="chapter-title">Introducción a Python</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">En esta página</h2>
+   
+  <ul>
+  <li><a href="#introducción" id="toc-introducción" class="nav-link active" data-scroll-target="#introducción"><span class="header-section-number">12</span> Introducción</a></li>
+  <li><a href="#el-problema-en-lenguaje-matricial" id="toc-el-problema-en-lenguaje-matricial" class="nav-link" data-scroll-target="#el-problema-en-lenguaje-matricial"><span class="header-section-number">13</span> El problema en lenguaje matricial</a></li>
+  <li><a href="#la-frontera-eficiente" id="toc-la-frontera-eficiente" class="nav-link" data-scroll-target="#la-frontera-eficiente"><span class="header-section-number">14</span> La frontera eficiente</a>
+  <ul class="collapse">
+  <li><a href="#el-portafolio-de-mínima-varianza-global" id="toc-el-portafolio-de-mínima-varianza-global" class="nav-link" data-scroll-target="#el-portafolio-de-mínima-varianza-global"><span class="header-section-number">14.1</span> El portafolio de mínima varianza global</a></li>
+  <li><a href="#el-portafolio-tangente-y-la-capital-market-line" id="toc-el-portafolio-tangente-y-la-capital-market-line" class="nav-link" data-scroll-target="#el-portafolio-tangente-y-la-capital-market-line"><span class="header-section-number">14.2</span> El portafolio tangente y la Capital Market Line</a></li>
+  </ul></li>
+  <li><a href="#qué-métrica-optimizar-sharpe-sortino-y-compañía" id="toc-qué-métrica-optimizar-sharpe-sortino-y-compañía" class="nav-link" data-scroll-target="#qué-métrica-optimizar-sharpe-sortino-y-compañía"><span class="header-section-number">15</span> ¿Qué métrica optimizar? Sharpe, Sortino y compañía</a></li>
+  <li><a href="#los-inputs-importan-más-que-el-optimizador" id="toc-los-inputs-importan-más-que-el-optimizador" class="nav-link" data-scroll-target="#los-inputs-importan-más-que-el-optimizador"><span class="header-section-number">16</span> Los inputs importan más que el optimizador</a>
+  <ul class="collapse">
+  <li><a href="#dividendos-usar-retorno-total-no-solo-precio" id="toc-dividendos-usar-retorno-total-no-solo-precio" class="nav-link" data-scroll-target="#dividendos-usar-retorno-total-no-solo-precio"><span class="header-section-number">16.1</span> Dividendos: usar retorno total, no solo precio</a></li>
+  <li><a href="#renta-fija-en-el-universo-más-que-el-activo-sin-riesgo" id="toc-renta-fija-en-el-universo-más-que-el-activo-sin-riesgo" class="nav-link" data-scroll-target="#renta-fija-en-el-universo-más-que-el-activo-sin-riesgo"><span class="header-section-number">16.2</span> Renta fija en el universo: más que “el activo sin riesgo”</a></li>
+  <li><a href="#inflación-y-horizontes-largos-deflactar-o-engañarse" id="toc-inflación-y-horizontes-largos-deflactar-o-engañarse" class="nav-link" data-scroll-target="#inflación-y-horizontes-largos-deflactar-o-engañarse"><span class="header-section-number">16.3</span> Inflación y horizontes largos: deflactar o engañarse</a></li>
+  <li><a href="#retornos-directos-o-excesos-de-retorno" id="toc-retornos-directos-o-excesos-de-retorno" class="nav-link" data-scroll-target="#retornos-directos-o-excesos-de-retorno"><span class="header-section-number">16.4</span> ¿Retornos directos o excesos de retorno?</a></li>
+  </ul></li>
+  <li><a href="#las-limitaciones-del-modelo-y-adónde-vamos" id="toc-las-limitaciones-del-modelo-y-adónde-vamos" class="nav-link" data-scroll-target="#las-limitaciones-del-modelo-y-adónde-vamos"><span class="header-section-number">17</span> Las limitaciones del modelo (y adónde vamos)</a></li>
+  <li><a href="#errores-comunes" id="toc-errores-comunes" class="nav-link" data-scroll-target="#errores-comunes"><span class="header-section-number">18</span> Errores comunes</a></li>
+  <li><a href="#ejercicios-propuestos" id="toc-ejercicios-propuestos" class="nav-link" data-scroll-target="#ejercicios-propuestos"><span class="header-section-number">19</span> Ejercicios Propuestos</a></li>
+  <li><a href="#referencias" id="toc-referencias" class="nav-link" data-scroll-target="#referencias"><span class="header-section-number">20</span> Referencias</a></li>
+  </ul>
+<div class="toc-actions"><ul><li><a href="https://github.com/uade-finanzas-computacionales/libro/edit/main/unidad2/cap08_markowitz.qmd" class="toc-action"><i class="bi bi-github"></i>Editar esta página</a></li><li><a href="https://github.com/uade-finanzas-computacionales/libro/issues/new" class="toc-action"><i class="bi empty"></i>Informar sobre problema</a></li></ul></div></nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../unidad2/_intro_mod2.html">Módulo 2: Teoría de Portafolios y Optimización</a></li><li class="breadcrumb-item"><a href="../unidad2/cap08_markowitz.html"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Capítulo 8: Teoría Moderna de Portafolios (Markowitz)</span></a></li></ol></nav>
+<div class="quarto-title">
+<div class="quarto-title-block"><div><h1 class="title"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Capítulo 8: Teoría Moderna de Portafolios (Markowitz)</span></h1><button type="button" class="btn code-tools-button" id="quarto-code-tools-source"><i class="bi"></i> Código</button></div></div>
+<p class="subtitle lead">Frontera eficiente, métricas de desempeño y decisiones de diseño</p>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+<div>
+  <div class="abstract">
+    <div class="block-title">Resumen</div>
+    <p>El modelo de Markowitz formaliza la pregunta más importante de la inversión: ¿cómo repartir el capital entre activos riesgosos? Construimos la frontera eficiente con álgebra matricial y optimización numérica, encontramos el portafolio de mínima varianza y el tangente, y discutimos las decisiones que el paper de 1952 no responde: qué métrica optimizar (Sharpe, Sortino, varianza), cómo tratar los dividendos, qué rol juega la renta fija, cuándo trabajar con retornos reales y cuándo con excesos de retorno.</p>
+  </div>
+</div>
+
+
+</header>
+
+
+<section id="introducción" class="level1" data-number="12">
+<h1 data-number="12"><span class="header-section-number">12</span> Introducción</h1>
+<p>Hasta ahora analizamos activos de a uno: su retorno, su volatilidad, su distribución. Pero ningún inversor serio tiene un solo activo. La pregunta real es otra: <strong>¿cómo combinar activos para obtener el mejor balance entre retorno y riesgo?</strong></p>
+<p>En 1952, Harry Markowitz —con 25 años— respondió esa pregunta con una idea que le valdría el Nobel: el riesgo de una cartera <strong>no es el promedio de los riesgos individuales</strong>, porque los activos no se mueven en sincronía perfecta. Cuando uno cae, otro puede subir. Esa compensación —la <strong>covarianza</strong>— es la materia prima de la diversificación, y puede medirse y optimizarse.</p>
+<p>En este capítulo implementamos el modelo completo con NumPy y SciPy, y después nos metemos en las decisiones prácticas que todo gestor enfrenta y que el modelo básico deja abiertas.</p>
+<div class="callout callout-style-simple callout-note callout-titled" title="Lo que ya sabés">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Nota</span>Lo que ya sabés
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Todo el andamiaje matemático de este capítulo —producto matricial <code>@</code>, matriz de covarianzas, la forma cuadrática <span class="math inline">\(\mathbf{w}^T\Sigma\mathbf{w}\)</span>— lo construimos en el Capítulo 5 (NumPy). Y la herramienta de optimización, <code>scipy.optimize.minimize</code>, la vimos en el Capítulo 7. Acá las juntamos.</p>
+</div>
+</div>
+<div id="setup" class="cell" data-execution_count="1">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> scipy.optimize <span class="im">import</span> minimize</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>np.set_printoptions(precision<span class="op">=</span><span class="dv">4</span>, suppress<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>rng <span class="op">=</span> np.random.default_rng(<span class="dv">42</span>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<hr>
+</section>
+<section id="el-problema-en-lenguaje-matricial" class="level1" data-number="13">
+<h1 data-number="13"><span class="header-section-number">13</span> El problema en lenguaje matricial</h1>
+<p>Un portafolio de <span class="math inline">\(n\)</span> activos queda definido por su vector de <strong>pesos</strong> <span class="math inline">\(\mathbf{w} = (w_1, \dots, w_n)\)</span>, con <span class="math inline">\(\sum w_i = 1\)</span>. Dadas las estimaciones de retornos esperados <span class="math inline">\(\boldsymbol{\mu}\)</span> y la matriz de covarianzas <span class="math inline">\(\Sigma\)</span>:</p>
+<ul>
+<li><strong>Retorno esperado del portafolio</strong>: <span class="math inline">\(\ E[R_p] = \mathbf{w}^T \boldsymbol{\mu}\)</span></li>
+<li><strong>Varianza del portafolio</strong>: <span class="math inline">\(\ \sigma_p^2 = \mathbf{w}^T \Sigma \mathbf{w}\)</span></li>
+</ul>
+<p>La segunda fórmula es la clave: incluye no solo las varianzas individuales (la diagonal de <span class="math inline">\(\Sigma\)</span>) sino <strong>todas las covarianzas cruzadas</strong>. Ahí vive la diversificación.</p>
+<div id="universo" class="cell" data-execution_count="2">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Universo de ejemplo: 4 activos con perfiles bien distintos</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>activos <span class="op">=</span> [<span class="st">"Acción Growth"</span>, <span class="st">"Acción Value"</span>, <span class="st">"Acción Defensiva"</span>, <span class="st">"Bono Corporativo"</span>]</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>mu <span class="op">=</span> np.array([<span class="fl">0.14</span>, <span class="fl">0.10</span>, <span class="fl">0.07</span>, <span class="fl">0.05</span>])      <span class="co"># retornos esperados anuales</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>vols <span class="op">=</span> np.array([<span class="fl">0.28</span>, <span class="fl">0.20</span>, <span class="fl">0.14</span>, <span class="fl">0.06</span>])    <span class="co"># volatilidades anuales</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>corr <span class="op">=</span> np.array([</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>    [<span class="fl">1.00</span>, <span class="fl">0.65</span>, <span class="fl">0.45</span>, <span class="fl">0.10</span>],</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>    [<span class="fl">0.65</span>, <span class="fl">1.00</span>, <span class="fl">0.50</span>, <span class="fl">0.15</span>],</span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>    [<span class="fl">0.45</span>, <span class="fl">0.50</span>, <span class="fl">1.00</span>, <span class="fl">0.20</span>],</span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>    [<span class="fl">0.10</span>, <span class="fl">0.15</span>, <span class="fl">0.20</span>, <span class="fl">1.00</span>],</span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>])</span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>Sigma <span class="op">=</span> np.outer(vols, vols) <span class="op">*</span> corr           <span class="co"># Σ = D ρ D</span></span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a><span class="co"># Un portafolio cualquiera para arrancar</span></span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>w <span class="op">=</span> np.array([<span class="fl">0.25</span>, <span class="fl">0.25</span>, <span class="fl">0.25</span>, <span class="fl">0.25</span>])</span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>ret_p <span class="op">=</span> w <span class="op">@</span> mu</span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>vol_p <span class="op">=</span> np.sqrt(w <span class="op">@</span> Sigma <span class="op">@</span> w)</span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Portafolio equiponderado:"</span>)</span>
+<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"  Retorno esperado: </span><span class="sc">{</span>ret_p<span class="sc">:.2%}</span><span class="ss">"</span>)</span>
+<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"  Volatilidad:      </span><span class="sc">{</span>vol_p<span class="sc">:.2%}</span><span class="ss">"</span>)</span>
+<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"  Promedio simple de vols individuales: </span><span class="sc">{</span>vols<span class="sc">.</span>mean()<span class="sc">:.2%}</span><span class="ss">"</span>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Portafolio equiponderado:
+  Retorno esperado: 9.00%
+  Volatilidad:      13.42%
+  Promedio simple de vols individuales: 17.00%</code></pre>
+</div>
+</div>
+<p>Fijate el resultado: la volatilidad del portafolio es <strong>menor que el promedio de las volatilidades individuales</strong>. No elegimos nada inteligente todavía —son pesos iguales— y la diversificación ya nos regaló varios puntos de riesgo. Eso es lo que Markowitz llamó <em>the only free lunch in finance</em>.</p>
+<hr>
+</section>
+<section id="la-frontera-eficiente" class="level1" data-number="14">
+<h1 data-number="14"><span class="header-section-number">14</span> La frontera eficiente</h1>
+<p>De todos los portafolios posibles, ¿cuáles valen la pena? Markowitz lo formuló como un problema de optimización: para cada nivel de retorno objetivo <span class="math inline">\(\mu^*\)</span>, buscar los pesos que <strong>minimizan la varianza</strong>:</p>
+<p><span class="math display">\[\min_{\mathbf{w}} \ \mathbf{w}^T \Sigma \mathbf{w} \quad \text{sujeto a} \quad \mathbf{w}^T \boldsymbol{\mu} = \mu^*, \quad \mathbf{w}^T \mathbf{1} = 1\]</span></p>
+<p>El conjunto de soluciones dibuja una curva en el plano riesgo-retorno: la <strong>frontera eficiente</strong>. Todo portafolio por debajo de ella es mejorable (misma volatilidad, más retorno); por encima no hay nada alcanzable.</p>
+<div id="frontera" class="cell" data-execution_count="3">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> vol_portafolio(w, Sigma):</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> np.sqrt(w <span class="op">@</span> Sigma <span class="op">@</span> w)</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>n <span class="op">=</span> <span class="bu">len</span>(mu)</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>w0 <span class="op">=</span> np.ones(n) <span class="op">/</span> n                      <span class="co"># punto de partida: equiponderado</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>bounds <span class="op">=</span> [(<span class="dv">0</span>, <span class="dv">1</span>)] <span class="op">*</span> n                    <span class="co"># sin ventas en corto</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>retornos_objetivo <span class="op">=</span> np.linspace(mu.<span class="bu">min</span>(), mu.<span class="bu">max</span>(), <span class="dv">60</span>)</span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>frontera_vol <span class="op">=</span> []</span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>frontera_pesos <span class="op">=</span> []</span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> r_obj <span class="kw">in</span> retornos_objetivo:</span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>    restricciones <span class="op">=</span> [</span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>        {<span class="st">"type"</span>: <span class="st">"eq"</span>, <span class="st">"fun"</span>: <span class="kw">lambda</span> w: w.<span class="bu">sum</span>() <span class="op">-</span> <span class="dv">1</span>},</span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>        {<span class="st">"type"</span>: <span class="st">"eq"</span>, <span class="st">"fun"</span>: <span class="kw">lambda</span> w, r<span class="op">=</span>r_obj: w <span class="op">@</span> mu <span class="op">-</span> r},</span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>    ]</span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a>    res <span class="op">=</span> minimize(vol_portafolio, w0, args<span class="op">=</span>(Sigma,),</span>
+<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a>                   method<span class="op">=</span><span class="st">"SLSQP"</span>, bounds<span class="op">=</span>bounds, constraints<span class="op">=</span>restricciones)</span>
+<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a>    frontera_vol.append(res.fun <span class="cf">if</span> res.success <span class="cf">else</span> np.nan)</span>
+<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a>    frontera_pesos.append(res.x)</span>
+<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a>frontera_vol <span class="op">=</span> np.array(frontera_vol)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<section id="el-portafolio-de-mínima-varianza-global" class="level2" data-number="14.1">
+<h2 data-number="14.1" class="anchored" data-anchor-id="el-portafolio-de-mínima-varianza-global"><span class="header-section-number">14.1</span> El portafolio de mínima varianza global</h2>
+<p>Un punto especial de la frontera es su extremo izquierdo: el portafolio de <strong>mínima varianza global (GMV)</strong>, el más conservador posible con estos activos. No necesita estimar retornos esperados —solo <span class="math inline">\(\Sigma\)</span>—, lo que lo hace más robusto que el resto de la frontera (recordá: <span class="math inline">\(\boldsymbol{\mu}\)</span> es lo más ruidoso).</p>
+<div id="gmv" class="cell" data-execution_count="4">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>res_gmv <span class="op">=</span> minimize(vol_portafolio, w0, args<span class="op">=</span>(Sigma,),</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>                   method<span class="op">=</span><span class="st">"SLSQP"</span>, bounds<span class="op">=</span>bounds,</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>                   constraints<span class="op">=</span>[{<span class="st">"type"</span>: <span class="st">"eq"</span>, <span class="st">"fun"</span>: <span class="kw">lambda</span> w: w.<span class="bu">sum</span>() <span class="op">-</span> <span class="dv">1</span>}])</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>w_gmv <span class="op">=</span> res_gmv.x</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Portafolio de Mínima Varianza Global:"</span>)</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> a, wi <span class="kw">in</span> <span class="bu">zip</span>(activos, w_gmv):</span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"  </span><span class="sc">{</span>a<span class="sc">:&lt;18}</span><span class="ss"> </span><span class="sc">{</span>wi<span class="sc">:6.1%}</span><span class="ss">"</span>)</span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"  Retorno: </span><span class="sc">{</span>w_gmv <span class="op">@</span> mu<span class="sc">:.2%}</span><span class="ss"> | Volatilidad: </span><span class="sc">{</span>res_gmv<span class="sc">.</span>fun<span class="sc">:.2%}</span><span class="ss">"</span>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Portafolio de Mínima Varianza Global:
+  Acción Growth        0.0%
+  Acción Value         1.3%
+  Acción Defensiva     8.8%
+  Bono Corporativo    89.9%
+  Retorno: 5.24% | Volatilidad: 5.84%</code></pre>
+</div>
+</div>
+<p>Como era de esperar, el GMV se carga hacia el bono (el activo menos volátil) pero <strong>no pone todo ahí</strong>: mantiene algo de acciones porque su baja correlación con el bono sigue restando riesgo total. La diversificación manda incluso cuando solo minimizás varianza.</p>
+</section>
+<section id="el-portafolio-tangente-y-la-capital-market-line" class="level2" data-number="14.2">
+<h2 data-number="14.2" class="anchored" data-anchor-id="el-portafolio-tangente-y-la-capital-market-line"><span class="header-section-number">14.2</span> El portafolio tangente y la Capital Market Line</h2>
+<p>Ahora agreguemos un ingrediente: un <strong>activo libre de riesgo</strong> con tasa <span class="math inline">\(r_f\)</span> (un plazo fijo, una letra del tesoro). Poder combinar la frontera con ese activo cambia la geometría del problema: las combinaciones entre <span class="math inline">\(r_f\)</span> y cualquier portafolio riesgoso son <strong>rectas</strong> en el plano riesgo-retorno.</p>
+<p>¿Cuál es la mejor recta? La que sale de <span class="math inline">\(r_f\)</span> y <strong>apenas toca</strong> la frontera: la <strong>Capital Market Line (CML)</strong>. El punto de tangencia es el <strong>portafolio tangente</strong>, que maximiza el <strong>ratio de Sharpe</strong>:</p>
+<p><span class="math display">\[\text{Sharpe} = \frac{E[R_p] - r_f}{\sigma_p}\]</span></p>
+<div id="tangente" class="cell" data-execution_count="5">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>rf <span class="op">=</span> <span class="fl">0.03</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> neg_sharpe(w, mu, Sigma, rf):</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> <span class="op">-</span>(w <span class="op">@</span> mu <span class="op">-</span> rf) <span class="op">/</span> np.sqrt(w <span class="op">@</span> Sigma <span class="op">@</span> w)</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>res_tan <span class="op">=</span> minimize(neg_sharpe, w0, args<span class="op">=</span>(mu, Sigma, rf),</span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>                   method<span class="op">=</span><span class="st">"SLSQP"</span>, bounds<span class="op">=</span>bounds,</span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>                   constraints<span class="op">=</span>[{<span class="st">"type"</span>: <span class="st">"eq"</span>, <span class="st">"fun"</span>: <span class="kw">lambda</span> w: w.<span class="bu">sum</span>() <span class="op">-</span> <span class="dv">1</span>}])</span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>w_tan <span class="op">=</span> res_tan.x</span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>ret_tan, vol_tan <span class="op">=</span> w_tan <span class="op">@</span> mu, np.sqrt(w_tan <span class="op">@</span> Sigma <span class="op">@</span> w_tan)</span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>sharpe_tan <span class="op">=</span> (ret_tan <span class="op">-</span> rf) <span class="op">/</span> vol_tan</span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Portafolio Tangente (máximo Sharpe):"</span>)</span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> a, wi <span class="kw">in</span> <span class="bu">zip</span>(activos, w_tan):</span>
+<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"  </span><span class="sc">{</span>a<span class="sc">:&lt;18}</span><span class="ss"> </span><span class="sc">{</span>wi<span class="sc">:6.1%}</span><span class="ss">"</span>)</span>
+<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"  Retorno: </span><span class="sc">{</span>ret_tan<span class="sc">:.2%}</span><span class="ss"> | Vol: </span><span class="sc">{</span>vol_tan<span class="sc">:.2%}</span><span class="ss"> | Sharpe: </span><span class="sc">{</span>sharpe_tan<span class="sc">:.3f}</span><span class="ss">"</span>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Portafolio Tangente (máximo Sharpe):
+  Acción Growth       14.9%
+  Acción Value         7.9%
+  Acción Defensiva     6.1%
+  Bono Corporativo    71.1%
+  Retorno: 6.85% | Vol: 7.67% | Sharpe: 0.502</code></pre>
+</div>
+</div>
+<div id="cell-grafico-frontera" class="cell" data-execution_count="6">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>fig, ax <span class="op">=</span> plt.subplots(figsize<span class="op">=</span>(<span class="dv">10</span>, <span class="dv">6</span>))</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Frontera eficiente</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>ax.plot(frontera_vol <span class="op">*</span> <span class="dv">100</span>, retornos_objetivo <span class="op">*</span> <span class="dv">100</span>, <span class="st">"b-"</span>, linewidth<span class="op">=</span><span class="dv">2</span>,</span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>        label<span class="op">=</span><span class="st">"Frontera eficiente"</span>)</span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Capital Market Line: recta desde (0, rf) que pasa por el tangente</span></span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>x_cml <span class="op">=</span> np.linspace(<span class="dv">0</span>, vol_tan <span class="op">*</span> <span class="fl">1.4</span>, <span class="dv">50</span>)</span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>ax.plot(x_cml <span class="op">*</span> <span class="dv">100</span>, (rf <span class="op">+</span> sharpe_tan <span class="op">*</span> x_cml) <span class="op">*</span> <span class="dv">100</span>, <span class="st">"g--"</span>, linewidth<span class="op">=</span><span class="dv">2</span>,</span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>        label<span class="op">=</span><span class="st">"Capital Market Line"</span>)</span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a><span class="co"># Puntos notables</span></span>
+<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a>ax.scatter(vols <span class="op">*</span> <span class="dv">100</span>, mu <span class="op">*</span> <span class="dv">100</span>, s<span class="op">=</span><span class="dv">90</span>, c<span class="op">=</span><span class="st">"red"</span>, zorder<span class="op">=</span><span class="dv">5</span>, label<span class="op">=</span><span class="st">"Activos individuales"</span>)</span>
+<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> a, v, m <span class="kw">in</span> <span class="bu">zip</span>(activos, vols, mu):</span>
+<span id="cb9-15"><a href="#cb9-15" aria-hidden="true" tabindex="-1"></a>    ax.annotate(a, (v <span class="op">*</span> <span class="dv">100</span>, m <span class="op">*</span> <span class="dv">100</span>), textcoords<span class="op">=</span><span class="st">"offset points"</span>,</span>
+<span id="cb9-16"><a href="#cb9-16" aria-hidden="true" tabindex="-1"></a>                xytext<span class="op">=</span>(<span class="dv">8</span>, <span class="op">-</span><span class="dv">4</span>), fontsize<span class="op">=</span><span class="dv">8</span>)</span>
+<span id="cb9-17"><a href="#cb9-17" aria-hidden="true" tabindex="-1"></a>ax.scatter(res_gmv.fun <span class="op">*</span> <span class="dv">100</span>, (w_gmv <span class="op">@</span> mu) <span class="op">*</span> <span class="dv">100</span>, s<span class="op">=</span><span class="dv">160</span>, c<span class="op">=</span><span class="st">"orange"</span>, marker<span class="op">=</span><span class="st">"D"</span>,</span>
+<span id="cb9-18"><a href="#cb9-18" aria-hidden="true" tabindex="-1"></a>           zorder<span class="op">=</span><span class="dv">6</span>, label<span class="op">=</span><span class="st">"Mínima varianza (GMV)"</span>)</span>
+<span id="cb9-19"><a href="#cb9-19" aria-hidden="true" tabindex="-1"></a>ax.scatter(vol_tan <span class="op">*</span> <span class="dv">100</span>, ret_tan <span class="op">*</span> <span class="dv">100</span>, s<span class="op">=</span><span class="dv">180</span>, c<span class="op">=</span><span class="st">"green"</span>, marker<span class="op">=</span><span class="st">"*"</span>,</span>
+<span id="cb9-20"><a href="#cb9-20" aria-hidden="true" tabindex="-1"></a>           zorder<span class="op">=</span><span class="dv">6</span>, label<span class="op">=</span><span class="st">"Portafolio tangente"</span>)</span>
+<span id="cb9-21"><a href="#cb9-21" aria-hidden="true" tabindex="-1"></a>ax.scatter(<span class="dv">0</span>, rf <span class="op">*</span> <span class="dv">100</span>, s<span class="op">=</span><span class="dv">90</span>, c<span class="op">=</span><span class="st">"black"</span>, marker<span class="op">=</span><span class="st">"s"</span>, zorder<span class="op">=</span><span class="dv">6</span>,</span>
+<span id="cb9-22"><a href="#cb9-22" aria-hidden="true" tabindex="-1"></a>           label<span class="op">=</span><span class="ss">f"Libre de riesgo (</span><span class="sc">{</span>rf<span class="sc">:.0%}</span><span class="ss">)"</span>)</span>
+<span id="cb9-23"><a href="#cb9-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-24"><a href="#cb9-24" aria-hidden="true" tabindex="-1"></a>ax.set_xlabel(<span class="st">"Volatilidad anual (%)"</span>)</span>
+<span id="cb9-25"><a href="#cb9-25" aria-hidden="true" tabindex="-1"></a>ax.set_ylabel(<span class="st">"Retorno esperado anual (%)"</span>)</span>
+<span id="cb9-26"><a href="#cb9-26" aria-hidden="true" tabindex="-1"></a>ax.set_title(<span class="st">"Frontera Eficiente, GMV, Tangente y CML"</span>)</span>
+<span id="cb9-27"><a href="#cb9-27" aria-hidden="true" tabindex="-1"></a>ax.legend(loc<span class="op">=</span><span class="st">"lower right"</span>)</span>
+<span id="cb9-28"><a href="#cb9-28" aria-hidden="true" tabindex="-1"></a>ax.grid(<span class="va">True</span>, alpha<span class="op">=</span><span class="fl">0.3</span>)</span>
+<span id="cb9-29"><a href="#cb9-29" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
+<span id="cb9-30"><a href="#cb9-30" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="cap08_markowitz_files/figure-html/grafico-frontera-output-1.png" id="grafico-frontera" width="942" height="566" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>La lectura del gráfico es una de las ideas más profundas de las finanzas: <strong>con un activo libre de riesgo disponible, la frontera curva deja de ser el menú óptimo</strong>. Todo inversor racional debería pararse sobre la CML: elegir el portafolio tangente para su plata riesgosa, y regular su nivel de riesgo total moviendo la proporción entre el tangente y el activo libre de riesgo. El conservador pone 30% en el tangente y 70% a tasa; el agresivo, todo en el tangente (o incluso se apalanca). La <em>composición</em> de la parte riesgosa es la misma para ambos.</p>
+<hr>
+</section>
+</section>
+<section id="qué-métrica-optimizar-sharpe-sortino-y-compañía" class="level1" data-number="15">
+<h1 data-number="15"><span class="header-section-number">15</span> ¿Qué métrica optimizar? Sharpe, Sortino y compañía</h1>
+<p>Hasta acá maximizamos Sharpe como si fuera la única opción. No lo es, y elegir la función objetivo es una <strong>decisión de diseño</strong> con consecuencias. Repasemos el menú:</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 33%">
+<col style="width: 33%">
+<col style="width: 33%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Objetivo</th>
+<th>Qué premia / castiga</th>
+<th>Cuándo tiene sentido</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Mínima varianza</strong></td>
+<td>Castiga toda dispersión, ignora el retorno</td>
+<td>Perfil ultraconservador; cuando desconfiás de tu estimación de <span class="math inline">\(\mu\)</span></td>
+</tr>
+<tr class="even">
+<td><strong>Máximo retorno</strong></td>
+<td>Ignora el riesgo por completo</td>
+<td>Casi nunca solo: lleva a concentrar todo en el activo más prometedor</td>
+</tr>
+<tr class="odd">
+<td><strong>Máximo Sharpe</strong></td>
+<td>Retorno en exceso por unidad de volatilidad <em>total</em></td>
+<td>El estándar de la industria para comparar estrategias</td>
+</tr>
+<tr class="even">
+<td><strong>Máximo Sortino</strong></td>
+<td>Como Sharpe, pero solo castiga la volatilidad <em>a la baja</em></td>
+<td>Cuando la distribución es asimétrica y no querés castigar las subas</td>
+</tr>
+</tbody>
+</table>
+<p>El punto fino está entre Sharpe y Sortino. La volatilidad castiga <strong>ambas colas</strong>: para el Sharpe, un activo que da sorpresas positivas enormes es tan “riesgoso” como uno que se derrumba. El <strong>Sortino</strong> corrige eso usando en el denominador solo la <strong>desviación a la baja</strong> (<em>downside deviation</em>), calculada con los retornos por debajo de un umbral (típicamente <span class="math inline">\(r_f\)</span> o cero):</p>
+<p><span class="math display">\[\text{Sortino} = \frac{E[R_p] - r_f}{\sigma_{down}}, \qquad \sigma_{down} = \sqrt{\frac{1}{n}\sum_{r_i &lt; \tau} (r_i - \tau)^2}\]</span></p>
+<div id="sortino" class="cell" data-execution_count="7">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Simulamos la historia de dos estrategias con igual media y varianza...</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>n_dias <span class="op">=</span> <span class="dv">2500</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>r_A <span class="op">=</span> rng.normal(<span class="fl">0.0005</span>, <span class="fl">0.012</span>, n_dias)                    <span class="co"># simétrica</span></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a><span class="co"># ...pero B tiene asimetría positiva: pierde poco seguido, gana mucho de a ratos</span></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>r_B <span class="op">=</span> rng.exponential(<span class="fl">0.009</span>, n_dias) <span class="op">-</span> <span class="fl">0.0085</span></span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>r_B <span class="op">=</span> (r_B <span class="op">-</span> r_B.mean()) <span class="op">/</span> r_B.std() <span class="op">*</span> <span class="fl">0.012</span> <span class="op">+</span> <span class="fl">0.0005</span>      <span class="co"># igual media y desvío que A</span></span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>rf_diario <span class="op">=</span> <span class="fl">0.03</span> <span class="op">/</span> <span class="dv">252</span></span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> sharpe_anual(r):</span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> (r.mean() <span class="op">-</span> rf_diario) <span class="op">/</span> r.std() <span class="op">*</span> np.sqrt(<span class="dv">252</span>)</span>
+<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> sortino_anual(r, umbral<span class="op">=</span>rf_diario):</span>
+<span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a>    downside <span class="op">=</span> np.sqrt(np.mean(np.minimum(r <span class="op">-</span> umbral, <span class="dv">0</span>) <span class="op">**</span> <span class="dv">2</span>))</span>
+<span id="cb10-16"><a href="#cb10-16" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> (r.mean() <span class="op">-</span> umbral) <span class="op">/</span> downside <span class="op">*</span> np.sqrt(<span class="dv">252</span>)</span>
+<span id="cb10-17"><a href="#cb10-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-18"><a href="#cb10-18" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span><span class="st">''</span><span class="sc">:12}{</span><span class="st">'Sharpe'</span><span class="sc">:&gt;8}{</span><span class="st">'Sortino'</span><span class="sc">:&gt;9}{</span><span class="st">'Asimetría'</span><span class="sc">:&gt;11}</span><span class="ss">"</span>)</span>
+<span id="cb10-19"><a href="#cb10-19" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> nombre, r <span class="kw">in</span> [(<span class="st">"Estrategia A"</span>, r_A), (<span class="st">"Estrategia B"</span>, r_B)]:</span>
+<span id="cb10-20"><a href="#cb10-20" aria-hidden="true" tabindex="-1"></a>    <span class="im">from</span> scipy <span class="im">import</span> stats</span>
+<span id="cb10-21"><a href="#cb10-21" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span>nombre<span class="sc">:&lt;12}{</span>sharpe_anual(r)<span class="sc">:&gt;8.2f}{</span>sortino_anual(r)<span class="sc">:&gt;9.2f}</span><span class="ss">"</span></span>
+<span id="cb10-22"><a href="#cb10-22" aria-hidden="true" tabindex="-1"></a>          <span class="ss">f"</span><span class="sc">{</span>stats<span class="sc">.</span>skew(r)<span class="sc">:&gt;11.2f}</span><span class="ss">"</span>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>              Sharpe  Sortino  Asimetría
+Estrategia A   -0.20    -0.28      -0.04
+Estrategia B    0.50     1.02       1.96</code></pre>
+</div>
+</div>
+<p>Las dos estrategias tienen el mismo Sharpe (misma media, misma varianza), pero el Sortino revela que <strong>B pierde de manera más contenida</strong>: su riesgo “malo” es menor. Si tu inversor sufre las caídas más de lo que disfruta las subas —o sea, si es humano—, el Sortino describe mejor su experiencia.</p>
+<div class="callout callout-style-simple callout-tip callout-titled" title="¿Cuál usar?">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>¿Cuál usar?
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>No hay respuesta universal, pero sí una guía: <strong>Sharpe para comparar y comunicar</strong> (todo el mundo lo entiende y lo calcula igual), <strong>Sortino cuando la asimetría importa</strong> (estrategias con opciones, crédito, o cualquier cosa con colas raras), <strong>mínima varianza cuando no confiás en tus retornos esperados</strong>, y “máximo retorno” solo como provocación intelectual. Y siempre mirá más de una métrica: cada una ilumina un ángulo distinto.</p>
+</div>
+</div>
+<hr>
+</section>
+<section id="los-inputs-importan-más-que-el-optimizador" class="level1" data-number="16">
+<h1 data-number="16"><span class="header-section-number">16</span> Los inputs importan más que el optimizador</h1>
+<p>El 90% del esfuerzo práctico en Markowitz no está en la optimización (eso lo hace <code>scipy</code> en milisegundos) sino en <strong>estimar bien <span class="math inline">\(\boldsymbol{\mu}\)</span> y <span class="math inline">\(\Sigma\)</span></strong>. Tres decisiones concretas que cambian los resultados:</p>
+<section id="dividendos-usar-retorno-total-no-solo-precio" class="level2" data-number="16.1">
+<h2 data-number="16.1" class="anchored" data-anchor-id="dividendos-usar-retorno-total-no-solo-precio"><span class="header-section-number">16.1</span> Dividendos: usar retorno total, no solo precio</h2>
+<p>El retorno de una acción tiene dos componentes: la variación del precio <strong>y los dividendos</strong>. Ignorarlos —un error común al bajar series de precios sin ajustar— subestima sistemáticamente <span class="math inline">\(\mu\)</span>:</p>
+<p><span class="math display">\[R_{total} = \underbrace{\frac{P_t - P_{t-1}}{P_{t-1}}}_{\text{apreciación}} + \underbrace{\frac{D_t}{P_{t-1}}}_{\text{dividend yield}}\]</span></p>
+<div id="dividendos" class="cell" data-execution_count="8">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Una acción "value" típica: sube poco de precio pero reparte 4% anual</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>apreciacion <span class="op">=</span> <span class="fl">0.05</span></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>dividend_yield <span class="op">=</span> <span class="fl">0.04</span></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Retorno solo-precio: </span><span class="sc">{</span>apreciacion<span class="sc">:.1%}</span><span class="ss">"</span>)</span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Retorno total:       </span><span class="sc">{</span>apreciacion <span class="op">+</span> dividend_yield<span class="sc">:.1%}</span><span class="ss">"</span>)</span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a><span class="co"># En 20 años, la diferencia es enorme por capitalización:</span></span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"</span><span class="ch">\n</span><span class="ss">$100 a 20 años, solo precio:   $</span><span class="sc">{</span><span class="dv">100</span> <span class="op">*</span> (<span class="dv">1</span> <span class="op">+</span> apreciacion) <span class="op">**</span> <span class="dv">20</span><span class="sc">:,.0f}</span><span class="ss">"</span>)</span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"$100 a 20 años, retorno total: $</span><span class="sc">{</span><span class="dv">100</span> <span class="op">*</span> (<span class="dv">1</span> <span class="op">+</span> apreciacion <span class="op">+</span> dividend_yield) <span class="op">**</span> <span class="dv">20</span><span class="sc">:,.0f}</span><span class="ss">"</span>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Retorno solo-precio: 5.0%
+Retorno total:       9.0%
+
+$100 a 20 años, solo precio:   $265
+$100 a 20 años, retorno total: $560</code></pre>
+</div>
+</div>
+<p>Para un optimizador, esto no es un detalle: una acción de alto dividendo puede parecer mediocre mirando solo el precio y ser excelente en retorno total. <strong>Usá siempre precios ajustados por dividendos</strong> (<em>adjusted close</em>) o sumá el yield explícitamente.</p>
+</section>
+<section id="renta-fija-en-el-universo-más-que-el-activo-sin-riesgo" class="level2" data-number="16.2">
+<h2 data-number="16.2" class="anchored" data-anchor-id="renta-fija-en-el-universo-más-que-el-activo-sin-riesgo"><span class="header-section-number">16.2</span> Renta fija en el universo: más que “el activo sin riesgo”</h2>
+<p>En el modelo de la CML, la renta fija aparece como el activo libre de riesgo de volatilidad cero. Pero un <strong>bono real</strong> (como los que valuamos en el Módulo 1) no es eso: tiene riesgo de tasa (duración), riesgo de crédito y volatilidad de precio. La forma correcta de tratarlo es <strong>incluirlo como un activo riesgoso más</strong> dentro del universo, con su <span class="math inline">\(\mu\)</span>, su <span class="math inline">\(\sigma\)</span> y —lo más valioso— su <strong>baja correlación</strong> con las acciones.</p>
+<p>Ya lo hicimos sin decirlo: nuestro cuarto activo es un bono corporativo. Mirá cuánto aporta:</p>
+<div id="cell-bono-aporte" class="cell" data-execution_count="9">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Frontera SIN el bono (solo los 3 primeros activos)</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>mu3, Sigma3 <span class="op">=</span> mu[:<span class="dv">3</span>], Sigma[:<span class="dv">3</span>, :<span class="dv">3</span>]</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>w03 <span class="op">=</span> np.ones(<span class="dv">3</span>) <span class="op">/</span> <span class="dv">3</span></span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>vols_sin_bono <span class="op">=</span> []</span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>rets_grid <span class="op">=</span> np.linspace(mu3.<span class="bu">min</span>(), mu3.<span class="bu">max</span>(), <span class="dv">40</span>)</span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> r_obj <span class="kw">in</span> rets_grid:</span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a>    res <span class="op">=</span> minimize(vol_portafolio, w03, args<span class="op">=</span>(Sigma3,), method<span class="op">=</span><span class="st">"SLSQP"</span>,</span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a>                   bounds<span class="op">=</span>[(<span class="dv">0</span>, <span class="dv">1</span>)] <span class="op">*</span> <span class="dv">3</span>,</span>
+<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a>                   constraints<span class="op">=</span>[{<span class="st">"type"</span>: <span class="st">"eq"</span>, <span class="st">"fun"</span>: <span class="kw">lambda</span> w: w.<span class="bu">sum</span>() <span class="op">-</span> <span class="dv">1</span>},</span>
+<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a>                                {<span class="st">"type"</span>: <span class="st">"eq"</span>, <span class="st">"fun"</span>: <span class="kw">lambda</span> w, r<span class="op">=</span>r_obj: w <span class="op">@</span> mu3 <span class="op">-</span> r}])</span>
+<span id="cb14-12"><a href="#cb14-12" aria-hidden="true" tabindex="-1"></a>    vols_sin_bono.append(res.fun)</span>
+<span id="cb14-13"><a href="#cb14-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-14"><a href="#cb14-14" aria-hidden="true" tabindex="-1"></a>fig, ax <span class="op">=</span> plt.subplots(figsize<span class="op">=</span>(<span class="dv">9</span>, <span class="dv">5</span>))</span>
+<span id="cb14-15"><a href="#cb14-15" aria-hidden="true" tabindex="-1"></a>ax.plot(np.array(vols_sin_bono) <span class="op">*</span> <span class="dv">100</span>, rets_grid <span class="op">*</span> <span class="dv">100</span>, <span class="st">"r--"</span>, linewidth<span class="op">=</span><span class="dv">2</span>,</span>
+<span id="cb14-16"><a href="#cb14-16" aria-hidden="true" tabindex="-1"></a>        label<span class="op">=</span><span class="st">"Frontera sin bonos (solo acciones)"</span>)</span>
+<span id="cb14-17"><a href="#cb14-17" aria-hidden="true" tabindex="-1"></a>ax.plot(frontera_vol <span class="op">*</span> <span class="dv">100</span>, retornos_objetivo <span class="op">*</span> <span class="dv">100</span>, <span class="st">"b-"</span>, linewidth<span class="op">=</span><span class="dv">2</span>,</span>
+<span id="cb14-18"><a href="#cb14-18" aria-hidden="true" tabindex="-1"></a>        label<span class="op">=</span><span class="st">"Frontera con bonos"</span>)</span>
+<span id="cb14-19"><a href="#cb14-19" aria-hidden="true" tabindex="-1"></a>ax.set_xlabel(<span class="st">"Volatilidad anual (%)"</span>)</span>
+<span id="cb14-20"><a href="#cb14-20" aria-hidden="true" tabindex="-1"></a>ax.set_ylabel(<span class="st">"Retorno esperado anual (%)"</span>)</span>
+<span id="cb14-21"><a href="#cb14-21" aria-hidden="true" tabindex="-1"></a>ax.set_title(<span class="st">"El efecto de agregar renta fija al universo"</span>)</span>
+<span id="cb14-22"><a href="#cb14-22" aria-hidden="true" tabindex="-1"></a>ax.legend()</span>
+<span id="cb14-23"><a href="#cb14-23" aria-hidden="true" tabindex="-1"></a>ax.grid(<span class="va">True</span>, alpha<span class="op">=</span><span class="fl">0.3</span>)</span>
+<span id="cb14-24"><a href="#cb14-24" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
+<span id="cb14-25"><a href="#cb14-25" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="cap08_markowitz_files/figure-html/bono-aporte-output-1.png" id="bono-aporte" width="855" height="470" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>La frontera con bonos <strong>domina</strong> a la de solo-acciones en toda la zona de riesgo bajo y medio: para los mismos retornos objetivo, menos volatilidad. El bono no está ahí por su retorno (es el más bajo del universo) sino por su <strong>correlación baja</strong>: es el mejor diversificador de la mesa. Esta es la base cuantitativa del clásico portafolio 60/40.</p>
+</section>
+<section id="inflación-y-horizontes-largos-deflactar-o-engañarse" class="level2" data-number="16.3">
+<h2 data-number="16.3" class="anchored" data-anchor-id="inflación-y-horizontes-largos-deflactar-o-engañarse"><span class="header-section-number">16.3</span> Inflación y horizontes largos: deflactar o engañarse</h2>
+<p>Cuando el análisis abarca períodos largos —décadas de historia, o economías de alta inflación—, trabajar con retornos <strong>nominales</strong> distorsiona todo. Un retorno nominal del 40% anual con inflación del 45% es una <strong>pérdida</strong> de poder adquisitivo, aunque el número se vea espectacular. La conversión correcta es:</p>
+<p><span class="math display">\[1 + r_{real} = \frac{1 + r_{nominal}}{1 + \pi} \quad\Rightarrow\quad r_{real} = \frac{r_{nominal} - \pi}{1 + \pi}\]</span></p>
+<div id="deflactar" class="cell" data-execution_count="10">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>casos <span class="op">=</span> [</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>    (<span class="st">"EEUU, año típico"</span>, <span class="fl">0.10</span>, <span class="fl">0.03</span>),</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>    (<span class="st">"Argentina, año de alta inflación"</span>, <span class="fl">0.40</span>, <span class="fl">0.45</span>),</span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>    (<span class="st">"Argentina, buen año real"</span>, <span class="fl">0.80</span>, <span class="fl">0.50</span>),</span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>]</span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span><span class="st">'Caso'</span><span class="sc">:&lt;34}{</span><span class="st">'Nominal'</span><span class="sc">:&gt;9}{</span><span class="st">'Inflación'</span><span class="sc">:&gt;11}{</span><span class="st">'Real'</span><span class="sc">:&gt;8}</span><span class="ss">"</span>)</span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> nombre, r_nom, pi <span class="kw">in</span> casos:</span>
+<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a>    r_real <span class="op">=</span> (r_nom <span class="op">-</span> pi) <span class="op">/</span> (<span class="dv">1</span> <span class="op">+</span> pi)</span>
+<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span>nombre<span class="sc">:&lt;34}{</span>r_nom<span class="sc">:&gt;8.0%}{</span>pi<span class="sc">:&gt;10.0%}{</span>r_real<span class="sc">:&gt;8.1%}</span><span class="ss">"</span>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Caso                                Nominal  Inflación    Real
+EEUU, año típico                       10%        3%    6.8%
+Argentina, año de alta inflación       40%       45%   -3.4%
+Argentina, buen año real               80%       50%   20.0%</code></pre>
+</div>
+</div>
+<p>¿Por qué importa para Markowitz? Porque en series largas o inflacionarias, la inflación <strong>infla artificialmente las medias y las correlaciones</strong>: todos los activos “suben” juntos con el nivel de precios, y el optimizador cree ver retornos altos y co-movimientos que no existen en términos reales. La regla práctica:</p>
+<ul>
+<li><strong>Horizontes cortos y baja inflación</strong> (retornos diarios/mensuales en economías estables): trabajar en nominal es aceptable; la inflación es un ruido de fondo casi constante.</li>
+<li><strong>Horizontes largos o alta inflación</strong>: deflactá las series (o trabajá en una moneda dura de referencia) <em>antes</em> de estimar <span class="math inline">\(\mu\)</span> y <span class="math inline">\(\Sigma\)</span>. Lo que le importa al inversor es el poder de compra, no los pesos nominales.</li>
+</ul>
+</section>
+<section id="retornos-directos-o-excesos-de-retorno" class="level2" data-number="16.4">
+<h2 data-number="16.4" class="anchored" data-anchor-id="retornos-directos-o-excesos-de-retorno"><span class="header-section-number">16.4</span> ¿Retornos directos o excesos de retorno?</h2>
+<p>Última decisión de diseño: ¿optimizamos sobre los retornos “crudos” de cada activo, o sobre su <strong>exceso</strong> respecto de una referencia (<span class="math inline">\(r_i - r_f\)</span>, o <span class="math inline">\(r_i - r_{mkt}\)</span>)? La respuesta depende de qué pregunta estés haciendo:</p>
+<ul>
+<li><strong>Retornos directos (o reales)</strong> — cuando la pregunta es de <strong>asignación de capital total</strong>: “tengo <span class="math inline">\(X\)</span>, ¿cómo lo reparto?”. El nivel absoluto de cada retorno importa, porque la alternativa de no invertir (o de quedarse en tasa) es parte del problema. La frontera y la CML de este capítulo trabajan así.</li>
+<li><strong>Excesos sobre la tasa libre de riesgo</strong> (<span class="math inline">\(r_i - r_f\)</span>) — cuando la tasa varía en el tiempo y querés que tu estimación de <span class="math inline">\(\mu\)</span> no mezcle “premio por riesgo” con “nivel de tasas”. El ratio de Sharpe ya está definido sobre excesos; estimar directamente en excesos hace todo más consistente, especialmente con datos que cruzan regímenes de tasas muy distintos.</li>
+<li><strong>Excesos sobre el mercado</strong> (<span class="math inline">\(r_i - r_{mkt}\)</span>) — cuando el problema no es asignar capital sino <strong>construir una cartera activa</strong> que le gane a un benchmark. Ahí lo que optimizás es el <em>tracking error</em> y el exceso de retorno relativo; el riesgo “de mercado” es irrelevante porque el benchmark ya lo carga. Es el mundo de los fondos con mandato relativo.</li>
+</ul>
+<div class="callout callout-style-simple callout-warning callout-titled" title="El error clásico">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Advertencia</span>El error clásico
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Mezclar marcos: estimar <span class="math inline">\(\mu\)</span> como promedio de retornos nominales de una década de tasas altas, y usarlo para optimizar hoy con tasas bajas. El “premio” que el optimizador ve es en gran parte nivel de tasas que ya no existe. Trabajar en excesos sobre <span class="math inline">\(r_f\)</span> inmuniza contra esto.</p>
+</div>
+</div>
+<hr>
+</section>
+</section>
+<section id="las-limitaciones-del-modelo-y-adónde-vamos" class="level1" data-number="17">
+<h1 data-number="17"><span class="header-section-number">17</span> Las limitaciones del modelo (y adónde vamos)</h1>
+<p>Markowitz es el punto de partida de toda la teoría de portafolios, pero conviene salir del capítulo con sus límites claros:</p>
+<ol type="1">
+<li><strong>Hipersensibilidad a los inputs</strong>: cambios chicos en <span class="math inline">\(\boldsymbol{\mu}\)</span> producen carteras completamente distintas, y <span class="math inline">\(\boldsymbol{\mu}\)</span> es casi imposible de estimar bien. Es el problema que atacan <strong>HRP</strong> (capítulo siguiente, esquivando la inversión de <span class="math inline">\(\Sigma\)</span>) y <strong>Black-Litterman</strong> (Capítulo 10, disciplinando la estimación de <span class="math inline">\(\mu\)</span>).</li>
+<li><strong>Supone que la varianza captura el riesgo</strong>: ignora asimetrías y colas pesadas. Las métricas de cola (VaR, Expected Shortfall) llegan en el Módulo 3.</li>
+<li><strong>Un solo período</strong>: el modelo decide una vez y se queda quieto; no contempla rebalanceo, costos de transacción ni impuestos.</li>
+<li><strong>Las correlaciones no son constantes</strong>: en las crisis, justo cuando más importa, las correlaciones suben y la diversificación se evapora. Lo veremos con crudeza en el capítulo de riesgo y regulación.</li>
+</ol>
+<p>Nada de esto “refuta” a Markowitz: define la agenda de todo lo que sigue en el libro.</p>
+<hr>
+</section>
+<section id="errores-comunes" class="level1" data-number="18">
+<h1 data-number="18"><span class="header-section-number">18</span> Errores comunes</h1>
+<div class="callout callout-style-simple callout-warning callout-titled" title="Trampas frecuentes">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Advertencia</span>Trampas frecuentes
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ul>
+<li><strong>Anualizar mal</strong>: los retornos escalan por <span class="math inline">\(T\)</span> (×252 de diario a anual) pero la volatilidad escala por <span class="math inline">\(\sqrt{T}\)</span> (×<span class="math inline">\(\sqrt{252}\)</span>). Mezclar las dos reglas rompe todos los ratios.</li>
+<li><strong>Usar precios sin ajustar por dividendos</strong>: subestima el retorno de los activos de alto yield y sesga la optimización hacia las acciones growth.</li>
+<li><strong>Olvidar las restricciones</strong>: sin <code>bounds=[(0,1)]</code>, el optimizador puede sugerir ventas en corto del 300%. Verificá siempre que la solución sea implementable.</li>
+<li><strong>Confiar en un único punto de partida</strong>: <code>minimize</code> puede quedar atrapado en óptimos locales con restricciones complejas. Ante dudas, probá varios <code>w0</code>.</li>
+<li><strong>Interpretar la frontera como predicción</strong>: la frontera es óptima <em>para las estimaciones que le diste</em>. Si <span class="math inline">\(\mu\)</span> y <span class="math inline">\(\Sigma\)</span> están mal, la frontera es una ficción precisa.</li>
+</ul>
+</div>
+</div>
+<hr>
+</section>
+<section id="ejercicios-propuestos" class="level1" data-number="19">
+<h1 data-number="19"><span class="header-section-number">19</span> Ejercicios Propuestos</h1>
+<div class="callout callout-style-simple callout-important callout-titled" title="Ejercicios">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Importante</span>Ejercicios
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ol type="1">
+<li><strong>CML completa</strong>: calculá qué combinación de tangente + activo libre de riesgo necesita un inversor que tolera exactamente 10% de volatilidad anual. ¿Qué retorno esperado obtiene?</li>
+<li><strong>Sortino como objetivo</strong>: reemplazá la función <code>neg_sharpe</code> por una <code>neg_sortino</code> (usá retornos simulados del portafolio) y compará las carteras resultantes.</li>
+<li><strong>Short-selling</strong>: recalculá la frontera con <code>bounds=[(-1, 2)]</code> (cortos permitidos). ¿Cuánto mejora? ¿Los pesos resultantes te parecen implementables?</li>
+<li><strong>Efecto dividendos</strong>: bajá 3 puntos el <span class="math inline">\(\mu\)</span> del activo “Value” (simulando que ignoraste su dividendo) y mirá cómo cambia el portafolio tangente. ¿Te parece un cambio proporcional al error?</li>
+<li><strong>Deflactar</strong>: simulá 10 años de retornos nominales mensuales con inflación mensual del 2%, estimá la frontera en nominal y en real, y compará los pesos.</li>
+<li><strong>Datos reales</strong>: descargá precios ajustados de 5 acciones y un ETF de bonos, estimá <span class="math inline">\(\mu\)</span> y <span class="math inline">\(\Sigma\)</span> con retornos mensuales, y construí frontera, GMV y tangente.</li>
+</ol>
+</div>
+</div>
+<hr>
+</section>
+<section id="referencias" class="level1" data-number="20">
+<h1 data-number="20"><span class="header-section-number">20</span> Referencias</h1>
+<ul>
+<li>Markowitz, H. (1952). <em>Portfolio Selection</em>. The Journal of Finance, 7(1), 77–91.</li>
+<li>Sharpe, W. (1966). <em>Mutual Fund Performance</em>. The Journal of Business, 39(1), 119–138.</li>
+<li>Sortino, F., &amp; van der Meer, R. (1991). <em>Downside Risk</em>. The Journal of Portfolio Management, 17(4), 27–31.</li>
+<li>Elton, E., Gruber, M., Brown, S., &amp; Goetzmann, W. (2014). <em>Modern Portfolio Theory and Investment Analysis</em>. Wiley.</li>
+<li>Dimson, E., Marsh, P., &amp; Staunton, M. (2002). <em>Triumph of the Optimists: 101 Years of Global Investment Returns</em>. Princeton University Press.</li>
+</ul>
+
+
+<!-- -->
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copiado");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copiado");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+    const viewSource = window.document.getElementById('quarto-view-source') ||
+                       window.document.getElementById('quarto-code-tools-source');
+    if (viewSource) {
+      const sourceUrl = viewSource.getAttribute("data-quarto-source-url");
+      viewSource.addEventListener("click", function(e) {
+        if (sourceUrl) {
+          // rstudio viewer pane
+          if (/\bcapabilities=\b/.test(window.location)) {
+            window.open(sourceUrl);
+          } else {
+            window.location.href = sourceUrl;
+          }
+        } else {
+          const modal = new bootstrap.Modal(document.getElementById('quarto-embedded-source-code-modal'));
+          modal.show();
+        }
+        return false;
+      });
+    }
+    function toggleCodeHandler(show) {
+      return function(e) {
+        const detailsSrc = window.document.querySelectorAll(".cell > details > .sourceCode");
+        for (let i=0; i<detailsSrc.length; i++) {
+          const details = detailsSrc[i].parentElement;
+          if (show) {
+            details.open = true;
+          } else {
+            details.removeAttribute("open");
+          }
+        }
+        const cellCodeDivs = window.document.querySelectorAll(".cell > .sourceCode");
+        const fromCls = show ? "hidden" : "unhidden";
+        const toCls = show ? "unhidden" : "hidden";
+        for (let i=0; i<cellCodeDivs.length; i++) {
+          const codeDiv = cellCodeDivs[i];
+          if (codeDiv.classList.contains(fromCls)) {
+            codeDiv.classList.remove(fromCls);
+            codeDiv.classList.add(toCls);
+          } 
+        }
+        return false;
+      }
+    }
+    const hideAllCode = window.document.getElementById("quarto-hide-all-code");
+    if (hideAllCode) {
+      hideAllCode.addEventListener("click", toggleCodeHandler(false));
+    }
+    const showAllCode = window.document.getElementById("quarto-show-all-code");
+    if (showAllCode) {
+      showAllCode.addEventListener("click", toggleCodeHandler(true));
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+            // target, if specified
+            link.setAttribute("target", "_blank");
+            if (link.getAttribute("rel") === null) {
+              link.setAttribute("rel", "noopener");
+            }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="../unidad2/cap07_estadistica_optimizacion.html" class="pagination-link" aria-label="Capítulo 7: Estadística Descriptiva y Optimización Matemática">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Capítulo 7: Estadística Descriptiva y Optimización Matemática</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="../unidad2/cap09_hrp.html" class="pagination-link" aria-label="Capítulo 9: Hierarchical Risk Parity (HRP)">
+        <span class="nav-page-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Capítulo 9: Hierarchical Risk Parity (HRP)</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav><div class="modal fade" id="quarto-embedded-source-code-modal" tabindex="-1" aria-labelledby="quarto-embedded-source-code-modal-label" aria-hidden="true"><div class="modal-dialog modal-dialog-scrollable"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="quarto-embedded-source-code-modal-label">Ejecutar el código</h5><button class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><div class="">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb17" data-shortcodes="false"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="an">title:</span><span class="co"> "Capítulo 8: Teoría Moderna de Portafolios (Markowitz)"</span></span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a><span class="an">subtitle:</span><span class="co"> "Frontera eficiente, métricas de desempeño y decisiones de diseño"</span></span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a><span class="an">abstract:</span><span class="co"> |</span></span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a><span class="co">  El modelo de Markowitz formaliza la pregunta más importante de la inversión:</span></span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a><span class="co">  ¿cómo repartir el capital entre activos riesgosos? Construimos la frontera</span></span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a><span class="co">  eficiente con álgebra matricial y optimización numérica, encontramos el</span></span>
+<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a><span class="co">  portafolio de mínima varianza y el tangente, y discutimos las decisiones que el</span></span>
+<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a><span class="co">  paper de 1952 no responde: qué métrica optimizar (Sharpe, Sortino, varianza),</span></span>
+<span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a><span class="co">  cómo tratar los dividendos, qué rol juega la renta fija, cuándo trabajar con</span></span>
+<span id="cb17-11"><a href="#cb17-11" aria-hidden="true" tabindex="-1"></a><span class="co">  retornos reales y cuándo con excesos de retorno.</span></span>
+<span id="cb17-12"><a href="#cb17-12" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
+<span id="cb17-13"><a href="#cb17-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-14"><a href="#cb17-14" aria-hidden="true" tabindex="-1"></a><span class="fu"># Introducción</span></span>
+<span id="cb17-15"><a href="#cb17-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-16"><a href="#cb17-16" aria-hidden="true" tabindex="-1"></a>Hasta ahora analizamos activos de a uno: su retorno, su volatilidad, su distribución. Pero ningún inversor serio tiene un solo activo. La pregunta real es otra: **¿cómo combinar activos para obtener el mejor balance entre retorno y riesgo?**</span>
+<span id="cb17-17"><a href="#cb17-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-18"><a href="#cb17-18" aria-hidden="true" tabindex="-1"></a>En 1952, Harry Markowitz —con 25 años— respondió esa pregunta con una idea que le valdría el Nobel: el riesgo de una cartera **no es el promedio de los riesgos individuales**, porque los activos no se mueven en sincronía perfecta. Cuando uno cae, otro puede subir. Esa compensación —la **covarianza**— es la materia prima de la diversificación, y puede medirse y optimizarse.</span>
+<span id="cb17-19"><a href="#cb17-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-20"><a href="#cb17-20" aria-hidden="true" tabindex="-1"></a>En este capítulo implementamos el modelo completo con NumPy y SciPy, y después nos metemos en las decisiones prácticas que todo gestor enfrenta y que el modelo básico deja abiertas.</span>
+<span id="cb17-21"><a href="#cb17-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-22"><a href="#cb17-22" aria-hidden="true" tabindex="-1"></a>::: {.callout-note title="Lo que ya sabés"}</span>
+<span id="cb17-23"><a href="#cb17-23" aria-hidden="true" tabindex="-1"></a>Todo el andamiaje matemático de este capítulo —producto matricial <span class="in">`@`</span>, matriz de covarianzas, la forma cuadrática $\mathbf{w}^T\Sigma\mathbf{w}$— lo construimos en el Capítulo 5 (NumPy). Y la herramienta de optimización, <span class="in">`scipy.optimize.minimize`</span>, la vimos en el Capítulo 7. Acá las juntamos.</span>
+<span id="cb17-24"><a href="#cb17-24" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb17-25"><a href="#cb17-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-28"><a href="#cb17-28" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb17-29"><a href="#cb17-29" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: setup</span></span>
+<span id="cb17-30"><a href="#cb17-30" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb17-31"><a href="#cb17-31" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb17-32"><a href="#cb17-32" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> scipy.optimize <span class="im">import</span> minimize</span>
+<span id="cb17-33"><a href="#cb17-33" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-34"><a href="#cb17-34" aria-hidden="true" tabindex="-1"></a>np.set_printoptions(precision<span class="op">=</span><span class="dv">4</span>, suppress<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb17-35"><a href="#cb17-35" aria-hidden="true" tabindex="-1"></a>rng <span class="op">=</span> np.random.default_rng(<span class="dv">42</span>)</span>
+<span id="cb17-36"><a href="#cb17-36" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb17-37"><a href="#cb17-37" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-38"><a href="#cb17-38" aria-hidden="true" tabindex="-1"></a>---</span>
+<span id="cb17-39"><a href="#cb17-39" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-40"><a href="#cb17-40" aria-hidden="true" tabindex="-1"></a><span class="fu"># El problema en lenguaje matricial</span></span>
+<span id="cb17-41"><a href="#cb17-41" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-42"><a href="#cb17-42" aria-hidden="true" tabindex="-1"></a>Un portafolio de $n$ activos queda definido por su vector de **pesos** $\mathbf{w} = (w_1, \dots, w_n)$, con $\sum w_i = 1$. Dadas las estimaciones de retornos esperados $\boldsymbol{\mu}$ y la matriz de covarianzas $\Sigma$:</span>
+<span id="cb17-43"><a href="#cb17-43" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-44"><a href="#cb17-44" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Retorno esperado del portafolio**: $\ E<span class="co">[</span><span class="ot">R_p</span><span class="co">]</span> = \mathbf{w}^T \boldsymbol{\mu}$</span>
+<span id="cb17-45"><a href="#cb17-45" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Varianza del portafolio**: $\ \sigma_p^2 = \mathbf{w}^T \Sigma \mathbf{w}$</span>
+<span id="cb17-46"><a href="#cb17-46" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-47"><a href="#cb17-47" aria-hidden="true" tabindex="-1"></a>La segunda fórmula es la clave: incluye no solo las varianzas individuales (la diagonal de $\Sigma$) sino **todas las covarianzas cruzadas**. Ahí vive la diversificación.</span>
+<span id="cb17-48"><a href="#cb17-48" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-51"><a href="#cb17-51" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb17-52"><a href="#cb17-52" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: universo</span></span>
+<span id="cb17-53"><a href="#cb17-53" aria-hidden="true" tabindex="-1"></a><span class="co"># Universo de ejemplo: 4 activos con perfiles bien distintos</span></span>
+<span id="cb17-54"><a href="#cb17-54" aria-hidden="true" tabindex="-1"></a>activos <span class="op">=</span> [<span class="st">"Acción Growth"</span>, <span class="st">"Acción Value"</span>, <span class="st">"Acción Defensiva"</span>, <span class="st">"Bono Corporativo"</span>]</span>
+<span id="cb17-55"><a href="#cb17-55" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-56"><a href="#cb17-56" aria-hidden="true" tabindex="-1"></a>mu <span class="op">=</span> np.array([<span class="fl">0.14</span>, <span class="fl">0.10</span>, <span class="fl">0.07</span>, <span class="fl">0.05</span>])      <span class="co"># retornos esperados anuales</span></span>
+<span id="cb17-57"><a href="#cb17-57" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-58"><a href="#cb17-58" aria-hidden="true" tabindex="-1"></a>vols <span class="op">=</span> np.array([<span class="fl">0.28</span>, <span class="fl">0.20</span>, <span class="fl">0.14</span>, <span class="fl">0.06</span>])    <span class="co"># volatilidades anuales</span></span>
+<span id="cb17-59"><a href="#cb17-59" aria-hidden="true" tabindex="-1"></a>corr <span class="op">=</span> np.array([</span>
+<span id="cb17-60"><a href="#cb17-60" aria-hidden="true" tabindex="-1"></a>    [<span class="fl">1.00</span>, <span class="fl">0.65</span>, <span class="fl">0.45</span>, <span class="fl">0.10</span>],</span>
+<span id="cb17-61"><a href="#cb17-61" aria-hidden="true" tabindex="-1"></a>    [<span class="fl">0.65</span>, <span class="fl">1.00</span>, <span class="fl">0.50</span>, <span class="fl">0.15</span>],</span>
+<span id="cb17-62"><a href="#cb17-62" aria-hidden="true" tabindex="-1"></a>    [<span class="fl">0.45</span>, <span class="fl">0.50</span>, <span class="fl">1.00</span>, <span class="fl">0.20</span>],</span>
+<span id="cb17-63"><a href="#cb17-63" aria-hidden="true" tabindex="-1"></a>    [<span class="fl">0.10</span>, <span class="fl">0.15</span>, <span class="fl">0.20</span>, <span class="fl">1.00</span>],</span>
+<span id="cb17-64"><a href="#cb17-64" aria-hidden="true" tabindex="-1"></a>])</span>
+<span id="cb17-65"><a href="#cb17-65" aria-hidden="true" tabindex="-1"></a>Sigma <span class="op">=</span> np.outer(vols, vols) <span class="op">*</span> corr           <span class="co"># Σ = D ρ D</span></span>
+<span id="cb17-66"><a href="#cb17-66" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-67"><a href="#cb17-67" aria-hidden="true" tabindex="-1"></a><span class="co"># Un portafolio cualquiera para arrancar</span></span>
+<span id="cb17-68"><a href="#cb17-68" aria-hidden="true" tabindex="-1"></a>w <span class="op">=</span> np.array([<span class="fl">0.25</span>, <span class="fl">0.25</span>, <span class="fl">0.25</span>, <span class="fl">0.25</span>])</span>
+<span id="cb17-69"><a href="#cb17-69" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-70"><a href="#cb17-70" aria-hidden="true" tabindex="-1"></a>ret_p <span class="op">=</span> w <span class="op">@</span> mu</span>
+<span id="cb17-71"><a href="#cb17-71" aria-hidden="true" tabindex="-1"></a>vol_p <span class="op">=</span> np.sqrt(w <span class="op">@</span> Sigma <span class="op">@</span> w)</span>
+<span id="cb17-72"><a href="#cb17-72" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-73"><a href="#cb17-73" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Portafolio equiponderado:"</span>)</span>
+<span id="cb17-74"><a href="#cb17-74" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"  Retorno esperado: </span><span class="sc">{</span>ret_p<span class="sc">:.2%}</span><span class="ss">"</span>)</span>
+<span id="cb17-75"><a href="#cb17-75" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"  Volatilidad:      </span><span class="sc">{</span>vol_p<span class="sc">:.2%}</span><span class="ss">"</span>)</span>
+<span id="cb17-76"><a href="#cb17-76" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"  Promedio simple de vols individuales: </span><span class="sc">{</span>vols<span class="sc">.</span>mean()<span class="sc">:.2%}</span><span class="ss">"</span>)</span>
+<span id="cb17-77"><a href="#cb17-77" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb17-78"><a href="#cb17-78" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-79"><a href="#cb17-79" aria-hidden="true" tabindex="-1"></a>Fijate el resultado: la volatilidad del portafolio es **menor que el promedio de las volatilidades individuales**. No elegimos nada inteligente todavía —son pesos iguales— y la diversificación ya nos regaló varios puntos de riesgo. Eso es lo que Markowitz llamó *the only free lunch in finance*.</span>
+<span id="cb17-80"><a href="#cb17-80" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-81"><a href="#cb17-81" aria-hidden="true" tabindex="-1"></a>---</span>
+<span id="cb17-82"><a href="#cb17-82" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-83"><a href="#cb17-83" aria-hidden="true" tabindex="-1"></a><span class="fu"># La frontera eficiente</span></span>
+<span id="cb17-84"><a href="#cb17-84" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-85"><a href="#cb17-85" aria-hidden="true" tabindex="-1"></a>De todos los portafolios posibles, ¿cuáles valen la pena? Markowitz lo formuló como un problema de optimización: para cada nivel de retorno objetivo $\mu^*$, buscar los pesos que **minimizan la varianza**:</span>
+<span id="cb17-86"><a href="#cb17-86" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-87"><a href="#cb17-87" aria-hidden="true" tabindex="-1"></a>$$\min_{\mathbf{w}} \ \mathbf{w}^T \Sigma \mathbf{w} \quad \text{sujeto a} \quad \mathbf{w}^T \boldsymbol{\mu} = \mu^*, \quad \mathbf{w}^T \mathbf{1} = 1$$</span>
+<span id="cb17-88"><a href="#cb17-88" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-89"><a href="#cb17-89" aria-hidden="true" tabindex="-1"></a>El conjunto de soluciones dibuja una curva en el plano riesgo-retorno: la **frontera eficiente**. Todo portafolio por debajo de ella es mejorable (misma volatilidad, más retorno); por encima no hay nada alcanzable.</span>
+<span id="cb17-90"><a href="#cb17-90" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-93"><a href="#cb17-93" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb17-94"><a href="#cb17-94" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: frontera</span></span>
+<span id="cb17-95"><a href="#cb17-95" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> vol_portafolio(w, Sigma):</span>
+<span id="cb17-96"><a href="#cb17-96" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> np.sqrt(w <span class="op">@</span> Sigma <span class="op">@</span> w)</span>
+<span id="cb17-97"><a href="#cb17-97" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-98"><a href="#cb17-98" aria-hidden="true" tabindex="-1"></a>n <span class="op">=</span> <span class="bu">len</span>(mu)</span>
+<span id="cb17-99"><a href="#cb17-99" aria-hidden="true" tabindex="-1"></a>w0 <span class="op">=</span> np.ones(n) <span class="op">/</span> n                      <span class="co"># punto de partida: equiponderado</span></span>
+<span id="cb17-100"><a href="#cb17-100" aria-hidden="true" tabindex="-1"></a>bounds <span class="op">=</span> [(<span class="dv">0</span>, <span class="dv">1</span>)] <span class="op">*</span> n                    <span class="co"># sin ventas en corto</span></span>
+<span id="cb17-101"><a href="#cb17-101" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-102"><a href="#cb17-102" aria-hidden="true" tabindex="-1"></a>retornos_objetivo <span class="op">=</span> np.linspace(mu.<span class="bu">min</span>(), mu.<span class="bu">max</span>(), <span class="dv">60</span>)</span>
+<span id="cb17-103"><a href="#cb17-103" aria-hidden="true" tabindex="-1"></a>frontera_vol <span class="op">=</span> []</span>
+<span id="cb17-104"><a href="#cb17-104" aria-hidden="true" tabindex="-1"></a>frontera_pesos <span class="op">=</span> []</span>
+<span id="cb17-105"><a href="#cb17-105" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-106"><a href="#cb17-106" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> r_obj <span class="kw">in</span> retornos_objetivo:</span>
+<span id="cb17-107"><a href="#cb17-107" aria-hidden="true" tabindex="-1"></a>    restricciones <span class="op">=</span> [</span>
+<span id="cb17-108"><a href="#cb17-108" aria-hidden="true" tabindex="-1"></a>        {<span class="st">"type"</span>: <span class="st">"eq"</span>, <span class="st">"fun"</span>: <span class="kw">lambda</span> w: w.<span class="bu">sum</span>() <span class="op">-</span> <span class="dv">1</span>},</span>
+<span id="cb17-109"><a href="#cb17-109" aria-hidden="true" tabindex="-1"></a>        {<span class="st">"type"</span>: <span class="st">"eq"</span>, <span class="st">"fun"</span>: <span class="kw">lambda</span> w, r<span class="op">=</span>r_obj: w <span class="op">@</span> mu <span class="op">-</span> r},</span>
+<span id="cb17-110"><a href="#cb17-110" aria-hidden="true" tabindex="-1"></a>    ]</span>
+<span id="cb17-111"><a href="#cb17-111" aria-hidden="true" tabindex="-1"></a>    res <span class="op">=</span> minimize(vol_portafolio, w0, args<span class="op">=</span>(Sigma,),</span>
+<span id="cb17-112"><a href="#cb17-112" aria-hidden="true" tabindex="-1"></a>                   method<span class="op">=</span><span class="st">"SLSQP"</span>, bounds<span class="op">=</span>bounds, constraints<span class="op">=</span>restricciones)</span>
+<span id="cb17-113"><a href="#cb17-113" aria-hidden="true" tabindex="-1"></a>    frontera_vol.append(res.fun <span class="cf">if</span> res.success <span class="cf">else</span> np.nan)</span>
+<span id="cb17-114"><a href="#cb17-114" aria-hidden="true" tabindex="-1"></a>    frontera_pesos.append(res.x)</span>
+<span id="cb17-115"><a href="#cb17-115" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-116"><a href="#cb17-116" aria-hidden="true" tabindex="-1"></a>frontera_vol <span class="op">=</span> np.array(frontera_vol)</span>
+<span id="cb17-117"><a href="#cb17-117" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb17-118"><a href="#cb17-118" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-119"><a href="#cb17-119" aria-hidden="true" tabindex="-1"></a><span class="fu">## El portafolio de mínima varianza global</span></span>
+<span id="cb17-120"><a href="#cb17-120" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-121"><a href="#cb17-121" aria-hidden="true" tabindex="-1"></a>Un punto especial de la frontera es su extremo izquierdo: el portafolio de **mínima varianza global (GMV)**, el más conservador posible con estos activos. No necesita estimar retornos esperados —solo $\Sigma$—, lo que lo hace más robusto que el resto de la frontera (recordá: $\boldsymbol{\mu}$ es lo más ruidoso).</span>
+<span id="cb17-122"><a href="#cb17-122" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-125"><a href="#cb17-125" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb17-126"><a href="#cb17-126" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: gmv</span></span>
+<span id="cb17-127"><a href="#cb17-127" aria-hidden="true" tabindex="-1"></a>res_gmv <span class="op">=</span> minimize(vol_portafolio, w0, args<span class="op">=</span>(Sigma,),</span>
+<span id="cb17-128"><a href="#cb17-128" aria-hidden="true" tabindex="-1"></a>                   method<span class="op">=</span><span class="st">"SLSQP"</span>, bounds<span class="op">=</span>bounds,</span>
+<span id="cb17-129"><a href="#cb17-129" aria-hidden="true" tabindex="-1"></a>                   constraints<span class="op">=</span>[{<span class="st">"type"</span>: <span class="st">"eq"</span>, <span class="st">"fun"</span>: <span class="kw">lambda</span> w: w.<span class="bu">sum</span>() <span class="op">-</span> <span class="dv">1</span>}])</span>
+<span id="cb17-130"><a href="#cb17-130" aria-hidden="true" tabindex="-1"></a>w_gmv <span class="op">=</span> res_gmv.x</span>
+<span id="cb17-131"><a href="#cb17-131" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-132"><a href="#cb17-132" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Portafolio de Mínima Varianza Global:"</span>)</span>
+<span id="cb17-133"><a href="#cb17-133" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> a, wi <span class="kw">in</span> <span class="bu">zip</span>(activos, w_gmv):</span>
+<span id="cb17-134"><a href="#cb17-134" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"  </span><span class="sc">{</span>a<span class="sc">:&lt;18}</span><span class="ss"> </span><span class="sc">{</span>wi<span class="sc">:6.1%}</span><span class="ss">"</span>)</span>
+<span id="cb17-135"><a href="#cb17-135" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"  Retorno: </span><span class="sc">{</span>w_gmv <span class="op">@</span> mu<span class="sc">:.2%}</span><span class="ss"> | Volatilidad: </span><span class="sc">{</span>res_gmv<span class="sc">.</span>fun<span class="sc">:.2%}</span><span class="ss">"</span>)</span>
+<span id="cb17-136"><a href="#cb17-136" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb17-137"><a href="#cb17-137" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-138"><a href="#cb17-138" aria-hidden="true" tabindex="-1"></a>Como era de esperar, el GMV se carga hacia el bono (el activo menos volátil) pero **no pone todo ahí**: mantiene algo de acciones porque su baja correlación con el bono sigue restando riesgo total. La diversificación manda incluso cuando solo minimizás varianza.</span>
+<span id="cb17-139"><a href="#cb17-139" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-140"><a href="#cb17-140" aria-hidden="true" tabindex="-1"></a><span class="fu">## El portafolio tangente y la Capital Market Line</span></span>
+<span id="cb17-141"><a href="#cb17-141" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-142"><a href="#cb17-142" aria-hidden="true" tabindex="-1"></a>Ahora agreguemos un ingrediente: un **activo libre de riesgo** con tasa $r_f$ (un plazo fijo, una letra del tesoro). Poder combinar la frontera con ese activo cambia la geometría del problema: las combinaciones entre $r_f$ y cualquier portafolio riesgoso son **rectas** en el plano riesgo-retorno.</span>
+<span id="cb17-143"><a href="#cb17-143" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-144"><a href="#cb17-144" aria-hidden="true" tabindex="-1"></a>¿Cuál es la mejor recta? La que sale de $r_f$ y **apenas toca** la frontera: la **Capital Market Line (CML)**. El punto de tangencia es el **portafolio tangente**, que maximiza el **ratio de Sharpe**:</span>
+<span id="cb17-145"><a href="#cb17-145" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-146"><a href="#cb17-146" aria-hidden="true" tabindex="-1"></a>$$\text{Sharpe} = \frac{E<span class="co">[</span><span class="ot">R_p</span><span class="co">]</span> - r_f}{\sigma_p}$$</span>
+<span id="cb17-147"><a href="#cb17-147" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-150"><a href="#cb17-150" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb17-151"><a href="#cb17-151" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: tangente</span></span>
+<span id="cb17-152"><a href="#cb17-152" aria-hidden="true" tabindex="-1"></a>rf <span class="op">=</span> <span class="fl">0.03</span></span>
+<span id="cb17-153"><a href="#cb17-153" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-154"><a href="#cb17-154" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> neg_sharpe(w, mu, Sigma, rf):</span>
+<span id="cb17-155"><a href="#cb17-155" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> <span class="op">-</span>(w <span class="op">@</span> mu <span class="op">-</span> rf) <span class="op">/</span> np.sqrt(w <span class="op">@</span> Sigma <span class="op">@</span> w)</span>
+<span id="cb17-156"><a href="#cb17-156" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-157"><a href="#cb17-157" aria-hidden="true" tabindex="-1"></a>res_tan <span class="op">=</span> minimize(neg_sharpe, w0, args<span class="op">=</span>(mu, Sigma, rf),</span>
+<span id="cb17-158"><a href="#cb17-158" aria-hidden="true" tabindex="-1"></a>                   method<span class="op">=</span><span class="st">"SLSQP"</span>, bounds<span class="op">=</span>bounds,</span>
+<span id="cb17-159"><a href="#cb17-159" aria-hidden="true" tabindex="-1"></a>                   constraints<span class="op">=</span>[{<span class="st">"type"</span>: <span class="st">"eq"</span>, <span class="st">"fun"</span>: <span class="kw">lambda</span> w: w.<span class="bu">sum</span>() <span class="op">-</span> <span class="dv">1</span>}])</span>
+<span id="cb17-160"><a href="#cb17-160" aria-hidden="true" tabindex="-1"></a>w_tan <span class="op">=</span> res_tan.x</span>
+<span id="cb17-161"><a href="#cb17-161" aria-hidden="true" tabindex="-1"></a>ret_tan, vol_tan <span class="op">=</span> w_tan <span class="op">@</span> mu, np.sqrt(w_tan <span class="op">@</span> Sigma <span class="op">@</span> w_tan)</span>
+<span id="cb17-162"><a href="#cb17-162" aria-hidden="true" tabindex="-1"></a>sharpe_tan <span class="op">=</span> (ret_tan <span class="op">-</span> rf) <span class="op">/</span> vol_tan</span>
+<span id="cb17-163"><a href="#cb17-163" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-164"><a href="#cb17-164" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Portafolio Tangente (máximo Sharpe):"</span>)</span>
+<span id="cb17-165"><a href="#cb17-165" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> a, wi <span class="kw">in</span> <span class="bu">zip</span>(activos, w_tan):</span>
+<span id="cb17-166"><a href="#cb17-166" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"  </span><span class="sc">{</span>a<span class="sc">:&lt;18}</span><span class="ss"> </span><span class="sc">{</span>wi<span class="sc">:6.1%}</span><span class="ss">"</span>)</span>
+<span id="cb17-167"><a href="#cb17-167" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"  Retorno: </span><span class="sc">{</span>ret_tan<span class="sc">:.2%}</span><span class="ss"> | Vol: </span><span class="sc">{</span>vol_tan<span class="sc">:.2%}</span><span class="ss"> | Sharpe: </span><span class="sc">{</span>sharpe_tan<span class="sc">:.3f}</span><span class="ss">"</span>)</span>
+<span id="cb17-168"><a href="#cb17-168" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb17-169"><a href="#cb17-169" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-172"><a href="#cb17-172" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb17-173"><a href="#cb17-173" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: grafico-frontera</span></span>
+<span id="cb17-174"><a href="#cb17-174" aria-hidden="true" tabindex="-1"></a>fig, ax <span class="op">=</span> plt.subplots(figsize<span class="op">=</span>(<span class="dv">10</span>, <span class="dv">6</span>))</span>
+<span id="cb17-175"><a href="#cb17-175" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-176"><a href="#cb17-176" aria-hidden="true" tabindex="-1"></a><span class="co"># Frontera eficiente</span></span>
+<span id="cb17-177"><a href="#cb17-177" aria-hidden="true" tabindex="-1"></a>ax.plot(frontera_vol <span class="op">*</span> <span class="dv">100</span>, retornos_objetivo <span class="op">*</span> <span class="dv">100</span>, <span class="st">"b-"</span>, linewidth<span class="op">=</span><span class="dv">2</span>,</span>
+<span id="cb17-178"><a href="#cb17-178" aria-hidden="true" tabindex="-1"></a>        label<span class="op">=</span><span class="st">"Frontera eficiente"</span>)</span>
+<span id="cb17-179"><a href="#cb17-179" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-180"><a href="#cb17-180" aria-hidden="true" tabindex="-1"></a><span class="co"># Capital Market Line: recta desde (0, rf) que pasa por el tangente</span></span>
+<span id="cb17-181"><a href="#cb17-181" aria-hidden="true" tabindex="-1"></a>x_cml <span class="op">=</span> np.linspace(<span class="dv">0</span>, vol_tan <span class="op">*</span> <span class="fl">1.4</span>, <span class="dv">50</span>)</span>
+<span id="cb17-182"><a href="#cb17-182" aria-hidden="true" tabindex="-1"></a>ax.plot(x_cml <span class="op">*</span> <span class="dv">100</span>, (rf <span class="op">+</span> sharpe_tan <span class="op">*</span> x_cml) <span class="op">*</span> <span class="dv">100</span>, <span class="st">"g--"</span>, linewidth<span class="op">=</span><span class="dv">2</span>,</span>
+<span id="cb17-183"><a href="#cb17-183" aria-hidden="true" tabindex="-1"></a>        label<span class="op">=</span><span class="st">"Capital Market Line"</span>)</span>
+<span id="cb17-184"><a href="#cb17-184" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-185"><a href="#cb17-185" aria-hidden="true" tabindex="-1"></a><span class="co"># Puntos notables</span></span>
+<span id="cb17-186"><a href="#cb17-186" aria-hidden="true" tabindex="-1"></a>ax.scatter(vols <span class="op">*</span> <span class="dv">100</span>, mu <span class="op">*</span> <span class="dv">100</span>, s<span class="op">=</span><span class="dv">90</span>, c<span class="op">=</span><span class="st">"red"</span>, zorder<span class="op">=</span><span class="dv">5</span>, label<span class="op">=</span><span class="st">"Activos individuales"</span>)</span>
+<span id="cb17-187"><a href="#cb17-187" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> a, v, m <span class="kw">in</span> <span class="bu">zip</span>(activos, vols, mu):</span>
+<span id="cb17-188"><a href="#cb17-188" aria-hidden="true" tabindex="-1"></a>    ax.annotate(a, (v <span class="op">*</span> <span class="dv">100</span>, m <span class="op">*</span> <span class="dv">100</span>), textcoords<span class="op">=</span><span class="st">"offset points"</span>,</span>
+<span id="cb17-189"><a href="#cb17-189" aria-hidden="true" tabindex="-1"></a>                xytext<span class="op">=</span>(<span class="dv">8</span>, <span class="op">-</span><span class="dv">4</span>), fontsize<span class="op">=</span><span class="dv">8</span>)</span>
+<span id="cb17-190"><a href="#cb17-190" aria-hidden="true" tabindex="-1"></a>ax.scatter(res_gmv.fun <span class="op">*</span> <span class="dv">100</span>, (w_gmv <span class="op">@</span> mu) <span class="op">*</span> <span class="dv">100</span>, s<span class="op">=</span><span class="dv">160</span>, c<span class="op">=</span><span class="st">"orange"</span>, marker<span class="op">=</span><span class="st">"D"</span>,</span>
+<span id="cb17-191"><a href="#cb17-191" aria-hidden="true" tabindex="-1"></a>           zorder<span class="op">=</span><span class="dv">6</span>, label<span class="op">=</span><span class="st">"Mínima varianza (GMV)"</span>)</span>
+<span id="cb17-192"><a href="#cb17-192" aria-hidden="true" tabindex="-1"></a>ax.scatter(vol_tan <span class="op">*</span> <span class="dv">100</span>, ret_tan <span class="op">*</span> <span class="dv">100</span>, s<span class="op">=</span><span class="dv">180</span>, c<span class="op">=</span><span class="st">"green"</span>, marker<span class="op">=</span><span class="st">"*"</span>,</span>
+<span id="cb17-193"><a href="#cb17-193" aria-hidden="true" tabindex="-1"></a>           zorder<span class="op">=</span><span class="dv">6</span>, label<span class="op">=</span><span class="st">"Portafolio tangente"</span>)</span>
+<span id="cb17-194"><a href="#cb17-194" aria-hidden="true" tabindex="-1"></a>ax.scatter(<span class="dv">0</span>, rf <span class="op">*</span> <span class="dv">100</span>, s<span class="op">=</span><span class="dv">90</span>, c<span class="op">=</span><span class="st">"black"</span>, marker<span class="op">=</span><span class="st">"s"</span>, zorder<span class="op">=</span><span class="dv">6</span>,</span>
+<span id="cb17-195"><a href="#cb17-195" aria-hidden="true" tabindex="-1"></a>           label<span class="op">=</span><span class="ss">f"Libre de riesgo (</span><span class="sc">{</span>rf<span class="sc">:.0%}</span><span class="ss">)"</span>)</span>
+<span id="cb17-196"><a href="#cb17-196" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-197"><a href="#cb17-197" aria-hidden="true" tabindex="-1"></a>ax.set_xlabel(<span class="st">"Volatilidad anual (%)"</span>)</span>
+<span id="cb17-198"><a href="#cb17-198" aria-hidden="true" tabindex="-1"></a>ax.set_ylabel(<span class="st">"Retorno esperado anual (%)"</span>)</span>
+<span id="cb17-199"><a href="#cb17-199" aria-hidden="true" tabindex="-1"></a>ax.set_title(<span class="st">"Frontera Eficiente, GMV, Tangente y CML"</span>)</span>
+<span id="cb17-200"><a href="#cb17-200" aria-hidden="true" tabindex="-1"></a>ax.legend(loc<span class="op">=</span><span class="st">"lower right"</span>)</span>
+<span id="cb17-201"><a href="#cb17-201" aria-hidden="true" tabindex="-1"></a>ax.grid(<span class="va">True</span>, alpha<span class="op">=</span><span class="fl">0.3</span>)</span>
+<span id="cb17-202"><a href="#cb17-202" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
+<span id="cb17-203"><a href="#cb17-203" aria-hidden="true" tabindex="-1"></a>plt.show()</span>
+<span id="cb17-204"><a href="#cb17-204" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb17-205"><a href="#cb17-205" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-206"><a href="#cb17-206" aria-hidden="true" tabindex="-1"></a>La lectura del gráfico es una de las ideas más profundas de las finanzas: **con un activo libre de riesgo disponible, la frontera curva deja de ser el menú óptimo**. Todo inversor racional debería pararse sobre la CML: elegir el portafolio tangente para su plata riesgosa, y regular su nivel de riesgo total moviendo la proporción entre el tangente y el activo libre de riesgo. El conservador pone 30% en el tangente y 70% a tasa; el agresivo, todo en el tangente (o incluso se apalanca). La *composición* de la parte riesgosa es la misma para ambos.</span>
+<span id="cb17-207"><a href="#cb17-207" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-208"><a href="#cb17-208" aria-hidden="true" tabindex="-1"></a>---</span>
+<span id="cb17-209"><a href="#cb17-209" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-210"><a href="#cb17-210" aria-hidden="true" tabindex="-1"></a><span class="fu"># ¿Qué métrica optimizar? Sharpe, Sortino y compañía</span></span>
+<span id="cb17-211"><a href="#cb17-211" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-212"><a href="#cb17-212" aria-hidden="true" tabindex="-1"></a>Hasta acá maximizamos Sharpe como si fuera la única opción. No lo es, y elegir la función objetivo es una **decisión de diseño** con consecuencias. Repasemos el menú:</span>
+<span id="cb17-213"><a href="#cb17-213" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-214"><a href="#cb17-214" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Objetivo <span class="pp">|</span> Qué premia / castiga <span class="pp">|</span> Cuándo tiene sentido <span class="pp">|</span></span>
+<span id="cb17-215"><a href="#cb17-215" aria-hidden="true" tabindex="-1"></a><span class="pp">|---|---|---|</span></span>
+<span id="cb17-216"><a href="#cb17-216" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> **Mínima varianza** <span class="pp">|</span> Castiga toda dispersión, ignora el retorno <span class="pp">|</span> Perfil ultraconservador; cuando desconfiás de tu estimación de $\mu$ <span class="pp">|</span></span>
+<span id="cb17-217"><a href="#cb17-217" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> **Máximo retorno** <span class="pp">|</span> Ignora el riesgo por completo <span class="pp">|</span> Casi nunca solo: lleva a concentrar todo en el activo más prometedor <span class="pp">|</span></span>
+<span id="cb17-218"><a href="#cb17-218" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> **Máximo Sharpe** <span class="pp">|</span> Retorno en exceso por unidad de volatilidad *total* <span class="pp">|</span> El estándar de la industria para comparar estrategias <span class="pp">|</span></span>
+<span id="cb17-219"><a href="#cb17-219" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> **Máximo Sortino** <span class="pp">|</span> Como Sharpe, pero solo castiga la volatilidad *a la baja* <span class="pp">|</span> Cuando la distribución es asimétrica y no querés castigar las subas <span class="pp">|</span></span>
+<span id="cb17-220"><a href="#cb17-220" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-221"><a href="#cb17-221" aria-hidden="true" tabindex="-1"></a>El punto fino está entre Sharpe y Sortino. La volatilidad castiga **ambas colas**: para el Sharpe, un activo que da sorpresas positivas enormes es tan "riesgoso" como uno que se derrumba. El **Sortino** corrige eso usando en el denominador solo la **desviación a la baja** (*downside deviation*), calculada con los retornos por debajo de un umbral (típicamente $r_f$ o cero):</span>
+<span id="cb17-222"><a href="#cb17-222" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-223"><a href="#cb17-223" aria-hidden="true" tabindex="-1"></a>$$\text{Sortino} = \frac{E<span class="co">[</span><span class="ot">R_p</span><span class="co">]</span> - r_f}{\sigma_{down}}, \qquad \sigma_{down} = \sqrt{\frac{1}{n}\sum_{r_i &lt; \tau} (r_i - \tau)^2}$$</span>
+<span id="cb17-224"><a href="#cb17-224" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-227"><a href="#cb17-227" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb17-228"><a href="#cb17-228" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: sortino</span></span>
+<span id="cb17-229"><a href="#cb17-229" aria-hidden="true" tabindex="-1"></a><span class="co"># Simulamos la historia de dos estrategias con igual media y varianza...</span></span>
+<span id="cb17-230"><a href="#cb17-230" aria-hidden="true" tabindex="-1"></a>n_dias <span class="op">=</span> <span class="dv">2500</span></span>
+<span id="cb17-231"><a href="#cb17-231" aria-hidden="true" tabindex="-1"></a>r_A <span class="op">=</span> rng.normal(<span class="fl">0.0005</span>, <span class="fl">0.012</span>, n_dias)                    <span class="co"># simétrica</span></span>
+<span id="cb17-232"><a href="#cb17-232" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-233"><a href="#cb17-233" aria-hidden="true" tabindex="-1"></a><span class="co"># ...pero B tiene asimetría positiva: pierde poco seguido, gana mucho de a ratos</span></span>
+<span id="cb17-234"><a href="#cb17-234" aria-hidden="true" tabindex="-1"></a>r_B <span class="op">=</span> rng.exponential(<span class="fl">0.009</span>, n_dias) <span class="op">-</span> <span class="fl">0.0085</span></span>
+<span id="cb17-235"><a href="#cb17-235" aria-hidden="true" tabindex="-1"></a>r_B <span class="op">=</span> (r_B <span class="op">-</span> r_B.mean()) <span class="op">/</span> r_B.std() <span class="op">*</span> <span class="fl">0.012</span> <span class="op">+</span> <span class="fl">0.0005</span>      <span class="co"># igual media y desvío que A</span></span>
+<span id="cb17-236"><a href="#cb17-236" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-237"><a href="#cb17-237" aria-hidden="true" tabindex="-1"></a>rf_diario <span class="op">=</span> <span class="fl">0.03</span> <span class="op">/</span> <span class="dv">252</span></span>
+<span id="cb17-238"><a href="#cb17-238" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-239"><a href="#cb17-239" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> sharpe_anual(r):</span>
+<span id="cb17-240"><a href="#cb17-240" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> (r.mean() <span class="op">-</span> rf_diario) <span class="op">/</span> r.std() <span class="op">*</span> np.sqrt(<span class="dv">252</span>)</span>
+<span id="cb17-241"><a href="#cb17-241" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-242"><a href="#cb17-242" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> sortino_anual(r, umbral<span class="op">=</span>rf_diario):</span>
+<span id="cb17-243"><a href="#cb17-243" aria-hidden="true" tabindex="-1"></a>    downside <span class="op">=</span> np.sqrt(np.mean(np.minimum(r <span class="op">-</span> umbral, <span class="dv">0</span>) <span class="op">**</span> <span class="dv">2</span>))</span>
+<span id="cb17-244"><a href="#cb17-244" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> (r.mean() <span class="op">-</span> umbral) <span class="op">/</span> downside <span class="op">*</span> np.sqrt(<span class="dv">252</span>)</span>
+<span id="cb17-245"><a href="#cb17-245" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-246"><a href="#cb17-246" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span><span class="st">''</span><span class="sc">:12}{</span><span class="st">'Sharpe'</span><span class="sc">:&gt;8}{</span><span class="st">'Sortino'</span><span class="sc">:&gt;9}{</span><span class="st">'Asimetría'</span><span class="sc">:&gt;11}</span><span class="ss">"</span>)</span>
+<span id="cb17-247"><a href="#cb17-247" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> nombre, r <span class="kw">in</span> [(<span class="st">"Estrategia A"</span>, r_A), (<span class="st">"Estrategia B"</span>, r_B)]:</span>
+<span id="cb17-248"><a href="#cb17-248" aria-hidden="true" tabindex="-1"></a>    <span class="im">from</span> scipy <span class="im">import</span> stats</span>
+<span id="cb17-249"><a href="#cb17-249" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span>nombre<span class="sc">:&lt;12}{</span>sharpe_anual(r)<span class="sc">:&gt;8.2f}{</span>sortino_anual(r)<span class="sc">:&gt;9.2f}</span><span class="ss">"</span></span>
+<span id="cb17-250"><a href="#cb17-250" aria-hidden="true" tabindex="-1"></a>          <span class="ss">f"</span><span class="sc">{</span>stats<span class="sc">.</span>skew(r)<span class="sc">:&gt;11.2f}</span><span class="ss">"</span>)</span>
+<span id="cb17-251"><a href="#cb17-251" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb17-252"><a href="#cb17-252" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-253"><a href="#cb17-253" aria-hidden="true" tabindex="-1"></a>Las dos estrategias tienen el mismo Sharpe (misma media, misma varianza), pero el Sortino revela que **B pierde de manera más contenida**: su riesgo "malo" es menor. Si tu inversor sufre las caídas más de lo que disfruta las subas —o sea, si es humano—, el Sortino describe mejor su experiencia.</span>
+<span id="cb17-254"><a href="#cb17-254" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-255"><a href="#cb17-255" aria-hidden="true" tabindex="-1"></a>::: {.callout-tip title="¿Cuál usar?"}</span>
+<span id="cb17-256"><a href="#cb17-256" aria-hidden="true" tabindex="-1"></a>No hay respuesta universal, pero sí una guía: **Sharpe para comparar y comunicar** (todo el mundo lo entiende y lo calcula igual), **Sortino cuando la asimetría importa** (estrategias con opciones, crédito, o cualquier cosa con colas raras), **mínima varianza cuando no confiás en tus retornos esperados**, y "máximo retorno" solo como provocación intelectual. Y siempre mirá más de una métrica: cada una ilumina un ángulo distinto.</span>
+<span id="cb17-257"><a href="#cb17-257" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb17-258"><a href="#cb17-258" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-259"><a href="#cb17-259" aria-hidden="true" tabindex="-1"></a>---</span>
+<span id="cb17-260"><a href="#cb17-260" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-261"><a href="#cb17-261" aria-hidden="true" tabindex="-1"></a><span class="fu"># Los inputs importan más que el optimizador</span></span>
+<span id="cb17-262"><a href="#cb17-262" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-263"><a href="#cb17-263" aria-hidden="true" tabindex="-1"></a>El 90% del esfuerzo práctico en Markowitz no está en la optimización (eso lo hace <span class="in">`scipy`</span> en milisegundos) sino en **estimar bien $\boldsymbol{\mu}$ y $\Sigma$**. Tres decisiones concretas que cambian los resultados:</span>
+<span id="cb17-264"><a href="#cb17-264" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-265"><a href="#cb17-265" aria-hidden="true" tabindex="-1"></a><span class="fu">## Dividendos: usar retorno total, no solo precio</span></span>
+<span id="cb17-266"><a href="#cb17-266" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-267"><a href="#cb17-267" aria-hidden="true" tabindex="-1"></a>El retorno de una acción tiene dos componentes: la variación del precio **y los dividendos**. Ignorarlos —un error común al bajar series de precios sin ajustar— subestima sistemáticamente $\mu$:</span>
+<span id="cb17-268"><a href="#cb17-268" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-269"><a href="#cb17-269" aria-hidden="true" tabindex="-1"></a>$$R_{total} = \underbrace{\frac{P_t - P_{t-1}}{P_{t-1}}}_{\text{apreciación}} + \underbrace{\frac{D_t}{P_{t-1}}}_{\text{dividend yield}}$$</span>
+<span id="cb17-270"><a href="#cb17-270" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-273"><a href="#cb17-273" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb17-274"><a href="#cb17-274" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: dividendos</span></span>
+<span id="cb17-275"><a href="#cb17-275" aria-hidden="true" tabindex="-1"></a><span class="co"># Una acción "value" típica: sube poco de precio pero reparte 4% anual</span></span>
+<span id="cb17-276"><a href="#cb17-276" aria-hidden="true" tabindex="-1"></a>apreciacion <span class="op">=</span> <span class="fl">0.05</span></span>
+<span id="cb17-277"><a href="#cb17-277" aria-hidden="true" tabindex="-1"></a>dividend_yield <span class="op">=</span> <span class="fl">0.04</span></span>
+<span id="cb17-278"><a href="#cb17-278" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-279"><a href="#cb17-279" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Retorno solo-precio: </span><span class="sc">{</span>apreciacion<span class="sc">:.1%}</span><span class="ss">"</span>)</span>
+<span id="cb17-280"><a href="#cb17-280" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Retorno total:       </span><span class="sc">{</span>apreciacion <span class="op">+</span> dividend_yield<span class="sc">:.1%}</span><span class="ss">"</span>)</span>
+<span id="cb17-281"><a href="#cb17-281" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-282"><a href="#cb17-282" aria-hidden="true" tabindex="-1"></a><span class="co"># En 20 años, la diferencia es enorme por capitalización:</span></span>
+<span id="cb17-283"><a href="#cb17-283" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"</span><span class="ch">\n</span><span class="ss">$100 a 20 años, solo precio:   $</span><span class="sc">{</span><span class="dv">100</span> <span class="op">*</span> (<span class="dv">1</span> <span class="op">+</span> apreciacion) <span class="op">**</span> <span class="dv">20</span><span class="sc">:,.0f}</span><span class="ss">"</span>)</span>
+<span id="cb17-284"><a href="#cb17-284" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"$100 a 20 años, retorno total: $</span><span class="sc">{</span><span class="dv">100</span> <span class="op">*</span> (<span class="dv">1</span> <span class="op">+</span> apreciacion <span class="op">+</span> dividend_yield) <span class="op">**</span> <span class="dv">20</span><span class="sc">:,.0f}</span><span class="ss">"</span>)</span>
+<span id="cb17-285"><a href="#cb17-285" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb17-286"><a href="#cb17-286" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-287"><a href="#cb17-287" aria-hidden="true" tabindex="-1"></a>Para un optimizador, esto no es un detalle: una acción de alto dividendo puede parecer mediocre mirando solo el precio y ser excelente en retorno total. **Usá siempre precios ajustados por dividendos** (*adjusted close*) o sumá el yield explícitamente.</span>
+<span id="cb17-288"><a href="#cb17-288" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-289"><a href="#cb17-289" aria-hidden="true" tabindex="-1"></a><span class="fu">## Renta fija en el universo: más que "el activo sin riesgo"</span></span>
+<span id="cb17-290"><a href="#cb17-290" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-291"><a href="#cb17-291" aria-hidden="true" tabindex="-1"></a>En el modelo de la CML, la renta fija aparece como el activo libre de riesgo de volatilidad cero. Pero un **bono real** (como los que valuamos en el Módulo 1) no es eso: tiene riesgo de tasa (duración), riesgo de crédito y volatilidad de precio. La forma correcta de tratarlo es **incluirlo como un activo riesgoso más** dentro del universo, con su $\mu$, su $\sigma$ y —lo más valioso— su **baja correlación** con las acciones.</span>
+<span id="cb17-292"><a href="#cb17-292" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-293"><a href="#cb17-293" aria-hidden="true" tabindex="-1"></a>Ya lo hicimos sin decirlo: nuestro cuarto activo es un bono corporativo. Mirá cuánto aporta:</span>
+<span id="cb17-294"><a href="#cb17-294" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-297"><a href="#cb17-297" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb17-298"><a href="#cb17-298" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: bono-aporte</span></span>
+<span id="cb17-299"><a href="#cb17-299" aria-hidden="true" tabindex="-1"></a><span class="co"># Frontera SIN el bono (solo los 3 primeros activos)</span></span>
+<span id="cb17-300"><a href="#cb17-300" aria-hidden="true" tabindex="-1"></a>mu3, Sigma3 <span class="op">=</span> mu[:<span class="dv">3</span>], Sigma[:<span class="dv">3</span>, :<span class="dv">3</span>]</span>
+<span id="cb17-301"><a href="#cb17-301" aria-hidden="true" tabindex="-1"></a>w03 <span class="op">=</span> np.ones(<span class="dv">3</span>) <span class="op">/</span> <span class="dv">3</span></span>
+<span id="cb17-302"><a href="#cb17-302" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-303"><a href="#cb17-303" aria-hidden="true" tabindex="-1"></a>vols_sin_bono <span class="op">=</span> []</span>
+<span id="cb17-304"><a href="#cb17-304" aria-hidden="true" tabindex="-1"></a>rets_grid <span class="op">=</span> np.linspace(mu3.<span class="bu">min</span>(), mu3.<span class="bu">max</span>(), <span class="dv">40</span>)</span>
+<span id="cb17-305"><a href="#cb17-305" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> r_obj <span class="kw">in</span> rets_grid:</span>
+<span id="cb17-306"><a href="#cb17-306" aria-hidden="true" tabindex="-1"></a>    res <span class="op">=</span> minimize(vol_portafolio, w03, args<span class="op">=</span>(Sigma3,), method<span class="op">=</span><span class="st">"SLSQP"</span>,</span>
+<span id="cb17-307"><a href="#cb17-307" aria-hidden="true" tabindex="-1"></a>                   bounds<span class="op">=</span>[(<span class="dv">0</span>, <span class="dv">1</span>)] <span class="op">*</span> <span class="dv">3</span>,</span>
+<span id="cb17-308"><a href="#cb17-308" aria-hidden="true" tabindex="-1"></a>                   constraints<span class="op">=</span>[{<span class="st">"type"</span>: <span class="st">"eq"</span>, <span class="st">"fun"</span>: <span class="kw">lambda</span> w: w.<span class="bu">sum</span>() <span class="op">-</span> <span class="dv">1</span>},</span>
+<span id="cb17-309"><a href="#cb17-309" aria-hidden="true" tabindex="-1"></a>                                {<span class="st">"type"</span>: <span class="st">"eq"</span>, <span class="st">"fun"</span>: <span class="kw">lambda</span> w, r<span class="op">=</span>r_obj: w <span class="op">@</span> mu3 <span class="op">-</span> r}])</span>
+<span id="cb17-310"><a href="#cb17-310" aria-hidden="true" tabindex="-1"></a>    vols_sin_bono.append(res.fun)</span>
+<span id="cb17-311"><a href="#cb17-311" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-312"><a href="#cb17-312" aria-hidden="true" tabindex="-1"></a>fig, ax <span class="op">=</span> plt.subplots(figsize<span class="op">=</span>(<span class="dv">9</span>, <span class="dv">5</span>))</span>
+<span id="cb17-313"><a href="#cb17-313" aria-hidden="true" tabindex="-1"></a>ax.plot(np.array(vols_sin_bono) <span class="op">*</span> <span class="dv">100</span>, rets_grid <span class="op">*</span> <span class="dv">100</span>, <span class="st">"r--"</span>, linewidth<span class="op">=</span><span class="dv">2</span>,</span>
+<span id="cb17-314"><a href="#cb17-314" aria-hidden="true" tabindex="-1"></a>        label<span class="op">=</span><span class="st">"Frontera sin bonos (solo acciones)"</span>)</span>
+<span id="cb17-315"><a href="#cb17-315" aria-hidden="true" tabindex="-1"></a>ax.plot(frontera_vol <span class="op">*</span> <span class="dv">100</span>, retornos_objetivo <span class="op">*</span> <span class="dv">100</span>, <span class="st">"b-"</span>, linewidth<span class="op">=</span><span class="dv">2</span>,</span>
+<span id="cb17-316"><a href="#cb17-316" aria-hidden="true" tabindex="-1"></a>        label<span class="op">=</span><span class="st">"Frontera con bonos"</span>)</span>
+<span id="cb17-317"><a href="#cb17-317" aria-hidden="true" tabindex="-1"></a>ax.set_xlabel(<span class="st">"Volatilidad anual (%)"</span>)</span>
+<span id="cb17-318"><a href="#cb17-318" aria-hidden="true" tabindex="-1"></a>ax.set_ylabel(<span class="st">"Retorno esperado anual (%)"</span>)</span>
+<span id="cb17-319"><a href="#cb17-319" aria-hidden="true" tabindex="-1"></a>ax.set_title(<span class="st">"El efecto de agregar renta fija al universo"</span>)</span>
+<span id="cb17-320"><a href="#cb17-320" aria-hidden="true" tabindex="-1"></a>ax.legend()</span>
+<span id="cb17-321"><a href="#cb17-321" aria-hidden="true" tabindex="-1"></a>ax.grid(<span class="va">True</span>, alpha<span class="op">=</span><span class="fl">0.3</span>)</span>
+<span id="cb17-322"><a href="#cb17-322" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
+<span id="cb17-323"><a href="#cb17-323" aria-hidden="true" tabindex="-1"></a>plt.show()</span>
+<span id="cb17-324"><a href="#cb17-324" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb17-325"><a href="#cb17-325" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-326"><a href="#cb17-326" aria-hidden="true" tabindex="-1"></a>La frontera con bonos **domina** a la de solo-acciones en toda la zona de riesgo bajo y medio: para los mismos retornos objetivo, menos volatilidad. El bono no está ahí por su retorno (es el más bajo del universo) sino por su **correlación baja**: es el mejor diversificador de la mesa. Esta es la base cuantitativa del clásico portafolio 60/40.</span>
+<span id="cb17-327"><a href="#cb17-327" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-328"><a href="#cb17-328" aria-hidden="true" tabindex="-1"></a><span class="fu">## Inflación y horizontes largos: deflactar o engañarse</span></span>
+<span id="cb17-329"><a href="#cb17-329" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-330"><a href="#cb17-330" aria-hidden="true" tabindex="-1"></a>Cuando el análisis abarca períodos largos —décadas de historia, o economías de alta inflación—, trabajar con retornos **nominales** distorsiona todo. Un retorno nominal del 40% anual con inflación del 45% es una **pérdida** de poder adquisitivo, aunque el número se vea espectacular. La conversión correcta es:</span>
+<span id="cb17-331"><a href="#cb17-331" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-332"><a href="#cb17-332" aria-hidden="true" tabindex="-1"></a>$$1 + r_{real} = \frac{1 + r_{nominal}}{1 + \pi} \quad\Rightarrow\quad r_{real} = \frac{r_{nominal} - \pi}{1 + \pi}$$</span>
+<span id="cb17-333"><a href="#cb17-333" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-336"><a href="#cb17-336" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb17-337"><a href="#cb17-337" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: deflactar</span></span>
+<span id="cb17-338"><a href="#cb17-338" aria-hidden="true" tabindex="-1"></a>casos <span class="op">=</span> [</span>
+<span id="cb17-339"><a href="#cb17-339" aria-hidden="true" tabindex="-1"></a>    (<span class="st">"EEUU, año típico"</span>, <span class="fl">0.10</span>, <span class="fl">0.03</span>),</span>
+<span id="cb17-340"><a href="#cb17-340" aria-hidden="true" tabindex="-1"></a>    (<span class="st">"Argentina, año de alta inflación"</span>, <span class="fl">0.40</span>, <span class="fl">0.45</span>),</span>
+<span id="cb17-341"><a href="#cb17-341" aria-hidden="true" tabindex="-1"></a>    (<span class="st">"Argentina, buen año real"</span>, <span class="fl">0.80</span>, <span class="fl">0.50</span>),</span>
+<span id="cb17-342"><a href="#cb17-342" aria-hidden="true" tabindex="-1"></a>]</span>
+<span id="cb17-343"><a href="#cb17-343" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-344"><a href="#cb17-344" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span><span class="st">'Caso'</span><span class="sc">:&lt;34}{</span><span class="st">'Nominal'</span><span class="sc">:&gt;9}{</span><span class="st">'Inflación'</span><span class="sc">:&gt;11}{</span><span class="st">'Real'</span><span class="sc">:&gt;8}</span><span class="ss">"</span>)</span>
+<span id="cb17-345"><a href="#cb17-345" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> nombre, r_nom, pi <span class="kw">in</span> casos:</span>
+<span id="cb17-346"><a href="#cb17-346" aria-hidden="true" tabindex="-1"></a>    r_real <span class="op">=</span> (r_nom <span class="op">-</span> pi) <span class="op">/</span> (<span class="dv">1</span> <span class="op">+</span> pi)</span>
+<span id="cb17-347"><a href="#cb17-347" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span>nombre<span class="sc">:&lt;34}{</span>r_nom<span class="sc">:&gt;8.0%}{</span>pi<span class="sc">:&gt;10.0%}{</span>r_real<span class="sc">:&gt;8.1%}</span><span class="ss">"</span>)</span>
+<span id="cb17-348"><a href="#cb17-348" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb17-349"><a href="#cb17-349" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-350"><a href="#cb17-350" aria-hidden="true" tabindex="-1"></a>¿Por qué importa para Markowitz? Porque en series largas o inflacionarias, la inflación **infla artificialmente las medias y las correlaciones**: todos los activos "suben" juntos con el nivel de precios, y el optimizador cree ver retornos altos y co-movimientos que no existen en términos reales. La regla práctica:</span>
+<span id="cb17-351"><a href="#cb17-351" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-352"><a href="#cb17-352" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Horizontes cortos y baja inflación** (retornos diarios/mensuales en economías estables): trabajar en nominal es aceptable; la inflación es un ruido de fondo casi constante.</span>
+<span id="cb17-353"><a href="#cb17-353" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Horizontes largos o alta inflación**: deflactá las series (o trabajá en una moneda dura de referencia) *antes* de estimar $\mu$ y $\Sigma$. Lo que le importa al inversor es el poder de compra, no los pesos nominales.</span>
+<span id="cb17-354"><a href="#cb17-354" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-355"><a href="#cb17-355" aria-hidden="true" tabindex="-1"></a><span class="fu">## ¿Retornos directos o excesos de retorno?</span></span>
+<span id="cb17-356"><a href="#cb17-356" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-357"><a href="#cb17-357" aria-hidden="true" tabindex="-1"></a>Última decisión de diseño: ¿optimizamos sobre los retornos "crudos" de cada activo, o sobre su **exceso** respecto de una referencia ($r_i - r_f$, o $r_i - r_{mkt}$)? La respuesta depende de qué pregunta estés haciendo:</span>
+<span id="cb17-358"><a href="#cb17-358" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-359"><a href="#cb17-359" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Retornos directos (o reales)** — cuando la pregunta es de **asignación de capital total**: "tengo $X$, ¿cómo lo reparto?". El nivel absoluto de cada retorno importa, porque la alternativa de no invertir (o de quedarse en tasa) es parte del problema. La frontera y la CML de este capítulo trabajan así.</span>
+<span id="cb17-360"><a href="#cb17-360" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Excesos sobre la tasa libre de riesgo** ($r_i - r_f$) — cuando la tasa varía en el tiempo y querés que tu estimación de $\mu$ no mezcle "premio por riesgo" con "nivel de tasas". El ratio de Sharpe ya está definido sobre excesos; estimar directamente en excesos hace todo más consistente, especialmente con datos que cruzan regímenes de tasas muy distintos.</span>
+<span id="cb17-361"><a href="#cb17-361" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Excesos sobre el mercado** ($r_i - r_{mkt}$) — cuando el problema no es asignar capital sino **construir una cartera activa** que le gane a un benchmark. Ahí lo que optimizás es el *tracking error* y el exceso de retorno relativo; el riesgo "de mercado" es irrelevante porque el benchmark ya lo carga. Es el mundo de los fondos con mandato relativo.</span>
+<span id="cb17-362"><a href="#cb17-362" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-363"><a href="#cb17-363" aria-hidden="true" tabindex="-1"></a>::: {.callout-warning title="El error clásico"}</span>
+<span id="cb17-364"><a href="#cb17-364" aria-hidden="true" tabindex="-1"></a>Mezclar marcos: estimar $\mu$ como promedio de retornos nominales de una década de tasas altas, y usarlo para optimizar hoy con tasas bajas. El "premio" que el optimizador ve es en gran parte nivel de tasas que ya no existe. Trabajar en excesos sobre $r_f$ inmuniza contra esto.</span>
+<span id="cb17-365"><a href="#cb17-365" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb17-366"><a href="#cb17-366" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-367"><a href="#cb17-367" aria-hidden="true" tabindex="-1"></a>---</span>
+<span id="cb17-368"><a href="#cb17-368" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-369"><a href="#cb17-369" aria-hidden="true" tabindex="-1"></a><span class="fu"># Las limitaciones del modelo (y adónde vamos)</span></span>
+<span id="cb17-370"><a href="#cb17-370" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-371"><a href="#cb17-371" aria-hidden="true" tabindex="-1"></a>Markowitz es el punto de partida de toda la teoría de portafolios, pero conviene salir del capítulo con sus límites claros:</span>
+<span id="cb17-372"><a href="#cb17-372" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-373"><a href="#cb17-373" aria-hidden="true" tabindex="-1"></a><span class="ss">1. </span>**Hipersensibilidad a los inputs**: cambios chicos en $\boldsymbol{\mu}$ producen carteras completamente distintas, y $\boldsymbol{\mu}$ es casi imposible de estimar bien. Es el problema que atacan **HRP** (capítulo siguiente, esquivando la inversión de $\Sigma$) y **Black-Litterman** (Capítulo 10, disciplinando la estimación de $\mu$).</span>
+<span id="cb17-374"><a href="#cb17-374" aria-hidden="true" tabindex="-1"></a><span class="ss">2. </span>**Supone que la varianza captura el riesgo**: ignora asimetrías y colas pesadas. Las métricas de cola (VaR, Expected Shortfall) llegan en el Módulo 3.</span>
+<span id="cb17-375"><a href="#cb17-375" aria-hidden="true" tabindex="-1"></a><span class="ss">3. </span>**Un solo período**: el modelo decide una vez y se queda quieto; no contempla rebalanceo, costos de transacción ni impuestos.</span>
+<span id="cb17-376"><a href="#cb17-376" aria-hidden="true" tabindex="-1"></a><span class="ss">4. </span>**Las correlaciones no son constantes**: en las crisis, justo cuando más importa, las correlaciones suben y la diversificación se evapora. Lo veremos con crudeza en el capítulo de riesgo y regulación.</span>
+<span id="cb17-377"><a href="#cb17-377" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-378"><a href="#cb17-378" aria-hidden="true" tabindex="-1"></a>Nada de esto "refuta" a Markowitz: define la agenda de todo lo que sigue en el libro.</span>
+<span id="cb17-379"><a href="#cb17-379" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-380"><a href="#cb17-380" aria-hidden="true" tabindex="-1"></a>---</span>
+<span id="cb17-381"><a href="#cb17-381" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-382"><a href="#cb17-382" aria-hidden="true" tabindex="-1"></a><span class="fu"># Errores comunes</span></span>
+<span id="cb17-383"><a href="#cb17-383" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-384"><a href="#cb17-384" aria-hidden="true" tabindex="-1"></a>::: {.callout-warning title="Trampas frecuentes"}</span>
+<span id="cb17-385"><a href="#cb17-385" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Anualizar mal**: los retornos escalan por $T$ (×252 de diario a anual) pero la volatilidad escala por $\sqrt{T}$ (×$\sqrt{252}$). Mezclar las dos reglas rompe todos los ratios.</span>
+<span id="cb17-386"><a href="#cb17-386" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Usar precios sin ajustar por dividendos**: subestima el retorno de los activos de alto yield y sesga la optimización hacia las acciones growth.</span>
+<span id="cb17-387"><a href="#cb17-387" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Olvidar las restricciones**: sin <span class="in">`bounds=[(0,1)]`</span>, el optimizador puede sugerir ventas en corto del 300%. Verificá siempre que la solución sea implementable.</span>
+<span id="cb17-388"><a href="#cb17-388" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Confiar en un único punto de partida**: <span class="in">`minimize`</span> puede quedar atrapado en óptimos locales con restricciones complejas. Ante dudas, probá varios <span class="in">`w0`</span>.</span>
+<span id="cb17-389"><a href="#cb17-389" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Interpretar la frontera como predicción**: la frontera es óptima *para las estimaciones que le diste*. Si $\mu$ y $\Sigma$ están mal, la frontera es una ficción precisa.</span>
+<span id="cb17-390"><a href="#cb17-390" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb17-391"><a href="#cb17-391" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-392"><a href="#cb17-392" aria-hidden="true" tabindex="-1"></a>---</span>
+<span id="cb17-393"><a href="#cb17-393" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-394"><a href="#cb17-394" aria-hidden="true" tabindex="-1"></a><span class="fu"># Ejercicios Propuestos</span></span>
+<span id="cb17-395"><a href="#cb17-395" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-396"><a href="#cb17-396" aria-hidden="true" tabindex="-1"></a>::: {.callout-important title="Ejercicios"}</span>
+<span id="cb17-397"><a href="#cb17-397" aria-hidden="true" tabindex="-1"></a><span class="ss">1. </span>**CML completa**: calculá qué combinación de tangente + activo libre de riesgo necesita un inversor que tolera exactamente 10% de volatilidad anual. ¿Qué retorno esperado obtiene?</span>
+<span id="cb17-398"><a href="#cb17-398" aria-hidden="true" tabindex="-1"></a><span class="ss">2. </span>**Sortino como objetivo**: reemplazá la función <span class="in">`neg_sharpe`</span> por una <span class="in">`neg_sortino`</span> (usá retornos simulados del portafolio) y compará las carteras resultantes.</span>
+<span id="cb17-399"><a href="#cb17-399" aria-hidden="true" tabindex="-1"></a><span class="ss">3. </span>**Short-selling**: recalculá la frontera con <span class="in">`bounds=[(-1, 2)]`</span> (cortos permitidos). ¿Cuánto mejora? ¿Los pesos resultantes te parecen implementables?</span>
+<span id="cb17-400"><a href="#cb17-400" aria-hidden="true" tabindex="-1"></a><span class="ss">4. </span>**Efecto dividendos**: bajá 3 puntos el $\mu$ del activo "Value" (simulando que ignoraste su dividendo) y mirá cómo cambia el portafolio tangente. ¿Te parece un cambio proporcional al error?</span>
+<span id="cb17-401"><a href="#cb17-401" aria-hidden="true" tabindex="-1"></a><span class="ss">5. </span>**Deflactar**: simulá 10 años de retornos nominales mensuales con inflación mensual del 2%, estimá la frontera en nominal y en real, y compará los pesos.</span>
+<span id="cb17-402"><a href="#cb17-402" aria-hidden="true" tabindex="-1"></a><span class="ss">6. </span>**Datos reales**: descargá precios ajustados de 5 acciones y un ETF de bonos, estimá $\mu$ y $\Sigma$ con retornos mensuales, y construí frontera, GMV y tangente.</span>
+<span id="cb17-403"><a href="#cb17-403" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb17-404"><a href="#cb17-404" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-405"><a href="#cb17-405" aria-hidden="true" tabindex="-1"></a>---</span>
+<span id="cb17-406"><a href="#cb17-406" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-407"><a href="#cb17-407" aria-hidden="true" tabindex="-1"></a><span class="fu"># Referencias</span></span>
+<span id="cb17-408"><a href="#cb17-408" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-409"><a href="#cb17-409" aria-hidden="true" tabindex="-1"></a><span class="ss">* </span>Markowitz, H. (1952). *Portfolio Selection*. The Journal of Finance, 7(1), 77–91.</span>
+<span id="cb17-410"><a href="#cb17-410" aria-hidden="true" tabindex="-1"></a><span class="ss">* </span>Sharpe, W. (1966). *Mutual Fund Performance*. The Journal of Business, 39(1), 119–138.</span>
+<span id="cb17-411"><a href="#cb17-411" aria-hidden="true" tabindex="-1"></a><span class="ss">* </span>Sortino, F., &amp; van der Meer, R. (1991). *Downside Risk*. The Journal of Portfolio Management, 17(4), 27–31.</span>
+<span id="cb17-412"><a href="#cb17-412" aria-hidden="true" tabindex="-1"></a><span class="ss">* </span>Elton, E., Gruber, M., Brown, S., &amp; Goetzmann, W. (2014). *Modern Portfolio Theory and Investment Analysis*. Wiley.</span>
+<span id="cb17-413"><a href="#cb17-413" aria-hidden="true" tabindex="-1"></a><span class="ss">* </span>Dimson, E., Marsh, P., &amp; Staunton, M. (2002). *Triumph of the Optimists: 101 Years of Global Investment Returns*. Princeton University Press.</span>
+</code></pre></div><button title="Copiar al portapapeles" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></div>
+</div></div></div></div></div>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+<p>Finanzas Computacionales con Python fue escrito por la Cátedra de Finanzas Computacionales — UADE.</p>
+</div>   
+    <div class="nav-footer-center">
+      &nbsp;
+    <div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/uade-finanzas-computacionales/libro/edit/main/unidad2/cap08_markowitz.qmd" class="toc-action"><i class="bi bi-github"></i>Editar esta página</a></li><li><a href="https://github.com/uade-finanzas-computacionales/libro/issues/new" class="toc-action"><i class="bi empty"></i>Informar sobre problema</a></li></ul></div></div>
+    <div class="nav-footer-right">
+<p>Este libro fue construido con <a href="https://quarto.org/">Quarto</a>.</p>
+</div>
+  </div>
+</footer>
+
+
+
+
+<script src="../site_libs/quarto-html/zenscroll-min.js"></script>
+</body></html>

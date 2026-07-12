@@ -1,0 +1,381 @@
+---
+title: "Capítulo 6: Series de Tiempo y Análisis de Datos con Pandas"
+subtitle: "Estructuras de Datos, Manipulación y Cálculos Financieros"
+abstract: |
+  Introducción a pandas como herramienta fundamental para la carga, limpieza y análisis de datos en finanzas.
+  Estudiamos Series y DataFrames, manipulación de series temporales, cálculos vectorizados de retornos,
+  ventanas móviles y visualización técnica.
+---
+
+# Introducción
+
+En los capítulos anteriores, utilizamos listas y diccionarios para representar datos de instrumentos financieros. Sin embargo, en el mundo real, los datos suelen ser tabulares y masivos (decenas de miles de cotizaciones). **Pandas** es la librería estándar de Python diseñada específicamente para este propósito, ofreciendo estructuras de datos de alto rendimiento y herramientas de análisis intuitivas.
+
+---
+
+# Introducción a Pandas
+
+**Pandas** es una librería esencial para la carga, limpieza, análisis y exportación de datos. Se integra perfectamente con el ecosistema de Python (NumPy, SciPy y Matplotlib).
+
+```{python}
+#| label: setup
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+
+# Configuración estética para los gráficos
+plt.style.use('ggplot')
+```
+
+## Series (1D)
+Una **Serie** es una estructura unidimensional etiquetada con un índice. Soporta operaciones vectorizadas y métodos estadísticos básicos.
+
+```{python}
+#| label: pandas-series
+precios_serie = pd.Series([110, 112, 108, 115, 120], 
+                          index=["Lunes", "Martes", "Miércoles", "Jueves", "Viernes"],
+                          name="Precios")
+
+print(precios_serie)
+print(f"\nMedia: {precios_serie.mean():.2f}")
+print(f"Desvío estándar: {precios_serie.std():.2f}")
+```
+
+## DataFrames (2D)
+Un **DataFrame** es una estructura tabular (filas y columnas) donde cada columna es, técnicamente, una Serie que comparte el mismo índice.
+
+```{python}
+#| label: dataframe-intro
+datos = {
+    "Ticker": ["GD30", "GD35", "GD38", "GD41", "GD46"],
+    "Precio": [92.5, 85.3, 78.1, 72.4, 65.8],
+    "Cercanía": [0.08, 0.07, 0.065, 0.06, 0.055]
+}
+
+df = pd.DataFrame(datos)
+print(df)
+```
+
+## Exploración Inicial
+Antes de analizar datos, debemos inspeccionar su estructura mediante métodos clave:
+
+```{python}
+#| label: exploracion
+print(f"Dimensiones: {df.shape}")
+print(f"Columnas: {df.columns.tolist()}")
+
+# Métodos esenciales de inspección
+# df.head()      # Primeras 5 filas
+# df.tail()      # Últimas 5 filas
+# df.info()      # Resumen de tipos de datos y memoria
+# df.describe()  # Estadísticas descriptivas rápidas
+```
+
+---
+
+# Lectura, Escritura y Alineación de Datos
+
+## I/O de Archivos
+Pandas permite la ingesta de datos desde múltiples fuentes (`read_csv`, `read_excel`) y el guardado de resultados (`to_csv`, `to_excel`).
+
+```{python}
+#| label: io-ejemplo
+# Ejemplo hipotético de lectura
+# df = pd.read_csv("historico.csv", sep=";", encoding="utf-8")
+
+# Parámetros útiles al leer:
+# parse_dates=['Fecha']: Convierte columnas a objetos Datetime directamente.
+# index_col='Fecha': Establece una columna como índice del DataFrame.
+```
+
+## Alineación de Índices e Integración de Datos
+La **alineación automática** es un concepto crítico en finanzas. Si combinamos dos activos que cotizan en días distintos (debido a feriados locales), Pandas se asegura de alinear las fechas correctamente.
+
+Para combinar datasets utilizamos:
+- `merge()`: Unión por columnas (similar a un JOIN de SQL).
+- `join()`: Unión eficiente usando el índice (ideal para `DatetimeIndex`).
+- `concat()`: Apilado vertical u horizontal.
+
+Tipos de uniones: `inner`, `outer` (por defecto en `concat`), `left` y `right`.
+
+```{python}
+#| label: merge-ejemplo
+df_a = pd.DataFrame({"Ticker": ["GD30", "AL30"], "Tir": [0.45, 0.52]})
+df_b = pd.DataFrame({"Ticker": ["GD30", "AL30"], "Paridad": [0.35, 0.32]})
+
+df_unido = pd.merge(df_a, df_b, on="Ticker", how="inner")
+print(df_unido)
+```
+
+---
+
+# Selección y Filtrado
+
+## Indexación: .loc vs .iloc
+- `.loc`: Busca por **etiquetas** de índice y nombres de columnas.
+- `.iloc`: Busca por **posición numérica** (0-indexed).
+
+```{python}
+#| label: indexing
+# Seleccionar fila 0 y columna 'Precio' por posición
+print(f"Precio GD30 (.iloc): {df.iloc[0, 1]}")
+
+# Seleccionar por etiqueta (si el ticker fuera el índice)
+df_idx = df.set_index("Ticker")
+print(f"Precio GD30 (.loc):\n{df_idx.loc['GD30', 'Precio']}")
+```
+
+## Filtrado Booleano y Máscaras
+Permite filtrar filas según condiciones lógicas o pertenencia a listas mediante `.isin()`.
+
+```{python}
+#| label: filtrado
+# Bonos con precio mayor a 80
+mascara = df["Precio"] > 80
+print(df[mascara])
+
+# Filtrar por múltiples valores
+tickers_interes = ["GD30", "GD46"]
+print(df[df["Ticker"].isin(tickers_interes)])
+```
+
+---
+
+# Manejo de Fechas y Series Temporales
+
+Pandas es excepcionalmente potente para trabajar con frecuencias temporales. Primero convertimos datos a tipo fecha con `pd.to_datetime()` y establecemos un `DatetimeIndex`.
+
+```{python}
+#| label: time-series
+fechas = ["2023-01-01", "2023-01-02", "2023-01-05"] # 02 es lunes, 01 es domingo
+df_time = pd.DataFrame({"Precio": [100, 101, 102.5]}, index=pd.to_datetime(fechas))
+
+print(df_time.index)
+```
+
+## Resample: Cambio de Frecuencias
+El método `resample()` permite agrupar datos por períodos (diario `"D"`, semanal `"W"`, fin de mes `"ME"`) y aplicar funciones de agregación.
+
+```{python}
+#| label: resample-ejemplo
+# Simulamos una serie diaria para ejemplo
+df_diario = pd.DataFrame({
+    "Precio": np.random.normal(100, 1, 100).cumsum()
+}, index=pd.date_range("2023-01-01", periods=100, freq="B"))
+
+# Cambiar de diario a mensual tomando el último valor
+df_mensual = df_diario.resample("ME").last()  # "ME" = Month End
+print(df_mensual.head(3))
+```
+
+---
+
+# Limpieza y Transformación de Datos
+
+En finanzas, los datos suelen tener "agujeros" (NaT o NaN).
+- `isna()`: Detecta nulos.
+- `dropna()`: Elimina filas/columnas con nulos.
+- `fillna()`: Rellena nulos con valores específicos o métodos como `ffill` (forward fill) o `bfill` (backward fill).
+
+::: {.callout-tip title="Forward Fill en Finanzas"}
+El método `ffill` es ideal para tratar feriados o días sin cotización, ya que asume que el precio sigue siendo el mismo que el del último cierre válido registrado.
+:::
+
+---
+
+# Operaciones Vectorizadas y Cálculos Financieros
+
+Pandas optimiza operaciones sobre columnas enteras sin necesidad de bucles `for`.
+
+## Movimientos y Variaciones
+- `.shift(n)`: Desplaza los datos $n$ posiciones (útil para comparar $P_t$ vs $P_{t-1}$).
+- `.pct_change()`: Calcula el retorno simple: $(P_t / P_{t-1}) - 1$.
+- `.diff()`: Calcula la diferencia absoluta: $P_t - P_{t-1}$.
+
+## Tipos de Retornos
+1. **Retorno Simple**: $R = (P_t / P_{t-1}) - 1$. Es aditivo entre activos en el mismo momento.
+2. **Retorno Logarítmico**: $r = \ln(P_t / P_{t-1})$. Es aditivo a lo largo del tiempo y simétrico.
+
+```{python}
+#| label: retornos-calculo
+df_diario["Ret_Simple"] = df_diario["Precio"].pct_change()
+df_diario["Ret_Log"] = np.log(df_diario["Precio"] / df_diario["Precio"].shift(1))
+```
+
+## Ventanas Móviles (Rolling)
+Se utiliza para indicadores técnicos como medias móviles simples (SMA) o volatilidad móvil.
+
+```{python}
+#| label: rolling-indicators
+# Media móvil de 20 días
+df_diario["SMA_20"] = df_diario["Precio"].rolling(window=20).mean()
+
+# Volatilidad móvil de 20 días (anualizada)
+df_diario["Vol_20"] = df_diario["Ret_Simple"].rolling(window=20).std() * np.sqrt(252)
+```
+
+---
+
+# Agrupación (Groupby)
+
+Sigue el mecanismo **Split-Apply-Combine**: dividimos el dataset por una categoría (Ticker, Sector), aplicamos una función y combinamos los resultados.
+
+```{python}
+#| label: groupby-ejemplo
+df_panel = pd.DataFrame({
+    "Sector": ["Energía", "Energía", "Bancos", "Bancos"],
+    "Ticker": ["YPF", "PAMP", "GGAL", "BMA"],
+    "Retorno": [0.05, 0.03, -0.01, 0.02]
+})
+
+# Agregación por sector
+resumen_sector = df_panel.groupby("Sector")["Retorno"].agg(["mean", "std", "count"])
+print(resumen_sector)
+```
+
+---
+
+# Visualización de Datos con Matplotlib
+
+Podemos generar gráficos directamente desde DataFrames de forma integrada.
+
+```{python}
+#| label: plot-complejo
+fig, ax = plt.subplots(2, 1, figsize=(10, 8), sharex=True)
+
+# Panel 1: Precios y SMA
+df_diario["Precio"].plot(ax=ax[0], label="Precio", alpha=0.7)
+df_diario["SMA_20"].plot(ax=ax[0], label="SMA 20", color="blue", linewidth=2)
+ax[0].set_title("Evolución de Precios y Media Móvil")
+ax[0].legend()
+
+# Panel 2: Volatilidad
+df_diario["Vol_20"].plot(ax=ax[1], color="orange", label="Volatilidad 20d")
+ax[1].set_title("Volatilidad Móvil Anualizada")
+ax[1].legend()
+
+plt.tight_layout()
+plt.show()
+```
+
+---
+
+# Caso de Uso: Construcción de la Curva de Rendimientos
+
+Este caso integra casi todo el capítulo —DataFrames, iteración, operaciones vectorizadas— para resolver un problema central de la renta fija: **construir la curva de tasas** a partir de precios de bonos que se cotizan en el mercado.
+
+## ¿Por qué necesitamos "construir" una curva?
+
+En el mercado no observamos directamente las tasas *spot* (la tasa de un instrumento que paga todo al vencimiento, sin cupones intermedios). Lo que observamos son **precios de bonos con cupón**, y cada uno mezcla tasas de muchos plazos a la vez. La técnica del **bootstrapping** desarma esa mezcla plazo por plazo: usa el bono a 1 año para despejar la tasa a 1 año, y con esa tasa ya conocida despeja la de 2 años del bono a 2 años, y así sucesivamente. Es como armar la curva "tirando del hilo".
+
+Para un bono a $n$ años con cupón anual $C$ y valor nominal $VN$, su precio es la suma de todos los flujos descontados a la tasa spot correspondiente a cada plazo:
+
+$$P = \sum_{t=1}^{n-1} \frac{C}{(1 + z_t)^t} + \frac{C + VN}{(1 + z_n)^n}$$
+
+Si ya conocemos las tasas $z_1, \dots, z_{n-1}$ (de los pasos anteriores), la única incógnita es $z_n$, y la despejamos.
+
+```{python}
+#| label: bootstrapping-final
+bonos_mkt = pd.DataFrame([
+    {"maturity": 1, "cupon": 0.05, "precio": 100.0},
+    {"maturity": 2, "cupon": 0.06, "precio": 100.5},
+    {"maturity": 3, "cupon": 0.065, "precio": 99.8},
+    {"maturity": 4, "cupon": 0.07, "precio": 100.2},
+    {"maturity": 5, "cupon": 0.075, "precio": 99.5},
+]).set_index("maturity")
+
+tasas_spot = pd.Series(index=bonos_mkt.index, dtype=float)
+VN = 100
+
+for n, bono in bonos_mkt.iterrows():
+    C = VN * bono["cupon"]
+    P = bono["precio"]
+
+    # Valor presente de los cupones anteriores al vencimiento,
+    # descontados con las tasas spot ya calculadas en pasos previos
+    vp_cupones = sum(C / (1 + tasas_spot[t]) ** t for t in range(1, int(n)))
+
+    # Despejamos la tasa spot del plazo n del flujo final (cupón + nominal)
+    z_n = ((C + VN) / (P - vp_cupones)) ** (1 / n) - 1
+    tasas_spot[n] = z_n
+
+print("Curva Spot (tasas cero-cupón):")
+print((tasas_spot * 100).round(3).astype(str) + " %")
+```
+
+## De la curva spot a las tasas forward
+
+La curva spot responde *"¿a qué tasa presto hoy por 3 años?"*. Pero muchas veces queremos saber otra cosa: *"¿qué tasa está descontando el mercado para el año que va del 2 al 3?"*. Esa es la **tasa forward implícita**, y sale de un argumento de no-arbitraje: invertir 3 años a la spot $z_3$ debe rendir lo mismo que invertir 2 años a $z_2$ y luego reinvertir 1 año a la forward $f_{2,3}$:
+
+$$(1 + z_n)^n = (1 + z_{n-1})^{n-1} \cdot (1 + f_{n-1,n}) \quad\Rightarrow\quad f_{n-1,n} = \frac{(1 + z_n)^n}{(1 + z_{n-1})^{n-1}} - 1$$
+
+```{python}
+#| label: forward-rates
+# Factor de capitalización acumulado hasta cada plazo: (1 + z_n)^n
+factor_acum = (1 + tasas_spot) ** tasas_spot.index
+
+# Forward de un año: cociente de factores acumulados consecutivos
+forwards = factor_acum / factor_acum.shift(1) - 1
+forwards.iloc[0] = tasas_spot.iloc[0]  # el forward del primer tramo es la spot a 1 año
+
+curva = pd.DataFrame({"spot": tasas_spot, "forward_1y": forwards})
+print((curva * 100).round(3))
+```
+
+Cuando las forward están **por encima** de las spot, el mercado espera que las tasas suban (curva creciente): cada tramo nuevo "empuja" el promedio hacia arriba.
+
+## Interpolar la curva para plazos intermedios
+
+Nuestra curva tiene puntos solo en 1, 2, 3, 4 y 5 años, pero en la práctica necesitamos descontar flujos que caen en cualquier fecha (por ejemplo, a 2,5 años). Para eso **interpolamos**. Pandas trae `interpolate()`, que rellena los huecos de un índice: reindexamos la curva a una grilla más fina y dejamos que complete linealmente.
+
+```{python}
+#| label: interpolacion-curva
+import numpy as np
+
+# Grilla de plazos cada medio año, de 1 a 5
+grilla = np.arange(1.0, 5.5, 0.5)
+
+curva_interpolada = (
+    tasas_spot
+    .reindex(tasas_spot.index.union(grilla))  # agregamos los plazos intermedios (quedan NaN)
+    .interpolate(method="index")              # interpolamos usando el valor del índice (el plazo)
+    .reindex(grilla)                           # nos quedamos con la grilla fina
+)
+
+fig, ax = plt.subplots(figsize=(9, 4))
+ax.plot(tasas_spot.index, tasas_spot * 100, "o", markersize=9,
+        label="Tasas spot observadas (bootstrapping)")
+ax.plot(curva_interpolada.index, curva_interpolada * 100, ".-", alpha=0.7,
+        label="Curva interpolada (cada 6 meses)")
+ax.set_xlabel("Plazo (años)")
+ax.set_ylabel("Tasa spot (%)")
+ax.set_title("Curva de Rendimientos: puntos observados vs. interpolación")
+ax.legend()
+ax.grid(True, alpha=0.3)
+plt.tight_layout()
+plt.show()
+```
+
+::: {.callout-warning title="La interpolación lineal es un punto de partida, no la verdad"}
+Interpolar linealmente es simple y transparente, pero los operadores de renta fija suelen usar métodos más suaves (splines cúbicos, Nelson-Siegel) para que la curva forward no tenga "quiebres" antieconómicos. Para aprender el mecanismo, lo lineal alcanza; para valuar en producción, conviene ir más fino.
+:::
+
+---
+
+# Ejercicios Propuestos
+
+::: {.callout-important title="Desafíos"}
+1. **Volatilidad comparada**: A partir de una serie de precios simulada, compará la volatilidad móvil de 30 días contra la de 90 días en un mismo gráfico. ¿Cuál reacciona más rápido a un shock?
+2. **Dashboard de retornos**: Escribí una función que reciba un DataFrame de precios y devuelva una tabla resumen con retorno acumulado, volatilidad anualizada y máximo *drawdown*.
+3. **Groupby + resample**: Dado un panel de varios activos, calculá el retorno promedio mensual de cada uno combinando `.groupby()` con `.resample()`.
+4. **`ffill` vs. `interpolate`**: Simulá una serie con valores nulos aleatorios y compará el resultado de rellenarlos con `ffill()` frente a `interpolate()`. ¿Cuándo es apropiado cada uno?
+5. **Curva forward completa**: Extendé el ejemplo de bootstrapping para calcular, además de las forward de 1 año, la tasa forward a 2 años que arranca dentro de 1 año ($f_{1,3}$).
+:::
+
+---
+
+# Referencias
+
+* McKinney, W. (2017). *Python for Data Analysis*. O'Reilly Media.
+* Hilpisch, Y. (2018). *Python for Finance*. O'Reilly Media.
+* Pandas Development Team. (2024). *Pandas Documentation*. [pandas.pydata.org](https://pandas.pydata.org)

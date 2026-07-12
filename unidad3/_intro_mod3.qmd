@@ -1,36 +1,45 @@
 ---
-title: "Módulo 3: Riesgo, Simulación y Estadística Bayesiana"
-subtitle: "Semanas 9–12 · Medir, simular y modelar la incertidumbre financiera"
+title: "Módulo 3: Riesgo, Simulación y Econometría"
+subtitle: "Medir lo que puede salir mal y validar lo que creemos saber"
 number-sections: false
 ---
 
-::: {.callout-note title="Visión General" appearance="simple"}
-Este es el módulo más largo y diverso del libro. Cubrimos tres pilares de las finanzas cuantitativas modernas: **medición de riesgo** (VaR), **simulación estocástica** (Monte Carlo) y **inferencia bayesiana** aplicada a modelos financieros como CAPM y Black-Litterman.
+El Módulo 2 terminó con una advertencia: los modelos de portafolio son tan buenos como sus supuestos, y los supuestos fallan. Este módulo —el más largo y diverso del libro— se toma esa advertencia en serio y construye el oficio completo del análisis cuantitativo de riesgo: **medir la incertidumbre, simularla, modelarla y, sobre todo, desconfiar de los propios modelos con método**.
+
+El recorrido avanza en cuatro actos. Primero, la **medición del riesgo** y su contexto institucional: el VaR y el Expected Shortfall como lenguaje estándar (Capítulo 11), y el marco regulatorio que las crisis fueron dejando —Basilea III, stress testing— junto a las dos historias que todo analista debería saber contar: LTCM y 2008 (Capítulo 12). Segundo, los **modelos del mundo**: la simulación de Monte Carlo con el Browniano geométrico (Capítulo 13) y su corrección necesaria, los procesos con saltos y colas gruesas que describen los mercados reales (Capítulo 14).
+
+El tercer acto es la **inferencia**: cómo aprender de los datos con modelos lineales bien especificados —CAPM, multifactor, p-values leídos con honestidad— (Capítulo 15) y cómo modelar series que dependen de su propio pasado con ARIMA y VAR (Capítulo 16). Y el cierre es el acto que le da sentido a todo lo anterior: el **backtesting** (Capítulo 17), la disciplina de separar la señal de la casualidad, que convierte "mi estrategia funcionó en el pasado" en una afirmación estadísticamente defendible... o la desarma.
+
+::: {.callout-note title="El hilo conductor" appearance="simple"}
+Si tuviéramos que resumir el módulo en una frase, sería esta: **la media y la varianza no cuentan la historia de las colas, y en las colas vive el riesgo**. Cada capítulo ataca una consecuencia distinta de esa frase.
 :::
 
 ---
 
 ## 🎯 Objetivos de Aprendizaje {.unnumbered}
 
-Al completar este módulo, serás capaz de:
+Al completar este módulo, vas a ser capaz de:
 
-1. **Calcular Value at Risk** (VaR) con métodos paramétrico, histórico y por Monte Carlo.
-2. **Simular trayectorias de precios** usando Movimiento Browniano Geométrico (GBM).
-3. **Implementar volatilidad dinámica** con EWMA (RiskMetrics).
-4. **Aplicar inferencia bayesiana** para estimar parámetros con incertidumbre.
-5. **Estimar betas** del CAPM por MCO y por métodos bayesianos.
-6. **Entender el modelo Black-Litterman** como extensión bayesiana de Markowitz.
+1. **Calcular Value at Risk y Expected Shortfall** con métodos paramétrico, histórico y por Monte Carlo.
+2. **Ubicar el riesgo en su marco regulatorio** (stress testing, Basilea III) y aprender de las crisis.
+3. **Simular trayectorias de precios** con Browniano geométrico y modelos con saltos.
+4. **Construir e interpretar modelos lineales** aplicados a finanzas (CAPM, multifactor).
+5. **Modelar y pronosticar series de tiempo** con ARIMA y VAR.
+6. **Validar estrategias** con backtesting out-of-sample y walk-forward.
 
 ---
 
-## 🗓️ Recorrido Semana a Semana {.unnumbered}
+## 🗓️ Recorrido Capítulo a Capítulo {.unnumbered}
 
-| Semana | Tema | Python | Finanzas |
+| Capítulo | Tema | Python | Finanzas |
 |:------:|------|--------|----------|
-| **9** | VaR y Distribuciones | `scipy.stats`, `np.percentile` | VaR paramétrico/histórico, EWMA, CVaR |
-| **10** | Monte Carlo | Simulación vectorizada, `np.random` | GBM, pricing por MC, convergencia |
-| **11** | Estadística Bayesiana | `pymc`, priors, posteriors, MCMC | Bayes vs. frecuentista, estimación |
-| **12** | Econometría y CAPM | MCO, regresión, `statsmodels` | CAPM, beta, Black-Litterman |
+| **11** | VaR y Expected Shortfall | `scipy.stats`, `np.percentile` | VaR, CVaR/ES, backtesting de riesgo |
+| **12** | Riesgo y Regulación | Simulación de escenarios | Stress testing, Basilea III, LTCM, 2008 |
+| **13** | Monte Carlo | Simulación vectorizada, `np.random` | GBM, pricing por MC, convergencia |
+| **14** | Procesos Estocásticos | Poisson, saltos | Jump-diffusion, Lévy, colas gruesas |
+| **15** | Econometría y Modelos Lineales | MCO, `statsmodels` | CAPM, multifactor, p-values |
+| **16** | Series Temporales | `statsmodels.tsa` | ARIMA, VAR, estacionariedad |
+| **17** | Backtesting | Ventanas rodantes | In/out-of-sample, walk-forward, Sharpe OOS |
 
 ---
 
@@ -51,29 +60,33 @@ Distribuciones y tests
 :::
 
 ::: {style="padding: 0.75rem; background: #fffbeb; border-radius: 8px; text-align: center;"}
-**PyMC**
+**Statsmodels**
 
-Inferencia bayesiana
+Regresión y series de tiempo
 :::
 
 ::: {style="padding: 0.75rem; background: #fdf2f8; border-radius: 8px; text-align: center;"}
-**Statsmodels**
+**Matplotlib**
 
-Regresión y econometría
+Distribuciones y trayectorias
 :::
 
 :::
 
 ---
 
-## 🔑 Concepto Clave: VaR {.unnumbered}
+## 🔑 Concepto Clave: VaR y Expected Shortfall {.unnumbered}
 
 ::: {.callout-important appearance="simple"}
-El **Value at Risk** al nivel de confianza $\alpha$ responde: *¿Cuál es la máxima pérdida esperada en un horizonte dado, tal que solo se excede el $(1-\alpha)\%$ de las veces?*
+El **Value at Risk** al nivel de confianza $\alpha$ responde: *¿cuál es la pérdida que solo se excede el $(1-\alpha)\%$ de las veces?*
 
 $$VaR_\alpha = -(\mu + z_\alpha \cdot \sigma) \cdot W$$
 
-donde $z_\alpha$ es el cuantil de la distribución normal estándar y $W$ es el valor del portafolio.
+Pero el VaR solo marca **dónde empieza** la zona de desastre. El **Expected Shortfall** mira adentro: *¿cuánto pierdo en promedio cuando la cruzo?*
+
+$$ES_\alpha = -E\big[\,r \mid r < -VaR_\alpha\,\big]$$
+
+La tensión entre estas dos preguntas —y por qué la regulación migró de una a la otra— es el punto de partida del módulo.
 :::
 
 ---
@@ -82,4 +95,6 @@ donde $z_\alpha$ es el cuantil de la distribución normal estándar y $W$ es el 
 
 - Jorion, P. (2006). *Value at Risk*. McGraw-Hill.
 - Glasserman, P. (2003). *Monte Carlo Methods in Financial Engineering*. Springer.
-- Gelman, A. et al. (2013). *Bayesian Data Analysis*. CRC Press.
+- Wooldridge, J. (2019). *Introductory Econometrics: A Modern Approach*. Cengage.
+- López de Prado, M. (2018). *Advances in Financial Machine Learning*. Wiley.
+- Lowenstein, R. (2000). *When Genius Failed*. Random House.
