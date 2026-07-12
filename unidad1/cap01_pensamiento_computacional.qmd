@@ -60,8 +60,7 @@ Representan números del conjunto $\mathbb{Z}$ y tienen precisión arbitraria.
 
 ```{pyodide-python}
 #| label: tipos-int
-# TODO: Definir variables enteras para un contexto financiero
-# Ejemplo: cantidad de bonos, días al vencimiento, lotes de acciones
+# Cantidades discretas típicas de finanzas: no admiten decimales
 dias_vencimiento = 365
 cantidad_bonos = 100
 lotes = 10
@@ -222,8 +221,8 @@ print("=" * 50)
 print("ALGORITMO DE DECISIÓN DE INVERSIÓN")
 print("=" * 50)
 
-# TODO: Implementar lógica de decisión basada en VPN y riesgo
-# Considerar: ¿qué pasa si ambos VPN son negativos?
+# La decisión combina rentabilidad (VPN) y tolerancia al riesgo.
+# Fijate qué pasaría si ambos VPN fueran negativos: cae al else.
 if vpn_proyecto_a > vpn_proyecto_b and riesgo_a != "alto":
     print(f"→ Invertir en Proyecto A (VPN: ${vpn_proyecto_a:,})")
 elif vpn_proyecto_b > 0:
@@ -251,7 +250,7 @@ Donde:
 
 ```{pyodide-python}
 #| label: interes-compuesto
-# TODO: Implementar cálculo de interés compuesto
+# Cada año, los intereses se reinvierten y generan nuevos intereses
 capital_inicial = 100_000
 tasa_anual = 0.10
 años = 10
@@ -270,9 +269,7 @@ print(f"Interés ganado:   ${interes_ganado:,.2f}")
 
 ```{pyodide-python}
 #| label: conversion-tasas
-# TODO: Implementar conversiones entre tasas
-# TNA → TEA, TEA → TNA, tasas continuas
-
+# Convertimos entre las formas de expresar una misma tasa: TNA, TEA y continua
 tna = 0.48  # Tasa Nominal Anual
 n = 12      # capitalización mensual
 
@@ -292,7 +289,7 @@ $$VP = \frac{VF}{(1 + r)^n}$$
 
 ```{pyodide-python}
 #| label: valor-presente
-# TODO: Calcular el valor presente de un flujo futuro
+# El valor presente "trae a hoy" un flujo que cobraremos en el futuro
 flujo_futuro = 1_000_000
 tasa = 0.08
 años = 5

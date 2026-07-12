@@ -6,101 +6,53 @@
 
 Este es el sitio web del libro **"Finanzas Computacionales con Python"**, desarrollado por la Cátedra de Finanzas Computacionales de la **Universidad Argentina de la Empresa (UADE)**.
 
-## Estructura del Libro
+La idea que organiza todo el libro es simple: **las finanzas cuantitativas se aprenden construyendo**. Acá no vas a encontrar fórmulas para memorizar, sino problemas reales —valuar un bono, armar un portafolio, medir un riesgo, cubrir una opción— resueltos con código que podés ejecutar, romper y modificar. Cada concepto de programación aparece cuando un problema financiero lo necesita, y cada modelo financiero llega con su implementación completa y con una discusión honesta de sus límites.
 
-El libro está organizado en cuatro módulos que siguen la progresión natural de la materia:
+## Cómo leer este libro
 
-### Módulo 1: Fundamentos y Programación (Capítulos 1-5)
+El libro está pensado para leerse **en orden**: cada capítulo usa lo construido en los anteriores, y los cuatro módulos forman un arco que va de la primera variable de Python hasta los modelos de volatilidad estocástica. Los bloques de código son ejecutables — la mejor forma de estudiar es correrlos a medida que leés, ya sea en el propio navegador (los capítulos iniciales lo permiten), en Jupyter local o en Google Colab. Al final de cada capítulo vas a encontrar los **errores comunes** del tema (léelos: son los que vas a cometer) y **ejercicios** para consolidar.
 
-- **Capítulo 1: Pensamiento Computacional en Finanzas**
-    - Fundamentos de lógica de programación
-    - Tipos de datos y operadores financieros
-    - Flujos de control y toma de decisiones
-    - Interacción básica con el usuario
+## Los cuatro módulos
 
-- **Capítulo 2: Estructuras de Datos y Algoritmos**
-    - Colecciones de datos lineales y asociativas
-    - Estructuras de repetición y automatización
-    - Lógica de acumulación de valores
-    - Introducción a la eficiencia de algoritmos
+### Módulo 1: Fundamentos y Renta Fija (Capítulos 1–6)
 
-- **Capítulo 3: Modularización y Calidad de Código**
-    - Creación y reutilización de funciones
-    - Gestión de argumentos y retorno de información
-    - Organización del código en módulos
-    - Manejo y prevención de errores en ejecución
+Aprendés a programar desde cero, con problemas financieros como excusa y motor. El arco: variables y decisiones → estructuras y bucles → funciones → objetos → NumPy → Pandas, terminando con una librería de valuación de renta fija y la construcción de curvas de tasas hecha por vos.
 
-- **Capítulo 4: Programación Orientada a Objetos (POO)**
-    - Paradigmas de programación aplicados a finanzas
-    - Definición de clases y creación de ejemplares
-    - Atributos de estado y comportamiento de objetos
-    - Modelado de activos financieros como entidades
+1. Pensamiento Computacional en Finanzas
+2. Iteraciones y Estructuras de Datos
+3. Funciones, Excepciones y Módulos
+4. Programación Orientada a Objetos (POO)
+5. NumPy y Cálculo Vectorizado
+6. Series de Tiempo con Pandas
 
-- **Capítulo 5: Análisis de Series de Tiempo**
-    - Estructuras de datos para análisis temporal
-    - Gestión de índices cronológicos
-    - Análisis de retornos y variaciones de precios
-    - Visualización gráfica de tendencias
+### Módulo 2: Teoría de Portafolios y Optimización (Capítulos 7–10)
 
----
+La pregunta central de la inversión —¿cómo reparto el capital?— respondida en tres tiempos: el edificio clásico de Markowitz, sus fallas prácticas, y las dos respuestas modernas (HRP y Black-Litterman) que la industria usa para repararlas.
 
-### Módulo 2: Optimización de Portafolios (Capítulos 6-7)
+7. Estadística Descriptiva y Optimización Matemática
+8. Teoría Moderna de Portafolios (Markowitz)
+9. Hierarchical Risk Parity (HRP)
+10. El Modelo de Black-Litterman
 
-- **Capítulo 6: Fundamentos de Optimización**
-    - Modelado matemático de problemas financieros
-    - Funciones de optimización y restricciones del mercado
-    - Programación funcional aplicada a modelos
-    - Herramientas computacionales para minimización de riesgos
+### Módulo 3: Riesgo, Simulación y Econometría (Capítulos 11–17)
 
-- **Capítulo 7: Teoría Moderna de Portafolios**
-    - Estructuras matriciales para gestión de activos
-    - Relación entre retorno esperado y riesgo sistémico
-    - Eficiencia computacional y vectorización de cálculos
-    - Modelos de frontera eficiente y ratios de desempeño
+El oficio del análisis de riesgo completo: medir (VaR y Expected Shortfall), contextualizar (Basilea, stress testing y las lecciones de LTCM y 2008), simular (Monte Carlo y procesos con saltos), inferir (modelos lineales y series de tiempo) y validar (backtesting con walk-forward). El módulo donde se aprende a desconfiar de los modelos con método.
 
----
+11. Valor en Riesgo (VaR) y Expected Shortfall
+12. Riesgo y Regulación
+13. Simulación de Monte Carlo
+14. Procesos Estocásticos del Precio de un Activo
+15. Econometría y Modelos Lineales
+16. Series Temporales — ARIMA y VAR
+17. Backtesting de Estrategias
 
-### Módulo 3: Riesgo y Estadística Avanzada (Capítulos 8-11)
+### Módulo 4: Derivados y Volatilidad (Capítulos 18–20)
 
-- **Capítulo 8: Medición de Riesgo de Mercado**
-    - Metodologías de cálculo del Valor en Riesgo (VaR)
-    - Modelado de distribuciones estadísticas
-    - Análisis histórico vs. modelos paramétricos
-    - Generación de variables aleatorias
+El examen integrador: los derivados usan todo el libro a la vez. Black-Scholes y la volatilidad implícita, la réplica puesta en práctica con delta hedging, y los modelos de volatilidad estocástica (Heston, SABR) que capturan lo que la sonrisa de volatilidad venía señalando.
 
-- **Capítulo 9: Simulación Estocástica**
-    - Fundamentos de la Simulación de Monte Carlo
-    - Modelado de procesos aleatorios en el tiempo
-    - Proyecciones de trayectorias de precios
-    - Aplicaciones de probabilidad en la incertidumbre
-
-- **Capítulo 10: Inferencia Bayesiana**
-    - Fundamentos de la probabilidad condicional
-    - Actualización de creencias con nueva información
-    - Contraste entre estadística clásica y bayesiana
-    - Aplicación de priors y posteriors en finanzas
-
-- **Capítulo 11: Econometría y Modelos de Equilibrio**
-    - Regresión lineal aplicada a activos
-    - Estimación de parámetros de sensibilidad y exceso de retorno
-    - Integración de opiniones del inversor en modelos de mercado
-    - Modelos de avanzados de actualización de expectativas
-
----
-
-### Módulo 4: Instrumentos Derivados (Capítulos 12-13)
-
-- **Capítulo 12: Valuación Numérica de Opciones**
-    - Modelos teóricos de precio de opciones
-    - Algoritmos de resolución para variables implícitas
-    - Métodos numéricos de búsqueda de soluciones
-    - Relación entre precio de mercado y volatilidad
-
-- **Capítulo 13: Gestión de Coberturas Dinámicas**
-    - Sensibilidades de las opciones (Griegas)
-    - Estrategias de inmunización de portafolios
-    - Simulación de estrategias de cobertura en tiempo real
-    - Rebalanceo de posiciones frente a cambios del mercado
+18. Valuación de Opciones y Volatilidad Implícita
+19. Gestión de Coberturas Dinámicas (Delta Hedging)
+20. Modelos de Volatilidad Estocástica
 
 ## ¿A quién va dirigido?
 
@@ -113,7 +65,7 @@ Este libro está diseñado para estudiantes de finanzas, economía y profesional
 -   Usamos **callouts** para resaltar tips, advertencias y conceptos clave.
 
 ::: {.callout-tip appearance="simple"}
-Recomendamos seguir el libro de forma secuencial, ejecutando los ejemplos dentro del libro, en un entorno local o en Google Colab.
+Recomendamos seguir el libro de forma secuencial, ejecutando los ejemplos dentro del libro, en un entorno local o en Google Colab. En el apéndice encontrás la guía para poner a punto tu entorno.
 :::
 
 ---

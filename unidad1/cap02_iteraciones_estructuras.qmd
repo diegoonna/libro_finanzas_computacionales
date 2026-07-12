@@ -1,37 +1,47 @@
 ---
 title: "Capítulo 2: Iteraciones y Estructuras de Datos Nativas"
-subtitle: "Bucles, Listas y Diccionarios"
+subtitle: "Bucles, listas y diccionarios aplicados a la valuación de bonos"
 abstract: |
-  Este capítulo desarrolla los conceptos de bucles, contadores, acumuladores, listas y diccionarios.
+  Los problemas financieros reales involucran muchos números: treinta cupones de
+  un bono, doscientas ruedas de cotización, una cartera de cincuenta activos. Este
+  capítulo construye las dos herramientas que lo hacen manejable: los bucles (repetir
+  sin copiar y pegar) y las estructuras de datos (listas y diccionarios para
+  organizar colecciones). Cierra con el primer caso integrador del libro: valuar
+  un bono y encontrar su TIR usando solo lo aprendido.
 ---
 
 # Introducción {.unnumbered}
 
-En este capítulo exploraremos los pilares fundamentales para lograr las **estructuras iterativas** (bucles `while` y `for`) y las **estructuras de datos** (listas y diccionarios) que permitan almacenar cantidades variables de datos. A través de casos prácticos, dejaremos atrás el cálculo manual de rendimientos aislados para aprender a procesar y organizar series de precios y carteras de inversión en milisegundos.
+En el capítulo anterior calculaste el interés compuesto de una inversión y el valor presente de un flujo. Pero fijate qué pasa si el problema crece un poco: un bono a 10 años paga 20 cupones semestrales — ¿vas a escribir 20 veces la fórmula de descuento, una por cupón? ¿Y si mañana el bono es a 30 años?
+
+La programación empieza a rendir de verdad cuando aparece la **repetición**: le explicás a la computadora la operación *una* vez y ella la ejecuta mil. Para eso necesitamos dos cosas que este capítulo desarrolla en tándem:
+
+- **Estructuras iterativas** (bucles `while` y `for`): repetir instrucciones de forma controlada.
+- **Estructuras de datos** (listas y diccionarios): guardar colecciones de valores en una sola variable, para que los bucles tengan qué recorrer.
+
+Al final del capítulo vas a combinar todo en el primer caso integrador del libro: **valuar un bono y encontrar su TIR** — el problema que en la práctica resuelve una calculadora financiera, reconstruido por vos desde cero.
 
 ---
 
-## Bucles `while`, Contadores y Acumuladores
+## Bucles `while`: repetir mientras algo sea cierto
 
-La estructura `while` repite las instrucciones mientras una condición sea evaluada como verdadera (`True`). Se le conoce como bucle indefinido porque no sabemos de antemano cuántas veces se ejecutará.
+El bucle `while` repite un bloque de instrucciones **mientras una condición sea verdadera**. Se lo llama *bucle indefinido* porque no sabemos de antemano cuántas vueltas va a dar: eso lo decide la condición.
 
-**Conceptos clave:**
+¿Cuándo es la herramienta correcta? Cuando la pregunta es del tipo *"¿hasta cuándo...?"* o *"¿cuántas veces hace falta...?"*. Un ejemplo financiero clásico: **¿cuántos meses tengo que ahorrar para llegar a mi objetivo?** No sabés la respuesta de antemano — justamente es lo que querés calcular.
 
-* **Contador:** Una variable que suma un valor constante en cada iteración (ej: `i = i + 1`).
-* **Acumulador:** Una variable que suma un valor variable en cada iteración (muy usado para sumar flujos, capitales, etc.).
+Antes del código, dos patrones que vas a usar toda la vida:
+
+* **Contador:** una variable que suma un valor constante en cada vuelta (`meses = meses + 1`). Cuenta *cuántas veces* pasó algo.
+* **Acumulador:** una variable que suma un valor que puede variar en cada vuelta. Acumula *cuánto* se juntó — capital, flujos, intereses.
 
 ```{pyodide-python}
 #| label: while-ahorro
-# Ejemplo: Búsqueda incremental (Aproximación por tanteo)
-# Supongamos que queremos saber cuántos meses necesitamos ahorrar $150 para alcanzar o superar los $1000, 
-# asumiendo que no hay interés.
-
+# ¿Cuántos meses de ahorrar $150 necesito para juntar $1000? (sin interés)
 ahorro_mensual = 150
 objetivo = 1000
 
-# Inicializamos nuestras variables
-capital_acumulado = 0  # Esto es un ACUMULADOR
-meses = 0              # Esto es un CONTADOR
+capital_acumulado = 0  # ACUMULADOR: junta plata
+meses = 0              # CONTADOR: cuenta vueltas
 
 print("--- Inicio del ahorro ---")
 while capital_acumulado < objetivo:
@@ -42,16 +52,20 @@ while capital_acumulado < objetivo:
 print(f"Tomó {meses} meses alcanzar el objetivo de ${objetivo}.")
 ```
 
-### Control de Flujo: `break` y `continue`
+Leé la salida con atención: el bucle dio 7 vueltas y **paró solo**, cuando la condición `capital_acumulado < objetivo` dejó de ser cierta (1050 ya no es menor que 1000). Nadie le dijo "repetí 7 veces" — la condición lo decidió. Notá también que el resultado final (1050) *supera* el objetivo: el `while` verifica la condición **antes** de cada vuelta, así que la última suma se ejecuta completa. Este detalle —¿el bucle corta antes o después de pasarse?— es el tipo de pregunta que siempre conviene hacerse.
 
-En ocasiones necesitamos alterar el flujo normal de un bucle. Python nos proporciona dos sentencias clave para esto:
+::: {.callout-warning title="El bucle infinito: el error clásico del `while`"}
+Si la condición nunca se vuelve falsa, el bucle no termina jamás y el programa se cuelga. Probá mentalmente qué pasaría si olvidaras la línea `capital_acumulado = capital_acumulado + ahorro_mensual`: el capital quedaría en 0 para siempre, y la condición `0 < 1000` sería eternamente cierta. **Regla práctica**: antes de escribir un `while`, identificá qué línea de adentro acerca la condición hacia `False`.
+:::
 
-*   **`break`**: Termina el bucle inmediatamente, saltando a la primera línea de código después del bloque del bucle.
-*   **`continue`**: Salta el resto del código dentro del bucle para la iteración actual y vuelve al principio del bucle para evaluar la condición nuevamente.
+### Control de flujo: `break` y `continue`
 
-#### Ejemplo: Uso de `break` para detener una búsqueda
+A veces necesitamos alterar el recorrido normal de un bucle:
 
-Supongamos que estamos procesando una serie de precios y queremos detener el bucle apenas encontremos un valor que supere un umbral crítico.
+*   **`break`**: termina el bucle inmediatamente y sigue en la primera línea después del bloque. Útil cuando ya encontraste lo que buscabas — seguir iterando sería perder tiempo.
+*   **`continue`**: abandona la vuelta actual y salta directo a la siguiente. Útil para **ignorar** casos que no te interesan sin frenar el proceso.
+
+Un uso típico de `break` en finanzas: monitorear precios y **cortar apenas se dispara una alerta**.
 
 ```{pyodide-python}
 #| label: break-ejemplo
@@ -64,17 +78,17 @@ while indice < len(precios):
     precio_actual = precios[indice]
     if precio_actual > precio_objetivo:
         print(f"¡Alerta! Precio de ${precio_actual} detectado. Deteniendo proceso.")
-        break  # Sale del bucle while
-    
+        break  # sale del bucle: ya no hace falta mirar el resto
+
     print(f"Precio verificado: ${precio_actual} (Normal)")
     indice = indice + 1
 
 print("Fin del monitoreo.")
 ```
 
-#### Ejemplo: Uso de `continue` para omitir datos inválidos
+Fijate que los precios 118 y 125 **nunca se revisaron**: el `break` cortó en 122, el primer valor que superó el umbral. Eso es exactamente lo que queríamos — y en una serie de un millón de precios, la diferencia de eficiencia importa.
 
-A menudo los datos financieros tienen errores o valores nulos. Podemos usar `continue` para ignorarlos y seguir con el siguiente elemento.
+Y el uso típico de `continue`: **saltear datos inválidos**. Los datos financieros reales vienen sucios (huecos, ceros por errores de carga, feriados), y procesarlos sin filtrar arruina los cálculos.
 
 ```{pyodide-python}
 #| label: continue-ejemplo
@@ -87,11 +101,11 @@ i = 0
 while i < len(precios_con_error):
     p = precios_con_error[i]
     i = i + 1
-    
+
     if p == 0:
         print("Dato inválido detectado. Saltando...")
-        continue  # Vuelve al inicio del while para evaluar la siguiente iteración
-    
+        continue  # abandona ESTA vuelta; el bucle sigue con la próxima
+
     suma = suma + p
     contador_validos = contador_validos + 1
 
@@ -99,84 +113,94 @@ promedio = suma / contador_validos
 print(f"El promedio de los {contador_validos} precios válidos es: ${promedio:.2f}")
 ```
 
+El detalle importante está en el denominador: dividimos por `contador_validos` (4), **no** por la longitud de la lista (6). Si hubiéramos dividido por 6, los dos ceros habrían "diluido" el promedio hacia abajo — un error silencioso que produce un número con aspecto razonable pero incorrecto. Contar por separado los datos válidos es el antídoto.
+
+::: {.callout-tip title="¿Por qué incrementamos `i` ANTES del `continue`?"}
+Mirá el orden de las líneas: `i = i + 1` está *antes* del `if` con `continue`. Si estuviera después, al saltear un dato inválido el índice no avanzaría, el bucle volvería a leer el mismo cero... infinitamente. Es la versión sutil del bucle infinito: cuando uses `continue` dentro de un `while`, verificá que el avance del índice ocurra siempre.
+:::
+
 ---
 
 ## Bucles `for` y la función `range()`
 
-La estructura `for` permite realizar una cantidad definida de iteraciones. Itera sobre cada elemento de una secuencia (como una lista o un rango de números). La función `range()` se utiliza frecuentemente para construir estos bucles.
+Cuando sabés de antemano **cuántas vueltas** hay que dar —"para cada uno de los 4 años", "para cada precio de la lista"— la herramienta natural es el bucle `for`. Recorre uno por uno los elementos de una secuencia, sin que tengas que manejar índices ni condiciones de corte a mano: menos código, menos lugares donde equivocarse.
+
+La función `range()` genera secuencias de números para iterar: `range(1, 5)` produce 1, 2, 3, 4 (el extremo derecho **no** se incluye — la convención de Python que ya viste en las listas).
 
 ```{pyodide-python}
 #| label: for-interes-simple
-# Ejemplo: Proyección de un capital con interés simple
-# Queremos ver cómo crece una inversión inicial de $500 a una tasa del 5% anual durante 4 años.
-
+# Proyección de un capital con interés SIMPLE:
+# $500 al 5% anual durante 4 años. Los intereses NO se reinvierten.
 capital_inicial = 500
 tasa_anual = 0.05
 anios = 4
 
 print(f"Capital inicial: ${capital_inicial}")
 
-# range(1, anios + 1) generará los números: 1, 2, 3, 4
+# range(1, anios + 1) genera: 1, 2, 3, 4
 for anio in range(1, anios + 1):
-    # Calculamos el interés generado en el año (interés simple)
     interes_generado = capital_inicial * tasa_anual
-    
-    # En el interés simple, el capital total es el inicial más los intereses acumulados
+    # En interés simple, el capital crece linealmente
     capital_total = capital_inicial + (interes_generado * anio)
-    
     print(f"Fin del Año {anio}: El capital total es ${capital_total}")
 ```
 
+Observá el patrón de la salida: el capital crece **$25 por año, siempre lo mismo** (520, 545... espera, 525, 550, 575, 600). Es una recta. Compará mentalmente con el interés *compuesto* del Capítulo 1, donde cada año los intereses generan nuevos intereses y el crecimiento se acelera. Con estos números la diferencia a 4 años es chica ($600 vs ~$607.75), pero a 30 años es enorme ($1250 vs ~$2161): la diferencia entre una recta y una exponencial. Que puedas *ver* esa diferencia recorriendo año por año es exactamente el poder del bucle.
+
 ---
 
-## Listas: Almacenando múltiples valores
+## Listas: almacenar múltiples valores
 
-Las listas nos permiten guardar varios elementos en una sola variable, manteniendo el orden. Podemos acceder a ellos mediante su índice (que empieza en 0) y modificarlas con métodos como `.append()`, `.pop()` o `del`.
+Hasta acá, cada variable guardaba **un** valor. Pero "los precios de la última semana" no son un valor: son una colección. La **lista** es la estructura de Python para guardar varios elementos en una sola variable, **manteniendo el orden** — y en finanzas el orden casi siempre es tiempo, así que esto importa.
+
+Lo esencial: se accede a los elementos por su **índice** (que arranca en 0), y se modifican con métodos como `.append()` (agregar al final), `.pop()` (quitar) o `del`.
+
+El primer patrón de uso es el **filtrado**: recorrer una lista y quedarse solo con los elementos que cumplen una condición.
 
 ```{pyodide-python}
 #| label: listas-filtrado
-# Ejemplo A: Filtrado de datos en listas
-# Tenemos una lista con las cotizaciones históricas de un tipo de cambio.
-# Queremos crear una nueva lista SOLO con los días en que la cotización superó los $1000.
-
+# Filtrado: quedarnos solo con los días en que el tipo de cambio superó $1000
 cotizaciones = [980.5, 995.0, 1005.2, 1010.0, 998.0, 1020.5]
-cotizaciones_altas = [] # Creamos una lista vacía usando corchetes
+cotizaciones_altas = []  # lista vacía que iremos llenando
 
 for precio in cotizaciones:
     if precio > 1000:
-        cotizaciones_altas.append(precio) # Añade el elemento al final de la lista
+        cotizaciones_altas.append(precio)  # agrega al final
 
 print("Cotizaciones originales:", cotizaciones)
 print("Cotizaciones altas (mayores a 1000):", cotizaciones_altas)
 ```
 
+El patrón completo —lista vacía + `for` + `if` + `append`— es probablemente el fragmento de código más repetido de todo el análisis de datos. De 6 cotizaciones sobrevivieron 3: las que superaron el umbral, en su orden original.
+
+El segundo patrón es la **operación secuencial**: comparar cada elemento con el anterior. Es la esencia del análisis de series de tiempo — calcular variaciones, retornos, diferencias.
+
 ```{pyodide-python}
 #| label: listas-variaciones
-# Ejemplo B: Operaciones secuenciales (diferencias de precios)
-# A veces necesitamos comparar un elemento de la lista con el anterior.
+# ¿Cuánto varió el precio cada día respecto del anterior?
 precios_accion = [50.0, 52.0, 51.0, 55.0]
 variaciones = []
 
-# Iteramos usando índices. Usamos len() - 1 porque compararemos el día actual con el siguiente.
+# Iteramos por índice. Llegamos hasta len() - 1 porque el último día
+# no tiene un "día siguiente" con quien compararse.
 for i in range(len(precios_accion) - 1):
     precio_hoy = precios_accion[i]
     precio_manana = precios_accion[i + 1]
-    
-    variacion_absoluta = precio_manana - precio_hoy
-    variaciones.append(variacion_absoluta)
+    variaciones.append(precio_manana - precio_hoy)
 
 print("Precios diarios:", precios_accion)
 print("Variaciones absolutas diarias:", variaciones)
 ```
 
-### Listas anidadas: Representando matrices
+Dos lecturas del resultado. Primero, el contenido: la acción subió $2, bajó $1, subió $4 — con 4 precios obtenemos **3 variaciones**, siempre una menos (no hay variación "del primer día"). Segundo, el detalle técnico del `len() - 1`: si el rango llegara hasta el final, `precios_accion[i + 1]` intentaría leer un elemento que no existe y el programa explotaría con `IndexError`. Este desfasaje entre una serie y sus diferencias te va a perseguir toda la carrera — en el Capítulo 6 lo va a manejar Pandas automáticamente con `pct_change()`, pero ahora sabés qué hace por dentro.
 
-Cuando necesitamos representar datos en filas y columnas (por ejemplo, los precios de varios activos a lo largo del tiempo), podemos utilizar **listas de listas**. Cada elemento de la lista principal es, a su vez, una lista que representa una fila.
+### Listas anidadas: representando matrices
+
+¿Y si los datos tienen **dos dimensiones**? Los precios de *varios* activos a lo largo de *varios* días forman una tabla: filas y columnas. La versión nativa de Python es la **lista de listas** — cada elemento de la lista principal es, a su vez, una lista que representa una fila.
 
 ```{pyodide-python}
 #| label: listas-anidadas-matriz
-# Ejemplo: Matriz de precios de 3 activos durante 3 días
-# Cada fila representa un activo: [Día 1, Día 2, Día 3]
+# Matriz de precios: 3 activos (filas) x 3 días (columnas)
 precios_activos = [
     [100.5, 101.2, 100.8],  # Activo A
     [45.0, 45.5, 46.2],     # Activo B
@@ -187,31 +211,34 @@ print("Matriz completa de precios:")
 for fila in precios_activos:
     print(fila)
 
-# Podemos acceder a un elemento específico usando dos índices: [fila][columna]
-# Ejemplo: Precio del Activo B (índice 1) en el Día 2 (índice 1)
+# Acceso con dos índices: [fila][columna]
 precio_b_dia2 = precios_activos[1][1]
 print(f"\nPrecio del Activo B en el Día 2: ${precio_b_dia2}")
 
-# También podemos recorrerla con bucles anidados
+# Recorrido completo con bucles anidados
 print("\nAcceso individual a cada precio:")
 for i in range(len(precios_activos)):
     for j in range(len(precios_activos[i])):
         print(f"Activo {i}, Día {j}: ${precios_activos[i][j]}")
 ```
 
+El doble índice `[1][1]` se lee de afuera hacia adentro: "de la lista principal, dame la fila 1 (Activo B); de esa fila, dame el elemento 1 (Día 2)". Y el **bucle anidado** —un `for` adentro de otro— recorre la tabla completa: por cada fila, todos sus elementos.
+
+::: {.callout-note title="Spoiler del Capítulo 5"}
+Las listas anidadas funcionan, pero se vuelven lentas e incómodas con datos grandes (probá calcular el promedio de cada columna: son varios renglones de bucles). NumPy resuelve exactamente este problema con el `ndarray`, donde esa operación es una línea. Cuando llegues ahí, vas a apreciar lo que la abstracción te ahorra — porque ya escribiste la versión manual.
+:::
+
 ---
 
-## Diccionarios: Datos etiquetados
+## Diccionarios: datos etiquetados
 
-A diferencia de las listas, los diccionarios no tienen un orden secuencial (son como una bolsa). Los elementos se guardan y se buscan utilizando "claves" (keys) en lugar de índices numéricos.
+Las listas ordenan por **posición**: el elemento 0, el 1, el 2. Pero mirá cómo describirías un bono en la vida real: tiene un *ticker*, una *paridad*, una *legislación*. Nadie dice "el atributo 2 del bono" — cada dato tiene un **nombre**. El **diccionario** es la estructura que guarda pares `clave: valor`, y se busca por clave en lugar de por índice.
 
 ```{pyodide-python}
 #| label: dict-bono
-# Ejemplo A: Mapeo de información de un activo
-# Creamos un diccionario vacío usando dict() o llaves {}.
+# Un bono descripto como diccionario: cada dato tiene su etiqueta
 bono_soberano = dict()
 
-# Agregamos elementos clave-valor
 bono_soberano['ticker'] = 'AL30'
 bono_soberano['paridad'] = 45.5
 bono_soberano['legislacion'] = 'Local'
@@ -219,49 +246,152 @@ bono_soberano['legislacion'] = 'Local'
 print("Datos del bono:", bono_soberano)
 print("Ticker específico:", bono_soberano['ticker'])
 
-# Actualizamos un valor existente
+# Actualizar un valor existente: misma sintaxis que crear
 bono_soberano['paridad'] = 48.2
 print("Paridad actualizada:", bono_soberano['paridad'])
 ```
 
+Compará `bono_soberano['ticker']` con `bono[0]`: el código con claves **se explica solo**. Seis meses después de escribirlo, seguís entendiendo qué hace. Ese es el criterio para elegir estructura: ¿tus datos son una *secuencia* (usá lista) o un *registro con campos con nombre* (usá diccionario)?
+
+Un patrón enormemente útil: **contar frecuencias**. ¿Cuántos activos de cada nivel de riesgo tengo en la cartera?
+
 ```{pyodide-python}
 #| label: dict-riesgos
-# Ejemplo B: Frecuencias y el método .get()
-# Queremos contar cuántos activos tenemos agrupados por su nivel de riesgo.
-# El método .get(clave, valor_por_defecto) es ideal para esto.
-
+# Contar cuántos activos hay por nivel de riesgo
 activos = ["Bajo", "Alto", "Medio", "Bajo", "Bajo", "Medio", "Alto", "Bajo"]
 conteo_riesgos = {}
 
 for nivel in activos:
-    # Si 'nivel' ya está en el diccionario, toma su valor actual.
-    # Si no está, devuelve 0. A eso le sumamos 1.
+    # .get(clave, defecto): si la clave existe devuelve su valor; si no, el defecto.
+    # Así la primera aparición de cada nivel arranca de 0 sin error.
     conteo_riesgos[nivel] = conteo_riesgos.get(nivel, 0) + 1
 
 print("Distribución de riesgos de la cartera:")
 print(conteo_riesgos)
 ```
 
+El resultado dice que la cartera está cargada hacia el riesgo bajo (4 de 8 activos). El héroe silencioso es `.get(nivel, 0)`: sin él, la primera vez que apareciera cada nivel, `conteo_riesgos[nivel]` fallaría con `KeyError` porque la clave todavía no existe. `.get` con valor por defecto es la forma idiomática de "leer o inicializar" en un solo paso.
+
+El tercer patrón: **combinar diccionarios** que comparten claves. Tenemos cantidades por commodity en un diccionario y precios en otro — la clave común (`'Soja'`, `'Maiz'`...) los conecta.
+
 ```{pyodide-python}
 #| label: dict-inventario
-# Ejemplo C: Combinando diccionarios (Valuación de inventario)
-# Tenemos un inventario físico de commodities y sus precios de mercado.
-# Queremos calcular el valor total del inventario.
-
+# Valuar un inventario: cantidades x precios, conectados por la clave
 cantidades = {'Soja': 150, 'Maiz': 300, 'Trigo': 200}
 precios_mercado = {'Soja': 350.0, 'Trigo': 210.5, 'Maiz': 180.0}
 
-valor_total_inventario = 0 # Acumulador
+valor_total_inventario = 0  # acumulador
 
-# Recorremos las claves del diccionario de cantidades
-for commodity in cantidades:
+for commodity in cantidades:          # recorre las CLAVES
     cantidad_toneladas = cantidades[commodity]
     precio_tonelada = precios_mercado[commodity]
-    
-    valor_parcial = cantidad_toneladas * precio_tonelada
-    valor_total_inventario = valor_total_inventario + valor_parcial
+    valor_total_inventario = valor_total_inventario + cantidad_toneladas * precio_tonelada
 
-print(f"El valor total del inventario agrícola es: ${valor_total_inventario}")
+print(f"El valor total del inventario agrícola es: ${valor_total_inventario:,.1f}")
 ```
 
+Notá que los dos diccionarios listan los commodities **en distinto orden** — y no importa en absoluto, porque no accedemos por posición sino por clave. Esa independencia del orden es precisamente lo que los hace robustos para conectar datos de distintas fuentes (en la práctica: tu sistema de posiciones y el feed de precios del mercado nunca vienen en el mismo orden).
 
+---
+
+## Caso integrador: valuar un bono y encontrar su TIR
+
+Hora de juntar todo. Un **bono bullet** paga un cupón fijo cada período y devuelve el capital al vencimiento. Su valor justo es la suma de todos sus flujos descontados:
+
+$$P = \sum_{t=1}^{n} \frac{C}{(1+r)^t} + \frac{VN}{(1+r)^n}$$
+
+Esa sumatoria $\sum$ que en el papel se lee de un vistazo es, computacionalmente, **un bucle `for` con un acumulador** — exactamente lo que venís practicando.
+
+```{pyodide-python}
+#| label: caso-valuacion-bono
+# Bono: valor nominal 1000, cupón 8% anual, 5 años, tasa de descuento 10%
+valor_nominal = 1000
+tasa_cupon = 0.08
+anios = 5
+tasa_descuento = 0.10
+
+cupon = valor_nominal * tasa_cupon   # $80 por año
+
+# La sumatoria de flujos descontados = bucle for + acumulador
+valor_presente = 0
+for t in range(1, anios + 1):
+    flujo = cupon
+    if t == anios:
+        flujo = flujo + valor_nominal   # el último período devuelve el capital
+
+    vp_flujo = flujo / (1 + tasa_descuento) ** t
+    valor_presente = valor_presente + vp_flujo
+    print(f"Año {t}: flujo ${flujo:>6.0f} → valor presente ${vp_flujo:>7.2f}")
+
+print(f"\nPrecio justo del bono: ${valor_presente:.2f}")
+```
+
+El bono vale **menos que su valor nominal** (unos $924 contra $1000). Tiene sentido económico: paga cupones del 8% pero el mercado exige 10% — nadie paga $1000 por algo que rinde menos que la alternativa, así que el precio baja hasta compensar. Un bono cotiza *bajo la par* cuando su cupón está por debajo de la tasa de mercado.
+
+Ahora la pregunta inversa, que es la que se hace el inversor real: el bono **cotiza** a un precio dado — ¿qué rendimiento me da si lo compro a ese precio? Esa tasa es la **TIR** (Tasa Interna de Retorno): la tasa de descuento que hace que el valor presente de los flujos iguale al precio de mercado. No se puede despejar algebraicamente, pero se puede **buscar por tanteo**: probamos tasas cada vez más altas hasta que el valor presente cae por debajo del precio. Un `while` con búsqueda incremental — el mismo patrón del ejemplo del ahorro.
+
+```{pyodide-python}
+#| label: caso-tir
+# El bono anterior cotiza a $950. ¿Qué TIR implica ese precio?
+precio_mercado = 950
+
+flujos = [cupon] * (anios - 1) + [cupon + valor_nominal]  # lista de flujos
+
+tasa = 0.0
+paso = 0.0001   # probamos de a 0.01%
+
+while True:
+    # Valuamos el bono a la tasa candidata (bucle interno con acumulador)
+    vp = 0
+    for t in range(1, anios + 1):
+        vp = vp + flujos[t - 1] / (1 + tasa) ** t
+
+    if vp <= precio_mercado:   # nos pasamos: el VP ya cayó hasta el precio
+        break
+    tasa = tasa + paso
+
+print(f"Precio de mercado: ${precio_mercado}")
+print(f"TIR aproximada: {tasa:.2%}")
+
+# Verificación: valuar el bono a la TIR encontrada debe dar ~el precio
+vp_verificacion = sum(flujos[t - 1] / (1 + tasa) ** t for t in range(1, anios + 1))
+print(f"Verificación — VP a la TIR: ${vp_verificacion:.2f}")
+```
+
+La TIR da cerca del **9.3%**: comprando a $950 un bono que promete cupones del 8% sobre $1000, tu rendimiento efectivo es mayor que el cupón — el descuento en el precio es rendimiento extra. Fijate la estructura del código: un `while` (buscar la tasa) que contiene un `for` (valuar a cada tasa candidata), con un `break` como condición de salida. Todos los ingredientes del capítulo trabajando juntos.
+
+::: {.callout-tip title="Esto que hiciste tiene nombre"}
+La búsqueda incremental es el método numérico más simple para resolver ecuaciones que no se pueden despejar. Es lento pero transparente. En el Capítulo 3 vas a empaquetar esta lógica en una función reutilizable, y en el Capítulo 18 vas a conocer a su primo profesional —Newton-Raphson— extrayendo volatilidades implícitas de opciones. La idea es la misma; solo mejora la puntería.
+:::
+
+---
+
+## Errores comunes
+
+::: {.callout-warning title="Trampas frecuentes"}
+- **El bucle infinito**: un `while` cuya condición nunca se vuelve falsa (típicamente porque olvidaste actualizar el contador o lo actualizás después de un `continue`). Si tu programa "se cuelga", sospechá de esto primero.
+- **`IndexError` por off-by-one**: pedir `lista[len(lista)]` no existe — el último índice válido es `len(lista) - 1`. Aparece muchísimo al comparar elementos consecutivos; por eso el `range(len(precios) - 1)` en el ejemplo de variaciones.
+- **`KeyError` en diccionarios**: acceder a una clave que no existe (`conteo['Alto']` antes de crearla) rompe el programa. Usá `.get(clave, defecto)` o verificá con `if clave in diccionario`.
+- **Modificar una lista mientras la recorrés**: hacer `lista.remove(x)` adentro de un `for` sobre esa misma lista saltea elementos de forma impredecible. El patrón seguro es construir una lista **nueva** con lo que querés conservar (como en el ejemplo de filtrado).
+- **Dividir por el contador equivocado**: al promediar datos filtrados, dividí por la cantidad de datos *válidos*, no por el total de la lista (el error silencioso del ejemplo de `continue`).
+:::
+
+---
+
+## Ejercicios Propuestos
+
+::: {.callout-important title="Ejercicios"}
+1. **Interés compuesto con `while`**: ¿cuántos años tarda una inversión de $1000 al 7% anual compuesto en duplicarse? Resolvelo con un `while` y comparalo con la "regla del 72" (72/7 ≈ 10.3 años).
+2. **Retornos porcentuales**: adaptá el ejemplo de variaciones absolutas para calcular retornos porcentuales ($R_t = P_t/P_{t-1} - 1$) y contá cuántos días fueron positivos usando un contador.
+3. **Cartera como lista de diccionarios**: representá una cartera de 4 activos como una lista donde cada elemento es un diccionario con claves `ticker`, `cantidad` y `precio`. Recorrela para calcular el valor total y el activo de mayor peso.
+4. **Bono bajo/sobre la par**: usando el código del caso integrador, valuá el mismo bono con tasas de descuento del 6%, 8% y 10%. ¿Qué relación observás entre la tasa de descuento, el cupón y que el precio esté sobre, a, o bajo la par?
+5. **TIR más precisa**: la búsqueda incremental del capítulo avanza siempre "hacia arriba" con paso fijo. Mejorala: cuando el VP cruce el precio, retrocedé un paso y volvé a avanzar con un paso 10 veces más chico. Repetí hasta lograr precisión de 0.0001%.
+:::
+
+---
+
+## Referencias
+
+* Lutz, M. (2013). *Learning Python*. O'Reilly Media.
+* Downey, A. (2015). *Think Python: How to Think Like a Computer Scientist*. O'Reilly Media.
+* Fabozzi, F. J. (2015). *Bond Markets, Analysis, and Strategies*. Pearson. [Valuación de bonos y TIR].

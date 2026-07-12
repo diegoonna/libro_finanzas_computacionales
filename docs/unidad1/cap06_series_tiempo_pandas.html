@@ -1,0 +1,1807 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="es" xml:lang="es"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.8.26">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>8&nbsp; Capítulo 6: Series de Tiempo y Análisis de Datos con Pandas – Finanzas Computacionales</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<link href="../unidad2/_intro_mod2.html" rel="next">
+<link href="../unidad1/cap05_numpy.html" rel="prev">
+<link href="../cover.png" rel="icon" type="image/png">
+<script src="../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../site_libs/quarto-html/axe/axe-check.js" type="module"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-33f28b034f783b36ff4b46fdeb362ebb.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap-495f0385760e8b3acd0ecbc251fe947a.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No se han encontrado resultados",
+    "search-matching-documents-text": "documentos encontrados",
+    "search-copy-link-title": "Copiar el enlace en la búsqueda",
+    "search-hide-matches-text": "Ocultar resultados adicionales",
+    "search-more-match-text": "resultado adicional en este documento",
+    "search-more-matches-text": "resultados adicionales en este documento",
+    "search-clear-button-title": "Borrar",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancelar",
+    "search-submit-button-title": "Enviar",
+    "search-label": "Buscar"
+  }
+}</script>
+<style>html{ scroll-behavior: smooth; }</style>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+</head>
+
+<body class="nav-sidebar docked quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Alternar barra lateral" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../unidad1/_intro_mod1.html">Módulo 1: Fundamentos y Renta Fija</a></li><li class="breadcrumb-item"><a href="../unidad1/cap06_series_tiempo_pandas.html"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Capítulo 6: Series de Tiempo y Análisis de Datos con Pandas</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Alternar barra lateral" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Buscar" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation docked overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="../">Finanzas Computacionales</a> 
+        <div class="sidebar-tools-main">
+    <a href="https://github.com/uade-finanzas-computacionales/libro" title="Source Code" class="quarto-navigation-tool px-1" aria-label="Source Code"><i class="bi bi-github"></i></a>
+  <a href="" class="quarto-reader-toggle quarto-navigation-tool px-1" onclick="window.quartoToggleReader(); return false;" title="Alternar modo lector">
+  <div class="quarto-reader-toggle-btn">
+  <i class="bi"></i>
+  </div>
+</a>
+</div>
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Buscar"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Bienvenida</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
+ <span class="menu-text">Módulo 1: Fundamentos y Renta Fija</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Alternar sección">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../unidad1/_intro_mod1.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Introducción al Módulo 1</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../unidad1/cap01_pensamiento_computacional.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Capítulo 1: Pensamiento Computacional en Finanzas</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../unidad1/cap02_iteraciones_estructuras.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Capítulo 2: Iteraciones y Estructuras de Datos Nativas</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../unidad1/cap03_funciones_modularizacion.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Capítulo 3: Funciones, Excepciones y módulos</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../unidad1/cap04_poo.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Capítulo 4: Programación Orientada a Objetos (POO)</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../unidad1/cap05_numpy.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Capítulo 5: NumPy y Cálculo Vectorizado</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../unidad1/cap06_series_tiempo_pandas.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Capítulo 6: Series de Tiempo y Análisis de Datos con Pandas</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="false">
+ <span class="menu-text">Módulo 2: Teoría de Portafolios y Optimización</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="false" aria-label="Alternar sección">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../unidad2/_intro_mod2.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Módulo 2: Teoría de Portafolios y Optimización</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../unidad2/cap07_estadistica_optimizacion.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Capítulo 7: Estadística Descriptiva y Optimización Matemática</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../unidad2/cap08_markowitz.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Capítulo 8: Teoría Moderna de Portafolios (Markowitz)</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../unidad2/cap09_hrp.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Capítulo 9: Hierarchical Risk Parity (HRP)</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../unidad2/cap10_black_litterman.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Capítulo 10: El Modelo de Black-Litterman</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="false">
+ <span class="menu-text">Módulo 3: Riesgo, Simulación y Econometría</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="false" aria-label="Alternar sección">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../unidad3/_intro_mod3.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Módulo 3: Riesgo, Simulación y Econometría</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../unidad3/cap11_var_expected_shortfall.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Capítulo 11: Valor en Riesgo (VaR) y Expected Shortfall</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../unidad3/cap12_riesgo_regulacion.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Capítulo 12: Riesgo y Regulación</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../unidad3/cap13_monte_carlo.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Capítulo 13: Simulación de Monte Carlo</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../unidad3/cap14_procesos_estocasticos_activos.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Capítulo 14: Procesos Estocásticos del Precio de un Activo</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../unidad3/cap15_econometria_modelos_lineales.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Capítulo 15: Econometría y Modelos Lineales en Finanzas</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../unidad3/cap16_series_temporales_macro.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Capítulo 16: Series Temporales — ARIMA y VAR</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../unidad3/cap17_backtesting.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Capítulo 17: Backtesting de Estrategias</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="false">
+ <span class="menu-text">Módulo 4: Derivados y Volatilidad</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="false" aria-label="Alternar sección">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../unidad4/_intro_mod4.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">Módulo 4: Derivados y Volatilidad</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../unidad4/cap18_derivados_vol_implicita.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">Capítulo 18: Valuación de Opciones y Volatilidad Implícita</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../unidad4/cap19_delta_hedging.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">24</span>&nbsp; <span class="chapter-title">Capítulo 19: Simulación de Cobertura Dinámica (Delta Hedging)</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../unidad4/cap20_volatilidad_estocastica.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">25</span>&nbsp; <span class="chapter-title">Capítulo 20: Modelos de Volatilidad Estocástica</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="false">
+ <span class="menu-text">Appendices</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="false" aria-label="Alternar sección">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../apendices/python_intro.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">A</span>&nbsp; <span class="chapter-title">Introducción a Python</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">En esta página</h2>
+   
+  <ul>
+  <li><a href="#introducción" id="toc-introducción" class="nav-link active" data-scroll-target="#introducción"><span class="header-section-number">9</span> Introducción</a></li>
+  <li><a href="#introducción-a-pandas" id="toc-introducción-a-pandas" class="nav-link" data-scroll-target="#introducción-a-pandas"><span class="header-section-number">10</span> Introducción a Pandas</a>
+  <ul class="collapse">
+  <li><a href="#series-1d" id="toc-series-1d" class="nav-link" data-scroll-target="#series-1d"><span class="header-section-number">10.1</span> Series (1D)</a></li>
+  <li><a href="#dataframes-2d" id="toc-dataframes-2d" class="nav-link" data-scroll-target="#dataframes-2d"><span class="header-section-number">10.2</span> DataFrames (2D)</a></li>
+  <li><a href="#exploración-inicial" id="toc-exploración-inicial" class="nav-link" data-scroll-target="#exploración-inicial"><span class="header-section-number">10.3</span> Exploración Inicial</a></li>
+  </ul></li>
+  <li><a href="#lectura-escritura-y-alineación-de-datos" id="toc-lectura-escritura-y-alineación-de-datos" class="nav-link" data-scroll-target="#lectura-escritura-y-alineación-de-datos"><span class="header-section-number">11</span> Lectura, Escritura y Alineación de Datos</a>
+  <ul class="collapse">
+  <li><a href="#io-de-archivos" id="toc-io-de-archivos" class="nav-link" data-scroll-target="#io-de-archivos"><span class="header-section-number">11.1</span> I/O de Archivos</a></li>
+  <li><a href="#alineación-de-índices-e-integración-de-datos" id="toc-alineación-de-índices-e-integración-de-datos" class="nav-link" data-scroll-target="#alineación-de-índices-e-integración-de-datos"><span class="header-section-number">11.2</span> Alineación de Índices e Integración de Datos</a></li>
+  </ul></li>
+  <li><a href="#selección-y-filtrado" id="toc-selección-y-filtrado" class="nav-link" data-scroll-target="#selección-y-filtrado"><span class="header-section-number">12</span> Selección y Filtrado</a>
+  <ul class="collapse">
+  <li><a href="#indexación-.loc-vs-.iloc" id="toc-indexación-.loc-vs-.iloc" class="nav-link" data-scroll-target="#indexación-.loc-vs-.iloc"><span class="header-section-number">12.1</span> Indexación: .loc vs .iloc</a></li>
+  <li><a href="#filtrado-booleano-y-máscaras" id="toc-filtrado-booleano-y-máscaras" class="nav-link" data-scroll-target="#filtrado-booleano-y-máscaras"><span class="header-section-number">12.2</span> Filtrado Booleano y Máscaras</a></li>
+  </ul></li>
+  <li><a href="#manejo-de-fechas-y-series-temporales" id="toc-manejo-de-fechas-y-series-temporales" class="nav-link" data-scroll-target="#manejo-de-fechas-y-series-temporales"><span class="header-section-number">13</span> Manejo de Fechas y Series Temporales</a>
+  <ul class="collapse">
+  <li><a href="#resample-cambio-de-frecuencias" id="toc-resample-cambio-de-frecuencias" class="nav-link" data-scroll-target="#resample-cambio-de-frecuencias"><span class="header-section-number">13.1</span> Resample: Cambio de Frecuencias</a></li>
+  </ul></li>
+  <li><a href="#limpieza-y-transformación-de-datos" id="toc-limpieza-y-transformación-de-datos" class="nav-link" data-scroll-target="#limpieza-y-transformación-de-datos"><span class="header-section-number">14</span> Limpieza y Transformación de Datos</a></li>
+  <li><a href="#operaciones-vectorizadas-y-cálculos-financieros" id="toc-operaciones-vectorizadas-y-cálculos-financieros" class="nav-link" data-scroll-target="#operaciones-vectorizadas-y-cálculos-financieros"><span class="header-section-number">15</span> Operaciones Vectorizadas y Cálculos Financieros</a>
+  <ul class="collapse">
+  <li><a href="#movimientos-y-variaciones" id="toc-movimientos-y-variaciones" class="nav-link" data-scroll-target="#movimientos-y-variaciones"><span class="header-section-number">15.1</span> Movimientos y Variaciones</a></li>
+  <li><a href="#tipos-de-retornos" id="toc-tipos-de-retornos" class="nav-link" data-scroll-target="#tipos-de-retornos"><span class="header-section-number">15.2</span> Tipos de Retornos</a></li>
+  <li><a href="#ventanas-móviles-rolling" id="toc-ventanas-móviles-rolling" class="nav-link" data-scroll-target="#ventanas-móviles-rolling"><span class="header-section-number">15.3</span> Ventanas Móviles (Rolling)</a></li>
+  </ul></li>
+  <li><a href="#agrupación-groupby" id="toc-agrupación-groupby" class="nav-link" data-scroll-target="#agrupación-groupby"><span class="header-section-number">16</span> Agrupación (Groupby)</a></li>
+  <li><a href="#visualización-de-datos-con-matplotlib" id="toc-visualización-de-datos-con-matplotlib" class="nav-link" data-scroll-target="#visualización-de-datos-con-matplotlib"><span class="header-section-number">17</span> Visualización de Datos con Matplotlib</a></li>
+  <li><a href="#caso-de-uso-construcción-de-la-curva-de-rendimientos" id="toc-caso-de-uso-construcción-de-la-curva-de-rendimientos" class="nav-link" data-scroll-target="#caso-de-uso-construcción-de-la-curva-de-rendimientos"><span class="header-section-number">18</span> Caso de Uso: Construcción de la Curva de Rendimientos</a>
+  <ul class="collapse">
+  <li><a href="#por-qué-necesitamos-construir-una-curva" id="toc-por-qué-necesitamos-construir-una-curva" class="nav-link" data-scroll-target="#por-qué-necesitamos-construir-una-curva"><span class="header-section-number">18.1</span> ¿Por qué necesitamos “construir” una curva?</a></li>
+  <li><a href="#de-la-curva-spot-a-las-tasas-forward" id="toc-de-la-curva-spot-a-las-tasas-forward" class="nav-link" data-scroll-target="#de-la-curva-spot-a-las-tasas-forward"><span class="header-section-number">18.2</span> De la curva spot a las tasas forward</a></li>
+  <li><a href="#interpolar-la-curva-para-plazos-intermedios" id="toc-interpolar-la-curva-para-plazos-intermedios" class="nav-link" data-scroll-target="#interpolar-la-curva-para-plazos-intermedios"><span class="header-section-number">18.3</span> Interpolar la curva para plazos intermedios</a></li>
+  </ul></li>
+  <li><a href="#ejercicios-propuestos" id="toc-ejercicios-propuestos" class="nav-link" data-scroll-target="#ejercicios-propuestos"><span class="header-section-number">19</span> Ejercicios Propuestos</a></li>
+  <li><a href="#referencias" id="toc-referencias" class="nav-link" data-scroll-target="#referencias"><span class="header-section-number">20</span> Referencias</a></li>
+  </ul>
+<div class="toc-actions"><ul><li><a href="https://github.com/uade-finanzas-computacionales/libro/edit/main/unidad1/cap06_series_tiempo_pandas.qmd" class="toc-action"><i class="bi bi-github"></i>Editar esta página</a></li><li><a href="https://github.com/uade-finanzas-computacionales/libro/issues/new" class="toc-action"><i class="bi empty"></i>Informar sobre problema</a></li></ul></div></nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../unidad1/_intro_mod1.html">Módulo 1: Fundamentos y Renta Fija</a></li><li class="breadcrumb-item"><a href="../unidad1/cap06_series_tiempo_pandas.html"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Capítulo 6: Series de Tiempo y Análisis de Datos con Pandas</span></a></li></ol></nav>
+<div class="quarto-title">
+<div class="quarto-title-block"><div><h1 class="title"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Capítulo 6: Series de Tiempo y Análisis de Datos con Pandas</span></h1><button type="button" class="btn code-tools-button" id="quarto-code-tools-source"><i class="bi"></i> Código</button></div></div>
+<p class="subtitle lead">Estructuras de Datos, Manipulación y Cálculos Financieros</p>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+<div>
+  <div class="abstract">
+    <div class="block-title">Resumen</div>
+    <p>Introducción a pandas como herramienta fundamental para la carga, limpieza y análisis de datos en finanzas. Estudiamos Series y DataFrames, manipulación de series temporales, cálculos vectorizados de retornos, ventanas móviles y visualización técnica.</p>
+  </div>
+</div>
+
+
+</header>
+
+
+<section id="introducción" class="level1" data-number="9">
+<h1 data-number="9"><span class="header-section-number">9</span> Introducción</h1>
+<p>En los capítulos anteriores, utilizamos listas y diccionarios para representar datos de instrumentos financieros. Sin embargo, en el mundo real, los datos suelen ser tabulares y masivos (decenas de miles de cotizaciones). <strong>Pandas</strong> es la librería estándar de Python diseñada específicamente para este propósito, ofreciendo estructuras de datos de alto rendimiento y herramientas de análisis intuitivas.</p>
+<hr>
+</section>
+<section id="introducción-a-pandas" class="level1" data-number="10">
+<h1 data-number="10"><span class="header-section-number">10</span> Introducción a Pandas</h1>
+<p><strong>Pandas</strong> es una librería esencial para la carga, limpieza, análisis y exportación de datos. Se integra perfectamente con el ecosistema de Python (NumPy, SciPy y Matplotlib).</p>
+<div id="setup" class="cell" data-execution_count="1">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Configuración estética para los gráficos</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>plt.style.use(<span class="st">'ggplot'</span>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<section id="series-1d" class="level2" data-number="10.1">
+<h2 data-number="10.1" class="anchored" data-anchor-id="series-1d"><span class="header-section-number">10.1</span> Series (1D)</h2>
+<p>Una <strong>Serie</strong> es una estructura unidimensional etiquetada con un índice. Soporta operaciones vectorizadas y métodos estadísticos básicos.</p>
+<div id="pandas-series" class="cell" data-execution_count="2">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>precios_serie <span class="op">=</span> pd.Series([<span class="dv">110</span>, <span class="dv">112</span>, <span class="dv">108</span>, <span class="dv">115</span>, <span class="dv">120</span>], </span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>                          index<span class="op">=</span>[<span class="st">"Lunes"</span>, <span class="st">"Martes"</span>, <span class="st">"Miércoles"</span>, <span class="st">"Jueves"</span>, <span class="st">"Viernes"</span>],</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>                          name<span class="op">=</span><span class="st">"Precios"</span>)</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(precios_serie)</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"</span><span class="ch">\n</span><span class="ss">Media: </span><span class="sc">{</span>precios_serie<span class="sc">.</span>mean()<span class="sc">:.2f}</span><span class="ss">"</span>)</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Desvío estándar: </span><span class="sc">{</span>precios_serie<span class="sc">.</span>std()<span class="sc">:.2f}</span><span class="ss">"</span>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Lunes        110
+Martes       112
+Miércoles    108
+Jueves       115
+Viernes      120
+Name: Precios, dtype: int64
+
+Media: 113.00
+Desvío estándar: 4.69</code></pre>
+</div>
+</div>
+</section>
+<section id="dataframes-2d" class="level2" data-number="10.2">
+<h2 data-number="10.2" class="anchored" data-anchor-id="dataframes-2d"><span class="header-section-number">10.2</span> DataFrames (2D)</h2>
+<p>Un <strong>DataFrame</strong> es una estructura tabular (filas y columnas) donde cada columna es, técnicamente, una Serie que comparte el mismo índice.</p>
+<div id="dataframe-intro" class="cell" data-execution_count="3">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>datos <span class="op">=</span> {</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Ticker"</span>: [<span class="st">"GD30"</span>, <span class="st">"GD35"</span>, <span class="st">"GD38"</span>, <span class="st">"GD41"</span>, <span class="st">"GD46"</span>],</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Precio"</span>: [<span class="fl">92.5</span>, <span class="fl">85.3</span>, <span class="fl">78.1</span>, <span class="fl">72.4</span>, <span class="fl">65.8</span>],</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Cercanía"</span>: [<span class="fl">0.08</span>, <span class="fl">0.07</span>, <span class="fl">0.065</span>, <span class="fl">0.06</span>, <span class="fl">0.055</span>]</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.DataFrame(datos)</span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(df)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  Ticker  Precio  Cercanía
+0   GD30    92.5     0.080
+1   GD35    85.3     0.070
+2   GD38    78.1     0.065
+3   GD41    72.4     0.060
+4   GD46    65.8     0.055</code></pre>
+</div>
+</div>
+</section>
+<section id="exploración-inicial" class="level2" data-number="10.3">
+<h2 data-number="10.3" class="anchored" data-anchor-id="exploración-inicial"><span class="header-section-number">10.3</span> Exploración Inicial</h2>
+<p>Antes de analizar datos, debemos inspeccionar su estructura mediante métodos clave:</p>
+<div id="exploracion" class="cell" data-execution_count="4">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Dimensiones: </span><span class="sc">{</span>df<span class="sc">.</span>shape<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Columnas: </span><span class="sc">{</span>df<span class="sc">.</span>columns<span class="sc">.</span>tolist()<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Métodos esenciales de inspección</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="co"># df.head()      # Primeras 5 filas</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a><span class="co"># df.tail()      # Últimas 5 filas</span></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a><span class="co"># df.info()      # Resumen de tipos de datos y memoria</span></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a><span class="co"># df.describe()  # Estadísticas descriptivas rápidas</span></span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Dimensiones: (5, 3)
+Columnas: ['Ticker', 'Precio', 'Cercanía']</code></pre>
+</div>
+</div>
+<hr>
+</section>
+</section>
+<section id="lectura-escritura-y-alineación-de-datos" class="level1" data-number="11">
+<h1 data-number="11"><span class="header-section-number">11</span> Lectura, Escritura y Alineación de Datos</h1>
+<section id="io-de-archivos" class="level2" data-number="11.1">
+<h2 data-number="11.1" class="anchored" data-anchor-id="io-de-archivos"><span class="header-section-number">11.1</span> I/O de Archivos</h2>
+<p>Pandas permite la ingesta de datos desde múltiples fuentes (<code>read_csv</code>, <code>read_excel</code>) y el guardado de resultados (<code>to_csv</code>, <code>to_excel</code>).</p>
+<div id="io-ejemplo" class="cell" data-execution_count="5">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Ejemplo hipotético de lectura</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="co"># df = pd.read_csv("historico.csv", sep=";", encoding="utf-8")</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Parámetros útiles al leer:</span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a><span class="co"># parse_dates=['Fecha']: Convierte columnas a objetos Datetime directamente.</span></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a><span class="co"># index_col='Fecha': Establece una columna como índice del DataFrame.</span></span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
+<section id="alineación-de-índices-e-integración-de-datos" class="level2" data-number="11.2">
+<h2 data-number="11.2" class="anchored" data-anchor-id="alineación-de-índices-e-integración-de-datos"><span class="header-section-number">11.2</span> Alineación de Índices e Integración de Datos</h2>
+<p>La <strong>alineación automática</strong> es un concepto crítico en finanzas. Si combinamos dos activos que cotizan en días distintos (debido a feriados locales), Pandas se asegura de alinear las fechas correctamente.</p>
+<p>Para combinar datasets utilizamos: - <code>merge()</code>: Unión por columnas (similar a un JOIN de SQL). - <code>join()</code>: Unión eficiente usando el índice (ideal para <code>DatetimeIndex</code>). - <code>concat()</code>: Apilado vertical u horizontal.</p>
+<p>Tipos de uniones: <code>inner</code>, <code>outer</code> (por defecto en <code>concat</code>), <code>left</code> y <code>right</code>.</p>
+<div id="merge-ejemplo" class="cell" data-execution_count="6">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>df_a <span class="op">=</span> pd.DataFrame({<span class="st">"Ticker"</span>: [<span class="st">"GD30"</span>, <span class="st">"AL30"</span>], <span class="st">"Tir"</span>: [<span class="fl">0.45</span>, <span class="fl">0.52</span>]})</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>df_b <span class="op">=</span> pd.DataFrame({<span class="st">"Ticker"</span>: [<span class="st">"GD30"</span>, <span class="st">"AL30"</span>], <span class="st">"Paridad"</span>: [<span class="fl">0.35</span>, <span class="fl">0.32</span>]})</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>df_unido <span class="op">=</span> pd.merge(df_a, df_b, on<span class="op">=</span><span class="st">"Ticker"</span>, how<span class="op">=</span><span class="st">"inner"</span>)</span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(df_unido)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  Ticker   Tir  Paridad
+0   GD30  0.45     0.35
+1   AL30  0.52     0.32</code></pre>
+</div>
+</div>
+<hr>
+</section>
+</section>
+<section id="selección-y-filtrado" class="level1" data-number="12">
+<h1 data-number="12"><span class="header-section-number">12</span> Selección y Filtrado</h1>
+<section id="indexación-.loc-vs-.iloc" class="level2" data-number="12.1">
+<h2 data-number="12.1" class="anchored" data-anchor-id="indexación-.loc-vs-.iloc"><span class="header-section-number">12.1</span> Indexación: .loc vs .iloc</h2>
+<ul>
+<li><code>.loc</code>: Busca por <strong>etiquetas</strong> de índice y nombres de columnas.</li>
+<li><code>.iloc</code>: Busca por <strong>posición numérica</strong> (0-indexed).</li>
+</ul>
+<div id="indexing" class="cell" data-execution_count="7">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Seleccionar fila 0 y columna 'Precio' por posición</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Precio GD30 (.iloc): </span><span class="sc">{</span>df<span class="sc">.</span>iloc[<span class="dv">0</span>, <span class="dv">1</span>]<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Seleccionar por etiqueta (si el ticker fuera el índice)</span></span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>df_idx <span class="op">=</span> df.set_index(<span class="st">"Ticker"</span>)</span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Precio GD30 (.loc):</span><span class="ch">\n</span><span class="sc">{</span>df_idx<span class="sc">.</span>loc[<span class="st">'GD30'</span>, <span class="st">'Precio'</span>]<span class="sc">}</span><span class="ss">"</span>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Precio GD30 (.iloc): 92.5
+Precio GD30 (.loc):
+92.5</code></pre>
+</div>
+</div>
+</section>
+<section id="filtrado-booleano-y-máscaras" class="level2" data-number="12.2">
+<h2 data-number="12.2" class="anchored" data-anchor-id="filtrado-booleano-y-máscaras"><span class="header-section-number">12.2</span> Filtrado Booleano y Máscaras</h2>
+<p>Permite filtrar filas según condiciones lógicas o pertenencia a listas mediante <code>.isin()</code>.</p>
+<div id="filtrado" class="cell" data-execution_count="8">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Bonos con precio mayor a 80</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>mascara <span class="op">=</span> df[<span class="st">"Precio"</span>] <span class="op">&gt;</span> <span class="dv">80</span></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(df[mascara])</span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Filtrar por múltiples valores</span></span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>tickers_interes <span class="op">=</span> [<span class="st">"GD30"</span>, <span class="st">"GD46"</span>]</span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(df[df[<span class="st">"Ticker"</span>].isin(tickers_interes)])</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  Ticker  Precio  Cercanía
+0   GD30    92.5      0.08
+1   GD35    85.3      0.07
+  Ticker  Precio  Cercanía
+0   GD30    92.5     0.080
+4   GD46    65.8     0.055</code></pre>
+</div>
+</div>
+<hr>
+</section>
+</section>
+<section id="manejo-de-fechas-y-series-temporales" class="level1" data-number="13">
+<h1 data-number="13"><span class="header-section-number">13</span> Manejo de Fechas y Series Temporales</h1>
+<p>Pandas es excepcionalmente potente para trabajar con frecuencias temporales. Primero convertimos datos a tipo fecha con <code>pd.to_datetime()</code> y establecemos un <code>DatetimeIndex</code>.</p>
+<div id="time-series" class="cell" data-execution_count="9">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>fechas <span class="op">=</span> [<span class="st">"2023-01-01"</span>, <span class="st">"2023-01-02"</span>, <span class="st">"2023-01-05"</span>] <span class="co"># 02 es lunes, 01 es domingo</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>df_time <span class="op">=</span> pd.DataFrame({<span class="st">"Precio"</span>: [<span class="dv">100</span>, <span class="dv">101</span>, <span class="fl">102.5</span>]}, index<span class="op">=</span>pd.to_datetime(fechas))</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(df_time.index)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>DatetimeIndex(['2023-01-01', '2023-01-02', '2023-01-05'], dtype='datetime64[us]', freq=None)</code></pre>
+</div>
+</div>
+<section id="resample-cambio-de-frecuencias" class="level2" data-number="13.1">
+<h2 data-number="13.1" class="anchored" data-anchor-id="resample-cambio-de-frecuencias"><span class="header-section-number">13.1</span> Resample: Cambio de Frecuencias</h2>
+<p>El método <code>resample()</code> permite agrupar datos por períodos (diario <code>"D"</code>, semanal <code>"W"</code>, fin de mes <code>"ME"</code>) y aplicar funciones de agregación.</p>
+<div id="resample-ejemplo" class="cell" data-execution_count="10">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Simulamos una serie diaria para ejemplo</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>df_diario <span class="op">=</span> pd.DataFrame({</span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Precio"</span>: np.random.normal(<span class="dv">100</span>, <span class="dv">1</span>, <span class="dv">100</span>).cumsum()</span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>}, index<span class="op">=</span>pd.date_range(<span class="st">"2023-01-01"</span>, periods<span class="op">=</span><span class="dv">100</span>, freq<span class="op">=</span><span class="st">"B"</span>))</span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Cambiar de diario a mensual tomando el último valor</span></span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a>df_mensual <span class="op">=</span> df_diario.resample(<span class="st">"ME"</span>).last()  <span class="co"># "ME" = Month End</span></span>
+<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(df_mensual.head(<span class="dv">3</span>))</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>                 Precio
+2023-01-31  2202.580851
+2023-02-28  4209.520769
+2023-03-31  6511.598243</code></pre>
+</div>
+</div>
+<hr>
+</section>
+</section>
+<section id="limpieza-y-transformación-de-datos" class="level1" data-number="14">
+<h1 data-number="14"><span class="header-section-number">14</span> Limpieza y Transformación de Datos</h1>
+<p>En finanzas, los datos suelen tener “agujeros” (NaT o NaN). - <code>isna()</code>: Detecta nulos. - <code>dropna()</code>: Elimina filas/columnas con nulos. - <code>fillna()</code>: Rellena nulos con valores específicos o métodos como <code>ffill</code> (forward fill) o <code>bfill</code> (backward fill).</p>
+<div class="callout callout-style-simple callout-tip callout-titled" title="Forward Fill en Finanzas">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Forward Fill en Finanzas
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>El método <code>ffill</code> es ideal para tratar feriados o días sin cotización, ya que asume que el precio sigue siendo el mismo que el del último cierre válido registrado.</p>
+</div>
+</div>
+<hr>
+</section>
+<section id="operaciones-vectorizadas-y-cálculos-financieros" class="level1" data-number="15">
+<h1 data-number="15"><span class="header-section-number">15</span> Operaciones Vectorizadas y Cálculos Financieros</h1>
+<p>Pandas optimiza operaciones sobre columnas enteras sin necesidad de bucles <code>for</code>.</p>
+<section id="movimientos-y-variaciones" class="level2" data-number="15.1">
+<h2 data-number="15.1" class="anchored" data-anchor-id="movimientos-y-variaciones"><span class="header-section-number">15.1</span> Movimientos y Variaciones</h2>
+<ul>
+<li><code>.shift(n)</code>: Desplaza los datos <span class="math inline">\(n\)</span> posiciones (útil para comparar <span class="math inline">\(P_t\)</span> vs <span class="math inline">\(P_{t-1}\)</span>).</li>
+<li><code>.pct_change()</code>: Calcula el retorno simple: <span class="math inline">\((P_t / P_{t-1}) - 1\)</span>.</li>
+<li><code>.diff()</code>: Calcula la diferencia absoluta: <span class="math inline">\(P_t - P_{t-1}\)</span>.</li>
+</ul>
+</section>
+<section id="tipos-de-retornos" class="level2" data-number="15.2">
+<h2 data-number="15.2" class="anchored" data-anchor-id="tipos-de-retornos"><span class="header-section-number">15.2</span> Tipos de Retornos</h2>
+<ol type="1">
+<li><strong>Retorno Simple</strong>: <span class="math inline">\(R = (P_t / P_{t-1}) - 1\)</span>. Es aditivo entre activos en el mismo momento.</li>
+<li><strong>Retorno Logarítmico</strong>: <span class="math inline">\(r = \ln(P_t / P_{t-1})\)</span>. Es aditivo a lo largo del tiempo y simétrico.</li>
+</ol>
+<div id="retornos-calculo" class="cell" data-execution_count="11">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>df_diario[<span class="st">"Ret_Simple"</span>] <span class="op">=</span> df_diario[<span class="st">"Precio"</span>].pct_change()</span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>df_diario[<span class="st">"Ret_Log"</span>] <span class="op">=</span> np.log(df_diario[<span class="st">"Precio"</span>] <span class="op">/</span> df_diario[<span class="st">"Precio"</span>].shift(<span class="dv">1</span>))</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
+<section id="ventanas-móviles-rolling" class="level2" data-number="15.3">
+<h2 data-number="15.3" class="anchored" data-anchor-id="ventanas-móviles-rolling"><span class="header-section-number">15.3</span> Ventanas Móviles (Rolling)</h2>
+<p>Se utiliza para indicadores técnicos como medias móviles simples (SMA) o volatilidad móvil.</p>
+<div id="rolling-indicators" class="cell" data-execution_count="12">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Media móvil de 20 días</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>df_diario[<span class="st">"SMA_20"</span>] <span class="op">=</span> df_diario[<span class="st">"Precio"</span>].rolling(window<span class="op">=</span><span class="dv">20</span>).mean()</span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Volatilidad móvil de 20 días (anualizada)</span></span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>df_diario[<span class="st">"Vol_20"</span>] <span class="op">=</span> df_diario[<span class="st">"Ret_Simple"</span>].rolling(window<span class="op">=</span><span class="dv">20</span>).std() <span class="op">*</span> np.sqrt(<span class="dv">252</span>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<hr>
+</section>
+</section>
+<section id="agrupación-groupby" class="level1" data-number="16">
+<h1 data-number="16"><span class="header-section-number">16</span> Agrupación (Groupby)</h1>
+<p>Sigue el mecanismo <strong>Split-Apply-Combine</strong>: dividimos el dataset por una categoría (Ticker, Sector), aplicamos una función y combinamos los resultados.</p>
+<div id="groupby-ejemplo" class="cell" data-execution_count="13">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb21"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>df_panel <span class="op">=</span> pd.DataFrame({</span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Sector"</span>: [<span class="st">"Energía"</span>, <span class="st">"Energía"</span>, <span class="st">"Bancos"</span>, <span class="st">"Bancos"</span>],</span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Ticker"</span>: [<span class="st">"YPF"</span>, <span class="st">"PAMP"</span>, <span class="st">"GGAL"</span>, <span class="st">"BMA"</span>],</span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Retorno"</span>: [<span class="fl">0.05</span>, <span class="fl">0.03</span>, <span class="op">-</span><span class="fl">0.01</span>, <span class="fl">0.02</span>]</span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>})</span>
+<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Agregación por sector</span></span>
+<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a>resumen_sector <span class="op">=</span> df_panel.groupby(<span class="st">"Sector"</span>)[<span class="st">"Retorno"</span>].agg([<span class="st">"mean"</span>, <span class="st">"std"</span>, <span class="st">"count"</span>])</span>
+<span id="cb21-9"><a href="#cb21-9" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(resumen_sector)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>          mean       std  count
+Sector                         
+Bancos   0.005  0.021213      2
+Energía  0.040  0.014142      2</code></pre>
+</div>
+</div>
+<hr>
+</section>
+<section id="visualización-de-datos-con-matplotlib" class="level1" data-number="17">
+<h1 data-number="17"><span class="header-section-number">17</span> Visualización de Datos con Matplotlib</h1>
+<p>Podemos generar gráficos directamente desde DataFrames de forma integrada.</p>
+<div id="cell-plot-complejo" class="cell" data-execution_count="14">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb23"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>fig, ax <span class="op">=</span> plt.subplots(<span class="dv">2</span>, <span class="dv">1</span>, figsize<span class="op">=</span>(<span class="dv">10</span>, <span class="dv">8</span>), sharex<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Panel 1: Precios y SMA</span></span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>df_diario[<span class="st">"Precio"</span>].plot(ax<span class="op">=</span>ax[<span class="dv">0</span>], label<span class="op">=</span><span class="st">"Precio"</span>, alpha<span class="op">=</span><span class="fl">0.7</span>)</span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>df_diario[<span class="st">"SMA_20"</span>].plot(ax<span class="op">=</span>ax[<span class="dv">0</span>], label<span class="op">=</span><span class="st">"SMA 20"</span>, color<span class="op">=</span><span class="st">"blue"</span>, linewidth<span class="op">=</span><span class="dv">2</span>)</span>
+<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a>ax[<span class="dv">0</span>].set_title(<span class="st">"Evolución de Precios y Media Móvil"</span>)</span>
+<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a>ax[<span class="dv">0</span>].legend()</span>
+<span id="cb23-8"><a href="#cb23-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-9"><a href="#cb23-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Panel 2: Volatilidad</span></span>
+<span id="cb23-10"><a href="#cb23-10" aria-hidden="true" tabindex="-1"></a>df_diario[<span class="st">"Vol_20"</span>].plot(ax<span class="op">=</span>ax[<span class="dv">1</span>], color<span class="op">=</span><span class="st">"orange"</span>, label<span class="op">=</span><span class="st">"Volatilidad 20d"</span>)</span>
+<span id="cb23-11"><a href="#cb23-11" aria-hidden="true" tabindex="-1"></a>ax[<span class="dv">1</span>].set_title(<span class="st">"Volatilidad Móvil Anualizada"</span>)</span>
+<span id="cb23-12"><a href="#cb23-12" aria-hidden="true" tabindex="-1"></a>ax[<span class="dv">1</span>].legend()</span>
+<span id="cb23-13"><a href="#cb23-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-14"><a href="#cb23-14" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
+<span id="cb23-15"><a href="#cb23-15" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="cap06_series_tiempo_pandas_files/figure-html/plot-complejo-output-1.png" id="plot-complejo" width="953" height="758" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<hr>
+</section>
+<section id="caso-de-uso-construcción-de-la-curva-de-rendimientos" class="level1" data-number="18">
+<h1 data-number="18"><span class="header-section-number">18</span> Caso de Uso: Construcción de la Curva de Rendimientos</h1>
+<p>Este caso integra casi todo el capítulo —DataFrames, iteración, operaciones vectorizadas— para resolver un problema central de la renta fija: <strong>construir la curva de tasas</strong> a partir de precios de bonos que se cotizan en el mercado.</p>
+<section id="por-qué-necesitamos-construir-una-curva" class="level2" data-number="18.1">
+<h2 data-number="18.1" class="anchored" data-anchor-id="por-qué-necesitamos-construir-una-curva"><span class="header-section-number">18.1</span> ¿Por qué necesitamos “construir” una curva?</h2>
+<p>En el mercado no observamos directamente las tasas <em>spot</em> (la tasa de un instrumento que paga todo al vencimiento, sin cupones intermedios). Lo que observamos son <strong>precios de bonos con cupón</strong>, y cada uno mezcla tasas de muchos plazos a la vez. La técnica del <strong>bootstrapping</strong> desarma esa mezcla plazo por plazo: usa el bono a 1 año para despejar la tasa a 1 año, y con esa tasa ya conocida despeja la de 2 años del bono a 2 años, y así sucesivamente. Es como armar la curva “tirando del hilo”.</p>
+<p>Para un bono a <span class="math inline">\(n\)</span> años con cupón anual <span class="math inline">\(C\)</span> y valor nominal <span class="math inline">\(VN\)</span>, su precio es la suma de todos los flujos descontados a la tasa spot correspondiente a cada plazo:</p>
+<p><span class="math display">\[P = \sum_{t=1}^{n-1} \frac{C}{(1 + z_t)^t} + \frac{C + VN}{(1 + z_n)^n}\]</span></p>
+<p>Si ya conocemos las tasas <span class="math inline">\(z_1, \dots, z_{n-1}\)</span> (de los pasos anteriores), la única incógnita es <span class="math inline">\(z_n\)</span>, y la despejamos.</p>
+<div id="bootstrapping-final" class="cell" data-execution_count="15">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb24"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>bonos_mkt <span class="op">=</span> pd.DataFrame([</span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>    {<span class="st">"maturity"</span>: <span class="dv">1</span>, <span class="st">"cupon"</span>: <span class="fl">0.05</span>, <span class="st">"precio"</span>: <span class="fl">100.0</span>},</span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>    {<span class="st">"maturity"</span>: <span class="dv">2</span>, <span class="st">"cupon"</span>: <span class="fl">0.06</span>, <span class="st">"precio"</span>: <span class="fl">100.5</span>},</span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>    {<span class="st">"maturity"</span>: <span class="dv">3</span>, <span class="st">"cupon"</span>: <span class="fl">0.065</span>, <span class="st">"precio"</span>: <span class="fl">99.8</span>},</span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a>    {<span class="st">"maturity"</span>: <span class="dv">4</span>, <span class="st">"cupon"</span>: <span class="fl">0.07</span>, <span class="st">"precio"</span>: <span class="fl">100.2</span>},</span>
+<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a>    {<span class="st">"maturity"</span>: <span class="dv">5</span>, <span class="st">"cupon"</span>: <span class="fl">0.075</span>, <span class="st">"precio"</span>: <span class="fl">99.5</span>},</span>
+<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a>]).set_index(<span class="st">"maturity"</span>)</span>
+<span id="cb24-8"><a href="#cb24-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-9"><a href="#cb24-9" aria-hidden="true" tabindex="-1"></a>tasas_spot <span class="op">=</span> pd.Series(index<span class="op">=</span>bonos_mkt.index, dtype<span class="op">=</span><span class="bu">float</span>)</span>
+<span id="cb24-10"><a href="#cb24-10" aria-hidden="true" tabindex="-1"></a>VN <span class="op">=</span> <span class="dv">100</span></span>
+<span id="cb24-11"><a href="#cb24-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-12"><a href="#cb24-12" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> n, bono <span class="kw">in</span> bonos_mkt.iterrows():</span>
+<span id="cb24-13"><a href="#cb24-13" aria-hidden="true" tabindex="-1"></a>    C <span class="op">=</span> VN <span class="op">*</span> bono[<span class="st">"cupon"</span>]</span>
+<span id="cb24-14"><a href="#cb24-14" aria-hidden="true" tabindex="-1"></a>    P <span class="op">=</span> bono[<span class="st">"precio"</span>]</span>
+<span id="cb24-15"><a href="#cb24-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-16"><a href="#cb24-16" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Valor presente de los cupones anteriores al vencimiento,</span></span>
+<span id="cb24-17"><a href="#cb24-17" aria-hidden="true" tabindex="-1"></a>    <span class="co"># descontados con las tasas spot ya calculadas en pasos previos</span></span>
+<span id="cb24-18"><a href="#cb24-18" aria-hidden="true" tabindex="-1"></a>    vp_cupones <span class="op">=</span> <span class="bu">sum</span>(C <span class="op">/</span> (<span class="dv">1</span> <span class="op">+</span> tasas_spot[t]) <span class="op">**</span> t <span class="cf">for</span> t <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">1</span>, <span class="bu">int</span>(n)))</span>
+<span id="cb24-19"><a href="#cb24-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-20"><a href="#cb24-20" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Despejamos la tasa spot del plazo n del flujo final (cupón + nominal)</span></span>
+<span id="cb24-21"><a href="#cb24-21" aria-hidden="true" tabindex="-1"></a>    z_n <span class="op">=</span> ((C <span class="op">+</span> VN) <span class="op">/</span> (P <span class="op">-</span> vp_cupones)) <span class="op">**</span> (<span class="dv">1</span> <span class="op">/</span> n) <span class="op">-</span> <span class="dv">1</span></span>
+<span id="cb24-22"><a href="#cb24-22" aria-hidden="true" tabindex="-1"></a>    tasas_spot[n] <span class="op">=</span> z_n</span>
+<span id="cb24-23"><a href="#cb24-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-24"><a href="#cb24-24" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Curva Spot (tasas cero-cupón):"</span>)</span>
+<span id="cb24-25"><a href="#cb24-25" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>((tasas_spot <span class="op">*</span> <span class="dv">100</span>).<span class="bu">round</span>(<span class="dv">3</span>).astype(<span class="bu">str</span>) <span class="op">+</span> <span class="st">" %"</span>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Curva Spot (tasas cero-cupón):
+maturity
+1      5.0 %
+2     5.75 %
+3    6.649 %
+4    7.042 %
+5    7.826 %
+dtype: str</code></pre>
+</div>
+</div>
+</section>
+<section id="de-la-curva-spot-a-las-tasas-forward" class="level2" data-number="18.2">
+<h2 data-number="18.2" class="anchored" data-anchor-id="de-la-curva-spot-a-las-tasas-forward"><span class="header-section-number">18.2</span> De la curva spot a las tasas forward</h2>
+<p>La curva spot responde <em>“¿a qué tasa presto hoy por 3 años?”</em>. Pero muchas veces queremos saber otra cosa: <em>“¿qué tasa está descontando el mercado para el año que va del 2 al 3?”</em>. Esa es la <strong>tasa forward implícita</strong>, y sale de un argumento de no-arbitraje: invertir 3 años a la spot <span class="math inline">\(z_3\)</span> debe rendir lo mismo que invertir 2 años a <span class="math inline">\(z_2\)</span> y luego reinvertir 1 año a la forward <span class="math inline">\(f_{2,3}\)</span>:</p>
+<p><span class="math display">\[(1 + z_n)^n = (1 + z_{n-1})^{n-1} \cdot (1 + f_{n-1,n}) \quad\Rightarrow\quad f_{n-1,n} = \frac{(1 + z_n)^n}{(1 + z_{n-1})^{n-1}} - 1\]</span></p>
+<div id="forward-rates" class="cell" data-execution_count="16">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb26"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Factor de capitalización acumulado hasta cada plazo: (1 + z_n)^n</span></span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>factor_acum <span class="op">=</span> (<span class="dv">1</span> <span class="op">+</span> tasas_spot) <span class="op">**</span> tasas_spot.index</span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Forward de un año: cociente de factores acumulados consecutivos</span></span>
+<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a>forwards <span class="op">=</span> factor_acum <span class="op">/</span> factor_acum.shift(<span class="dv">1</span>) <span class="op">-</span> <span class="dv">1</span></span>
+<span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a>forwards.iloc[<span class="dv">0</span>] <span class="op">=</span> tasas_spot.iloc[<span class="dv">0</span>]  <span class="co"># el forward del primer tramo es la spot a 1 año</span></span>
+<span id="cb26-7"><a href="#cb26-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-8"><a href="#cb26-8" aria-hidden="true" tabindex="-1"></a>curva <span class="op">=</span> pd.DataFrame({<span class="st">"spot"</span>: tasas_spot, <span class="st">"forward_1y"</span>: forwards})</span>
+<span id="cb26-9"><a href="#cb26-9" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>((curva <span class="op">*</span> <span class="dv">100</span>).<span class="bu">round</span>(<span class="dv">3</span>))</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>           spot  forward_1y
+maturity                   
+1         5.000       5.000
+2         5.750       6.506
+3         6.649       8.469
+4         7.042       8.228
+5         7.826      11.022</code></pre>
+</div>
+</div>
+<p>Cuando las forward están <strong>por encima</strong> de las spot, el mercado espera que las tasas suban (curva creciente): cada tramo nuevo “empuja” el promedio hacia arriba.</p>
+</section>
+<section id="interpolar-la-curva-para-plazos-intermedios" class="level2" data-number="18.3">
+<h2 data-number="18.3" class="anchored" data-anchor-id="interpolar-la-curva-para-plazos-intermedios"><span class="header-section-number">18.3</span> Interpolar la curva para plazos intermedios</h2>
+<p>Nuestra curva tiene puntos solo en 1, 2, 3, 4 y 5 años, pero en la práctica necesitamos descontar flujos que caen en cualquier fecha (por ejemplo, a 2,5 años). Para eso <strong>interpolamos</strong>. Pandas trae <code>interpolate()</code>, que rellena los huecos de un índice: reindexamos la curva a una grilla más fina y dejamos que complete linealmente.</p>
+<div id="cell-interpolacion-curva" class="cell" data-execution_count="17">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb28"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Grilla de plazos cada medio año, de 1 a 5</span></span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a>grilla <span class="op">=</span> np.arange(<span class="fl">1.0</span>, <span class="fl">5.5</span>, <span class="fl">0.5</span>)</span>
+<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a>curva_interpolada <span class="op">=</span> (</span>
+<span id="cb28-7"><a href="#cb28-7" aria-hidden="true" tabindex="-1"></a>    tasas_spot</span>
+<span id="cb28-8"><a href="#cb28-8" aria-hidden="true" tabindex="-1"></a>    .reindex(tasas_spot.index.union(grilla))  <span class="co"># agregamos los plazos intermedios (quedan NaN)</span></span>
+<span id="cb28-9"><a href="#cb28-9" aria-hidden="true" tabindex="-1"></a>    .interpolate(method<span class="op">=</span><span class="st">"index"</span>)              <span class="co"># interpolamos usando el valor del índice (el plazo)</span></span>
+<span id="cb28-10"><a href="#cb28-10" aria-hidden="true" tabindex="-1"></a>    .reindex(grilla)                           <span class="co"># nos quedamos con la grilla fina</span></span>
+<span id="cb28-11"><a href="#cb28-11" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb28-12"><a href="#cb28-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-13"><a href="#cb28-13" aria-hidden="true" tabindex="-1"></a>fig, ax <span class="op">=</span> plt.subplots(figsize<span class="op">=</span>(<span class="dv">9</span>, <span class="dv">4</span>))</span>
+<span id="cb28-14"><a href="#cb28-14" aria-hidden="true" tabindex="-1"></a>ax.plot(tasas_spot.index, tasas_spot <span class="op">*</span> <span class="dv">100</span>, <span class="st">"o"</span>, markersize<span class="op">=</span><span class="dv">9</span>,</span>
+<span id="cb28-15"><a href="#cb28-15" aria-hidden="true" tabindex="-1"></a>        label<span class="op">=</span><span class="st">"Tasas spot observadas (bootstrapping)"</span>)</span>
+<span id="cb28-16"><a href="#cb28-16" aria-hidden="true" tabindex="-1"></a>ax.plot(curva_interpolada.index, curva_interpolada <span class="op">*</span> <span class="dv">100</span>, <span class="st">".-"</span>, alpha<span class="op">=</span><span class="fl">0.7</span>,</span>
+<span id="cb28-17"><a href="#cb28-17" aria-hidden="true" tabindex="-1"></a>        label<span class="op">=</span><span class="st">"Curva interpolada (cada 6 meses)"</span>)</span>
+<span id="cb28-18"><a href="#cb28-18" aria-hidden="true" tabindex="-1"></a>ax.set_xlabel(<span class="st">"Plazo (años)"</span>)</span>
+<span id="cb28-19"><a href="#cb28-19" aria-hidden="true" tabindex="-1"></a>ax.set_ylabel(<span class="st">"Tasa spot (%)"</span>)</span>
+<span id="cb28-20"><a href="#cb28-20" aria-hidden="true" tabindex="-1"></a>ax.set_title(<span class="st">"Curva de Rendimientos: puntos observados vs. interpolación"</span>)</span>
+<span id="cb28-21"><a href="#cb28-21" aria-hidden="true" tabindex="-1"></a>ax.legend()</span>
+<span id="cb28-22"><a href="#cb28-22" aria-hidden="true" tabindex="-1"></a>ax.grid(<span class="va">True</span>, alpha<span class="op">=</span><span class="fl">0.3</span>)</span>
+<span id="cb28-23"><a href="#cb28-23" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
+<span id="cb28-24"><a href="#cb28-24" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="cap06_series_tiempo_pandas_files/figure-html/interpolacion-curva-output-1.png" id="interpolacion-curva" width="856" height="375" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="callout callout-style-simple callout-warning callout-titled" title="La interpolación lineal es un punto de partida, no la verdad">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Advertencia</span>La interpolación lineal es un punto de partida, no la verdad
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Interpolar linealmente es simple y transparente, pero los operadores de renta fija suelen usar métodos más suaves (splines cúbicos, Nelson-Siegel) para que la curva forward no tenga “quiebres” antieconómicos. Para aprender el mecanismo, lo lineal alcanza; para valuar en producción, conviene ir más fino.</p>
+</div>
+</div>
+<hr>
+</section>
+</section>
+<section id="ejercicios-propuestos" class="level1" data-number="19">
+<h1 data-number="19"><span class="header-section-number">19</span> Ejercicios Propuestos</h1>
+<div class="callout callout-style-simple callout-important callout-titled" title="Desafíos">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Importante</span>Desafíos
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ol type="1">
+<li><strong>Volatilidad comparada</strong>: A partir de una serie de precios simulada, compará la volatilidad móvil de 30 días contra la de 90 días en un mismo gráfico. ¿Cuál reacciona más rápido a un shock?</li>
+<li><strong>Dashboard de retornos</strong>: Escribí una función que reciba un DataFrame de precios y devuelva una tabla resumen con retorno acumulado, volatilidad anualizada y máximo <em>drawdown</em>.</li>
+<li><strong>Groupby + resample</strong>: Dado un panel de varios activos, calculá el retorno promedio mensual de cada uno combinando <code>.groupby()</code> con <code>.resample()</code>.</li>
+<li><strong><code>ffill</code> vs.&nbsp;<code>interpolate</code></strong>: Simulá una serie con valores nulos aleatorios y compará el resultado de rellenarlos con <code>ffill()</code> frente a <code>interpolate()</code>. ¿Cuándo es apropiado cada uno?</li>
+<li><strong>Curva forward completa</strong>: Extendé el ejemplo de bootstrapping para calcular, además de las forward de 1 año, la tasa forward a 2 años que arranca dentro de 1 año (<span class="math inline">\(f_{1,3}\)</span>).</li>
+</ol>
+</div>
+</div>
+<hr>
+</section>
+<section id="referencias" class="level1" data-number="20">
+<h1 data-number="20"><span class="header-section-number">20</span> Referencias</h1>
+<ul>
+<li>McKinney, W. (2017). <em>Python for Data Analysis</em>. O’Reilly Media.</li>
+<li>Hilpisch, Y. (2018). <em>Python for Finance</em>. O’Reilly Media.</li>
+<li>Pandas Development Team. (2024). <em>Pandas Documentation</em>. <a href="https://pandas.pydata.org">pandas.pydata.org</a></li>
+</ul>
+
+
+<!-- -->
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copiado");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copiado");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+    const viewSource = window.document.getElementById('quarto-view-source') ||
+                       window.document.getElementById('quarto-code-tools-source');
+    if (viewSource) {
+      const sourceUrl = viewSource.getAttribute("data-quarto-source-url");
+      viewSource.addEventListener("click", function(e) {
+        if (sourceUrl) {
+          // rstudio viewer pane
+          if (/\bcapabilities=\b/.test(window.location)) {
+            window.open(sourceUrl);
+          } else {
+            window.location.href = sourceUrl;
+          }
+        } else {
+          const modal = new bootstrap.Modal(document.getElementById('quarto-embedded-source-code-modal'));
+          modal.show();
+        }
+        return false;
+      });
+    }
+    function toggleCodeHandler(show) {
+      return function(e) {
+        const detailsSrc = window.document.querySelectorAll(".cell > details > .sourceCode");
+        for (let i=0; i<detailsSrc.length; i++) {
+          const details = detailsSrc[i].parentElement;
+          if (show) {
+            details.open = true;
+          } else {
+            details.removeAttribute("open");
+          }
+        }
+        const cellCodeDivs = window.document.querySelectorAll(".cell > .sourceCode");
+        const fromCls = show ? "hidden" : "unhidden";
+        const toCls = show ? "unhidden" : "hidden";
+        for (let i=0; i<cellCodeDivs.length; i++) {
+          const codeDiv = cellCodeDivs[i];
+          if (codeDiv.classList.contains(fromCls)) {
+            codeDiv.classList.remove(fromCls);
+            codeDiv.classList.add(toCls);
+          } 
+        }
+        return false;
+      }
+    }
+    const hideAllCode = window.document.getElementById("quarto-hide-all-code");
+    if (hideAllCode) {
+      hideAllCode.addEventListener("click", toggleCodeHandler(false));
+    }
+    const showAllCode = window.document.getElementById("quarto-show-all-code");
+    if (showAllCode) {
+      showAllCode.addEventListener("click", toggleCodeHandler(true));
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+            // target, if specified
+            link.setAttribute("target", "_blank");
+            if (link.getAttribute("rel") === null) {
+              link.setAttribute("rel", "noopener");
+            }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="../unidad1/cap05_numpy.html" class="pagination-link" aria-label="Capítulo 5: NumPy y Cálculo Vectorizado">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Capítulo 5: NumPy y Cálculo Vectorizado</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="../unidad2/_intro_mod2.html" class="pagination-link" aria-label="Módulo 2: Teoría de Portafolios y Optimización">
+        <span class="nav-page-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Módulo 2: Teoría de Portafolios y Optimización</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav><div class="modal fade" id="quarto-embedded-source-code-modal" tabindex="-1" aria-labelledby="quarto-embedded-source-code-modal-label" aria-hidden="true"><div class="modal-dialog modal-dialog-scrollable"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="quarto-embedded-source-code-modal-label">Ejecutar el código</h5><button class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><div class="">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb29" data-shortcodes="false"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a><span class="an">title:</span><span class="co"> "Capítulo 6: Series de Tiempo y Análisis de Datos con Pandas"</span></span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a><span class="an">subtitle:</span><span class="co"> "Estructuras de Datos, Manipulación y Cálculos Financieros"</span></span>
+<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a><span class="an">abstract:</span><span class="co"> |</span></span>
+<span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a><span class="co">  Introducción a pandas como herramienta fundamental para la carga, limpieza y análisis de datos en finanzas.</span></span>
+<span id="cb29-6"><a href="#cb29-6" aria-hidden="true" tabindex="-1"></a><span class="co">  Estudiamos Series y DataFrames, manipulación de series temporales, cálculos vectorizados de retornos,</span></span>
+<span id="cb29-7"><a href="#cb29-7" aria-hidden="true" tabindex="-1"></a><span class="co">  ventanas móviles y visualización técnica.</span></span>
+<span id="cb29-8"><a href="#cb29-8" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
+<span id="cb29-9"><a href="#cb29-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-10"><a href="#cb29-10" aria-hidden="true" tabindex="-1"></a><span class="fu"># Introducción</span></span>
+<span id="cb29-11"><a href="#cb29-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-12"><a href="#cb29-12" aria-hidden="true" tabindex="-1"></a>En los capítulos anteriores, utilizamos listas y diccionarios para representar datos de instrumentos financieros. Sin embargo, en el mundo real, los datos suelen ser tabulares y masivos (decenas de miles de cotizaciones). **Pandas** es la librería estándar de Python diseñada específicamente para este propósito, ofreciendo estructuras de datos de alto rendimiento y herramientas de análisis intuitivas.</span>
+<span id="cb29-13"><a href="#cb29-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-14"><a href="#cb29-14" aria-hidden="true" tabindex="-1"></a>---</span>
+<span id="cb29-15"><a href="#cb29-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-16"><a href="#cb29-16" aria-hidden="true" tabindex="-1"></a><span class="fu"># Introducción a Pandas</span></span>
+<span id="cb29-17"><a href="#cb29-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-18"><a href="#cb29-18" aria-hidden="true" tabindex="-1"></a>**Pandas** es una librería esencial para la carga, limpieza, análisis y exportación de datos. Se integra perfectamente con el ecosistema de Python (NumPy, SciPy y Matplotlib).</span>
+<span id="cb29-19"><a href="#cb29-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-22"><a href="#cb29-22" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb29-23"><a href="#cb29-23" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: setup</span></span>
+<span id="cb29-24"><a href="#cb29-24" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb29-25"><a href="#cb29-25" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb29-26"><a href="#cb29-26" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb29-27"><a href="#cb29-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-28"><a href="#cb29-28" aria-hidden="true" tabindex="-1"></a><span class="co"># Configuración estética para los gráficos</span></span>
+<span id="cb29-29"><a href="#cb29-29" aria-hidden="true" tabindex="-1"></a>plt.style.use(<span class="st">'ggplot'</span>)</span>
+<span id="cb29-30"><a href="#cb29-30" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb29-31"><a href="#cb29-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-32"><a href="#cb29-32" aria-hidden="true" tabindex="-1"></a><span class="fu">## Series (1D)</span></span>
+<span id="cb29-33"><a href="#cb29-33" aria-hidden="true" tabindex="-1"></a>Una **Serie** es una estructura unidimensional etiquetada con un índice. Soporta operaciones vectorizadas y métodos estadísticos básicos.</span>
+<span id="cb29-34"><a href="#cb29-34" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-37"><a href="#cb29-37" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb29-38"><a href="#cb29-38" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: pandas-series</span></span>
+<span id="cb29-39"><a href="#cb29-39" aria-hidden="true" tabindex="-1"></a>precios_serie <span class="op">=</span> pd.Series([<span class="dv">110</span>, <span class="dv">112</span>, <span class="dv">108</span>, <span class="dv">115</span>, <span class="dv">120</span>], </span>
+<span id="cb29-40"><a href="#cb29-40" aria-hidden="true" tabindex="-1"></a>                          index<span class="op">=</span>[<span class="st">"Lunes"</span>, <span class="st">"Martes"</span>, <span class="st">"Miércoles"</span>, <span class="st">"Jueves"</span>, <span class="st">"Viernes"</span>],</span>
+<span id="cb29-41"><a href="#cb29-41" aria-hidden="true" tabindex="-1"></a>                          name<span class="op">=</span><span class="st">"Precios"</span>)</span>
+<span id="cb29-42"><a href="#cb29-42" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-43"><a href="#cb29-43" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(precios_serie)</span>
+<span id="cb29-44"><a href="#cb29-44" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"</span><span class="ch">\n</span><span class="ss">Media: </span><span class="sc">{</span>precios_serie<span class="sc">.</span>mean()<span class="sc">:.2f}</span><span class="ss">"</span>)</span>
+<span id="cb29-45"><a href="#cb29-45" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Desvío estándar: </span><span class="sc">{</span>precios_serie<span class="sc">.</span>std()<span class="sc">:.2f}</span><span class="ss">"</span>)</span>
+<span id="cb29-46"><a href="#cb29-46" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb29-47"><a href="#cb29-47" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-48"><a href="#cb29-48" aria-hidden="true" tabindex="-1"></a><span class="fu">## DataFrames (2D)</span></span>
+<span id="cb29-49"><a href="#cb29-49" aria-hidden="true" tabindex="-1"></a>Un **DataFrame** es una estructura tabular (filas y columnas) donde cada columna es, técnicamente, una Serie que comparte el mismo índice.</span>
+<span id="cb29-50"><a href="#cb29-50" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-53"><a href="#cb29-53" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb29-54"><a href="#cb29-54" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: dataframe-intro</span></span>
+<span id="cb29-55"><a href="#cb29-55" aria-hidden="true" tabindex="-1"></a>datos <span class="op">=</span> {</span>
+<span id="cb29-56"><a href="#cb29-56" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Ticker"</span>: [<span class="st">"GD30"</span>, <span class="st">"GD35"</span>, <span class="st">"GD38"</span>, <span class="st">"GD41"</span>, <span class="st">"GD46"</span>],</span>
+<span id="cb29-57"><a href="#cb29-57" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Precio"</span>: [<span class="fl">92.5</span>, <span class="fl">85.3</span>, <span class="fl">78.1</span>, <span class="fl">72.4</span>, <span class="fl">65.8</span>],</span>
+<span id="cb29-58"><a href="#cb29-58" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Cercanía"</span>: [<span class="fl">0.08</span>, <span class="fl">0.07</span>, <span class="fl">0.065</span>, <span class="fl">0.06</span>, <span class="fl">0.055</span>]</span>
+<span id="cb29-59"><a href="#cb29-59" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb29-60"><a href="#cb29-60" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-61"><a href="#cb29-61" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.DataFrame(datos)</span>
+<span id="cb29-62"><a href="#cb29-62" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(df)</span>
+<span id="cb29-63"><a href="#cb29-63" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb29-64"><a href="#cb29-64" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-65"><a href="#cb29-65" aria-hidden="true" tabindex="-1"></a><span class="fu">## Exploración Inicial</span></span>
+<span id="cb29-66"><a href="#cb29-66" aria-hidden="true" tabindex="-1"></a>Antes de analizar datos, debemos inspeccionar su estructura mediante métodos clave:</span>
+<span id="cb29-67"><a href="#cb29-67" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-70"><a href="#cb29-70" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb29-71"><a href="#cb29-71" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: exploracion</span></span>
+<span id="cb29-72"><a href="#cb29-72" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Dimensiones: </span><span class="sc">{</span>df<span class="sc">.</span>shape<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb29-73"><a href="#cb29-73" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Columnas: </span><span class="sc">{</span>df<span class="sc">.</span>columns<span class="sc">.</span>tolist()<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb29-74"><a href="#cb29-74" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-75"><a href="#cb29-75" aria-hidden="true" tabindex="-1"></a><span class="co"># Métodos esenciales de inspección</span></span>
+<span id="cb29-76"><a href="#cb29-76" aria-hidden="true" tabindex="-1"></a><span class="co"># df.head()      # Primeras 5 filas</span></span>
+<span id="cb29-77"><a href="#cb29-77" aria-hidden="true" tabindex="-1"></a><span class="co"># df.tail()      # Últimas 5 filas</span></span>
+<span id="cb29-78"><a href="#cb29-78" aria-hidden="true" tabindex="-1"></a><span class="co"># df.info()      # Resumen de tipos de datos y memoria</span></span>
+<span id="cb29-79"><a href="#cb29-79" aria-hidden="true" tabindex="-1"></a><span class="co"># df.describe()  # Estadísticas descriptivas rápidas</span></span>
+<span id="cb29-80"><a href="#cb29-80" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb29-81"><a href="#cb29-81" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-82"><a href="#cb29-82" aria-hidden="true" tabindex="-1"></a>---</span>
+<span id="cb29-83"><a href="#cb29-83" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-84"><a href="#cb29-84" aria-hidden="true" tabindex="-1"></a><span class="fu"># Lectura, Escritura y Alineación de Datos</span></span>
+<span id="cb29-85"><a href="#cb29-85" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-86"><a href="#cb29-86" aria-hidden="true" tabindex="-1"></a><span class="fu">## I/O de Archivos</span></span>
+<span id="cb29-87"><a href="#cb29-87" aria-hidden="true" tabindex="-1"></a>Pandas permite la ingesta de datos desde múltiples fuentes (<span class="in">`read_csv`</span>, <span class="in">`read_excel`</span>) y el guardado de resultados (<span class="in">`to_csv`</span>, <span class="in">`to_excel`</span>).</span>
+<span id="cb29-88"><a href="#cb29-88" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-91"><a href="#cb29-91" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb29-92"><a href="#cb29-92" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: io-ejemplo</span></span>
+<span id="cb29-93"><a href="#cb29-93" aria-hidden="true" tabindex="-1"></a><span class="co"># Ejemplo hipotético de lectura</span></span>
+<span id="cb29-94"><a href="#cb29-94" aria-hidden="true" tabindex="-1"></a><span class="co"># df = pd.read_csv("historico.csv", sep=";", encoding="utf-8")</span></span>
+<span id="cb29-95"><a href="#cb29-95" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-96"><a href="#cb29-96" aria-hidden="true" tabindex="-1"></a><span class="co"># Parámetros útiles al leer:</span></span>
+<span id="cb29-97"><a href="#cb29-97" aria-hidden="true" tabindex="-1"></a><span class="co"># parse_dates=['Fecha']: Convierte columnas a objetos Datetime directamente.</span></span>
+<span id="cb29-98"><a href="#cb29-98" aria-hidden="true" tabindex="-1"></a><span class="co"># index_col='Fecha': Establece una columna como índice del DataFrame.</span></span>
+<span id="cb29-99"><a href="#cb29-99" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb29-100"><a href="#cb29-100" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-101"><a href="#cb29-101" aria-hidden="true" tabindex="-1"></a><span class="fu">## Alineación de Índices e Integración de Datos</span></span>
+<span id="cb29-102"><a href="#cb29-102" aria-hidden="true" tabindex="-1"></a>La **alineación automática** es un concepto crítico en finanzas. Si combinamos dos activos que cotizan en días distintos (debido a feriados locales), Pandas se asegura de alinear las fechas correctamente.</span>
+<span id="cb29-103"><a href="#cb29-103" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-104"><a href="#cb29-104" aria-hidden="true" tabindex="-1"></a>Para combinar datasets utilizamos:</span>
+<span id="cb29-105"><a href="#cb29-105" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span><span class="in">`merge()`</span>: Unión por columnas (similar a un JOIN de SQL).</span>
+<span id="cb29-106"><a href="#cb29-106" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span><span class="in">`join()`</span>: Unión eficiente usando el índice (ideal para <span class="in">`DatetimeIndex`</span>).</span>
+<span id="cb29-107"><a href="#cb29-107" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span><span class="in">`concat()`</span>: Apilado vertical u horizontal.</span>
+<span id="cb29-108"><a href="#cb29-108" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-109"><a href="#cb29-109" aria-hidden="true" tabindex="-1"></a>Tipos de uniones: <span class="in">`inner`</span>, <span class="in">`outer`</span> (por defecto en <span class="in">`concat`</span>), <span class="in">`left`</span> y <span class="in">`right`</span>.</span>
+<span id="cb29-110"><a href="#cb29-110" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-113"><a href="#cb29-113" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb29-114"><a href="#cb29-114" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: merge-ejemplo</span></span>
+<span id="cb29-115"><a href="#cb29-115" aria-hidden="true" tabindex="-1"></a>df_a <span class="op">=</span> pd.DataFrame({<span class="st">"Ticker"</span>: [<span class="st">"GD30"</span>, <span class="st">"AL30"</span>], <span class="st">"Tir"</span>: [<span class="fl">0.45</span>, <span class="fl">0.52</span>]})</span>
+<span id="cb29-116"><a href="#cb29-116" aria-hidden="true" tabindex="-1"></a>df_b <span class="op">=</span> pd.DataFrame({<span class="st">"Ticker"</span>: [<span class="st">"GD30"</span>, <span class="st">"AL30"</span>], <span class="st">"Paridad"</span>: [<span class="fl">0.35</span>, <span class="fl">0.32</span>]})</span>
+<span id="cb29-117"><a href="#cb29-117" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-118"><a href="#cb29-118" aria-hidden="true" tabindex="-1"></a>df_unido <span class="op">=</span> pd.merge(df_a, df_b, on<span class="op">=</span><span class="st">"Ticker"</span>, how<span class="op">=</span><span class="st">"inner"</span>)</span>
+<span id="cb29-119"><a href="#cb29-119" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(df_unido)</span>
+<span id="cb29-120"><a href="#cb29-120" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb29-121"><a href="#cb29-121" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-122"><a href="#cb29-122" aria-hidden="true" tabindex="-1"></a>---</span>
+<span id="cb29-123"><a href="#cb29-123" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-124"><a href="#cb29-124" aria-hidden="true" tabindex="-1"></a><span class="fu"># Selección y Filtrado</span></span>
+<span id="cb29-125"><a href="#cb29-125" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-126"><a href="#cb29-126" aria-hidden="true" tabindex="-1"></a><span class="fu">## Indexación: .loc vs .iloc</span></span>
+<span id="cb29-127"><a href="#cb29-127" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span><span class="in">`.loc`</span>: Busca por **etiquetas** de índice y nombres de columnas.</span>
+<span id="cb29-128"><a href="#cb29-128" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span><span class="in">`.iloc`</span>: Busca por **posición numérica** (0-indexed).</span>
+<span id="cb29-129"><a href="#cb29-129" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-132"><a href="#cb29-132" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb29-133"><a href="#cb29-133" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: indexing</span></span>
+<span id="cb29-134"><a href="#cb29-134" aria-hidden="true" tabindex="-1"></a><span class="co"># Seleccionar fila 0 y columna 'Precio' por posición</span></span>
+<span id="cb29-135"><a href="#cb29-135" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Precio GD30 (.iloc): </span><span class="sc">{</span>df<span class="sc">.</span>iloc[<span class="dv">0</span>, <span class="dv">1</span>]<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb29-136"><a href="#cb29-136" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-137"><a href="#cb29-137" aria-hidden="true" tabindex="-1"></a><span class="co"># Seleccionar por etiqueta (si el ticker fuera el índice)</span></span>
+<span id="cb29-138"><a href="#cb29-138" aria-hidden="true" tabindex="-1"></a>df_idx <span class="op">=</span> df.set_index(<span class="st">"Ticker"</span>)</span>
+<span id="cb29-139"><a href="#cb29-139" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Precio GD30 (.loc):</span><span class="ch">\n</span><span class="sc">{</span>df_idx<span class="sc">.</span>loc[<span class="st">'GD30'</span>, <span class="st">'Precio'</span>]<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb29-140"><a href="#cb29-140" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb29-141"><a href="#cb29-141" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-142"><a href="#cb29-142" aria-hidden="true" tabindex="-1"></a><span class="fu">## Filtrado Booleano y Máscaras</span></span>
+<span id="cb29-143"><a href="#cb29-143" aria-hidden="true" tabindex="-1"></a>Permite filtrar filas según condiciones lógicas o pertenencia a listas mediante <span class="in">`.isin()`</span>.</span>
+<span id="cb29-144"><a href="#cb29-144" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-147"><a href="#cb29-147" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb29-148"><a href="#cb29-148" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: filtrado</span></span>
+<span id="cb29-149"><a href="#cb29-149" aria-hidden="true" tabindex="-1"></a><span class="co"># Bonos con precio mayor a 80</span></span>
+<span id="cb29-150"><a href="#cb29-150" aria-hidden="true" tabindex="-1"></a>mascara <span class="op">=</span> df[<span class="st">"Precio"</span>] <span class="op">&gt;</span> <span class="dv">80</span></span>
+<span id="cb29-151"><a href="#cb29-151" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(df[mascara])</span>
+<span id="cb29-152"><a href="#cb29-152" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-153"><a href="#cb29-153" aria-hidden="true" tabindex="-1"></a><span class="co"># Filtrar por múltiples valores</span></span>
+<span id="cb29-154"><a href="#cb29-154" aria-hidden="true" tabindex="-1"></a>tickers_interes <span class="op">=</span> [<span class="st">"GD30"</span>, <span class="st">"GD46"</span>]</span>
+<span id="cb29-155"><a href="#cb29-155" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(df[df[<span class="st">"Ticker"</span>].isin(tickers_interes)])</span>
+<span id="cb29-156"><a href="#cb29-156" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb29-157"><a href="#cb29-157" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-158"><a href="#cb29-158" aria-hidden="true" tabindex="-1"></a>---</span>
+<span id="cb29-159"><a href="#cb29-159" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-160"><a href="#cb29-160" aria-hidden="true" tabindex="-1"></a><span class="fu"># Manejo de Fechas y Series Temporales</span></span>
+<span id="cb29-161"><a href="#cb29-161" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-162"><a href="#cb29-162" aria-hidden="true" tabindex="-1"></a>Pandas es excepcionalmente potente para trabajar con frecuencias temporales. Primero convertimos datos a tipo fecha con <span class="in">`pd.to_datetime()`</span> y establecemos un <span class="in">`DatetimeIndex`</span>.</span>
+<span id="cb29-163"><a href="#cb29-163" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-166"><a href="#cb29-166" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb29-167"><a href="#cb29-167" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: time-series</span></span>
+<span id="cb29-168"><a href="#cb29-168" aria-hidden="true" tabindex="-1"></a>fechas <span class="op">=</span> [<span class="st">"2023-01-01"</span>, <span class="st">"2023-01-02"</span>, <span class="st">"2023-01-05"</span>] <span class="co"># 02 es lunes, 01 es domingo</span></span>
+<span id="cb29-169"><a href="#cb29-169" aria-hidden="true" tabindex="-1"></a>df_time <span class="op">=</span> pd.DataFrame({<span class="st">"Precio"</span>: [<span class="dv">100</span>, <span class="dv">101</span>, <span class="fl">102.5</span>]}, index<span class="op">=</span>pd.to_datetime(fechas))</span>
+<span id="cb29-170"><a href="#cb29-170" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-171"><a href="#cb29-171" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(df_time.index)</span>
+<span id="cb29-172"><a href="#cb29-172" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb29-173"><a href="#cb29-173" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-174"><a href="#cb29-174" aria-hidden="true" tabindex="-1"></a><span class="fu">## Resample: Cambio de Frecuencias</span></span>
+<span id="cb29-175"><a href="#cb29-175" aria-hidden="true" tabindex="-1"></a>El método <span class="in">`resample()`</span> permite agrupar datos por períodos (diario <span class="in">`"D"`</span>, semanal <span class="in">`"W"`</span>, fin de mes <span class="in">`"ME"`</span>) y aplicar funciones de agregación.</span>
+<span id="cb29-176"><a href="#cb29-176" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-179"><a href="#cb29-179" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb29-180"><a href="#cb29-180" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: resample-ejemplo</span></span>
+<span id="cb29-181"><a href="#cb29-181" aria-hidden="true" tabindex="-1"></a><span class="co"># Simulamos una serie diaria para ejemplo</span></span>
+<span id="cb29-182"><a href="#cb29-182" aria-hidden="true" tabindex="-1"></a>df_diario <span class="op">=</span> pd.DataFrame({</span>
+<span id="cb29-183"><a href="#cb29-183" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Precio"</span>: np.random.normal(<span class="dv">100</span>, <span class="dv">1</span>, <span class="dv">100</span>).cumsum()</span>
+<span id="cb29-184"><a href="#cb29-184" aria-hidden="true" tabindex="-1"></a>}, index<span class="op">=</span>pd.date_range(<span class="st">"2023-01-01"</span>, periods<span class="op">=</span><span class="dv">100</span>, freq<span class="op">=</span><span class="st">"B"</span>))</span>
+<span id="cb29-185"><a href="#cb29-185" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-186"><a href="#cb29-186" aria-hidden="true" tabindex="-1"></a><span class="co"># Cambiar de diario a mensual tomando el último valor</span></span>
+<span id="cb29-187"><a href="#cb29-187" aria-hidden="true" tabindex="-1"></a>df_mensual <span class="op">=</span> df_diario.resample(<span class="st">"ME"</span>).last()  <span class="co"># "ME" = Month End</span></span>
+<span id="cb29-188"><a href="#cb29-188" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(df_mensual.head(<span class="dv">3</span>))</span>
+<span id="cb29-189"><a href="#cb29-189" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb29-190"><a href="#cb29-190" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-191"><a href="#cb29-191" aria-hidden="true" tabindex="-1"></a>---</span>
+<span id="cb29-192"><a href="#cb29-192" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-193"><a href="#cb29-193" aria-hidden="true" tabindex="-1"></a><span class="fu"># Limpieza y Transformación de Datos</span></span>
+<span id="cb29-194"><a href="#cb29-194" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-195"><a href="#cb29-195" aria-hidden="true" tabindex="-1"></a>En finanzas, los datos suelen tener "agujeros" (NaT o NaN).</span>
+<span id="cb29-196"><a href="#cb29-196" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span><span class="in">`isna()`</span>: Detecta nulos.</span>
+<span id="cb29-197"><a href="#cb29-197" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span><span class="in">`dropna()`</span>: Elimina filas/columnas con nulos.</span>
+<span id="cb29-198"><a href="#cb29-198" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span><span class="in">`fillna()`</span>: Rellena nulos con valores específicos o métodos como <span class="in">`ffill`</span> (forward fill) o <span class="in">`bfill`</span> (backward fill).</span>
+<span id="cb29-199"><a href="#cb29-199" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-200"><a href="#cb29-200" aria-hidden="true" tabindex="-1"></a>::: {.callout-tip title="Forward Fill en Finanzas"}</span>
+<span id="cb29-201"><a href="#cb29-201" aria-hidden="true" tabindex="-1"></a>El método <span class="in">`ffill`</span> es ideal para tratar feriados o días sin cotización, ya que asume que el precio sigue siendo el mismo que el del último cierre válido registrado.</span>
+<span id="cb29-202"><a href="#cb29-202" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb29-203"><a href="#cb29-203" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-204"><a href="#cb29-204" aria-hidden="true" tabindex="-1"></a>---</span>
+<span id="cb29-205"><a href="#cb29-205" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-206"><a href="#cb29-206" aria-hidden="true" tabindex="-1"></a><span class="fu"># Operaciones Vectorizadas y Cálculos Financieros</span></span>
+<span id="cb29-207"><a href="#cb29-207" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-208"><a href="#cb29-208" aria-hidden="true" tabindex="-1"></a>Pandas optimiza operaciones sobre columnas enteras sin necesidad de bucles <span class="in">`for`</span>.</span>
+<span id="cb29-209"><a href="#cb29-209" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-210"><a href="#cb29-210" aria-hidden="true" tabindex="-1"></a><span class="fu">## Movimientos y Variaciones</span></span>
+<span id="cb29-211"><a href="#cb29-211" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span><span class="in">`.shift(n)`</span>: Desplaza los datos $n$ posiciones (útil para comparar $P_t$ vs $P_{t-1}$).</span>
+<span id="cb29-212"><a href="#cb29-212" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span><span class="in">`.pct_change()`</span>: Calcula el retorno simple: $(P_t / P_{t-1}) - 1$.</span>
+<span id="cb29-213"><a href="#cb29-213" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span><span class="in">`.diff()`</span>: Calcula la diferencia absoluta: $P_t - P_{t-1}$.</span>
+<span id="cb29-214"><a href="#cb29-214" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-215"><a href="#cb29-215" aria-hidden="true" tabindex="-1"></a><span class="fu">## Tipos de Retornos</span></span>
+<span id="cb29-216"><a href="#cb29-216" aria-hidden="true" tabindex="-1"></a><span class="ss">1. </span>**Retorno Simple**: $R = (P_t / P_{t-1}) - 1$. Es aditivo entre activos en el mismo momento.</span>
+<span id="cb29-217"><a href="#cb29-217" aria-hidden="true" tabindex="-1"></a><span class="ss">2. </span>**Retorno Logarítmico**: $r = \ln(P_t / P_{t-1})$. Es aditivo a lo largo del tiempo y simétrico.</span>
+<span id="cb29-218"><a href="#cb29-218" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-221"><a href="#cb29-221" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb29-222"><a href="#cb29-222" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: retornos-calculo</span></span>
+<span id="cb29-223"><a href="#cb29-223" aria-hidden="true" tabindex="-1"></a>df_diario[<span class="st">"Ret_Simple"</span>] <span class="op">=</span> df_diario[<span class="st">"Precio"</span>].pct_change()</span>
+<span id="cb29-224"><a href="#cb29-224" aria-hidden="true" tabindex="-1"></a>df_diario[<span class="st">"Ret_Log"</span>] <span class="op">=</span> np.log(df_diario[<span class="st">"Precio"</span>] <span class="op">/</span> df_diario[<span class="st">"Precio"</span>].shift(<span class="dv">1</span>))</span>
+<span id="cb29-225"><a href="#cb29-225" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb29-226"><a href="#cb29-226" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-227"><a href="#cb29-227" aria-hidden="true" tabindex="-1"></a><span class="fu">## Ventanas Móviles (Rolling)</span></span>
+<span id="cb29-228"><a href="#cb29-228" aria-hidden="true" tabindex="-1"></a>Se utiliza para indicadores técnicos como medias móviles simples (SMA) o volatilidad móvil.</span>
+<span id="cb29-229"><a href="#cb29-229" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-232"><a href="#cb29-232" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb29-233"><a href="#cb29-233" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: rolling-indicators</span></span>
+<span id="cb29-234"><a href="#cb29-234" aria-hidden="true" tabindex="-1"></a><span class="co"># Media móvil de 20 días</span></span>
+<span id="cb29-235"><a href="#cb29-235" aria-hidden="true" tabindex="-1"></a>df_diario[<span class="st">"SMA_20"</span>] <span class="op">=</span> df_diario[<span class="st">"Precio"</span>].rolling(window<span class="op">=</span><span class="dv">20</span>).mean()</span>
+<span id="cb29-236"><a href="#cb29-236" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-237"><a href="#cb29-237" aria-hidden="true" tabindex="-1"></a><span class="co"># Volatilidad móvil de 20 días (anualizada)</span></span>
+<span id="cb29-238"><a href="#cb29-238" aria-hidden="true" tabindex="-1"></a>df_diario[<span class="st">"Vol_20"</span>] <span class="op">=</span> df_diario[<span class="st">"Ret_Simple"</span>].rolling(window<span class="op">=</span><span class="dv">20</span>).std() <span class="op">*</span> np.sqrt(<span class="dv">252</span>)</span>
+<span id="cb29-239"><a href="#cb29-239" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb29-240"><a href="#cb29-240" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-241"><a href="#cb29-241" aria-hidden="true" tabindex="-1"></a>---</span>
+<span id="cb29-242"><a href="#cb29-242" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-243"><a href="#cb29-243" aria-hidden="true" tabindex="-1"></a><span class="fu"># Agrupación (Groupby)</span></span>
+<span id="cb29-244"><a href="#cb29-244" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-245"><a href="#cb29-245" aria-hidden="true" tabindex="-1"></a>Sigue el mecanismo **Split-Apply-Combine**: dividimos el dataset por una categoría (Ticker, Sector), aplicamos una función y combinamos los resultados.</span>
+<span id="cb29-246"><a href="#cb29-246" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-249"><a href="#cb29-249" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb29-250"><a href="#cb29-250" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: groupby-ejemplo</span></span>
+<span id="cb29-251"><a href="#cb29-251" aria-hidden="true" tabindex="-1"></a>df_panel <span class="op">=</span> pd.DataFrame({</span>
+<span id="cb29-252"><a href="#cb29-252" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Sector"</span>: [<span class="st">"Energía"</span>, <span class="st">"Energía"</span>, <span class="st">"Bancos"</span>, <span class="st">"Bancos"</span>],</span>
+<span id="cb29-253"><a href="#cb29-253" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Ticker"</span>: [<span class="st">"YPF"</span>, <span class="st">"PAMP"</span>, <span class="st">"GGAL"</span>, <span class="st">"BMA"</span>],</span>
+<span id="cb29-254"><a href="#cb29-254" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Retorno"</span>: [<span class="fl">0.05</span>, <span class="fl">0.03</span>, <span class="op">-</span><span class="fl">0.01</span>, <span class="fl">0.02</span>]</span>
+<span id="cb29-255"><a href="#cb29-255" aria-hidden="true" tabindex="-1"></a>})</span>
+<span id="cb29-256"><a href="#cb29-256" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-257"><a href="#cb29-257" aria-hidden="true" tabindex="-1"></a><span class="co"># Agregación por sector</span></span>
+<span id="cb29-258"><a href="#cb29-258" aria-hidden="true" tabindex="-1"></a>resumen_sector <span class="op">=</span> df_panel.groupby(<span class="st">"Sector"</span>)[<span class="st">"Retorno"</span>].agg([<span class="st">"mean"</span>, <span class="st">"std"</span>, <span class="st">"count"</span>])</span>
+<span id="cb29-259"><a href="#cb29-259" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(resumen_sector)</span>
+<span id="cb29-260"><a href="#cb29-260" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb29-261"><a href="#cb29-261" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-262"><a href="#cb29-262" aria-hidden="true" tabindex="-1"></a>---</span>
+<span id="cb29-263"><a href="#cb29-263" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-264"><a href="#cb29-264" aria-hidden="true" tabindex="-1"></a><span class="fu"># Visualización de Datos con Matplotlib</span></span>
+<span id="cb29-265"><a href="#cb29-265" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-266"><a href="#cb29-266" aria-hidden="true" tabindex="-1"></a>Podemos generar gráficos directamente desde DataFrames de forma integrada.</span>
+<span id="cb29-267"><a href="#cb29-267" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-270"><a href="#cb29-270" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb29-271"><a href="#cb29-271" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: plot-complejo</span></span>
+<span id="cb29-272"><a href="#cb29-272" aria-hidden="true" tabindex="-1"></a>fig, ax <span class="op">=</span> plt.subplots(<span class="dv">2</span>, <span class="dv">1</span>, figsize<span class="op">=</span>(<span class="dv">10</span>, <span class="dv">8</span>), sharex<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb29-273"><a href="#cb29-273" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-274"><a href="#cb29-274" aria-hidden="true" tabindex="-1"></a><span class="co"># Panel 1: Precios y SMA</span></span>
+<span id="cb29-275"><a href="#cb29-275" aria-hidden="true" tabindex="-1"></a>df_diario[<span class="st">"Precio"</span>].plot(ax<span class="op">=</span>ax[<span class="dv">0</span>], label<span class="op">=</span><span class="st">"Precio"</span>, alpha<span class="op">=</span><span class="fl">0.7</span>)</span>
+<span id="cb29-276"><a href="#cb29-276" aria-hidden="true" tabindex="-1"></a>df_diario[<span class="st">"SMA_20"</span>].plot(ax<span class="op">=</span>ax[<span class="dv">0</span>], label<span class="op">=</span><span class="st">"SMA 20"</span>, color<span class="op">=</span><span class="st">"blue"</span>, linewidth<span class="op">=</span><span class="dv">2</span>)</span>
+<span id="cb29-277"><a href="#cb29-277" aria-hidden="true" tabindex="-1"></a>ax[<span class="dv">0</span>].set_title(<span class="st">"Evolución de Precios y Media Móvil"</span>)</span>
+<span id="cb29-278"><a href="#cb29-278" aria-hidden="true" tabindex="-1"></a>ax[<span class="dv">0</span>].legend()</span>
+<span id="cb29-279"><a href="#cb29-279" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-280"><a href="#cb29-280" aria-hidden="true" tabindex="-1"></a><span class="co"># Panel 2: Volatilidad</span></span>
+<span id="cb29-281"><a href="#cb29-281" aria-hidden="true" tabindex="-1"></a>df_diario[<span class="st">"Vol_20"</span>].plot(ax<span class="op">=</span>ax[<span class="dv">1</span>], color<span class="op">=</span><span class="st">"orange"</span>, label<span class="op">=</span><span class="st">"Volatilidad 20d"</span>)</span>
+<span id="cb29-282"><a href="#cb29-282" aria-hidden="true" tabindex="-1"></a>ax[<span class="dv">1</span>].set_title(<span class="st">"Volatilidad Móvil Anualizada"</span>)</span>
+<span id="cb29-283"><a href="#cb29-283" aria-hidden="true" tabindex="-1"></a>ax[<span class="dv">1</span>].legend()</span>
+<span id="cb29-284"><a href="#cb29-284" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-285"><a href="#cb29-285" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
+<span id="cb29-286"><a href="#cb29-286" aria-hidden="true" tabindex="-1"></a>plt.show()</span>
+<span id="cb29-287"><a href="#cb29-287" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb29-288"><a href="#cb29-288" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-289"><a href="#cb29-289" aria-hidden="true" tabindex="-1"></a>---</span>
+<span id="cb29-290"><a href="#cb29-290" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-291"><a href="#cb29-291" aria-hidden="true" tabindex="-1"></a><span class="fu"># Caso de Uso: Construcción de la Curva de Rendimientos</span></span>
+<span id="cb29-292"><a href="#cb29-292" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-293"><a href="#cb29-293" aria-hidden="true" tabindex="-1"></a>Este caso integra casi todo el capítulo —DataFrames, iteración, operaciones vectorizadas— para resolver un problema central de la renta fija: **construir la curva de tasas** a partir de precios de bonos que se cotizan en el mercado.</span>
+<span id="cb29-294"><a href="#cb29-294" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-295"><a href="#cb29-295" aria-hidden="true" tabindex="-1"></a><span class="fu">## ¿Por qué necesitamos "construir" una curva?</span></span>
+<span id="cb29-296"><a href="#cb29-296" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-297"><a href="#cb29-297" aria-hidden="true" tabindex="-1"></a>En el mercado no observamos directamente las tasas *spot* (la tasa de un instrumento que paga todo al vencimiento, sin cupones intermedios). Lo que observamos son **precios de bonos con cupón**, y cada uno mezcla tasas de muchos plazos a la vez. La técnica del **bootstrapping** desarma esa mezcla plazo por plazo: usa el bono a 1 año para despejar la tasa a 1 año, y con esa tasa ya conocida despeja la de 2 años del bono a 2 años, y así sucesivamente. Es como armar la curva "tirando del hilo".</span>
+<span id="cb29-298"><a href="#cb29-298" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-299"><a href="#cb29-299" aria-hidden="true" tabindex="-1"></a>Para un bono a $n$ años con cupón anual $C$ y valor nominal $VN$, su precio es la suma de todos los flujos descontados a la tasa spot correspondiente a cada plazo:</span>
+<span id="cb29-300"><a href="#cb29-300" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-301"><a href="#cb29-301" aria-hidden="true" tabindex="-1"></a>$$P = \sum_{t=1}^{n-1} \frac{C}{(1 + z_t)^t} + \frac{C + VN}{(1 + z_n)^n}$$</span>
+<span id="cb29-302"><a href="#cb29-302" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-303"><a href="#cb29-303" aria-hidden="true" tabindex="-1"></a>Si ya conocemos las tasas $z_1, \dots, z_{n-1}$ (de los pasos anteriores), la única incógnita es $z_n$, y la despejamos.</span>
+<span id="cb29-304"><a href="#cb29-304" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-307"><a href="#cb29-307" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb29-308"><a href="#cb29-308" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: bootstrapping-final</span></span>
+<span id="cb29-309"><a href="#cb29-309" aria-hidden="true" tabindex="-1"></a>bonos_mkt <span class="op">=</span> pd.DataFrame([</span>
+<span id="cb29-310"><a href="#cb29-310" aria-hidden="true" tabindex="-1"></a>    {<span class="st">"maturity"</span>: <span class="dv">1</span>, <span class="st">"cupon"</span>: <span class="fl">0.05</span>, <span class="st">"precio"</span>: <span class="fl">100.0</span>},</span>
+<span id="cb29-311"><a href="#cb29-311" aria-hidden="true" tabindex="-1"></a>    {<span class="st">"maturity"</span>: <span class="dv">2</span>, <span class="st">"cupon"</span>: <span class="fl">0.06</span>, <span class="st">"precio"</span>: <span class="fl">100.5</span>},</span>
+<span id="cb29-312"><a href="#cb29-312" aria-hidden="true" tabindex="-1"></a>    {<span class="st">"maturity"</span>: <span class="dv">3</span>, <span class="st">"cupon"</span>: <span class="fl">0.065</span>, <span class="st">"precio"</span>: <span class="fl">99.8</span>},</span>
+<span id="cb29-313"><a href="#cb29-313" aria-hidden="true" tabindex="-1"></a>    {<span class="st">"maturity"</span>: <span class="dv">4</span>, <span class="st">"cupon"</span>: <span class="fl">0.07</span>, <span class="st">"precio"</span>: <span class="fl">100.2</span>},</span>
+<span id="cb29-314"><a href="#cb29-314" aria-hidden="true" tabindex="-1"></a>    {<span class="st">"maturity"</span>: <span class="dv">5</span>, <span class="st">"cupon"</span>: <span class="fl">0.075</span>, <span class="st">"precio"</span>: <span class="fl">99.5</span>},</span>
+<span id="cb29-315"><a href="#cb29-315" aria-hidden="true" tabindex="-1"></a>]).set_index(<span class="st">"maturity"</span>)</span>
+<span id="cb29-316"><a href="#cb29-316" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-317"><a href="#cb29-317" aria-hidden="true" tabindex="-1"></a>tasas_spot <span class="op">=</span> pd.Series(index<span class="op">=</span>bonos_mkt.index, dtype<span class="op">=</span><span class="bu">float</span>)</span>
+<span id="cb29-318"><a href="#cb29-318" aria-hidden="true" tabindex="-1"></a>VN <span class="op">=</span> <span class="dv">100</span></span>
+<span id="cb29-319"><a href="#cb29-319" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-320"><a href="#cb29-320" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> n, bono <span class="kw">in</span> bonos_mkt.iterrows():</span>
+<span id="cb29-321"><a href="#cb29-321" aria-hidden="true" tabindex="-1"></a>    C <span class="op">=</span> VN <span class="op">*</span> bono[<span class="st">"cupon"</span>]</span>
+<span id="cb29-322"><a href="#cb29-322" aria-hidden="true" tabindex="-1"></a>    P <span class="op">=</span> bono[<span class="st">"precio"</span>]</span>
+<span id="cb29-323"><a href="#cb29-323" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-324"><a href="#cb29-324" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Valor presente de los cupones anteriores al vencimiento,</span></span>
+<span id="cb29-325"><a href="#cb29-325" aria-hidden="true" tabindex="-1"></a>    <span class="co"># descontados con las tasas spot ya calculadas en pasos previos</span></span>
+<span id="cb29-326"><a href="#cb29-326" aria-hidden="true" tabindex="-1"></a>    vp_cupones <span class="op">=</span> <span class="bu">sum</span>(C <span class="op">/</span> (<span class="dv">1</span> <span class="op">+</span> tasas_spot[t]) <span class="op">**</span> t <span class="cf">for</span> t <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">1</span>, <span class="bu">int</span>(n)))</span>
+<span id="cb29-327"><a href="#cb29-327" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-328"><a href="#cb29-328" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Despejamos la tasa spot del plazo n del flujo final (cupón + nominal)</span></span>
+<span id="cb29-329"><a href="#cb29-329" aria-hidden="true" tabindex="-1"></a>    z_n <span class="op">=</span> ((C <span class="op">+</span> VN) <span class="op">/</span> (P <span class="op">-</span> vp_cupones)) <span class="op">**</span> (<span class="dv">1</span> <span class="op">/</span> n) <span class="op">-</span> <span class="dv">1</span></span>
+<span id="cb29-330"><a href="#cb29-330" aria-hidden="true" tabindex="-1"></a>    tasas_spot[n] <span class="op">=</span> z_n</span>
+<span id="cb29-331"><a href="#cb29-331" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-332"><a href="#cb29-332" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Curva Spot (tasas cero-cupón):"</span>)</span>
+<span id="cb29-333"><a href="#cb29-333" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>((tasas_spot <span class="op">*</span> <span class="dv">100</span>).<span class="bu">round</span>(<span class="dv">3</span>).astype(<span class="bu">str</span>) <span class="op">+</span> <span class="st">" %"</span>)</span>
+<span id="cb29-334"><a href="#cb29-334" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb29-335"><a href="#cb29-335" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-336"><a href="#cb29-336" aria-hidden="true" tabindex="-1"></a><span class="fu">## De la curva spot a las tasas forward</span></span>
+<span id="cb29-337"><a href="#cb29-337" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-338"><a href="#cb29-338" aria-hidden="true" tabindex="-1"></a>La curva spot responde *"¿a qué tasa presto hoy por 3 años?"*. Pero muchas veces queremos saber otra cosa: *"¿qué tasa está descontando el mercado para el año que va del 2 al 3?"*. Esa es la **tasa forward implícita**, y sale de un argumento de no-arbitraje: invertir 3 años a la spot $z_3$ debe rendir lo mismo que invertir 2 años a $z_2$ y luego reinvertir 1 año a la forward $f_{2,3}$:</span>
+<span id="cb29-339"><a href="#cb29-339" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-340"><a href="#cb29-340" aria-hidden="true" tabindex="-1"></a>$$(1 + z_n)^n = (1 + z_{n-1})^{n-1} \cdot (1 + f_{n-1,n}) \quad\Rightarrow\quad f_{n-1,n} = \frac{(1 + z_n)^n}{(1 + z_{n-1})^{n-1}} - 1$$</span>
+<span id="cb29-341"><a href="#cb29-341" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-344"><a href="#cb29-344" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb29-345"><a href="#cb29-345" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: forward-rates</span></span>
+<span id="cb29-346"><a href="#cb29-346" aria-hidden="true" tabindex="-1"></a><span class="co"># Factor de capitalización acumulado hasta cada plazo: (1 + z_n)^n</span></span>
+<span id="cb29-347"><a href="#cb29-347" aria-hidden="true" tabindex="-1"></a>factor_acum <span class="op">=</span> (<span class="dv">1</span> <span class="op">+</span> tasas_spot) <span class="op">**</span> tasas_spot.index</span>
+<span id="cb29-348"><a href="#cb29-348" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-349"><a href="#cb29-349" aria-hidden="true" tabindex="-1"></a><span class="co"># Forward de un año: cociente de factores acumulados consecutivos</span></span>
+<span id="cb29-350"><a href="#cb29-350" aria-hidden="true" tabindex="-1"></a>forwards <span class="op">=</span> factor_acum <span class="op">/</span> factor_acum.shift(<span class="dv">1</span>) <span class="op">-</span> <span class="dv">1</span></span>
+<span id="cb29-351"><a href="#cb29-351" aria-hidden="true" tabindex="-1"></a>forwards.iloc[<span class="dv">0</span>] <span class="op">=</span> tasas_spot.iloc[<span class="dv">0</span>]  <span class="co"># el forward del primer tramo es la spot a 1 año</span></span>
+<span id="cb29-352"><a href="#cb29-352" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-353"><a href="#cb29-353" aria-hidden="true" tabindex="-1"></a>curva <span class="op">=</span> pd.DataFrame({<span class="st">"spot"</span>: tasas_spot, <span class="st">"forward_1y"</span>: forwards})</span>
+<span id="cb29-354"><a href="#cb29-354" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>((curva <span class="op">*</span> <span class="dv">100</span>).<span class="bu">round</span>(<span class="dv">3</span>))</span>
+<span id="cb29-355"><a href="#cb29-355" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb29-356"><a href="#cb29-356" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-357"><a href="#cb29-357" aria-hidden="true" tabindex="-1"></a>Cuando las forward están **por encima** de las spot, el mercado espera que las tasas suban (curva creciente): cada tramo nuevo "empuja" el promedio hacia arriba.</span>
+<span id="cb29-358"><a href="#cb29-358" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-359"><a href="#cb29-359" aria-hidden="true" tabindex="-1"></a><span class="fu">## Interpolar la curva para plazos intermedios</span></span>
+<span id="cb29-360"><a href="#cb29-360" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-361"><a href="#cb29-361" aria-hidden="true" tabindex="-1"></a>Nuestra curva tiene puntos solo en 1, 2, 3, 4 y 5 años, pero en la práctica necesitamos descontar flujos que caen en cualquier fecha (por ejemplo, a 2,5 años). Para eso **interpolamos**. Pandas trae <span class="in">`interpolate()`</span>, que rellena los huecos de un índice: reindexamos la curva a una grilla más fina y dejamos que complete linealmente.</span>
+<span id="cb29-362"><a href="#cb29-362" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-365"><a href="#cb29-365" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb29-366"><a href="#cb29-366" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: interpolacion-curva</span></span>
+<span id="cb29-367"><a href="#cb29-367" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb29-368"><a href="#cb29-368" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-369"><a href="#cb29-369" aria-hidden="true" tabindex="-1"></a><span class="co"># Grilla de plazos cada medio año, de 1 a 5</span></span>
+<span id="cb29-370"><a href="#cb29-370" aria-hidden="true" tabindex="-1"></a>grilla <span class="op">=</span> np.arange(<span class="fl">1.0</span>, <span class="fl">5.5</span>, <span class="fl">0.5</span>)</span>
+<span id="cb29-371"><a href="#cb29-371" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-372"><a href="#cb29-372" aria-hidden="true" tabindex="-1"></a>curva_interpolada <span class="op">=</span> (</span>
+<span id="cb29-373"><a href="#cb29-373" aria-hidden="true" tabindex="-1"></a>    tasas_spot</span>
+<span id="cb29-374"><a href="#cb29-374" aria-hidden="true" tabindex="-1"></a>    .reindex(tasas_spot.index.union(grilla))  <span class="co"># agregamos los plazos intermedios (quedan NaN)</span></span>
+<span id="cb29-375"><a href="#cb29-375" aria-hidden="true" tabindex="-1"></a>    .interpolate(method<span class="op">=</span><span class="st">"index"</span>)              <span class="co"># interpolamos usando el valor del índice (el plazo)</span></span>
+<span id="cb29-376"><a href="#cb29-376" aria-hidden="true" tabindex="-1"></a>    .reindex(grilla)                           <span class="co"># nos quedamos con la grilla fina</span></span>
+<span id="cb29-377"><a href="#cb29-377" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb29-378"><a href="#cb29-378" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-379"><a href="#cb29-379" aria-hidden="true" tabindex="-1"></a>fig, ax <span class="op">=</span> plt.subplots(figsize<span class="op">=</span>(<span class="dv">9</span>, <span class="dv">4</span>))</span>
+<span id="cb29-380"><a href="#cb29-380" aria-hidden="true" tabindex="-1"></a>ax.plot(tasas_spot.index, tasas_spot <span class="op">*</span> <span class="dv">100</span>, <span class="st">"o"</span>, markersize<span class="op">=</span><span class="dv">9</span>,</span>
+<span id="cb29-381"><a href="#cb29-381" aria-hidden="true" tabindex="-1"></a>        label<span class="op">=</span><span class="st">"Tasas spot observadas (bootstrapping)"</span>)</span>
+<span id="cb29-382"><a href="#cb29-382" aria-hidden="true" tabindex="-1"></a>ax.plot(curva_interpolada.index, curva_interpolada <span class="op">*</span> <span class="dv">100</span>, <span class="st">".-"</span>, alpha<span class="op">=</span><span class="fl">0.7</span>,</span>
+<span id="cb29-383"><a href="#cb29-383" aria-hidden="true" tabindex="-1"></a>        label<span class="op">=</span><span class="st">"Curva interpolada (cada 6 meses)"</span>)</span>
+<span id="cb29-384"><a href="#cb29-384" aria-hidden="true" tabindex="-1"></a>ax.set_xlabel(<span class="st">"Plazo (años)"</span>)</span>
+<span id="cb29-385"><a href="#cb29-385" aria-hidden="true" tabindex="-1"></a>ax.set_ylabel(<span class="st">"Tasa spot (%)"</span>)</span>
+<span id="cb29-386"><a href="#cb29-386" aria-hidden="true" tabindex="-1"></a>ax.set_title(<span class="st">"Curva de Rendimientos: puntos observados vs. interpolación"</span>)</span>
+<span id="cb29-387"><a href="#cb29-387" aria-hidden="true" tabindex="-1"></a>ax.legend()</span>
+<span id="cb29-388"><a href="#cb29-388" aria-hidden="true" tabindex="-1"></a>ax.grid(<span class="va">True</span>, alpha<span class="op">=</span><span class="fl">0.3</span>)</span>
+<span id="cb29-389"><a href="#cb29-389" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
+<span id="cb29-390"><a href="#cb29-390" aria-hidden="true" tabindex="-1"></a>plt.show()</span>
+<span id="cb29-391"><a href="#cb29-391" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb29-392"><a href="#cb29-392" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-393"><a href="#cb29-393" aria-hidden="true" tabindex="-1"></a>::: {.callout-warning title="La interpolación lineal es un punto de partida, no la verdad"}</span>
+<span id="cb29-394"><a href="#cb29-394" aria-hidden="true" tabindex="-1"></a>Interpolar linealmente es simple y transparente, pero los operadores de renta fija suelen usar métodos más suaves (splines cúbicos, Nelson-Siegel) para que la curva forward no tenga "quiebres" antieconómicos. Para aprender el mecanismo, lo lineal alcanza; para valuar en producción, conviene ir más fino.</span>
+<span id="cb29-395"><a href="#cb29-395" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb29-396"><a href="#cb29-396" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-397"><a href="#cb29-397" aria-hidden="true" tabindex="-1"></a>---</span>
+<span id="cb29-398"><a href="#cb29-398" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-399"><a href="#cb29-399" aria-hidden="true" tabindex="-1"></a><span class="fu"># Ejercicios Propuestos</span></span>
+<span id="cb29-400"><a href="#cb29-400" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-401"><a href="#cb29-401" aria-hidden="true" tabindex="-1"></a>::: {.callout-important title="Desafíos"}</span>
+<span id="cb29-402"><a href="#cb29-402" aria-hidden="true" tabindex="-1"></a><span class="ss">1. </span>**Volatilidad comparada**: A partir de una serie de precios simulada, compará la volatilidad móvil de 30 días contra la de 90 días en un mismo gráfico. ¿Cuál reacciona más rápido a un shock?</span>
+<span id="cb29-403"><a href="#cb29-403" aria-hidden="true" tabindex="-1"></a><span class="ss">2. </span>**Dashboard de retornos**: Escribí una función que reciba un DataFrame de precios y devuelva una tabla resumen con retorno acumulado, volatilidad anualizada y máximo *drawdown*.</span>
+<span id="cb29-404"><a href="#cb29-404" aria-hidden="true" tabindex="-1"></a><span class="ss">3. </span>**Groupby + resample**: Dado un panel de varios activos, calculá el retorno promedio mensual de cada uno combinando <span class="in">`.groupby()`</span> con <span class="in">`.resample()`</span>.</span>
+<span id="cb29-405"><a href="#cb29-405" aria-hidden="true" tabindex="-1"></a><span class="ss">4. </span>**`ffill` vs. `interpolate`**: Simulá una serie con valores nulos aleatorios y compará el resultado de rellenarlos con <span class="in">`ffill()`</span> frente a <span class="in">`interpolate()`</span>. ¿Cuándo es apropiado cada uno?</span>
+<span id="cb29-406"><a href="#cb29-406" aria-hidden="true" tabindex="-1"></a><span class="ss">5. </span>**Curva forward completa**: Extendé el ejemplo de bootstrapping para calcular, además de las forward de 1 año, la tasa forward a 2 años que arranca dentro de 1 año ($f_{1,3}$).</span>
+<span id="cb29-407"><a href="#cb29-407" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb29-408"><a href="#cb29-408" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-409"><a href="#cb29-409" aria-hidden="true" tabindex="-1"></a>---</span>
+<span id="cb29-410"><a href="#cb29-410" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-411"><a href="#cb29-411" aria-hidden="true" tabindex="-1"></a><span class="fu"># Referencias</span></span>
+<span id="cb29-412"><a href="#cb29-412" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-413"><a href="#cb29-413" aria-hidden="true" tabindex="-1"></a><span class="ss">* </span>McKinney, W. (2017). *Python for Data Analysis*. O'Reilly Media.</span>
+<span id="cb29-414"><a href="#cb29-414" aria-hidden="true" tabindex="-1"></a><span class="ss">* </span>Hilpisch, Y. (2018). *Python for Finance*. O'Reilly Media.</span>
+<span id="cb29-415"><a href="#cb29-415" aria-hidden="true" tabindex="-1"></a><span class="ss">* </span>Pandas Development Team. (2024). *Pandas Documentation*. <span class="co">[</span><span class="ot">pandas.pydata.org</span><span class="co">](https://pandas.pydata.org)</span></span>
+</code></pre></div><button title="Copiar al portapapeles" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></div>
+</div></div></div></div></div>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+<p>Finanzas Computacionales con Python fue escrito por la Cátedra de Finanzas Computacionales — UADE.</p>
+</div>   
+    <div class="nav-footer-center">
+      &nbsp;
+    <div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/uade-finanzas-computacionales/libro/edit/main/unidad1/cap06_series_tiempo_pandas.qmd" class="toc-action"><i class="bi bi-github"></i>Editar esta página</a></li><li><a href="https://github.com/uade-finanzas-computacionales/libro/issues/new" class="toc-action"><i class="bi empty"></i>Informar sobre problema</a></li></ul></div></div>
+    <div class="nav-footer-right">
+<p>Este libro fue construido con <a href="https://quarto.org/">Quarto</a>.</p>
+</div>
+  </div>
+</footer>
+
+
+
+
+<script src="../site_libs/quarto-html/zenscroll-min.js"></script>
+</body></html>

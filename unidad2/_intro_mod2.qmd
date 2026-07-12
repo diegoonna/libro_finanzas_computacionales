@@ -1,33 +1,41 @@
 ---
 title: "Módulo 2: Teoría de Portafolios y Optimización"
-subtitle: "Semanas 6–7 · De la estadística descriptiva a la frontera eficiente de Markowitz"
+subtitle: "De describir activos a decidir entre ellos"
 number-sections: false
 ---
 
-::: {.callout-note title="Visión General" appearance="simple"}
-En este módulo pasamos de analizar instrumentos individuales a **construir portafolios óptimos**. Introducimos herramientas de estadística, álgebra matricial con NumPy y optimización con SciPy para implementar la Teoría Moderna de Portafolios.
+En el Módulo 1 aprendiste a analizar instrumentos **de a uno**: valuar un bono, calcular el retorno de una acción, graficar su historia. Pero ningún inversor real tiene un solo activo, y la pregunta que de verdad importa es otra: **¿cómo reparto mi capital entre todos los activos disponibles?** Este módulo construye la respuesta cuantitativa a esa pregunta — y también sus contraejemplos.
+
+El recorrido tiene forma de tesis, antítesis y síntesis. Primero armamos las herramientas: **estadística de retornos** (¿cómo se comporta cada activo?) y **optimización numérica** (¿cómo le pido a la computadora que encuentre "lo mejor"?). Con eso construimos el edificio clásico: la **frontera eficiente de Markowitz**, la idea ganadora del Nobel de que la diversificación se puede medir y optimizar. Hasta ahí la teoría es hermosa.
+
+Después viene la parte que los libros suelen esquivar: **en la práctica, Markowitz falla**. Es hipersensible a estimaciones que son puro ruido, y produce carteras extremas que ningún gestor firmaría. Los últimos dos capítulos presentan las dos respuestas modernas más importantes a ese problema, que atacan por flancos opuestos: **HRP** (López de Prado, 2016) esquiva la matemática frágil usando clustering jerárquico, y **Black-Litterman** (Goldman Sachs, 1992) disciplina las estimaciones partiendo del equilibrio del mercado y mezclándolo con tus opiniones según tu confianza. Al final del módulo no solo vas a saber optimizar un portafolio: vas a saber **cuándo desconfiar del optimizador** — que es la habilidad que separa al que aprendió la fórmula del que entiende el problema.
+
+::: {.callout-note title="Lo que este módulo asume" appearance="simple"}
+Usamos intensivamente el álgebra matricial de NumPy (Capítulo 5) — en particular `@`, `np.linalg` y la matriz de covarianzas — y la estadística descriptiva del Capítulo 6. Si esos temas no te quedaron firmes, vale la pena repasarlos antes de entrar a Markowitz.
 :::
 
 ---
 
 ## 🎯 Objetivos de Aprendizaje {.unnumbered}
 
-Al completar este módulo, serás capaz de:
+Al completar este módulo, vas a ser capaz de:
 
 1. **Analizar distribuciones** de retornos con estadística descriptiva y tests de normalidad.
-2. **Vectorizar cálculos** financieros con NumPy (eliminar bucles `for`).
-3. **Construir la frontera eficiente** de Markowitz.
-4. **Encontrar el portafolio tangente** (máximo Sharpe ratio).
-5. **Entender las limitaciones** del modelo media-varianza.
+2. **Construir la frontera eficiente** de Markowitz y encontrar el portafolio tangente (máximo Sharpe).
+3. **Elegir la métrica correcta** (Sharpe, Sortino, mínima varianza) según el objetivo del inversor.
+4. **Aplicar Hierarchical Risk Parity** para sortear la inestabilidad de la optimización clásica.
+5. **Incorporar tus views** al equilibrio del mercado con el modelo de Black-Litterman.
 
 ---
 
-## 🗓️ Recorrido Semana a Semana {.unnumbered}
+## 🗓️ Recorrido Capítulo a Capítulo {.unnumbered}
 
-| Semana | Tema | Python | Finanzas |
+| Capítulo | Tema | Python | Finanzas |
 |:------:|------|--------|----------|
-| **6** | Estadística y Optimización | `scipy.stats`, `scipy.optimize`, histogramas | Media, varianza, curtosis, normalidad |
-| **7** | Markowitz y Frontera Eficiente | `numpy` matricial, `minimize()` | Σ, Sharpe, CML, portafolio tangente |
+| **7** | Estadística y Optimización | `scipy.stats`, `scipy.optimize`, histogramas | Media, varianza, curtosis, normalidad |
+| **8** | Markowitz y Frontera Eficiente | `numpy` matricial, `minimize()` | Σ, Sharpe, Sortino, CML, dividendos, renta fija |
+| **9** | Hierarchical Risk Parity | `scipy.cluster.hierarchy` | Clustering, riesgo, robustez fuera de muestra |
+| **10** | Black-Litterman | Álgebra matricial, `np.linalg` | Equilibrio de mercado, views, fórmula maestra |
 
 ---
 
@@ -44,13 +52,13 @@ Al completar este módulo, serás capaz de:
 ::: {style="padding: 0.75rem; background: #f0fdf4; border-radius: 8px; text-align: center;"}
 **SciPy**
 
-Optimización y estadística
+Optimización, estadística y clustering
 :::
 
 ::: {style="padding: 0.75rem; background: #fffbeb; border-radius: 8px; text-align: center;"}
 **Matplotlib**
 
-Frontera eficiente
+Frontera eficiente y dendrogramas
 :::
 
 :::
@@ -63,6 +71,8 @@ Frontera eficiente
 El framework de Markowitz plantea que un inversor racional elige portafolios que **maximizan retorno** para un nivel dado de riesgo, o equivalentemente, **minimizan riesgo** para un retorno objetivo. La solución al problema de optimización genera la **frontera eficiente**.
 
 $$\min_{\mathbf{w}} \quad \mathbf{w}^T \boldsymbol{\Sigma} \mathbf{w} \quad \text{sujeto a} \quad \mathbf{w}^T \boldsymbol{\mu} = \mu^*, \quad \mathbf{w}^T \mathbf{1} = 1$$
+
+El resto del módulo puede leerse como una conversación con esta fórmula: cómo resolverla, qué esconde y cómo arreglarla.
 :::
 
 ---
@@ -71,3 +81,5 @@ $$\min_{\mathbf{w}} \quad \mathbf{w}^T \boldsymbol{\Sigma} \mathbf{w} \quad \tex
 
 - Markowitz, H. (1952). *Portfolio Selection*. The Journal of Finance.
 - Elton, E. et al. (2014). *Modern Portfolio Theory and Investment Analysis*. Wiley.
+- Black, F., & Litterman, R. (1992). *Global Portfolio Optimization*. Financial Analysts Journal.
+- López de Prado, M. (2016). *Building Diversified Portfolios that Outperform Out of Sample*. The Journal of Portfolio Management.

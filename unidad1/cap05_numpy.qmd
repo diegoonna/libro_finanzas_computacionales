@@ -1,0 +1,442 @@
+---
+title: "Capítulo 5: NumPy y Cálculo Vectorizado"
+subtitle: "El motor numérico de las finanzas cuantitativas en Python"
+abstract: |
+  NumPy es la librería sobre la que se construye todo el stack científico de Python
+  (Pandas, SciPy, scikit-learn). En este capítulo entendemos por qué el `ndarray`
+  reemplaza a las listas para trabajar con números, aprendemos a vectorizar cálculos
+  para eliminar bucles lentos, dominamos el broadcasting y damos nuestros primeros
+  pasos en álgebra lineal, que será la columna vertebral de la optimización de
+  portafolios del Módulo 2.
+---
+
+# Introducción
+
+Hasta ahora venimos representando datos financieros con **listas** y **diccionarios** de Python. Nos sirvieron para aprender a programar, pero tienen un problema serio: son lentas y verbosas cuando hay que hacer cuentas sobre miles de números. Y en finanzas, *siempre* hay miles de números: años de cotizaciones diarias, paneles de cientos de activos, millones de trayectorias en una simulación.
+
+Acá entra **NumPy** (de *Numerical Python*). Es la librería que le da a Python la capacidad de hacer cálculo numérico a la velocidad de un lenguaje compilado como C, pero con la comodidad de escribir Python. No es una librería más: es la base sobre la que están construidos Pandas, SciPy, scikit-learn y prácticamente todo lo que vas a usar de acá en adelante. Cuando en el Capítulo 6 hagas `pd.DataFrame`, por debajo hay arrays de NumPy; cuando en el Capítulo 8 optimices un portafolio de Markowitz, vas a estar multiplicando matrices de NumPy.
+
+::: {.callout-tip title="La idea de fondo"}
+Programar con NumPy es cambiar el chip: en vez de pensar *"recorré la lista elemento por elemento y hacé la cuenta"*, pensás *"aplicá esta operación a todo el vector de una"*. Eso se llama **vectorización**, y es la habilidad central de este capítulo.
+:::
+
+```{python}
+#| label: setup
+import numpy as np
+```
+
+Por convención universal, NumPy se importa como `np`. Vas a ver ese `np.` en todo el libro (y en todo el ecosistema de Python científico), así que conviene acostumbrarse desde ya.
+
+---
+
+# El problema: las listas no fueron hechas para calcular
+
+Imaginá que tenés los precios de cierre de una acción durante cinco días y querés calcular el retorno simple diario, $R_t = P_t / P_{t-1} - 1$. Con listas puras, tenés que escribir un bucle:
+
+```{python}
+#| label: listas-loop
+precios = [100.0, 102.5, 101.0, 103.5, 105.0]
+
+retornos = []
+for i in range(1, len(precios)):
+    retornos.append(precios[i] / precios[i-1] - 1)
+
+print(retornos)
+```
+
+Funciona, pero fijate todo lo que tuviste que hacer: crear una lista vacía, manejar índices, acordarte de arrancar en `1`. Y esto es para una sola acción y cinco días. Con NumPy, el mismo cálculo es una línea que se lee casi como la fórmula matemática:
+
+```{python}
+#| label: numpy-vectorizado
+precios = np.array([100.0, 102.5, 101.0, 103.5, 105.0])
+
+retornos = precios[1:] / precios[:-1] - 1
+
+print(retornos)
+```
+
+`precios[1:]` es "todos los precios desde el segundo" ($P_t$) y `precios[:-1]` es "todos menos el último" ($P_{t-1}$). NumPy divide los dos vectores **elemento a elemento** automáticamente. Sin bucles, sin índices, sin listas vacías. Esto no es solo más corto: sobre datos reales es **decenas o cientos de veces más rápido**, porque la operación corre en código C optimizado en lugar de un bucle interpretado de Python.
+
+---
+
+# El `ndarray`: qué es y por qué es distinto
+
+El objeto central de NumPy es el **array** (`ndarray`, de *N-dimensional array*). A primera vista se parece a una lista, pero tiene tres diferencias que lo cambian todo:
+
+1. **Es homogéneo**: todos los elementos son del mismo tipo (todos `float64`, todos `int`, etc.). Una lista de Python puede mezclar números, strings y objetos; un array no. Esa restricción es justamente lo que lo hace rápido.
+2. **Es contiguo en memoria**: los datos se guardan en un bloque compacto y ordenado de RAM, no desperdigados con punteros como en una lista. El procesador puede recorrerlos de corrido.
+3. **Opera vectorizado**: las operaciones aritméticas se aplican a todo el array de una sola vez, apoyándose en instrucciones de bajo nivel del procesador.
+
+```{python}
+#| label: array-basico
+a = np.array([10, 20, 30, 40])
+
+print("Array:   ", a)
+print("Tipo:    ", type(a))
+print("dtype:   ", a.dtype)     # tipo de los elementos
+print("shape:   ", a.shape)     # forma (dimensiones)
+print("ndim:    ", a.ndim)      # cantidad de dimensiones
+print("size:    ", a.size)      # cantidad total de elementos
+```
+
+El **`dtype`** (data type) es un concepto clave: le dice a NumPy exactamente cuántos bytes ocupa cada número y cómo interpretarlos. En finanzas trabajamos casi siempre con `float64` (números reales de doble precisión), que es el default para decimales.
+
+::: {.callout-note title="shape: la forma manda"}
+El atributo `.shape` es una tupla que describe las dimensiones. Un vector de 4 elementos tiene shape `(4,)`; una matriz de 3 filas por 2 columnas tiene shape `(3, 2)`. Cuando algo falla en NumPy, el 90% de las veces es un problema de shapes que no encajan. Acostumbrate a mirar `.shape` como primer paso de debugging.
+:::
+
+## Crear arrays
+
+Rara vez vas a escribir los números a mano. NumPy trae funciones para generar los arrays más comunes:
+
+```{python}
+#| label: creacion
+# Desde una lista
+np.array([1.0, 2.0, 3.0])
+
+# Rango de valores (como range, pero array): inicio, fin (excluido), paso
+plazos = np.arange(0, 12, 3)          # [0, 3, 6, 9] meses
+print("arange:  ", plazos)
+
+# N valores equiespaciados entre dos extremos (útil para grillas)
+grilla = np.linspace(0, 1, 5)         # 5 puntos entre 0 y 1
+print("linspace:", grilla)
+
+# Arrays de ceros y unos (útiles para inicializar acumuladores)
+print("zeros:   ", np.zeros(4))
+print("ones:    ", np.ones(3))
+
+# Matriz identidad (aparecerá en álgebra de portafolios)
+print("identidad:\n", np.eye(3))
+```
+
+## Arrays de varias dimensiones
+
+Un vector es 1D; una **matriz** es 2D. En finanzas la matriz más importante es el **panel de retornos**: filas = fechas, columnas = activos.
+
+```{python}
+#| label: matriz
+# Retornos mensuales de 3 activos durante 4 meses (4 filas x 3 columnas)
+R = np.array([
+    [0.02, -0.01,  0.03],
+    [0.01,  0.02, -0.02],
+    [-0.03, 0.01,  0.04],
+    [0.02,  0.00,  0.01],
+])
+
+print("Panel de retornos:\n", R)
+print("\nShape:", R.shape, "→ 4 fechas, 3 activos")
+```
+
+---
+
+# Números aleatorios: el generador moderno
+
+Buena parte de las finanzas computacionales consiste en simular escenarios, y para eso necesitamos números aleatorios. NumPy recomienda hoy usar un **generador** explícito, creado con `np.random.default_rng()`. Le pasamos una **semilla** (`seed`) para que los resultados sean reproducibles: la misma semilla da siempre los mismos "azares", lo cual es fundamental para que tus ejemplos y los de tus compañeros coincidan.
+
+```{python}
+#| label: random
+rng = np.random.default_rng(seed=42)
+
+# 5 retornos diarios simulados: media 0.05%, desvío 1.5%
+retornos_sim = rng.normal(loc=0.0005, scale=0.015, size=5)
+print("Retornos simulados:", retornos_sim)
+
+# Una matriz 3x3 de números uniformes entre 0 y 1
+print("\nUniformes:\n", rng.random((3, 3)))
+```
+
+::: {.callout-warning title="Vas a ver `np.random.seed()` en código viejo"}
+Mucho código (y capítulos previos de versiones anteriores de este libro) usa el estilo antiguo `np.random.seed(42)` y `np.random.normal(...)`. Funciona, pero está considerado *legacy*. El estilo moderno con `default_rng()` es más robusto y es el que vas a encontrar en la documentación actual. Usá `rng.` de acá en adelante.
+:::
+
+---
+
+# Indexado, slicing y máscaras booleanas
+
+Acceder a partes de un array es donde NumPy se pone realmente potente.
+
+## Slicing básico
+
+Funciona como en las listas, con `[inicio:fin:paso]`, pero se extiende a varias dimensiones separando con comas: `matriz[filas, columnas]`.
+
+```{python}
+#| label: slicing
+# Usamos el panel R de antes
+print("Primera fila (retornos de la fecha 0):", R[0])
+print("Primera columna (activo 0 en el tiempo):", R[:, 0])
+print("Submatriz (2 primeras fechas, 2 primeros activos):\n", R[:2, :2])
+print("Último retorno del último activo:", R[-1, -1])
+```
+
+La coma es la clave: `R[:, 0]` significa "todas las filas, columna 0". Poder pedir una columna entera de un panel sin bucles es exactamente lo que necesitamos para analizar un activo a lo largo del tiempo.
+
+## Máscaras booleanas: filtrar por condición
+
+Esta es una de las herramientas más usadas en análisis financiero. Una comparación sobre un array devuelve un array de `True`/`False`, y podemos usar ese array como "filtro":
+
+```{python}
+#| label: mascaras
+retornos_diarios = np.array([0.012, -0.008, 0.003, -0.021, 0.015, -0.004])
+
+# La comparación genera una máscara booleana
+mascara_perdidas = retornos_diarios < 0
+print("Máscara (días con pérdida):", mascara_perdidas)
+
+# Usamos la máscara para quedarnos solo con esos elementos
+perdidas = retornos_diarios[mascara_perdidas]
+print("Retornos negativos:        ", perdidas)
+
+print(f"\nDías con pérdida: {mascara_perdidas.sum()} de {retornos_diarios.size}")
+print(f"Pérdida promedio: {perdidas.mean():.2%}")
+```
+
+Fijate el truco de `mascara_perdidas.sum()`: como `True` vale 1 y `False` vale 0, sumar una máscara booleana **cuenta cuántas condiciones se cumplen**. Es un patrón que vas a repetir mil veces (¿cuántos días superaron el VaR?, ¿cuántos activos rindieron más que el mercado?, etc.).
+
+---
+
+# Vectorización: pensar en vectores, no en bucles
+
+Ya vimos la idea con los retornos. Generalicémosla. Las operaciones aritméticas (`+`, `-`, `*`, `/`, `**`) y las funciones de NumPy (`np.log`, `np.exp`, `np.sqrt`...) se aplican **elemento a elemento** sobre todo el array.
+
+```{python}
+#| label: vectorizacion
+precios = np.array([100.0, 102.5, 101.0, 103.5, 105.0])
+
+# Retorno logarítmico: r_t = ln(P_t / P_{t-1}), en una línea
+ret_log = np.log(precios[1:] / precios[:-1])
+print("Retornos log:", ret_log)
+
+# Convertir un vector entero de tasas anuales a mensuales, todo de una
+tasas_anuales = np.array([0.40, 0.35, 0.50, 0.45])
+tasas_mensuales = (1 + tasas_anuales) ** (1/12) - 1
+print("Tasas mensuales equivalentes:", np.round(tasas_mensuales, 4))
+```
+
+::: {.callout-tip title="La regla de oro"}
+Si te encontrás escribiendo un `for` que recorre un array para hacer una cuenta en cada elemento, casi siempre hay una versión vectorizada más corta y mucho más rápida. Antes de escribir el bucle, preguntate: *"¿puedo aplicarle esto al array entero?"*
+:::
+
+## ¿Cuánto más rápido es, en serio?
+
+No es una diferencia cosmética. Comparemos sumar el cuadrado de un millón de números con un bucle de Python contra NumPy:
+
+```{python}
+#| label: benchmark
+import time
+
+datos = rng.normal(size=1_000_000)
+
+# Versión con bucle Python
+t0 = time.perf_counter()
+suma = 0.0
+for x in datos:
+    suma += x**2
+t_bucle = time.perf_counter() - t0
+
+# Versión vectorizada
+t0 = time.perf_counter()
+suma_np = np.sum(datos**2)
+t_numpy = time.perf_counter() - t0
+
+print(f"Bucle Python:  {t_bucle*1000:7.1f} ms")
+print(f"NumPy:         {t_numpy*1000:7.1f} ms")
+print(f"NumPy es ~{t_bucle/t_numpy:.0f}x más rápido")
+```
+
+Sobre un millón de datos la diferencia es de uno a dos órdenes de magnitud. En una simulación de Monte Carlo con millones de trayectorias (Capítulo 13), esto es la diferencia entre que tu código termine en segundos o en horas.
+
+---
+
+# Reducciones: resumir un array
+
+Una **reducción** toma muchos números y devuelve pocos: la suma, el promedio, el máximo, el desvío. Son la base de toda la estadística descriptiva.
+
+```{python}
+#| label: reducciones
+ret = np.array([0.012, -0.008, 0.003, -0.021, 0.015, -0.004])
+
+print(f"Suma (retorno acumulado aprox): {ret.sum():.4f}")
+print(f"Media:                          {ret.mean():.4f}")
+print(f"Desvío estándar (volatilidad):  {ret.std():.4f}")
+print(f"Mínimo (peor día):              {ret.min():.4f}")
+print(f"Máximo (mejor día):             {ret.max():.4f}")
+```
+
+## El parámetro `axis`: el concepto que más confunde (y más importa)
+
+Cuando reducimos una **matriz**, tenemos que decidir *en qué dirección* resumimos. Ahí entra `axis`:
+
+- `axis=0` colapsa las **filas** → un resultado **por columna** (por activo).
+- `axis=1` colapsa las **columnas** → un resultado **por fila** (por fecha).
+
+Con un panel de retornos (filas = fechas, columnas = activos), esto es exactamente lo que necesitamos:
+
+```{python}
+#| label: axis
+# Panel: 4 fechas x 3 activos
+R = np.array([
+    [0.02, -0.01,  0.03],
+    [0.01,  0.02, -0.02],
+    [-0.03, 0.01,  0.04],
+    [0.02,  0.00,  0.01],
+])
+
+# Retorno medio DE CADA ACTIVO → colapsamos las fechas (axis=0)
+print("Media por activo (axis=0):", R.mean(axis=0))
+
+# Volatilidad DE CADA ACTIVO
+print("Vol por activo   (axis=0):", R.std(axis=0))
+
+# Retorno DE CADA FECHA (un portafolio equiponderado, por ejemplo) → axis=1
+print("Media por fecha  (axis=1):", R.mean(axis=1))
+```
+
+::: {.callout-note title="Truco para no confundirte con axis"}
+`axis=0` "apunta hacia abajo" (recorre las filas y deja una fila-resumen), así que el resultado tiene tantos elementos como **columnas**. Regla mnemotécnica: el eje que ponés en `axis` es el que **desaparece** del shape. Si `R.shape` es `(4, 3)`, entonces `R.mean(axis=0).shape` es `(3,)`.
+:::
+
+---
+
+# Broadcasting: operar arrays de distinta forma
+
+¿Qué pasa si querés sumarle un número a todo un array, o restarle a cada columna su propia media? NumPy tiene una regla elegante llamada **broadcasting**: cuando las formas no coinciden, NumPy "estira" automáticamente el array más chico para que encajen, sin copiar datos de verdad.
+
+El caso más simple ya lo usaste sin darte cuenta:
+
+```{python}
+#| label: broadcast-escalar
+precios = np.array([100.0, 102.5, 101.0])
+
+# Sumar un escalar a un vector: el escalar se "estira" a todos los elementos
+print("Con impuesto del 1%:", precios * 1.01)
+```
+
+El caso poderoso es **normalizar un panel**: restarle a cada activo su media y dividir por su desvío (estandarización), una operación constante en modelos de factores y machine learning financiero.
+
+```{python}
+#| label: broadcast-panel
+R = np.array([
+    [0.02, -0.01,  0.03],
+    [0.01,  0.02, -0.02],
+    [-0.03, 0.01,  0.04],
+    [0.02,  0.00,  0.01],
+])
+
+medias = R.mean(axis=0)   # shape (3,) → una media por activo
+desvios = R.std(axis=0)   # shape (3,) → un desvío por activo
+
+# R tiene shape (4,3) y medias shape (3,): broadcasting alinea por columna
+R_estandarizado = (R - medias) / desvios
+
+print("Medias por activo:", np.round(medias, 4))
+print("\nPanel estandarizado (media 0, desvío 1 por columna):\n",
+      np.round(R_estandarizado, 3))
+print("\nVerificación — media de cada columna:", np.round(R_estandarizado.mean(axis=0), 10))
+```
+
+NumPy vio que `R` es `(4, 3)` y `medias` es `(3,)`, y entendió que tenía que restar `medias` **a cada fila**. No tuviste que escribir ningún bucle sobre las 4 fechas.
+
+::: {.callout-warning title="Cuándo el broadcasting falla"}
+El broadcasting solo funciona si las dimensiones son compatibles: o son iguales, o una de ellas es 1. Si intentás operar un `(4, 3)` con un `(4,)` vas a recibir un `ValueError: operands could not be broadcast together`. La solución suele ser reformar el vector a `(4, 1)` con `vector.reshape(-1, 1)` para que se alinee por fila en lugar de por columna. Cuando veas ese error, mirá los shapes.
+:::
+
+---
+
+# Álgebra lineal: la antesala de Markowitz
+
+Acá NumPy muestra para qué fue diseñado. La optimización de portafolios del Módulo 2 se escribe entera en lenguaje matricial, y NumPy lo implementa directo.
+
+El **producto matricial** se hace con el operador `@` (no con `*`, que es elemento a elemento). Veamos el cálculo más importante de toda la teoría de portafolios: el **retorno esperado de un portafolio**, que es el producto entre el vector de pesos $\mathbf{w}$ y el vector de retornos esperados $\boldsymbol{\mu}$.
+
+```{python}
+#| label: producto-portafolio
+# Pesos del portafolio (40% activo 1, 35% activo 2, 25% activo 3)
+w = np.array([0.40, 0.35, 0.25])
+
+# Retornos esperados anuales de cada activo
+mu = np.array([0.12, 0.18, 0.08])
+
+# Retorno esperado del portafolio: w · mu (producto punto)
+ret_portafolio = w @ mu
+print(f"Retorno esperado del portafolio: {ret_portafolio:.2%}")
+```
+
+Y ahora la estrella: la **matriz de covarianzas** $\Sigma$, que resume cómo se mueven juntos los activos y es el corazón de la medición de riesgo. NumPy la calcula con `np.cov`. Con ella, la **varianza del portafolio** es la forma cuadrática $\mathbf{w}^T \Sigma \mathbf{w}$:
+
+```{python}
+#| label: covarianza
+# Panel de retornos: activos en FILAS, observaciones en COLUMNAS (rowvar=True, el default de np.cov)
+rng = np.random.default_rng(7)
+R_hist = rng.normal(loc=[0.001, 0.0015, 0.0008],
+                    scale=[0.02, 0.03, 0.015],
+                    size=(250, 3)).T   # .T → 3 activos x 250 días
+
+# Matriz de covarianzas (3x3)
+Sigma = np.cov(R_hist)
+print("Matriz de covarianzas (Σ):\n", np.round(Sigma, 6))
+
+# Varianza del portafolio: wᵀ Σ w
+var_portafolio = w @ Sigma @ w
+vol_portafolio = np.sqrt(var_portafolio)
+print(f"\nVolatilidad diaria del portafolio: {vol_portafolio:.4f}")
+print(f"Volatilidad anualizada:            {vol_portafolio * np.sqrt(252):.2%}")
+```
+
+Esas dos líneas —`w @ mu` y `w @ Sigma @ w`— son, literalmente, la Teoría Moderna de Portafolios. En el Capítulo 8 le vamos a pedir a la computadora que busque los pesos `w` que minimizan ese riesgo. Todo el andamiaje matemático ya lo tenés en NumPy.
+
+El submódulo `np.linalg` completa el kit de álgebra lineal (inversas, determinantes, autovalores, resolución de sistemas):
+
+```{python}
+#| label: linalg
+M = np.array([[4.0, 1.0],
+              [1.0, 3.0]])
+
+print("Inversa:\n", np.linalg.inv(M))
+print("\nDeterminante:", np.linalg.det(M))
+print("Autovalores: ", np.linalg.eigvals(M))
+```
+
+::: {.callout-note title="Guardá esto para más adelante"}
+Black-Litterman (Capítulo 10) y la regresión por mínimos cuadrados (Capítulo 15) se resuelven invirtiendo matrices con `np.linalg.inv` y `np.linalg.solve`. El código que acabás de ver es la base de la mitad del libro.
+:::
+
+---
+
+# De NumPy a Pandas
+
+NumPy es potentísimo, pero tiene una limitación para el trabajo diario: los arrays no tienen **etiquetas**. En `R[:, 0]` vos sabés que la columna 0 es "el activo A" porque te lo acordás, no porque el array lo diga. Cuando manejás decenas de activos con fechas de por medio, eso se vuelve un problema.
+
+Ahí entra **Pandas** (Capítulo 6): pone etiquetas (nombres de columnas y un índice de fechas) *encima* de los arrays de NumPy. Un `DataFrame` es, en el fondo, un array de NumPy con nombres. Por eso todo lo que aprendiste acá —vectorización, broadcasting, `axis`, máscaras booleanas— se traslada casi idéntico a Pandas. No estás aprendiendo dos cosas: estás aprendiendo NumPy, y Pandas es NumPy con etiquetas.
+
+---
+
+# Errores comunes
+
+::: {.callout-warning title="Trampas frecuentes con NumPy"}
+- **Confundir `*` con `@`**: `A * B` multiplica elemento a elemento; `A @ B` es el producto matricial. Para portafolios casi siempre querés `@`.
+- **Copias vs. vistas**: un slice como `b = a[:2]` **no copia** los datos, es una *vista*. Si modificás `b`, modificás `a`. Si necesitás una copia independiente, usá `a[:2].copy()`.
+- **Olvidarse del `axis`**: `R.mean()` sin `axis` promedia *todos* los elementos y te da un solo número, no uno por activo. Casi siempre querés especificar `axis`.
+- **Enteros donde querías decimales**: `np.array([1, 2, 3])` crea un array de enteros; dividirlo puede truncar en algunos contextos. Escribí `1.0` o pasá `dtype=float` para asegurarte de trabajar con `float64`.
+:::
+
+---
+
+# Ejercicios Propuestos
+
+::: {.callout-important title="Ejercicios"}
+1. **Retornos y volatilidad**: dado un array de 252 precios simulados, calculá el vector de retornos logarítmicos, su media anualizada ($\times 252$) y su volatilidad anualizada ($\times \sqrt{252}$), todo sin usar bucles.
+2. **Máximo drawdown vectorizado**: a partir de un vector de precios, calculá el máximo acumulado con `np.maximum.accumulate` y usalo para obtener la peor caída desde un pico (el *drawdown* máximo). *Pista*: el drawdown en cada instante es `precio / pico_hasta_ahora - 1`.
+3. **Panel de activos**: generá con `rng.normal` un panel de retornos de 5 activos por 500 días. Calculá el retorno medio y la volatilidad de cada activo con `axis`, y estandarizá el panel con broadcasting.
+4. **Portafolio equiponderado**: con el panel del ejercicio 3 y pesos iguales ($w_i = 1/5$), calculá la serie de retornos del portafolio (`R @ w`) y comparala con el promedio simple por fecha.
+5. **Covarianza y riesgo**: calculá la matriz de covarianzas del panel y la volatilidad de un portafolio con pesos `[0.3, 0.3, 0.2, 0.1, 0.1]` usando la forma cuadrática $\mathbf{w}^T\Sigma\mathbf{w}$. ¿Es menor que el promedio de las volatilidades individuales? ¿Por qué?
+:::
+
+---
+
+# Referencias
+
+* Harris, C. R. et al. (2020). *Array programming with NumPy*. Nature, 585, 357–362.
+* McKinney, W. (2017). *Python for Data Analysis*. O'Reilly Media.
+* VanderPlas, J. (2016). *Python Data Science Handbook*. O'Reilly Media. [Capítulo 2: Introduction to NumPy].
+* NumPy Development Team. (2024). *NumPy Documentation*. [numpy.org/doc](https://numpy.org/doc/stable/)
