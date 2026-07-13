@@ -9,13 +9,17 @@ abstract: |
 
 # Introducción
 
-En los capítulos anteriores, utilizamos listas y diccionarios para representar datos de instrumentos financieros. Sin embargo, en el mundo real, los datos suelen ser tabulares y masivos (decenas de miles de cotizaciones). **Pandas** es la librería estándar de Python diseñada específicamente para este propósito, ofreciendo estructuras de datos de alto rendimiento y herramientas de análisis intuitivas.
+En el capítulo anterior descubriste el poder de NumPy, pero también su limitación: los arrays no tienen **etiquetas**. `R[:, 0]` es "la columna 0", y vos tenés que acordarte de que esa columna es el GD30 y de que la fila 40 es el 3 de marzo. Con dos activos se tolera; con doscientos activos y diez años de fechas, es inmanejable.
+
+**Pandas** resuelve exactamente eso: pone nombres de columnas y un índice (típicamente de fechas) *encima* de los arrays de NumPy. No es una librería nueva que aprender desde cero — es NumPy con etiquetas: la vectorización, el broadcasting y las máscaras booleanas que ya dominás funcionan igual. Lo que se agrega es la maquinaria para el trabajo diario con datos financieros reales: leer archivos, alinear fechas, rellenar feriados, calcular retornos y ventanas móviles, agrupar por sector.
+
+Este capítulo recorre esa maquinaria y cierra integrando todo en un caso real de renta fija: construir la **curva de rendimientos** a partir de precios de bonos.
 
 ---
 
-# Introducción a Pandas
+# Las estructuras: Series y DataFrames
 
-**Pandas** es una librería esencial para la carga, limpieza, análisis y exportación de datos. Se integra perfectamente con el ecosistema de Python (NumPy, SciPy y Matplotlib).
+**Pandas** se integra perfectamente con el ecosistema que venimos usando (NumPy y Matplotlib). Sus dos estructuras centrales son la Serie (1D) y el DataFrame (2D).
 
 ```{python}
 #| label: setup
@@ -28,11 +32,11 @@ plt.style.use('ggplot')
 ```
 
 ## Series (1D)
-Una **Serie** es una estructura unidimensional etiquetada con un índice. Soporta operaciones vectorizadas y métodos estadísticos básicos.
+Una **Serie** es un array unidimensional con un índice de etiquetas. Compará con el array de NumPy: ahí el "lunes" era la posición 0 y tenías que recordarlo; acá el dato **lleva puesta su etiqueta**.
 
 ```{python}
 #| label: pandas-series
-precios_serie = pd.Series([110, 112, 108, 115, 120], 
+precios_serie = pd.Series([110, 112, 108, 115, 120],
                           index=["Lunes", "Martes", "Miércoles", "Jueves", "Viernes"],
                           name="Precios")
 
@@ -41,8 +45,10 @@ print(f"\nMedia: {precios_serie.mean():.2f}")
 print(f"Desvío estándar: {precios_serie.std():.2f}")
 ```
 
+Fijate la salida: cada precio aparece junto a su día, y los métodos estadísticos (`mean`, `std`) vienen incorporados — no hace falta importar nada más. El desvío de ~4.6 sobre una media de 113 nos dice que esta serie se mueve alrededor de un 4% por día: volátil.
+
 ## DataFrames (2D)
-Un **DataFrame** es una estructura tabular (filas y columnas) donde cada columna es, técnicamente, una Serie que comparte el mismo índice.
+Un **DataFrame** es la estructura tabular (filas y columnas) que vas a usar el 90% del tiempo. Técnicamente, cada columna es una Serie, y todas comparten el mismo índice. Armemos una tabla de bonos soberanos argentinos:
 
 ```{python}
 #| label: dataframe-intro
@@ -56,47 +62,80 @@ df = pd.DataFrame(datos)
 print(df)
 ```
 
+Un diccionario de listas se convierte directamente en tabla: las claves son las columnas. Notá el patrón financiero en los datos: a mayor plazo del bono (GD30 → GD46), menor precio — el tiempo descuenta.
+
 ## Exploración Inicial
-Antes de analizar datos, debemos inspeccionar su estructura mediante métodos clave:
+Regla de oro del análisis de datos: **antes de calcular nada, mirá qué tenés**. Pandas trae cuatro métodos de inspección que deberían ser tu reflejo automático al cargar cualquier dataset:
 
 ```{python}
 #| label: exploracion
 print(f"Dimensiones: {df.shape}")
-print(f"Columnas: {df.columns.tolist()}")
+print(f"Columnas: {df.columns.tolist()}\n")
 
-# Métodos esenciales de inspección
-# df.head()      # Primeras 5 filas
-# df.tail()      # Últimas 5 filas
-# df.info()      # Resumen de tipos de datos y memoria
-# df.describe()  # Estadísticas descriptivas rápidas
+# head(): las primeras filas — ¿los datos tienen la pinta esperada?
+print(df.head(3))
+
+# describe(): estadísticas rápidas — ¿hay valores absurdos? ¿escalas raras?
+print()
+print(df.describe().round(2))
 ```
+
+`head()` responde "¿cargué lo que creía?" y `describe()` responde "¿hay algo raro?" (un precio negativo, un máximo ridículo, menos filas que las esperadas delatan problemas de carga). Completan el kit `df.tail()` (últimas filas — útil para ver si la serie llega hasta la fecha esperada) y `df.info()` (tipos de datos y memoria — clave para detectar números que se cargaron como texto).
 
 ---
 
 # Lectura, Escritura y Alineación de Datos
 
 ## I/O de Archivos
-Pandas permite la ingesta de datos desde múltiples fuentes (`read_csv`, `read_excel`) y el guardado de resultados (`to_csv`, `to_excel`).
+En la práctica, los datos no se tipean a mano: llegan en archivos (CSV, Excel) exportados de un sistema o descargados de un proveedor. Pandas lee y escribe todos los formatos usuales (`read_csv`, `read_excel`, `to_csv`, `to_excel`). Hagamos el ciclo completo — guardar nuestra tabla de bonos y volver a leerla — que es además la forma de verificar que entendés el formato:
 
 ```{python}
 #| label: io-ejemplo
-# Ejemplo hipotético de lectura
-# df = pd.read_csv("historico.csv", sep=";", encoding="utf-8")
+import tempfile, os
 
-# Parámetros útiles al leer:
-# parse_dates=['Fecha']: Convierte columnas a objetos Datetime directamente.
-# index_col='Fecha': Establece una columna como índice del DataFrame.
+# Escribimos el DataFrame a un CSV (separador ; como es usual en la región)
+ruta = os.path.join(tempfile.gettempdir(), "bonos.csv")
+df.to_csv(ruta, sep=";", index=False)
+
+# Y lo volvemos a leer
+df_leido = pd.read_csv(ruta, sep=";")
+print(df_leido)
+print(f"\n¿La ida y vuelta preservó los datos? {df.equals(df_leido)}")
 ```
 
+Dos parámetros de `read_csv` que vas a usar constantemente con series de tiempo: `parse_dates=["Fecha"]` (convierte la columna a fechas de verdad en lugar de texto) e `index_col="Fecha"` (la establece como índice del DataFrame). Sin `parse_dates`, las fechas quedan como strings y ningún método temporal funciona — es la causa #1 de "pandas no me ordena por fecha".
+
 ## Alineación de Índices e Integración de Datos
-La **alineación automática** es un concepto crítico en finanzas. Si combinamos dos activos que cotizan en días distintos (debido a feriados locales), Pandas se asegura de alinear las fechas correctamente.
 
-Para combinar datasets utilizamos:
-- `merge()`: Unión por columnas (similar a un JOIN de SQL).
-- `join()`: Unión eficiente usando el índice (ideal para `DatetimeIndex`).
-- `concat()`: Apilado vertical u horizontal.
+Acá viene un problema **real** que las listas de Python no pueden resolver bien. Supongamos que seguís un bono que cotiza en Buenos Aires y una acción que cotiza en Nueva York. El 24 de marzo es feriado en Argentina (no hay precio local) pero NY opera; el 4 de julio es al revés. Si guardaras los precios en dos listas, **los índices dejarían de corresponderse** a partir del primer feriado — y cualquier cálculo conjunto (un spread, una correlación) compararía días distintos sin avisarte.
 
-Tipos de uniones: `inner`, `outer` (por defecto en `concat`), `left` y `right`.
+Pandas resuelve esto **alineando por etiqueta**: al combinar las dos series, empareja las fechas iguales y marca explícitamente los huecos con `NaN`. Veámoslo:
+
+```{python}
+#| label: alineacion-fechas
+# BYMA no opera el 24/03 (feriado argentino); NYSE no opera el 04/07
+precios_byma = pd.Series(
+    [100.0, 101.5, 102.0, 103.2],
+    index=pd.to_datetime(["2023-03-22", "2023-03-23", "2023-03-27", "2023-07-04"]),
+    name="GD30")
+
+precios_nyse = pd.Series(
+    [50.0, 50.8, 51.2, 51.5],
+    index=pd.to_datetime(["2023-03-22", "2023-03-23", "2023-03-24", "2023-03-27"]),
+    name="AAPL")
+
+# concat alinea automáticamente por fecha (outer: conserva todas las fechas)
+panel = pd.concat([precios_byma, precios_nyse], axis=1)
+print(panel)
+```
+
+Leé la tabla resultante: el 24/03 tiene precio de AAPL pero `NaN` en GD30 (feriado argentino), y el 04/07 al revés. Pandas **no inventó datos ni desalineó nada**: te mostró exactamente dónde falta información, para que decidas qué hacer (rellenar, eliminar — la sección de Limpieza). Con listas, este problema se resolvía con contabilidad manual de índices; con Pandas, desaparece.
+
+Para combinar datasets, el kit completo:
+
+- `merge()`: unión por columnas (como un JOIN de SQL) — el caso típico: pegar la TIR y la paridad de cada ticker.
+- `join()` / `concat()`: unión por índice — el caso típico con `DatetimeIndex`, como recién.
+- Tipos de unión: `inner` (solo claves comunes), `outer` (todas las claves, con NaN donde falte), `left`/`right`.
 
 ```{python}
 #| label: merge-ejemplo
@@ -158,27 +197,47 @@ El método `resample()` permite agrupar datos por períodos (diario `"D"`, seman
 
 ```{python}
 #| label: resample-ejemplo
-# Simulamos una serie diaria para ejemplo
+# Simulamos una serie diaria de precios (semilla fija para reproducibilidad)
+rng = np.random.default_rng(42)
 df_diario = pd.DataFrame({
-    "Precio": np.random.normal(100, 1, 100).cumsum()
+    "Precio": 100 + rng.normal(0.1, 1, 100).cumsum()
 }, index=pd.date_range("2023-01-01", periods=100, freq="B"))
 
-# Cambiar de diario a mensual tomando el último valor
+# Cambiar de diario a mensual tomando el último valor de cada mes
 df_mensual = df_diario.resample("ME").last()  # "ME" = Month End
+print(f"Serie original: {len(df_diario)} observaciones diarias")
+print(f"Tras resample:  {len(df_mensual)} observaciones mensuales\n")
 print(df_mensual.head(3))
 ```
+
+De 100 días hábiles quedaron 5 puntas de mes. Elegimos `.last()` porque para precios lo que importa es el **cierre** del período; con otras variables la agregación correcta cambia (`sum()` para volúmenes operados, `mean()` para tasas). El método de agregación es una decisión económica, no técnica.
 
 ---
 
 # Limpieza y Transformación de Datos
 
-En finanzas, los datos suelen tener "agujeros" (NaT o NaN).
-- `isna()`: Detecta nulos.
-- `dropna()`: Elimina filas/columnas con nulos.
-- `fillna()`: Rellena nulos con valores específicos o métodos como `ffill` (forward fill) o `bfill` (backward fill).
+Los datos financieros reales vienen con "agujeros" (`NaN`): feriados, activos que no cotizaron, errores del proveedor. Ya vimos cómo la alineación los hace visibles; ahora, qué hacer con ellos. El kit: `isna()` para detectarlos, `dropna()` para eliminar las filas afectadas, y `fillna()` para rellenarlos — en particular con `ffill` (*forward fill*: arrastrar el último valor válido).
+
+Trabajemos sobre el panel desalineado de la sección anterior, que tenía exactamente este problema:
+
+```{python}
+#| label: limpieza-ejemplo
+print("¿Dónde hay huecos?")
+print(panel.isna().sum(), "\n")
+
+# Opción 1: eliminar las filas incompletas (perdemos información)
+print("dropna(): quedan", len(panel.dropna()), "filas de", len(panel))
+
+# Opción 2: forward fill — cada hueco toma el último precio conocido
+panel_limpio = panel.ffill()
+print("\nPanel con ffill():")
+print(panel_limpio)
+```
+
+Compará las dos opciones sobre el caso concreto: `dropna()` tira los días de feriado enteros (perdés también el precio del mercado que **sí** operó), mientras que `ffill()` conserva todo, asumiendo que el precio del activo sin cotización "sigue siendo el del último cierre". Para precios, esa suposición es económicamente razonable — por eso `ffill` es el default en finanzas — pero no es gratis: el precio arrastrado es *viejo*, y en un día de crisis puede estar muy lejos del valor real.
 
 ::: {.callout-tip title="Forward Fill en Finanzas"}
-El método `ffill` es ideal para tratar feriados o días sin cotización, ya que asume que el precio sigue siendo el mismo que el del último cierre válido registrado.
+`ffill` es ideal para feriados y huecos cortos: asume que el precio vigente es el del último cierre válido. La alternativa `bfill` (rellenar con el valor *siguiente*) casi nunca corresponde en finanzas: usa información del futuro — un *look-ahead bias* disfrazado de limpieza.
 :::
 
 ---
@@ -193,26 +252,37 @@ Pandas optimiza operaciones sobre columnas enteras sin necesidad de bucles `for`
 - `.diff()`: Calcula la diferencia absoluta: $P_t - P_{t-1}$.
 
 ## Tipos de Retornos
-1. **Retorno Simple**: $R = (P_t / P_{t-1}) - 1$. Es aditivo entre activos en el mismo momento.
-2. **Retorno Logarítmico**: $r = \ln(P_t / P_{t-1})$. Es aditivo a lo largo del tiempo y simétrico.
+1. **Retorno Simple**: $R = (P_t / P_{t-1}) - 1$. Es aditivo entre activos en el mismo momento (el retorno de una cartera es el promedio ponderado de los retornos simples).
+2. **Retorno Logarítmico**: $r = \ln(P_t / P_{t-1})$. Es aditivo a lo largo del tiempo (el retorno de un año es la suma de los diarios) y simétrico.
 
 ```{python}
 #| label: retornos-calculo
 df_diario["Ret_Simple"] = df_diario["Precio"].pct_change()
 df_diario["Ret_Log"] = np.log(df_diario["Precio"] / df_diario["Precio"].shift(1))
+
+print(df_diario[["Precio", "Ret_Simple", "Ret_Log"]].head(4).round(4))
+print(f"\nRetorno medio diario:  {df_diario['Ret_Simple'].mean():.4%}")
+print(f"Volatilidad diaria:    {df_diario['Ret_Simple'].std():.4%}")
 ```
 
+Dos lecturas de la salida. Primero, la **primera fila tiene `NaN`**: el primer día no tiene "día anterior" con quien compararse — es el mismo desfasaje que manejaste a mano con `range(len - 1)` en el Capítulo 2, ahora automático. Segundo, el retorno simple y el logarítmico son casi idénticos: para movimientos diarios chicos (±1%) la diferencia es despreciable; se separa en movimientos grandes.
+
 ## Ventanas Móviles (Rolling)
-Se utiliza para indicadores técnicos como medias móviles simples (SMA) o volatilidad móvil.
+Una pregunta constante en finanzas: *¿cómo viene el activo **últimamente**?* No en toda su historia — en los últimos 20 días, 60 días. Las **ventanas móviles** (`rolling`) calculan una estadística sobre una ventana que se desliza por la serie: la base de las medias móviles y de la volatilidad histórica.
 
 ```{python}
 #| label: rolling-indicators
-# Media móvil de 20 días
+# Media móvil de 20 días: el precio "suavizado"
 df_diario["SMA_20"] = df_diario["Precio"].rolling(window=20).mean()
 
-# Volatilidad móvil de 20 días (anualizada)
+# Volatilidad móvil de 20 días, anualizada con √252
 df_diario["Vol_20"] = df_diario["Ret_Simple"].rolling(window=20).std() * np.sqrt(252)
+
+print(df_diario[["Precio", "SMA_20", "Vol_20"]].iloc[18:23].round(3))
+print(f"\nVolatilidad anualizada al final de la muestra: {df_diario['Vol_20'].iloc[-1]:.1%}")
 ```
+
+Mirá las filas impresas: las primeras 19 observaciones de `SMA_20` son `NaN` — la ventana de 20 días recién se "llena" en la observación 20. Y la volatilidad final (~15%) es la lectura estándar del riesgo del activo: se anualizó multiplicando por $\sqrt{252}$, la regla que formalizamos en el Capítulo 7. Cuando en la práctica leas "vol histórica 20 ruedas", es exactamente esta cuenta.
 
 ---
 
@@ -358,6 +428,18 @@ plt.show()
 
 ::: {.callout-warning title="La interpolación lineal es un punto de partida, no la verdad"}
 Interpolar linealmente es simple y transparente, pero los operadores de renta fija suelen usar métodos más suaves (splines cúbicos, Nelson-Siegel) para que la curva forward no tenga "quiebres" antieconómicos. Para aprender el mecanismo, lo lineal alcanza; para valuar en producción, conviene ir más fino.
+:::
+
+---
+
+# Errores comunes
+
+::: {.callout-warning title="Trampas frecuentes"}
+- **Fechas como texto**: si olvidás `parse_dates` (o `pd.to_datetime`), las fechas quedan como strings: se ordenan alfabéticamente, `resample` falla y los gráficos salen desordenados. Verificá con `df.index.dtype`.
+- **El `NaN` inicial de `pct_change()`**: la primera observación de cualquier serie de retornos es `NaN`. Si después calculás `mean()` no pasa nada (pandas lo ignora), pero si convertís a NumPy o lo pasás a otra librería, ese `NaN` propaga y arruina el cálculo. `dropna()` primero.
+- **`ffill` con huecos largos**: arrastrar un precio un día es razonable; arrastrarlo tres meses (un bono que dejó de cotizar) fabrica una serie plana con volatilidad cero — un activo "sin riesgo" que no existe. Poné un límite (`ffill(limit=5)`) o revisá los huecos antes.
+- **Look-ahead con `shift` al revés**: `shift(-1)` trae el dato de *mañana* a la fila de hoy. Útil para armar targets de predicción, letal si se te cuela en una señal de trading: estarías operando con información del futuro (el tema central del Capítulo 17).
+- **`SettingWithCopyWarning`**: asignar sobre un "recorte" de un DataFrame (`df[df.x > 0]["y"] = 1`) puede modificar una copia y no el original. La forma segura es una sola indexación con `.loc`: `df.loc[df.x > 0, "y"] = 1`.
 :::
 
 ---

@@ -269,7 +269,7 @@ globalThis.qpyodideCustomizedPyodideOptions = {
 }
 
 // Store cell data
-globalThis.qpyodideCellDetails = [{"code":"def valor_futuro(capital, tasa, periodos):\n    \"\"\"\n    Calcula el valor futuro de una inversión.\n    \n    Parámetros:\n    -----------\n    capital : float — Monto inicial invertido\n    tasa : float — Tasa de interés por período\n    periodos : int — Número de períodos\n    \n    Retorna:\n    --------\n    float — Valor futuro\n    \"\"\"\n    return capital * (1 + tasa) ** periodos\n\n# Uso\nvf = valor_futuro(100_000, 0.08, 10)\nprint(f\"Valor futuro: ${vf:,.2f}\")","id":1,"options":{"autorun":"","classes":"","comment":"","context":"interactive","dpi":72,"fig-cap":"","fig-height":5,"fig-width":7,"label":"funcion-basica","message":"true","out-height":"","out-width":"700px","output":"true","read-only":"false","results":"markup","warning":"true"}},{"code":"def resumen_inversion(capital, tasa, periodos):\n    vf = capital * (1 + tasa) ** periodos\n    interes_ganado = vf - capital\n    rendimiento_total = interes_ganado / capital\n    return vf, interes_ganado, rendimiento_total\n\n# La función recibe 3 parámetros y devuelve 3 valores\nvf, interes, rendimiento = resumen_inversion(100_000, 0.08, 3)\n\nprint(f\"Valor futuro: ${vf:,.2f}\")\nprint(f\"Interés ganado: ${interes:,.2f}\")\nprint(f\"Rendimiento total: {rendimiento:.2%}\")","id":2,"options":{"autorun":"","classes":"","comment":"","context":"interactive","dpi":72,"fig-cap":"","fig-height":5,"fig-width":7,"label":"multi-params-return","message":"true","out-height":"","out-width":"700px","output":"true","read-only":"false","results":"markup","warning":"true"}},{"code":"def valor_presente(flujo_futuro, tasa, periodos=1):\n    \"\"\"Calcula el valor presente. Por defecto, 1 período.\"\"\"\n    return flujo_futuro / (1 + tasa) ** periodos\n\n# Con y sin el parámetro por defecto\nvp1 = valor_presente(1000, 0.10)       # 1 período (default)\nvp2 = valor_presente(1000, 0.10, 5)    # 5 períodos\n\nprint(f\"VP a 1 año: ${vp1:,.2f}\")\nprint(f\"VP a 5 años: ${vp2:,.2f}\")","id":3,"options":{"autorun":"","classes":"","comment":"","context":"interactive","dpi":72,"fig-cap":"","fig-height":5,"fig-width":7,"label":"params-default","message":"true","out-height":"","out-width":"700px","output":"true","read-only":"false","results":"markup","warning":"true"}},{"code":"def sumar_flujos(*flujos):\n    \"\"\"Suma una cantidad variable de flujos de fondos.\"\"\"\n    total = 0\n    for f in flujos:\n        total += f\n    return total\n\n# Podemos pasar cualquier cantidad de argumentos\ntotal_1 = sumar_flujos(100, 200, 300)\ntotal_2 = sumar_flujos(80, 80, 80, 80, 1080)\n\nprint(f\"Total 3 flujos: ${total_1:,}\")\nprint(f\"Total 5 flujos: ${total_2:,}\")\n\n# Si ya tenemos una lista, usamos * para desempaquetar\nserie = [-1000, 300, 400, 500]\nprint(f\"Suma serie: ${sumar_flujos(*serie):,}\")","id":4,"options":{"autorun":"","classes":"","comment":"","context":"interactive","dpi":72,"fig-cap":"","fig-height":5,"fig-width":7,"label":"args","message":"true","out-height":"","out-width":"700px","output":"true","read-only":"false","results":"markup","warning":"true"}},{"code":"tasa_mercado = 0.05  # VARIABLE GLOBAL (Scope: Main)\n\ndef calcular_rendimiento(monto):\n    # tasa_mercado es visible aquí porque es global\n    return monto * tasa_mercado\n\ndef operacion_interna():\n    variable_interna = 100  # VARIABLE LOCAL (Scope: Función)\n    print(f\"Dentro de la función: {variable_interna}\")\n\nprint(f\"Rendimiento calculado: {calcular_rendimiento(1000)}\")\noperacion_interna()\n\n# Intentar acceder a variable_interna aquí daría un NameError\n# print(variable_interna) ","id":5,"options":{"autorun":"","classes":"","comment":"","context":"interactive","dpi":72,"fig-cap":"","fig-height":5,"fig-width":7,"label":"scope-basico","message":"true","out-height":"","out-width":"700px","output":"true","read-only":"false","results":"markup","warning":"true"}},{"code":"ticker = \"AAPL\"\n\ndef cambiar_ticker_local():\n    ticker = \"GGAL\"  # Esto crea una variable LOCAL, no cambia la global\n    print(f\"Dentro de la función: {ticker}\")\n\ncambiar_ticker_local()\nprint(f\"Fuera de la función (Global): {ticker}\")","id":6,"options":{"autorun":"","classes":"","comment":"","context":"interactive","dpi":72,"fig-cap":"","fig-height":5,"fig-width":7,"label":"scope-shadowing","message":"true","out-height":"","out-width":"700px","output":"true","read-only":"false","results":"markup","warning":"true"}},{"code":"# MALA PRÁCTICA (Dependencia global)\ntasa = 0.10\ndef calcular_interes_malo(capital):\n    return capital * tasa\n\n# BUENA PRÁCTICA (Parámetros explícitos)\ndef calcular_interes_bueno(capital, tasa_activa):\n    return capital * tasa_activa\n\nprint(f\"Malo: {calcular_interes_malo(100)}\")\nprint(f\"Bueno: {calcular_interes_bueno(100, 0.12)}\")","id":7,"options":{"autorun":"","classes":"","comment":"","context":"interactive","dpi":72,"fig-cap":"","fig-height":5,"fig-width":7,"label":"scope-mala-practica","message":"true","out-height":"","out-width":"700px","output":"true","read-only":"false","results":"markup","warning":"true"}},{"code":"def calcular_vpn(flujos, tasa):\n    \"\"\"Calcula el VPN de una serie de flujos.\"\"\"\n    if len(flujos) == 0:\n        raise ValueError(\"La lista de flujos no puede estar vacía\")\n\n    vpn = 0\n    for t, cf in enumerate(flujos):\n        vpn += cf / (1 + tasa) ** t\n    return vpn\n\n# Caso normal\nprint(f\"VPN correcto: {calcular_vpn([-1000, 400, 400, 400], 0.10):.2f}\")\n\n# Caso con error controlado (lista vacía)\ntry:\n    resultado = calcular_vpn([], 0.10)\nexcept ValueError as e:\n    print(f\"Error capturado: {e}\")","id":8,"options":{"autorun":"","classes":"","comment":"","context":"interactive","dpi":72,"fig-cap":"","fig-height":5,"fig-width":7,"label":"try-except","message":"true","out-height":"","out-width":"700px","output":"true","read-only":"false","results":"markup","warning":"true"}},{"code":"def ratio_cobertura(ebit, intereses):\n    return ebit / intereses\n\ntry:\n    print(ratio_cobertura(500, 0))  # podría fallar por división por cero\nexcept ZeroDivisionError:\n    print(\"Error: intereses no puede ser 0\")\nexcept TypeError:\n    print(\"Error: ebit e intereses deben ser numéricos\")","id":9,"options":{"autorun":"","classes":"","comment":"","context":"interactive","dpi":72,"fig-cap":"","fig-height":5,"fig-width":7,"label":"try-except-multiple","message":"true","out-height":"","out-width":"700px","output":"true","read-only":"false","results":"markup","warning":"true"}},{"code":"def parse_tasa(texto):\n    return float(texto)\n\nentrada = \"0.12\"\n\ntry:\n    tasa = parse_tasa(entrada)\nexcept ValueError:\n    print(\"No se pudo convertir la tasa a número\")\nelse:\n    print(f\"Tasa válida: {tasa:.2%}\")\nfinally:\n    print(\"Fin de la validación\")","id":10,"options":{"autorun":"","classes":"","comment":"","context":"interactive","dpi":72,"fig-cap":"","fig-height":5,"fig-width":7,"label":"try-except-else-finally","message":"true","out-height":"","out-width":"700px","output":"true","read-only":"false","results":"markup","warning":"true"}},{"code":"def cuota_francesa(capital, tasa, periodos):\n    if capital <= 0:\n        raise ValueError(\"El capital debe ser positivo\")\n    if tasa <= 0:\n        raise ValueError(\"La tasa debe ser positiva\")\n    if periodos <= 0:\n        raise ValueError(\"Los periodos deben ser mayores a 0\")\n    return capital * (tasa * (1 + tasa) ** periodos) / ((1 + tasa) ** periodos - 1)\n\ntry:\n    cuota = cuota_francesa(100000, 0.03, 24)\n    print(f\"Cuota: ${cuota:,.2f}\")\nexcept ValueError as e:\n    print(f\"Dato inválido: {e}\")","id":11,"options":{"autorun":"","classes":"","comment":"","context":"interactive","dpi":72,"fig-cap":"","fig-height":5,"fig-width":7,"label":"try-except-raise","message":"true","out-height":"","out-width":"700px","output":"true","read-only":"false","results":"markup","warning":"true"}},{"code":"# 1) import modulo\nimport math\nprint(math.sqrt(16))  # accedemos con prefijo math.\n\n# 2) import modulo as alias\nimport math as m\nprint(m.pi)  # mismo módulo, nombre corto\n\n# 3) from modulo import nombre\nfrom math import sqrt\nprint(sqrt(25))  # usamos sqrt directamente\n\n# 4) from modulo import nombre as alias\nfrom math import factorial as fact\nprint(fact(5))","id":12,"options":{"autorun":"","classes":"","comment":"","context":"interactive","dpi":72,"fig-cap":"","fig-height":5,"fig-width":7,"label":"","message":"true","out-height":"","out-width":"700px","output":"true","read-only":"false","results":"markup","warning":"true"}},{"code":"# === finanzas_basicas.py ===\n# En un proyecto real, este bloque viviría en su propio archivo .py\n# y lo importarías con: from finanzas_basicas import valor_futuro, ...\n\ndef valor_futuro(capital, tasa, periodos):\n    \"\"\"Calcula VF = C * (1 + r)^n.\"\"\"\n    if tasa < -1:\n        raise ValueError(\"La tasa no puede ser menor a -100%\")\n    return capital * (1 + tasa) ** periodos\n\n\ndef valor_presente_neto(flujos, tasa):\n    \"\"\"Calcula el VPN de una serie de flujos.\"\"\"\n    if not flujos:\n        raise ValueError(\"Lista de flujos vacía\")\n\n    vpn = 0\n    for t, cf in enumerate(flujos):\n        vpn += cf / (1 + tasa) ** t\n    return vpn","id":13,"options":{"autorun":"","classes":"","comment":"","context":"interactive","dpi":72,"fig-cap":"","fig-height":5,"fig-width":7,"label":"libreria","message":"true","out-height":"","out-width":"700px","output":"true","read-only":"false","results":"markup","warning":"true"}},{"code":"# === Uso de las funciones ===\n\n# Ejemplo 1: valor futuro\nvf = valor_futuro(100_000, 0.08, 3)\nprint(f\"Valor futuro: ${vf:,.2f}\")\n\n# Ejemplo 2: VPN de un proyecto\nflujos = [-1000, 400, 400, 400]\nvpn = valor_presente_neto(flujos, 0.10)\nprint(f\"VPN: ${vpn:,.2f}\")","id":14,"options":{"autorun":"","classes":"","comment":"","context":"interactive","dpi":72,"fig-cap":"","fig-height":5,"fig-width":7,"label":"uso-libreria","message":"true","out-height":"","out-width":"700px","output":"true","read-only":"false","results":"markup","warning":"true"}}];
+globalThis.qpyodideCellDetails = [{"code":"def valor_futuro(capital, tasa, periodos):\n    \"\"\"\n    Calcula el valor futuro de una inversión.\n    \n    Parámetros:\n    -----------\n    capital : float — Monto inicial invertido\n    tasa : float — Tasa de interés por período\n    periodos : int — Número de períodos\n    \n    Retorna:\n    --------\n    float — Valor futuro\n    \"\"\"\n    return capital * (1 + tasa) ** periodos\n\n# Uso\nvf = valor_futuro(100_000, 0.08, 10)\nprint(f\"Valor futuro: ${vf:,.2f}\")","id":1,"options":{"autorun":"","classes":"","comment":"","context":"interactive","dpi":72,"fig-cap":"","fig-height":5,"fig-width":7,"label":"funcion-basica","message":"true","out-height":"","out-width":"700px","output":"true","read-only":"false","results":"markup","warning":"true"}},{"code":"def resumen_inversion(capital, tasa, periodos):\n    vf = capital * (1 + tasa) ** periodos\n    interes_ganado = vf - capital\n    rendimiento_total = interes_ganado / capital\n    return vf, interes_ganado, rendimiento_total\n\n# La función recibe 3 parámetros y devuelve 3 valores\nvf, interes, rendimiento = resumen_inversion(100_000, 0.08, 3)\n\nprint(f\"Valor futuro: ${vf:,.2f}\")\nprint(f\"Interés ganado: ${interes:,.2f}\")\nprint(f\"Rendimiento total: {rendimiento:.2%}\")","id":2,"options":{"autorun":"","classes":"","comment":"","context":"interactive","dpi":72,"fig-cap":"","fig-height":5,"fig-width":7,"label":"multi-params-return","message":"true","out-height":"","out-width":"700px","output":"true","read-only":"false","results":"markup","warning":"true"}},{"code":"def valor_presente(flujo_futuro, tasa, periodos=1):\n    \"\"\"Calcula el valor presente. Por defecto, 1 período.\"\"\"\n    return flujo_futuro / (1 + tasa) ** periodos\n\n# Con y sin el parámetro por defecto\nvp1 = valor_presente(1000, 0.10)       # 1 período (default)\nvp2 = valor_presente(1000, 0.10, 5)    # 5 períodos\n\nprint(f\"VP a 1 año: ${vp1:,.2f}\")\nprint(f\"VP a 5 años: ${vp2:,.2f}\")","id":3,"options":{"autorun":"","classes":"","comment":"","context":"interactive","dpi":72,"fig-cap":"","fig-height":5,"fig-width":7,"label":"params-default","message":"true","out-height":"","out-width":"700px","output":"true","read-only":"false","results":"markup","warning":"true"}},{"code":"def sumar_flujos(*flujos):\n    \"\"\"Suma una cantidad variable de flujos de fondos.\"\"\"\n    total = 0\n    for f in flujos:\n        total += f\n    return total\n\n# Podemos pasar cualquier cantidad de argumentos\ntotal_1 = sumar_flujos(100, 200, 300)\ntotal_2 = sumar_flujos(80, 80, 80, 80, 1080)\n\nprint(f\"Total 3 flujos: ${total_1:,}\")\nprint(f\"Total 5 flujos: ${total_2:,}\")\n\n# Si ya tenemos una lista, usamos * para desempaquetar\nserie = [-1000, 300, 400, 500]\nprint(f\"Suma serie: ${sumar_flujos(*serie):,}\")","id":4,"options":{"autorun":"","classes":"","comment":"","context":"interactive","dpi":72,"fig-cap":"","fig-height":5,"fig-width":7,"label":"args","message":"true","out-height":"","out-width":"700px","output":"true","read-only":"false","results":"markup","warning":"true"}},{"code":"tasa_mercado = 0.05  # VARIABLE GLOBAL (Scope: Main)\n\ndef calcular_rendimiento(monto):\n    # tasa_mercado es visible aquí porque es global\n    return monto * tasa_mercado\n\ndef operacion_interna():\n    variable_interna = 100  # VARIABLE LOCAL (Scope: Función)\n    print(f\"Dentro de la función: {variable_interna}\")\n\nprint(f\"Rendimiento calculado: {calcular_rendimiento(1000)}\")\noperacion_interna()\n\n# Intentar acceder a variable_interna aquí daría un NameError\n# print(variable_interna) ","id":5,"options":{"autorun":"","classes":"","comment":"","context":"interactive","dpi":72,"fig-cap":"","fig-height":5,"fig-width":7,"label":"scope-basico","message":"true","out-height":"","out-width":"700px","output":"true","read-only":"false","results":"markup","warning":"true"}},{"code":"ticker = \"AAPL\"\n\ndef cambiar_ticker_local():\n    ticker = \"GGAL\"  # Esto crea una variable LOCAL, no cambia la global\n    print(f\"Dentro de la función: {ticker}\")\n\ncambiar_ticker_local()\nprint(f\"Fuera de la función (Global): {ticker}\")","id":6,"options":{"autorun":"","classes":"","comment":"","context":"interactive","dpi":72,"fig-cap":"","fig-height":5,"fig-width":7,"label":"scope-shadowing","message":"true","out-height":"","out-width":"700px","output":"true","read-only":"false","results":"markup","warning":"true"}},{"code":"# MALA PRÁCTICA (Dependencia global)\ntasa = 0.10\ndef calcular_interes_malo(capital):\n    return capital * tasa\n\n# BUENA PRÁCTICA (Parámetros explícitos)\ndef calcular_interes_bueno(capital, tasa_activa):\n    return capital * tasa_activa\n\nprint(f\"Malo: {calcular_interes_malo(100)}\")\nprint(f\"Bueno: {calcular_interes_bueno(100, 0.12)}\")","id":7,"options":{"autorun":"","classes":"","comment":"","context":"interactive","dpi":72,"fig-cap":"","fig-height":5,"fig-width":7,"label":"scope-mala-practica","message":"true","out-height":"","out-width":"700px","output":"true","read-only":"false","results":"markup","warning":"true"}},{"code":"def calcular_vpn(flujos, tasa):\n    \"\"\"Calcula el VPN de una serie de flujos.\"\"\"\n    if len(flujos) == 0:\n        raise ValueError(\"La lista de flujos no puede estar vacía\")\n\n    vpn = 0\n    for t, cf in enumerate(flujos):\n        vpn += cf / (1 + tasa) ** t\n    return vpn\n\n# Caso normal\nprint(f\"VPN correcto: {calcular_vpn([-1000, 400, 400, 400], 0.10):.2f}\")\n\n# Caso con error controlado (lista vacía)\ntry:\n    resultado = calcular_vpn([], 0.10)\nexcept ValueError as e:\n    print(f\"Error capturado: {e}\")","id":8,"options":{"autorun":"","classes":"","comment":"","context":"interactive","dpi":72,"fig-cap":"","fig-height":5,"fig-width":7,"label":"try-except","message":"true","out-height":"","out-width":"700px","output":"true","read-only":"false","results":"markup","warning":"true"}},{"code":"def ratio_cobertura(ebit, intereses):\n    return ebit / intereses\n\ntry:\n    print(ratio_cobertura(500, 0))  # podría fallar por división por cero\nexcept ZeroDivisionError:\n    print(\"Error: intereses no puede ser 0\")\nexcept TypeError:\n    print(\"Error: ebit e intereses deben ser numéricos\")","id":9,"options":{"autorun":"","classes":"","comment":"","context":"interactive","dpi":72,"fig-cap":"","fig-height":5,"fig-width":7,"label":"try-except-multiple","message":"true","out-height":"","out-width":"700px","output":"true","read-only":"false","results":"markup","warning":"true"}},{"code":"def parse_tasa(texto):\n    return float(texto)\n\nentrada = \"0.12\"\n\ntry:\n    tasa = parse_tasa(entrada)\nexcept ValueError:\n    print(\"No se pudo convertir la tasa a número\")\nelse:\n    print(f\"Tasa válida: {tasa:.2%}\")\nfinally:\n    print(\"Fin de la validación\")","id":10,"options":{"autorun":"","classes":"","comment":"","context":"interactive","dpi":72,"fig-cap":"","fig-height":5,"fig-width":7,"label":"try-except-else-finally","message":"true","out-height":"","out-width":"700px","output":"true","read-only":"false","results":"markup","warning":"true"}},{"code":"def cuota_francesa(capital, tasa, periodos):\n    if capital <= 0:\n        raise ValueError(\"El capital debe ser positivo\")\n    if tasa <= 0:\n        raise ValueError(\"La tasa debe ser positiva\")\n    if periodos <= 0:\n        raise ValueError(\"Los periodos deben ser mayores a 0\")\n    return capital * (tasa * (1 + tasa) ** periodos) / ((1 + tasa) ** periodos - 1)\n\ntry:\n    cuota = cuota_francesa(100000, 0.03, 24)\n    print(f\"Cuota: ${cuota:,.2f}\")\nexcept ValueError as e:\n    print(f\"Dato inválido: {e}\")","id":11,"options":{"autorun":"","classes":"","comment":"","context":"interactive","dpi":72,"fig-cap":"","fig-height":5,"fig-width":7,"label":"try-except-raise","message":"true","out-height":"","out-width":"700px","output":"true","read-only":"false","results":"markup","warning":"true"}},{"code":"# 1) import modulo\nimport math\nprint(math.sqrt(16))  # accedemos con prefijo math.\n\n# 2) import modulo as alias\nimport math as m\nprint(m.pi)  # mismo módulo, nombre corto\n\n# 3) from modulo import nombre\nfrom math import sqrt\nprint(sqrt(25))  # usamos sqrt directamente\n\n# 4) from modulo import nombre as alias\nfrom math import factorial as fact\nprint(fact(5))","id":12,"options":{"autorun":"","classes":"","comment":"","context":"interactive","dpi":72,"fig-cap":"","fig-height":5,"fig-width":7,"label":"","message":"true","out-height":"","out-width":"700px","output":"true","read-only":"false","results":"markup","warning":"true"}},{"code":"# === finanzas_basicas.py ===\n# En un proyecto real, este bloque viviría en su propio archivo .py\n# y lo importarías con: from finanzas_basicas import valor_futuro, ...\n\ndef valor_futuro(capital, tasa, periodos):\n    \"\"\"Calcula VF = C * (1 + r)^n.\"\"\"\n    if tasa < -1:\n        raise ValueError(\"La tasa no puede ser menor a -100%\")\n    return capital * (1 + tasa) ** periodos\n\n\ndef valor_presente_neto(flujos, tasa):\n    \"\"\"Calcula el VPN de una serie de flujos (el flujo 0 no se descuenta).\"\"\"\n    if not flujos:\n        raise ValueError(\"Lista de flujos vacía\")\n\n    vpn = 0\n    for t, cf in enumerate(flujos):\n        vpn += cf / (1 + tasa) ** t\n    return vpn\n\n\ndef conversion_tasas(tna, capitalizaciones=12):\n    \"\"\"Convierte una TNA con n capitalizaciones anuales a TEA.\"\"\"\n    if capitalizaciones <= 0:\n        raise ValueError(\"Las capitalizaciones deben ser positivas\")\n    return (1 + tna / capitalizaciones) ** capitalizaciones - 1\n\n\ndef valuacion_bono(valor_nominal, tasa_cupon, tasa_descuento, anios):\n    \"\"\"Precio de un bono bullet: cupones fijos + nominal al vencimiento.\n\n    Es la lógica del Capítulo 2, ahora encapsulada y validada.\n    \"\"\"\n    if tasa_cupon < 0 or anios <= 0:\n        raise ValueError(\"Cupón no negativo y plazo positivo\")\n\n    cupon = valor_nominal * tasa_cupon\n    precio = 0\n    for t in range(1, anios + 1):\n        flujo = cupon + (valor_nominal if t == anios else 0)\n        precio += flujo / (1 + tasa_descuento) ** t\n    return precio\n\n\ndef tir(valor_nominal, tasa_cupon, anios, precio_mercado, paso=0.0001):\n    \"\"\"TIR de un bono bullet por búsqueda incremental (Capítulo 2).\"\"\"\n    if precio_mercado <= 0:\n        raise ValueError(\"El precio debe ser positivo\")\n\n    tasa = 0.0\n    while valuacion_bono(valor_nominal, tasa_cupon, tasa, anios) > precio_mercado:\n        tasa += paso\n        if tasa > 5:   # techo de seguridad: 500% anual\n            raise ValueError(\"No se encontró TIR razonable: revisar inputs\")\n    return tasa","id":13,"options":{"autorun":"","classes":"","comment":"","context":"interactive","dpi":72,"fig-cap":"","fig-height":5,"fig-width":7,"label":"libreria","message":"true","out-height":"","out-width":"700px","output":"true","read-only":"false","results":"markup","warning":"true"}},{"code":"# === Uso de las funciones ===\n\n# 1. Valor futuro de una colocación\nvf = valor_futuro(100_000, 0.08, 3)\nprint(f\"Valor futuro: ${vf:,.2f}\")\n\n# 2. VPN de un proyecto de inversión\nflujos = [-1000, 400, 400, 400]\nvpn = valor_presente_neto(flujos, 0.10)\nprint(f\"VPN: ${vpn:,.2f}\")\n\n# 3. Conversión de tasas: TNA 48% con capitalización mensual → TEA\ntea = conversion_tasas(0.48, 12)\nprint(f\"TNA 48% mensual → TEA: {tea:.2%}\")\n\n# 4. Valuación del bono del Capítulo 2, ahora en una línea\nprecio = valuacion_bono(1000, 0.08, 0.10, 5)\nprint(f\"Precio del bono: ${precio:,.2f}\")\n\n# 5. Y su TIR comprándolo a $950\nrendimiento = tir(1000, 0.08, 5, 950)\nprint(f\"TIR al precio de $950: {rendimiento:.2%}\")","id":14,"options":{"autorun":"","classes":"","comment":"","context":"interactive","dpi":72,"fig-cap":"","fig-height":5,"fig-width":7,"label":"uso-libreria","message":"true","out-height":"","out-width":"700px","output":"true","read-only":"false","results":"markup","warning":"true"}}];
 
 
 </script>
@@ -460,6 +460,35 @@ globalThis._qpyodideGetInstance = function() {
 
 </script>
 
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
 
 </head>
 
@@ -523,7 +552,7 @@ globalThis._qpyodideGetInstance = function() {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../unidad1/_intro_mod1.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Introducción al Módulo 1</span></span></a>
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Módulo 1: Fundamentos y Renta Fija</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -711,7 +740,7 @@ globalThis._qpyodideGetInstance = function() {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../apendices/python_intro.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">A</span>&nbsp; <span class="chapter-title">Introducción a Python</span></span></a>
+ <span class="menu-text"><span class="chapter-number">A</span>&nbsp; <span class="chapter-title">Introducción a Python y Puesta en Marcha</span></span></a>
   </div>
 </li>
       </ul>
@@ -761,7 +790,9 @@ globalThis._qpyodideGetInstance = function() {
   <li><a href="#usando-la-librería" id="toc-usando-la-librería" class="nav-link" data-scroll-target="#usando-la-librería"><span class="header-section-number">11.2</span> Usando la Librería</a></li>
   </ul></li>
   <li><a href="#principio-dry-dont-repeat-yourself" id="toc-principio-dry-dont-repeat-yourself" class="nav-link" data-scroll-target="#principio-dry-dont-repeat-yourself"><span class="header-section-number">12</span> Principio DRY: Don’t Repeat Yourself</a></li>
-  <li><a href="#referencias" id="toc-referencias" class="nav-link" data-scroll-target="#referencias"><span class="header-section-number">13</span> Referencias</a></li>
+  <li><a href="#errores-comunes" id="toc-errores-comunes" class="nav-link" data-scroll-target="#errores-comunes"><span class="header-section-number">13</span> Errores comunes</a></li>
+  <li><a href="#ejercicios-propuestos" id="toc-ejercicios-propuestos" class="nav-link" data-scroll-target="#ejercicios-propuestos"><span class="header-section-number">14</span> Ejercicios Propuestos</a></li>
+  <li><a href="#referencias" id="toc-referencias" class="nav-link" data-scroll-target="#referencias"><span class="header-section-number">15</span> Referencias</a></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/uade-finanzas-computacionales/libro/edit/main/unidad1/cap03_funciones_modularizacion.qmd" class="toc-action"><i class="bi bi-github"></i>Editar esta página</a></li><li><a href="https://github.com/uade-finanzas-computacionales/libro/issues/new" class="toc-action"><i class="bi empty"></i>Informar sobre problema</a></li></ul></div></nav>
     </div>
@@ -1025,16 +1056,18 @@ Ejemplos: <code>numpy</code>, <code>pandas</code>, <code>matplotlib</code>.</li>
 </section>
 <section id="problemática-financiera-librería-finanzas_basicas.py" class="level1" data-number="11">
 <h1 data-number="11"><span class="header-section-number">11</span> Problemática Financiera: Librería <code>finanzas_basicas.py</code></h1>
-<p>Vamos a construir una librería con funciones financieras reutilizables. En un entorno real, este archivo se importaría con <code>from finanzas_basicas import *</code>.</p>
+<p>Hora de cosechar lo sembrado. En los dos capítulos anteriores resolviste problemas financieros reales —interés compuesto, conversión de tasas, valuación de bonos, TIR— pero cada solución quedó atrapada en su ejemplo. Vamos a <strong>rescatar esa lógica y empaquetarla en una librería reutilizable</strong>: el conjunto de funciones que vas a poder importar en cualquier análisis futuro. En un entorno real, este código viviría en un archivo <code>finanzas_basicas.py</code> y se importaría con <code>from finanzas_basicas import valuacion_bono, tir</code>.</p>
 <section id="funciones-de-la-librería" class="level2" data-number="11.1">
 <h2 data-number="11.1" class="anchored" data-anchor-id="funciones-de-la-librería"><span class="header-section-number">11.1</span> Funciones de la Librería</h2>
 <div id="qpyodide-insertion-location-13"></div>
 <noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
+<p>Fijate el detalle de diseño en <code>tir()</code>: <strong>reutiliza <code>valuacion_bono()</code></strong> en lugar de repetir el bucle de descuento. Las funciones de una librería se apoyan unas en otras — si mañana mejorás la valuación, la TIR mejora gratis. Notá también el “techo de seguridad”: una función de librería no puede colgarse en un bucle infinito porque alguien le pasó un precio absurdo; falla rápido y con un mensaje claro.</p>
 </section>
 <section id="usando-la-librería" class="level2" data-number="11.2">
 <h2 data-number="11.2" class="anchored" data-anchor-id="usando-la-librería"><span class="header-section-number">11.2</span> Usando la Librería</h2>
 <div id="qpyodide-insertion-location-14"></div>
 <noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
+<p>Compará el punto 4 con las ~10 líneas de bucle que necesitaste en el Capítulo 2: la misma lógica, pero ahora <strong>valuar un bono es una línea</strong> — y con validación de inputs incluida. Ese salto de “código que escribo cada vez” a “herramienta que invoco” es exactamente lo que este capítulo vino a enseñar. En el próximo capítulo estas funciones van a dar su paso final: convertirse en <em>métodos</em> de una clase <code>Bono</code>.</p>
 <hr>
 </section>
 </section>
@@ -1068,26 +1101,55 @@ Ejemplos: <code>numpy</code>, <code>pandas</code>, <code>matplotlib</code>.</li>
 </div>
 </div>
 <hr>
-<!--
-# Ejercicios Propuestos
-
-::: {.callout-important title="Ejercicios"}
-1. **Función de amortización francesa**: Crear una función `cuota_francesa(capital, tasa, periodos)` que calcule la cuota fija de un préstamo sistema francés. Validar que los inputs sean positivos.
-
-2. **Tabla de sensibilidad**: Usar la función `valuacion_bono()` para crear una tabla que muestre el precio del bono para distintas combinaciones de yield (filas) y maturity (columnas).
-
-3. **Extender la librería**: Agregar una función `duration_macaulay(flujos, tasa)` que calcule la duración de Macaulay:
-$$D = \frac{\sum_{t=1}^{n} t \cdot \frac{CF_t}{(1+r)^t}}{P}$$
-
-4. **Manejo de errores robusto**: Crear una función que lea datos de un bono ingresados por el usuario (`input()`) y maneje todos los posibles errores: texto en lugar de números, tasas fuera de rango, plazos negativos, etc.
-:::
-
----
-
--->
 </section>
-<section id="referencias" class="level1" data-number="13">
-<h1 data-number="13"><span class="header-section-number">13</span> Referencias</h1>
+<section id="errores-comunes" class="level1" data-number="13">
+<h1 data-number="13"><span class="header-section-number">13</span> Errores comunes</h1>
+<div class="callout callout-style-simple callout-warning callout-titled" title="Trampas frecuentes">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Advertencia</span>Trampas frecuentes
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ul>
+<li><strong>Argumento por defecto mutable</strong>: <code>def agregar(flujo, lista=[])</code> comparte la MISMA lista entre todas las llamadas — los flujos de un bono aparecen en otro. El idioma correcto: <code>def agregar(flujo, lista=None)</code> y crear la lista adentro (<code>if lista is None: lista = []</code>).</li>
+<li><strong>Olvidar el <code>return</code></strong>: una función que calcula pero no retorna devuelve <code>None</code> silenciosamente; el error explota recién más adelante (“unsupported operand type NoneType”). Si la función produce un valor, terminá con <code>return</code>.</li>
+<li><strong>Capturar <code>Exception</code> a ciegas</strong>: <code>except Exception: pass</code> esconde <em>todos</em> los errores, incluidos los bugs que necesitás ver. Capturá el error específico que esperás (<code>except ValueError:</code>) y dejá que el resto explote.</li>
+<li><strong>Modificar los argumentos recibidos</strong>: si tu función hace <code>flujos.append(...)</code> sobre la lista que le pasaron, el llamador ve su lista alterada sin saberlo. Trabajá sobre una copia (<code>flujos = list(flujos)</code>) o no mutes.</li>
+<li><strong>Validar tarde (o nunca)</strong>: validar los inputs al inicio de la función (como hace <code>valuacion_bono</code>) da errores claros y cercanos a la causa; sin validación, el error aparece diez llamadas más adentro con un mensaje incomprensible.</li>
+</ul>
+</div>
+</div>
+<hr>
+</section>
+<section id="ejercicios-propuestos" class="level1" data-number="14">
+<h1 data-number="14"><span class="header-section-number">14</span> Ejercicios Propuestos</h1>
+<div class="callout callout-style-simple callout-important callout-titled" title="Ejercicios">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Importante</span>Ejercicios
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ol type="1">
+<li><p><strong>Función de amortización francesa</strong>: Crear una función <code>cuota_francesa(capital, tasa, periodos)</code> que calcule la cuota fija de un préstamo sistema francés. Validar que los inputs sean positivos.</p></li>
+<li><p><strong>Tabla de sensibilidad</strong>: Usar la función <code>valuacion_bono()</code> para crear una tabla que muestre el precio del bono para distintas combinaciones de yield (filas) y maturity (columnas). <em>Pista</em>: dos bucles anidados.</p></li>
+<li><p><strong>Extender la librería</strong>: Agregar una función <code>duration_macaulay(flujos, tasa)</code> que calcule la duración de Macaulay: <span class="math display">\[D = \frac{\sum_{t=1}^{n} t \cdot \frac{CF_t}{(1+r)^t}}{P}\]</span></p></li>
+<li><p><strong>Manejo de errores robusto</strong>: Crear una función que lea datos de un bono ingresados por el usuario (<code>input()</code>) y maneje todos los posibles errores: texto en lugar de números, tasas fuera de rango, plazos negativos, etc.</p></li>
+<li><p><strong>TIR mejorada</strong>: la función <code>tir()</code> de la librería usa paso fijo. Reescribila con refinamiento progresivo (cuando cruza el precio, retrocede y prueba con paso 10 veces menor) y compará la precisión con la versión original.</p></li>
+</ol>
+</div>
+</div>
+<hr>
+</section>
+<section id="referencias" class="level1" data-number="15">
+<h1 data-number="15"><span class="header-section-number">15</span> Referencias</h1>
 <ul>
 <li>Lutz, M. (2013). <em>Learning Python</em>. O’Reilly Media.</li>
 <li>Fabozzi, F. J. (2015). <em>Bond Markets, Analysis, and Strategies</em>. Pearson.</li>
@@ -1953,7 +2015,7 @@ $$D = \frac{\sum_{t=1}^{n} t \cdot \frac{CF_t}{(1+r)^t}}{P}$$
 <span id="cb4-384"><a href="#cb4-384" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb4-385"><a href="#cb4-385" aria-hidden="true" tabindex="-1"></a><span class="fu"># Problemática Financiera: Librería `finanzas_basicas.py`</span></span>
 <span id="cb4-386"><a href="#cb4-386" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-387"><a href="#cb4-387" aria-hidden="true" tabindex="-1"></a>Vamos a construir una librería con funciones financieras reutilizables. En un entorno real, este archivo se importaría con <span class="in">`from finanzas_basicas import *`</span>.</span>
+<span id="cb4-387"><a href="#cb4-387" aria-hidden="true" tabindex="-1"></a>Hora de cosechar lo sembrado. En los dos capítulos anteriores resolviste problemas financieros reales —interés compuesto, conversión de tasas, valuación de bonos, TIR— pero cada solución quedó atrapada en su ejemplo. Vamos a **rescatar esa lógica y empaquetarla en una librería reutilizable**: el conjunto de funciones que vas a poder importar en cualquier análisis futuro. En un entorno real, este código viviría en un archivo <span class="in">`finanzas_basicas.py`</span> y se importaría con <span class="in">`from finanzas_basicas import valuacion_bono, tir`</span>.</span>
 <span id="cb4-388"><a href="#cb4-388" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb4-389"><a href="#cb4-389" aria-hidden="true" tabindex="-1"></a><span class="fu">## Funciones de la Librería</span></span>
 <span id="cb4-390"><a href="#cb4-390" aria-hidden="true" tabindex="-1"></a></span>
@@ -1971,7 +2033,7 @@ $$D = \frac{\sum_{t=1}^{n} t \cdot \frac{CF_t}{(1+r)^t}}{P}$$
 <span id="cb4-402"><a href="#cb4-402" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb4-403"><a href="#cb4-403" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb4-404"><a href="#cb4-404" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> valor_presente_neto(flujos, tasa):</span>
-<span id="cb4-405"><a href="#cb4-405" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""Calcula el VPN de una serie de flujos."""</span></span>
+<span id="cb4-405"><a href="#cb4-405" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""Calcula el VPN de una serie de flujos (el flujo 0 no se descuenta)."""</span></span>
 <span id="cb4-406"><a href="#cb4-406" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="kw">not</span> flujos:</span>
 <span id="cb4-407"><a href="#cb4-407" aria-hidden="true" tabindex="-1"></a>        <span class="cf">raise</span> <span class="pp">ValueError</span>(<span class="st">"Lista de flujos vacía"</span>)</span>
 <span id="cb4-408"><a href="#cb4-408" aria-hidden="true" tabindex="-1"></a></span>
@@ -1979,76 +2041,140 @@ $$D = \frac{\sum_{t=1}^{n} t \cdot \frac{CF_t}{(1+r)^t}}{P}$$
 <span id="cb4-410"><a href="#cb4-410" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> t, cf <span class="kw">in</span> <span class="bu">enumerate</span>(flujos):</span>
 <span id="cb4-411"><a href="#cb4-411" aria-hidden="true" tabindex="-1"></a>        vpn <span class="op">+=</span> cf <span class="op">/</span> (<span class="dv">1</span> <span class="op">+</span> tasa) <span class="op">**</span> t</span>
 <span id="cb4-412"><a href="#cb4-412" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> vpn</span>
-<span id="cb4-413"><a href="#cb4-413" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb4-413"><a href="#cb4-413" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb4-414"><a href="#cb4-414" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-415"><a href="#cb4-415" aria-hidden="true" tabindex="-1"></a><span class="fu">## Usando la Librería</span></span>
-<span id="cb4-416"><a href="#cb4-416" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-417"><a href="#cb4-417" aria-hidden="true" tabindex="-1"></a><span class="in">```{pyodide-python}</span></span>
-<span id="cb4-418"><a href="#cb4-418" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: uso-libreria</span></span>
-<span id="cb4-419"><a href="#cb4-419" aria-hidden="true" tabindex="-1"></a><span class="co"># === Uso de las funciones ===</span></span>
+<span id="cb4-415"><a href="#cb4-415" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> conversion_tasas(tna, capitalizaciones<span class="op">=</span><span class="dv">12</span>):</span>
+<span id="cb4-416"><a href="#cb4-416" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""Convierte una TNA con n capitalizaciones anuales a TEA."""</span></span>
+<span id="cb4-417"><a href="#cb4-417" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> capitalizaciones <span class="op">&lt;=</span> <span class="dv">0</span>:</span>
+<span id="cb4-418"><a href="#cb4-418" aria-hidden="true" tabindex="-1"></a>        <span class="cf">raise</span> <span class="pp">ValueError</span>(<span class="st">"Las capitalizaciones deben ser positivas"</span>)</span>
+<span id="cb4-419"><a href="#cb4-419" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> (<span class="dv">1</span> <span class="op">+</span> tna <span class="op">/</span> capitalizaciones) <span class="op">**</span> capitalizaciones <span class="op">-</span> <span class="dv">1</span></span>
 <span id="cb4-420"><a href="#cb4-420" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-421"><a href="#cb4-421" aria-hidden="true" tabindex="-1"></a><span class="co"># Ejemplo 1: valor futuro</span></span>
-<span id="cb4-422"><a href="#cb4-422" aria-hidden="true" tabindex="-1"></a>vf <span class="op">=</span> valor_futuro(<span class="dv">100_000</span>, <span class="fl">0.08</span>, <span class="dv">3</span>)</span>
-<span id="cb4-423"><a href="#cb4-423" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Valor futuro: $</span><span class="sc">{</span>vf<span class="sc">:,.2f}</span><span class="ss">"</span>)</span>
+<span id="cb4-421"><a href="#cb4-421" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-422"><a href="#cb4-422" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> valuacion_bono(valor_nominal, tasa_cupon, tasa_descuento, anios):</span>
+<span id="cb4-423"><a href="#cb4-423" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""Precio de un bono bullet: cupones fijos + nominal al vencimiento.</span></span>
 <span id="cb4-424"><a href="#cb4-424" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-425"><a href="#cb4-425" aria-hidden="true" tabindex="-1"></a><span class="co"># Ejemplo 2: VPN de un proyecto</span></span>
-<span id="cb4-426"><a href="#cb4-426" aria-hidden="true" tabindex="-1"></a>flujos <span class="op">=</span> [<span class="op">-</span><span class="dv">1000</span>, <span class="dv">400</span>, <span class="dv">400</span>, <span class="dv">400</span>]</span>
-<span id="cb4-427"><a href="#cb4-427" aria-hidden="true" tabindex="-1"></a>vpn <span class="op">=</span> valor_presente_neto(flujos, <span class="fl">0.10</span>)</span>
-<span id="cb4-428"><a href="#cb4-428" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"VPN: $</span><span class="sc">{</span>vpn<span class="sc">:,.2f}</span><span class="ss">"</span>)</span>
-<span id="cb4-429"><a href="#cb4-429" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb4-430"><a href="#cb4-430" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-431"><a href="#cb4-431" aria-hidden="true" tabindex="-1"></a>---</span>
-<span id="cb4-432"><a href="#cb4-432" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-433"><a href="#cb4-433" aria-hidden="true" tabindex="-1"></a><span class="fu"># Principio DRY: Don't Repeat Yourself</span></span>
-<span id="cb4-434"><a href="#cb4-434" aria-hidden="true" tabindex="-1"></a>El principio **DRY** (*Don't Repeat Yourself*) propone evitar duplicar la misma lógica en distintos lugares del código.</span>
-<span id="cb4-435"><a href="#cb4-435" aria-hidden="true" tabindex="-1"></a>Cuando repetimos fórmulas o bloques manualmente, aumentamos el riesgo de inconsistencias: si cambia un supuesto (por ejemplo, la tasa o la frecuencia), debemos corregir múltiples líneas y es fácil olvidar alguna.</span>
+<span id="cb4-425"><a href="#cb4-425" aria-hidden="true" tabindex="-1"></a><span class="co">    Es la lógica del Capítulo 2, ahora encapsulada y validada.</span></span>
+<span id="cb4-426"><a href="#cb4-426" aria-hidden="true" tabindex="-1"></a><span class="co">    """</span></span>
+<span id="cb4-427"><a href="#cb4-427" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> tasa_cupon <span class="op">&lt;</span> <span class="dv">0</span> <span class="kw">or</span> anios <span class="op">&lt;=</span> <span class="dv">0</span>:</span>
+<span id="cb4-428"><a href="#cb4-428" aria-hidden="true" tabindex="-1"></a>        <span class="cf">raise</span> <span class="pp">ValueError</span>(<span class="st">"Cupón no negativo y plazo positivo"</span>)</span>
+<span id="cb4-429"><a href="#cb4-429" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-430"><a href="#cb4-430" aria-hidden="true" tabindex="-1"></a>    cupon <span class="op">=</span> valor_nominal <span class="op">*</span> tasa_cupon</span>
+<span id="cb4-431"><a href="#cb4-431" aria-hidden="true" tabindex="-1"></a>    precio <span class="op">=</span> <span class="dv">0</span></span>
+<span id="cb4-432"><a href="#cb4-432" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> t <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">1</span>, anios <span class="op">+</span> <span class="dv">1</span>):</span>
+<span id="cb4-433"><a href="#cb4-433" aria-hidden="true" tabindex="-1"></a>        flujo <span class="op">=</span> cupon <span class="op">+</span> (valor_nominal <span class="cf">if</span> t <span class="op">==</span> anios <span class="cf">else</span> <span class="dv">0</span>)</span>
+<span id="cb4-434"><a href="#cb4-434" aria-hidden="true" tabindex="-1"></a>        precio <span class="op">+=</span> flujo <span class="op">/</span> (<span class="dv">1</span> <span class="op">+</span> tasa_descuento) <span class="op">**</span> t</span>
+<span id="cb4-435"><a href="#cb4-435" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> precio</span>
 <span id="cb4-436"><a href="#cb4-436" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-437"><a href="#cb4-437" aria-hidden="true" tabindex="-1"></a>Aplicar DRY en finanzas significa **encapsular cálculos recurrentes en funciones** (por ejemplo, <span class="in">`valuacion_bono()`</span> o <span class="in">`valor_presente_neto()`</span>) para tener:</span>
-<span id="cb4-438"><a href="#cb4-438" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-439"><a href="#cb4-439" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**menos errores** de mantenimiento,</span>
-<span id="cb4-440"><a href="#cb4-440" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**mayor claridad** del modelo,</span>
-<span id="cb4-441"><a href="#cb4-441" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**reutilización** en distintos ejercicios o casos,</span>
-<span id="cb4-442"><a href="#cb4-442" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>y **validaciones centralizadas** en un solo lugar.</span>
-<span id="cb4-443"><a href="#cb4-443" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-444"><a href="#cb4-444" aria-hidden="true" tabindex="-1"></a>::: {.callout-tip title="DRY en la Práctica"}</span>
-<span id="cb4-445"><a href="#cb4-445" aria-hidden="true" tabindex="-1"></a>Antes de copiar y pegar código, preguntate: *¿puedo hacer una función?*</span>
-<span id="cb4-446"><a href="#cb4-446" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-447"><a href="#cb4-447" aria-hidden="true" tabindex="-1"></a>**Sin DRY** (malo):</span>
-<span id="cb4-448"><a href="#cb4-448" aria-hidden="true" tabindex="-1"></a><span class="in">```python</span></span>
-<span id="cb4-449"><a href="#cb4-449" aria-hidden="true" tabindex="-1"></a>precio_a <span class="op">=</span> <span class="dv">80</span><span class="op">/</span>(<span class="fl">1.1</span>) <span class="op">+</span> <span class="dv">80</span><span class="op">/</span>(<span class="fl">1.1</span><span class="op">**</span><span class="dv">2</span>) <span class="op">+</span> <span class="dv">1080</span><span class="op">/</span>(<span class="fl">1.1</span><span class="op">**</span><span class="dv">3</span>)</span>
-<span id="cb4-450"><a href="#cb4-450" aria-hidden="true" tabindex="-1"></a>precio_b <span class="op">=</span> <span class="dv">60</span><span class="op">/</span>(<span class="fl">1.08</span>) <span class="op">+</span> <span class="dv">60</span><span class="op">/</span>(<span class="fl">1.08</span><span class="op">**</span><span class="dv">2</span>) <span class="op">+</span> <span class="dv">1060</span><span class="op">/</span>(<span class="fl">1.08</span><span class="op">**</span><span class="dv">3</span>)</span>
-<span id="cb4-451"><a href="#cb4-451" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb4-437"><a href="#cb4-437" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-438"><a href="#cb4-438" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> tir(valor_nominal, tasa_cupon, anios, precio_mercado, paso<span class="op">=</span><span class="fl">0.0001</span>):</span>
+<span id="cb4-439"><a href="#cb4-439" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""TIR de un bono bullet por búsqueda incremental (Capítulo 2)."""</span></span>
+<span id="cb4-440"><a href="#cb4-440" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> precio_mercado <span class="op">&lt;=</span> <span class="dv">0</span>:</span>
+<span id="cb4-441"><a href="#cb4-441" aria-hidden="true" tabindex="-1"></a>        <span class="cf">raise</span> <span class="pp">ValueError</span>(<span class="st">"El precio debe ser positivo"</span>)</span>
+<span id="cb4-442"><a href="#cb4-442" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-443"><a href="#cb4-443" aria-hidden="true" tabindex="-1"></a>    tasa <span class="op">=</span> <span class="fl">0.0</span></span>
+<span id="cb4-444"><a href="#cb4-444" aria-hidden="true" tabindex="-1"></a>    <span class="cf">while</span> valuacion_bono(valor_nominal, tasa_cupon, tasa, anios) <span class="op">&gt;</span> precio_mercado:</span>
+<span id="cb4-445"><a href="#cb4-445" aria-hidden="true" tabindex="-1"></a>        tasa <span class="op">+=</span> paso</span>
+<span id="cb4-446"><a href="#cb4-446" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> tasa <span class="op">&gt;</span> <span class="dv">5</span>:   <span class="co"># techo de seguridad: 500% anual</span></span>
+<span id="cb4-447"><a href="#cb4-447" aria-hidden="true" tabindex="-1"></a>            <span class="cf">raise</span> <span class="pp">ValueError</span>(<span class="st">"No se encontró TIR razonable: revisar inputs"</span>)</span>
+<span id="cb4-448"><a href="#cb4-448" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> tasa</span>
+<span id="cb4-449"><a href="#cb4-449" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb4-450"><a href="#cb4-450" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-451"><a href="#cb4-451" aria-hidden="true" tabindex="-1"></a>Fijate el detalle de diseño en <span class="in">`tir()`</span>: **reutiliza `valuacion_bono()`** en lugar de repetir el bucle de descuento. Las funciones de una librería se apoyan unas en otras — si mañana mejorás la valuación, la TIR mejora gratis. Notá también el "techo de seguridad": una función de librería no puede colgarse en un bucle infinito porque alguien le pasó un precio absurdo; falla rápido y con un mensaje claro.</span>
 <span id="cb4-452"><a href="#cb4-452" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-453"><a href="#cb4-453" aria-hidden="true" tabindex="-1"></a>**Con DRY** (bueno):</span>
-<span id="cb4-454"><a href="#cb4-454" aria-hidden="true" tabindex="-1"></a><span class="in">```python</span></span>
-<span id="cb4-455"><a href="#cb4-455" aria-hidden="true" tabindex="-1"></a>precio_a <span class="op">=</span> valuacion_bono(<span class="dv">1000</span>, <span class="fl">0.08</span>, <span class="fl">0.10</span>, <span class="dv">3</span>)</span>
-<span id="cb4-456"><a href="#cb4-456" aria-hidden="true" tabindex="-1"></a>precio_b <span class="op">=</span> valuacion_bono(<span class="dv">1000</span>, <span class="fl">0.06</span>, <span class="fl">0.08</span>, <span class="dv">3</span>)</span>
-<span id="cb4-457"><a href="#cb4-457" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb4-458"><a href="#cb4-458" aria-hidden="true" tabindex="-1"></a>:::</span>
-<span id="cb4-459"><a href="#cb4-459" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-460"><a href="#cb4-460" aria-hidden="true" tabindex="-1"></a>---</span>
-<span id="cb4-461"><a href="#cb4-461" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-462"><a href="#cb4-462" aria-hidden="true" tabindex="-1"></a><span class="co">&lt;!--</span></span>
-<span id="cb4-463"><a href="#cb4-463" aria-hidden="true" tabindex="-1"></a><span class="co"># Ejercicios Propuestos</span></span>
-<span id="cb4-464"><a href="#cb4-464" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-465"><a href="#cb4-465" aria-hidden="true" tabindex="-1"></a><span class="co">::: {.callout-important title="Ejercicios"}</span></span>
-<span id="cb4-466"><a href="#cb4-466" aria-hidden="true" tabindex="-1"></a><span class="co">1. **Función de amortización francesa**: Crear una función `cuota_francesa(capital, tasa, periodos)` que calcule la cuota fija de un préstamo sistema francés. Validar que los inputs sean positivos.</span></span>
+<span id="cb4-453"><a href="#cb4-453" aria-hidden="true" tabindex="-1"></a><span class="fu">## Usando la Librería</span></span>
+<span id="cb4-454"><a href="#cb4-454" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-455"><a href="#cb4-455" aria-hidden="true" tabindex="-1"></a><span class="in">```{pyodide-python}</span></span>
+<span id="cb4-456"><a href="#cb4-456" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: uso-libreria</span></span>
+<span id="cb4-457"><a href="#cb4-457" aria-hidden="true" tabindex="-1"></a><span class="co"># === Uso de las funciones ===</span></span>
+<span id="cb4-458"><a href="#cb4-458" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-459"><a href="#cb4-459" aria-hidden="true" tabindex="-1"></a><span class="co"># 1. Valor futuro de una colocación</span></span>
+<span id="cb4-460"><a href="#cb4-460" aria-hidden="true" tabindex="-1"></a>vf <span class="op">=</span> valor_futuro(<span class="dv">100_000</span>, <span class="fl">0.08</span>, <span class="dv">3</span>)</span>
+<span id="cb4-461"><a href="#cb4-461" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Valor futuro: $</span><span class="sc">{</span>vf<span class="sc">:,.2f}</span><span class="ss">"</span>)</span>
+<span id="cb4-462"><a href="#cb4-462" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-463"><a href="#cb4-463" aria-hidden="true" tabindex="-1"></a><span class="co"># 2. VPN de un proyecto de inversión</span></span>
+<span id="cb4-464"><a href="#cb4-464" aria-hidden="true" tabindex="-1"></a>flujos <span class="op">=</span> [<span class="op">-</span><span class="dv">1000</span>, <span class="dv">400</span>, <span class="dv">400</span>, <span class="dv">400</span>]</span>
+<span id="cb4-465"><a href="#cb4-465" aria-hidden="true" tabindex="-1"></a>vpn <span class="op">=</span> valor_presente_neto(flujos, <span class="fl">0.10</span>)</span>
+<span id="cb4-466"><a href="#cb4-466" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"VPN: $</span><span class="sc">{</span>vpn<span class="sc">:,.2f}</span><span class="ss">"</span>)</span>
 <span id="cb4-467"><a href="#cb4-467" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-468"><a href="#cb4-468" aria-hidden="true" tabindex="-1"></a><span class="co">2. **Tabla de sensibilidad**: Usar la función `valuacion_bono()` para crear una tabla que muestre el precio del bono para distintas combinaciones de yield (filas) y maturity (columnas).</span></span>
-<span id="cb4-469"><a href="#cb4-469" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-470"><a href="#cb4-470" aria-hidden="true" tabindex="-1"></a><span class="co">3. **Extender la librería**: Agregar una función `duration_macaulay(flujos, tasa)` que calcule la duración de Macaulay:</span></span>
-<span id="cb4-471"><a href="#cb4-471" aria-hidden="true" tabindex="-1"></a><span class="co">$$D = \frac{\sum_{t=1}^{n} t \cdot \frac{CF_t}{(1+r)^t}}{P}$$</span></span>
-<span id="cb4-472"><a href="#cb4-472" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-473"><a href="#cb4-473" aria-hidden="true" tabindex="-1"></a><span class="co">4. **Manejo de errores robusto**: Crear una función que lea datos de un bono ingresados por el usuario (`input()`) y maneje todos los posibles errores: texto en lugar de números, tasas fuera de rango, plazos negativos, etc.</span></span>
-<span id="cb4-474"><a href="#cb4-474" aria-hidden="true" tabindex="-1"></a><span class="co">:::</span></span>
+<span id="cb4-468"><a href="#cb4-468" aria-hidden="true" tabindex="-1"></a><span class="co"># 3. Conversión de tasas: TNA 48% con capitalización mensual → TEA</span></span>
+<span id="cb4-469"><a href="#cb4-469" aria-hidden="true" tabindex="-1"></a>tea <span class="op">=</span> conversion_tasas(<span class="fl">0.48</span>, <span class="dv">12</span>)</span>
+<span id="cb4-470"><a href="#cb4-470" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"TNA 48% mensual → TEA: </span><span class="sc">{</span>tea<span class="sc">:.2%}</span><span class="ss">"</span>)</span>
+<span id="cb4-471"><a href="#cb4-471" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-472"><a href="#cb4-472" aria-hidden="true" tabindex="-1"></a><span class="co"># 4. Valuación del bono del Capítulo 2, ahora en una línea</span></span>
+<span id="cb4-473"><a href="#cb4-473" aria-hidden="true" tabindex="-1"></a>precio <span class="op">=</span> valuacion_bono(<span class="dv">1000</span>, <span class="fl">0.08</span>, <span class="fl">0.10</span>, <span class="dv">5</span>)</span>
+<span id="cb4-474"><a href="#cb4-474" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Precio del bono: $</span><span class="sc">{</span>precio<span class="sc">:,.2f}</span><span class="ss">"</span>)</span>
 <span id="cb4-475"><a href="#cb4-475" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-476"><a href="#cb4-476" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
-<span id="cb4-477"><a href="#cb4-477" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-478"><a href="#cb4-478" aria-hidden="true" tabindex="-1"></a><span class="co">--&gt;</span></span>
-<span id="cb4-479"><a href="#cb4-479" aria-hidden="true" tabindex="-1"></a><span class="fu"># Referencias</span></span>
+<span id="cb4-476"><a href="#cb4-476" aria-hidden="true" tabindex="-1"></a><span class="co"># 5. Y su TIR comprándolo a $950</span></span>
+<span id="cb4-477"><a href="#cb4-477" aria-hidden="true" tabindex="-1"></a>rendimiento <span class="op">=</span> tir(<span class="dv">1000</span>, <span class="fl">0.08</span>, <span class="dv">5</span>, <span class="dv">950</span>)</span>
+<span id="cb4-478"><a href="#cb4-478" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"TIR al precio de $950: </span><span class="sc">{</span>rendimiento<span class="sc">:.2%}</span><span class="ss">"</span>)</span>
+<span id="cb4-479"><a href="#cb4-479" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb4-480"><a href="#cb4-480" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-481"><a href="#cb4-481" aria-hidden="true" tabindex="-1"></a><span class="ss">* </span>Lutz, M. (2013). *Learning Python*. O'Reilly Media.</span>
-<span id="cb4-482"><a href="#cb4-482" aria-hidden="true" tabindex="-1"></a><span class="ss">* </span>Fabozzi, F. J. (2015). *Bond Markets, Analysis, and Strategies*. Pearson.</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></div>
+<span id="cb4-481"><a href="#cb4-481" aria-hidden="true" tabindex="-1"></a>Compará el punto 4 con las ~10 líneas de bucle que necesitaste en el Capítulo 2: la misma lógica, pero ahora **valuar un bono es una línea** — y con validación de inputs incluida. Ese salto de "código que escribo cada vez" a "herramienta que invoco" es exactamente lo que este capítulo vino a enseñar. En el próximo capítulo estas funciones van a dar su paso final: convertirse en *métodos* de una clase <span class="in">`Bono`</span>.</span>
+<span id="cb4-482"><a href="#cb4-482" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-483"><a href="#cb4-483" aria-hidden="true" tabindex="-1"></a>---</span>
+<span id="cb4-484"><a href="#cb4-484" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-485"><a href="#cb4-485" aria-hidden="true" tabindex="-1"></a><span class="fu"># Principio DRY: Don't Repeat Yourself</span></span>
+<span id="cb4-486"><a href="#cb4-486" aria-hidden="true" tabindex="-1"></a>El principio **DRY** (*Don't Repeat Yourself*) propone evitar duplicar la misma lógica en distintos lugares del código.</span>
+<span id="cb4-487"><a href="#cb4-487" aria-hidden="true" tabindex="-1"></a>Cuando repetimos fórmulas o bloques manualmente, aumentamos el riesgo de inconsistencias: si cambia un supuesto (por ejemplo, la tasa o la frecuencia), debemos corregir múltiples líneas y es fácil olvidar alguna.</span>
+<span id="cb4-488"><a href="#cb4-488" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-489"><a href="#cb4-489" aria-hidden="true" tabindex="-1"></a>Aplicar DRY en finanzas significa **encapsular cálculos recurrentes en funciones** (por ejemplo, <span class="in">`valuacion_bono()`</span> o <span class="in">`valor_presente_neto()`</span>) para tener:</span>
+<span id="cb4-490"><a href="#cb4-490" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-491"><a href="#cb4-491" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**menos errores** de mantenimiento,</span>
+<span id="cb4-492"><a href="#cb4-492" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**mayor claridad** del modelo,</span>
+<span id="cb4-493"><a href="#cb4-493" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**reutilización** en distintos ejercicios o casos,</span>
+<span id="cb4-494"><a href="#cb4-494" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>y **validaciones centralizadas** en un solo lugar.</span>
+<span id="cb4-495"><a href="#cb4-495" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-496"><a href="#cb4-496" aria-hidden="true" tabindex="-1"></a>::: {.callout-tip title="DRY en la Práctica"}</span>
+<span id="cb4-497"><a href="#cb4-497" aria-hidden="true" tabindex="-1"></a>Antes de copiar y pegar código, preguntate: *¿puedo hacer una función?*</span>
+<span id="cb4-498"><a href="#cb4-498" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-499"><a href="#cb4-499" aria-hidden="true" tabindex="-1"></a>**Sin DRY** (malo):</span>
+<span id="cb4-500"><a href="#cb4-500" aria-hidden="true" tabindex="-1"></a><span class="in">```python</span></span>
+<span id="cb4-501"><a href="#cb4-501" aria-hidden="true" tabindex="-1"></a>precio_a <span class="op">=</span> <span class="dv">80</span><span class="op">/</span>(<span class="fl">1.1</span>) <span class="op">+</span> <span class="dv">80</span><span class="op">/</span>(<span class="fl">1.1</span><span class="op">**</span><span class="dv">2</span>) <span class="op">+</span> <span class="dv">1080</span><span class="op">/</span>(<span class="fl">1.1</span><span class="op">**</span><span class="dv">3</span>)</span>
+<span id="cb4-502"><a href="#cb4-502" aria-hidden="true" tabindex="-1"></a>precio_b <span class="op">=</span> <span class="dv">60</span><span class="op">/</span>(<span class="fl">1.08</span>) <span class="op">+</span> <span class="dv">60</span><span class="op">/</span>(<span class="fl">1.08</span><span class="op">**</span><span class="dv">2</span>) <span class="op">+</span> <span class="dv">1060</span><span class="op">/</span>(<span class="fl">1.08</span><span class="op">**</span><span class="dv">3</span>)</span>
+<span id="cb4-503"><a href="#cb4-503" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb4-504"><a href="#cb4-504" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-505"><a href="#cb4-505" aria-hidden="true" tabindex="-1"></a>**Con DRY** (bueno):</span>
+<span id="cb4-506"><a href="#cb4-506" aria-hidden="true" tabindex="-1"></a><span class="in">```python</span></span>
+<span id="cb4-507"><a href="#cb4-507" aria-hidden="true" tabindex="-1"></a>precio_a <span class="op">=</span> valuacion_bono(<span class="dv">1000</span>, <span class="fl">0.08</span>, <span class="fl">0.10</span>, <span class="dv">3</span>)</span>
+<span id="cb4-508"><a href="#cb4-508" aria-hidden="true" tabindex="-1"></a>precio_b <span class="op">=</span> valuacion_bono(<span class="dv">1000</span>, <span class="fl">0.06</span>, <span class="fl">0.08</span>, <span class="dv">3</span>)</span>
+<span id="cb4-509"><a href="#cb4-509" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb4-510"><a href="#cb4-510" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb4-511"><a href="#cb4-511" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-512"><a href="#cb4-512" aria-hidden="true" tabindex="-1"></a>---</span>
+<span id="cb4-513"><a href="#cb4-513" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-514"><a href="#cb4-514" aria-hidden="true" tabindex="-1"></a><span class="fu"># Errores comunes</span></span>
+<span id="cb4-515"><a href="#cb4-515" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-516"><a href="#cb4-516" aria-hidden="true" tabindex="-1"></a>::: {.callout-warning title="Trampas frecuentes"}</span>
+<span id="cb4-517"><a href="#cb4-517" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Argumento por defecto mutable**: <span class="in">`def agregar(flujo, lista=[])`</span> comparte la MISMA lista entre todas las llamadas — los flujos de un bono aparecen en otro. El idioma correcto: <span class="in">`def agregar(flujo, lista=None)`</span> y crear la lista adentro (<span class="in">`if lista is None: lista = []`</span>).</span>
+<span id="cb4-518"><a href="#cb4-518" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Olvidar el `return`**: una función que calcula pero no retorna devuelve <span class="in">`None`</span> silenciosamente; el error explota recién más adelante ("unsupported operand type NoneType"). Si la función produce un valor, terminá con <span class="in">`return`</span>.</span>
+<span id="cb4-519"><a href="#cb4-519" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Capturar `Exception` a ciegas**: <span class="in">`except Exception: pass`</span> esconde *todos* los errores, incluidos los bugs que necesitás ver. Capturá el error específico que esperás (<span class="in">`except ValueError:`</span>) y dejá que el resto explote.</span>
+<span id="cb4-520"><a href="#cb4-520" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Modificar los argumentos recibidos**: si tu función hace <span class="in">`flujos.append(...)`</span> sobre la lista que le pasaron, el llamador ve su lista alterada sin saberlo. Trabajá sobre una copia (<span class="in">`flujos = list(flujos)`</span>) o no mutes.</span>
+<span id="cb4-521"><a href="#cb4-521" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Validar tarde (o nunca)**: validar los inputs al inicio de la función (como hace <span class="in">`valuacion_bono`</span>) da errores claros y cercanos a la causa; sin validación, el error aparece diez llamadas más adentro con un mensaje incomprensible.</span>
+<span id="cb4-522"><a href="#cb4-522" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb4-523"><a href="#cb4-523" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-524"><a href="#cb4-524" aria-hidden="true" tabindex="-1"></a>---</span>
+<span id="cb4-525"><a href="#cb4-525" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-526"><a href="#cb4-526" aria-hidden="true" tabindex="-1"></a><span class="fu"># Ejercicios Propuestos</span></span>
+<span id="cb4-527"><a href="#cb4-527" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-528"><a href="#cb4-528" aria-hidden="true" tabindex="-1"></a>::: {.callout-important title="Ejercicios"}</span>
+<span id="cb4-529"><a href="#cb4-529" aria-hidden="true" tabindex="-1"></a><span class="ss">1. </span>**Función de amortización francesa**: Crear una función <span class="in">`cuota_francesa(capital, tasa, periodos)`</span> que calcule la cuota fija de un préstamo sistema francés. Validar que los inputs sean positivos.</span>
+<span id="cb4-530"><a href="#cb4-530" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-531"><a href="#cb4-531" aria-hidden="true" tabindex="-1"></a><span class="ss">2. </span>**Tabla de sensibilidad**: Usar la función <span class="in">`valuacion_bono()`</span> para crear una tabla que muestre el precio del bono para distintas combinaciones de yield (filas) y maturity (columnas). *Pista*: dos bucles anidados.</span>
+<span id="cb4-532"><a href="#cb4-532" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-533"><a href="#cb4-533" aria-hidden="true" tabindex="-1"></a><span class="ss">3. </span>**Extender la librería**: Agregar una función <span class="in">`duration_macaulay(flujos, tasa)`</span> que calcule la duración de Macaulay:</span>
+<span id="cb4-534"><a href="#cb4-534" aria-hidden="true" tabindex="-1"></a>$$D = \frac{\sum_{t=1}^{n} t \cdot \frac{CF_t}{(1+r)^t}}{P}$$</span>
+<span id="cb4-535"><a href="#cb4-535" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-536"><a href="#cb4-536" aria-hidden="true" tabindex="-1"></a><span class="ss">4. </span>**Manejo de errores robusto**: Crear una función que lea datos de un bono ingresados por el usuario (<span class="in">`input()`</span>) y maneje todos los posibles errores: texto en lugar de números, tasas fuera de rango, plazos negativos, etc.</span>
+<span id="cb4-537"><a href="#cb4-537" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-538"><a href="#cb4-538" aria-hidden="true" tabindex="-1"></a><span class="ss">5. </span>**TIR mejorada**: la función <span class="in">`tir()`</span> de la librería usa paso fijo. Reescribila con refinamiento progresivo (cuando cruza el precio, retrocede y prueba con paso 10 veces menor) y compará la precisión con la versión original.</span>
+<span id="cb4-539"><a href="#cb4-539" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb4-540"><a href="#cb4-540" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-541"><a href="#cb4-541" aria-hidden="true" tabindex="-1"></a>---</span>
+<span id="cb4-542"><a href="#cb4-542" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-543"><a href="#cb4-543" aria-hidden="true" tabindex="-1"></a><span class="fu"># Referencias</span></span>
+<span id="cb4-544"><a href="#cb4-544" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-545"><a href="#cb4-545" aria-hidden="true" tabindex="-1"></a><span class="ss">* </span>Lutz, M. (2013). *Learning Python*. O'Reilly Media.</span>
+<span id="cb4-546"><a href="#cb4-546" aria-hidden="true" tabindex="-1"></a><span class="ss">* </span>Fabozzi, F. J. (2015). *Bond Markets, Analysis, and Strategies*. Pearson.</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></div>
 </div></div></div></div></div>
 </div> <!-- /content -->
 <footer class="footer">

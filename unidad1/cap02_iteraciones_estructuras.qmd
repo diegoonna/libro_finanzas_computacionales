@@ -228,6 +228,69 @@ El doble índice `[1][1]` se lee de afuera hacia adentro: "de la lista principal
 Las listas anidadas funcionan, pero se vuelven lentas e incómodas con datos grandes (probá calcular el promedio de cada columna: son varios renglones de bucles). NumPy resuelve exactamente este problema con el `ndarray`, donde esa operación es una línea. Cuando llegues ahí, vas a apreciar lo que la abstracción te ahorra — porque ya escribiste la versión manual.
 :::
 
+### Copiar no es lo mismo que apuntar
+
+Es hora de cumplir una promesa del Capítulo 1. Ahí vimos que las variables de Python son **etiquetas** que apuntan a objetos en memoria, y que con los números (inmutables) eso no trae sorpresas: reasignar crea un objeto nuevo. Pero las listas son **mutables** —se pueden modificar sin crear un objeto nuevo— y ahí la historia cambia. Mirá este código y tratá de predecir la salida antes de ejecutarlo:
+
+```{pyodide-python}
+#| label: aliasing-listas
+cartera_a = [100.0, 250.0, 80.0]
+cartera_b = cartera_a          # ¿esto copia la cartera?
+
+cartera_b.append(500.0)        # agregamos un activo a la "copia"
+
+print("Cartera A:", cartera_a)
+print("Cartera B:", cartera_b)
+print(f"\n¿Son el MISMO objeto? id(a)={id(cartera_a)} | id(b)={id(cartera_b)}")
+```
+
+Sorpresa: agregamos un activo a `cartera_b`... **y apareció también en `cartera_a`**. El `id()` revela por qué: las dos variables apuntan a la **misma lista** en memoria. La línea `cartera_b = cartera_a` no copió nada — solo pegó una segunda etiqueta sobre el mismo objeto (a esto se lo llama *aliasing*). Es probablemente el bug más desconcertante que vas a encontrar en tus primeros meses de Python: "modifiqué una variable y cambió otra".
+
+Para obtener una copia **de verdad** —un objeto nuevo e independiente— hay que pedirla explícitamente con `.copy()`:
+
+```{pyodide-python}
+#| label: copia-listas
+cartera_original = [100.0, 250.0, 80.0]
+cartera_escenario = cartera_original.copy()   # copia real: objeto nuevo
+
+# Simulamos un escenario de estrés sobre la copia: todo cae 20%
+for i in range(len(cartera_escenario)):
+    cartera_escenario[i] = cartera_escenario[i] * 0.80
+
+print("Original:  ", cartera_original)
+print("Escenario: ", cartera_escenario)
+print(f"\n¿Mismo objeto? {cartera_original is cartera_escenario}")
+```
+
+Ahora sí: el escenario de estrés vive en su propia lista y el original quedó intacto — que es exactamente lo que querés cuando simulás escenarios sobre una cartera.
+
+Falta una vuelta de tuerca: ¿qué pasa con las **listas anidadas**? `.copy()` hace una copia **superficial** (*shallow*): copia la lista exterior, pero las filas interiores siguen siendo **las mismas** — etiquetas compartidas otra vez, un nivel más adentro:
+
+```{pyodide-python}
+#| label: copia-profunda
+import copy
+
+matriz_original = [
+    [100.5, 101.2],   # Activo A
+    [45.0, 45.5],     # Activo B
+]
+
+superficial = matriz_original.copy()       # copia la "cáscara", comparte las filas
+profunda = copy.deepcopy(matriz_original)  # copia TODO, a todos los niveles
+
+# Modificamos una fila a través de la copia superficial...
+superficial[0][0] = 999.9
+
+print("Original tras tocar la copia superficial:", matriz_original[0])
+print("Copia profunda (intacta):                ", profunda[0])
+```
+
+Tocamos la copia superficial y **el original cambió** — las filas eran compartidas. La copia profunda (`copy.deepcopy`) duplica la estructura completa y queda verdaderamente aislada. La regla práctica: para listas "planas", `.copy()` alcanza; para estructuras anidadas (matrices, listas de diccionarios), `deepcopy`.
+
+::: {.callout-warning title="Esto aplica a TODOS los objetos mutables"}
+Los **diccionarios** (que ves en la sección siguiente) se comportan exactamente igual: `dict_b = dict_a` comparte el objeto, `dict_a.copy()` es superficial, y un diccionario con listas adentro necesita `deepcopy`. Lo mismo vale para cualquier objeto mutable, incluidas las clases que vas a crear en el Capítulo 4. Los inmutables (números, strings, tuplas) están exentos del problema: como no se pueden modificar, compartirlos es inofensivo — por eso el Capítulo 1 no necesitó esta advertencia.
+:::
+
 ---
 
 ## Diccionarios: datos etiquetados
@@ -291,6 +354,46 @@ print(f"El valor total del inventario agrícola es: ${valor_total_inventario:,.1
 ```
 
 Notá que los dos diccionarios listan los commodities **en distinto orden** — y no importa en absoluto, porque no accedemos por posición sino por clave. Esa independencia del orden es precisamente lo que los hace robustos para conectar datos de distintas fuentes (en la práctica: tu sistema de posiciones y el feed de precios del mercado nunca vienen en el mismo orden).
+
+### El costo de buscar: por qué existen los diccionarios
+
+Hasta acá el diccionario parece solo una lista más cómoda. Pero hay una diferencia de fondo, **de ingeniería**, que explica por qué existe: el costo de *buscar*. Para saber si un ticker está en una **lista**, Python no tiene más remedio que recorrerla elemento por elemento — en el peor caso, la lista entera. Para buscarlo en un **diccionario**, calcula una función matemática sobre la clave (un *hash*) que le dice directamente *dónde* está guardado el valor: **una operación, sin recorrer nada**, tenga el diccionario diez claves o diez millones.
+
+Con pocos datos la diferencia es invisible. Midámosla con un universo grande:
+
+```{pyodide-python}
+#| label: costo-busqueda
+import time
+
+# Un universo de 200.000 instrumentos
+n = 200_000
+tickers_lista = [f"TICKER_{i}" for i in range(n)]
+tickers_dict = {t: i for i, t in enumerate(tickers_lista)}
+
+buscado = f"TICKER_{n - 1}"   # el peor caso: está al final
+
+# 200 búsquedas en la LISTA (recorre hasta encontrar)
+t0 = time.perf_counter()
+for _ in range(200):
+    encontrado = buscado in tickers_lista
+t_lista = time.perf_counter() - t0
+
+# 200 búsquedas en el DICCIONARIO (salto directo por hash)
+t0 = time.perf_counter()
+for _ in range(200):
+    encontrado = buscado in tickers_dict
+t_dict = time.perf_counter() - t0
+
+print(f"Lista:       {t_lista*1000:8.1f} ms")
+print(f"Diccionario: {t_dict*1000:8.1f} ms")
+print(f"El diccionario fue ~{t_lista/max(t_dict, 1e-9):,.0f}x más rápido")
+```
+
+La diferencia es de **miles de veces** — y crece con el tamaño: duplicar la lista duplica su tiempo de búsqueda, mientras el diccionario ni se inmuta. Ahora tenés el criterio completo para elegir estructura: lista cuando importa el **orden** y vas a recorrer todo; diccionario cuando vas a **buscar por clave**. Un sistema que consulta precios por ticker miles de veces por segundo *tiene* que ser un diccionario.
+
+::: {.callout-note title="El precio del truco: claves inmutables"}
+El salto directo funciona porque el hash de la clave se calcula una vez y no cambia. Por eso **las claves de un diccionario deben ser inmutables**: strings, números o tuplas sirven; una **lista no puede ser clave** (`precios[[1, 2]] = ...` lanza `TypeError: unhashable type`). Si la clave pudiera mutar, su hash cambiaría y el diccionario ya no sabría dónde la guardó. Fijate cómo se conecta todo: la distinción mutable/inmutable de la sección de copias no era solo una curiosidad — es la que decide qué puede ser clave.
+:::
 
 ---
 
@@ -373,6 +476,7 @@ La búsqueda incremental es el método numérico más simple para resolver ecuac
 - **`IndexError` por off-by-one**: pedir `lista[len(lista)]` no existe — el último índice válido es `len(lista) - 1`. Aparece muchísimo al comparar elementos consecutivos; por eso el `range(len(precios) - 1)` en el ejemplo de variaciones.
 - **`KeyError` en diccionarios**: acceder a una clave que no existe (`conteo['Alto']` antes de crearla) rompe el programa. Usá `.get(clave, defecto)` o verificá con `if clave in diccionario`.
 - **Modificar una lista mientras la recorrés**: hacer `lista.remove(x)` adentro de un `for` sobre esa misma lista saltea elementos de forma impredecible. El patrón seguro es construir una lista **nueva** con lo que querés conservar (como en el ejemplo de filtrado).
+- **Creer que `b = a` copia la lista**: solo agrega una etiqueta al mismo objeto — modificás `b` y "cambia" `a`. Copia real: `a.copy()`; con estructuras anidadas, `copy.deepcopy(a)` (la sección "Copiar no es lo mismo que apuntar").
 - **Dividir por el contador equivocado**: al promediar datos filtrados, dividí por la cantidad de datos *válidos*, no por el total de la lista (el error silencioso del ejemplo de `continue`).
 :::
 
