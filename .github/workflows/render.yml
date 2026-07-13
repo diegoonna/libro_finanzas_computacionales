@@ -1,0 +1,72 @@
+# Red de seguridad de publicación.
+#
+# El sitio se publica desde docs/ (GitHub Pages, rama main). El flujo normal es
+# renderizar localmente con `quarto render` y commitear docs/. Este workflow
+# cubre el caso en que se pushea un capítulo editado SIN re-renderizar: el CI
+# renderiza y, si docs/ quedó desactualizado, commitea la diferencia él mismo.
+# Si docs/ ya estaba al día, no hace nada.
+#
+# Notas:
+# - Gracias a `freeze: auto` con _freeze/ commiteado, el CI solo ejecuta Python
+#   en los capítulos cuya fuente cambió sin re-render local; el resto usa los
+#   resultados congelados.
+# - El commit del bot usa GITHUB_TOKEN, que por diseño de GitHub no dispara
+#   otra corrida de este workflow (no hay loop).
+
+name: Render del libro (red de seguridad)
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: render-libro
+  cancel-in-progress: true
+
+jobs:
+  render:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout con historial completo
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      # `date: last-modified` usa la fecha de modificación del archivo; sin este
+      # paso, el checkout pone la fecha de hoy en todos los archivos y cada
+      # página del libro cambiaría de fecha en cada corrida.
+      - name: Restaurar fechas de modificación desde git
+        uses: chetan/git-restore-mtime-action@v2
+
+      - name: Instalar Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Instalar dependencias de Python
+        run: pip install -r requirements.txt
+
+      - name: Instalar Quarto
+        uses: quarto-dev/quarto-actions/setup@v2
+        with:
+          version: 1.8.26
+
+      - name: Renderizar el libro
+        run: quarto render
+
+      - name: Commitear docs/ si quedó desactualizado
+        run: |
+          git add docs _freeze
+          if git diff --cached --quiet; then
+            echo "docs/ ya estaba al día — nada para publicar."
+          else
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git commit -m "chore: re-render automático de docs/ [CI]"
+            git push
+          fi

@@ -31,7 +31,15 @@ cd .\libro-finanzas
 quarto render
 ```
 
-El sitio resultante se escribe en `docs/` (ver `output-dir: docs` en [`_quarto.yml`](./_quarto.yml)).
+El sitio resultante se escribe en `docs/` (ver `output-dir: docs` en [`_quarto.yml`](./_quarto.yml)),
+que es lo que GitHub Pages publica desde la rama `main`.
+
+> **Red de seguridad (CI):** el workflow [`.github/workflows/render.yml`](./.github/workflows/render.yml)
+> re-renderiza el libro en cada push a `main`. Si pusheaste un capitulo editado sin correr
+> `quarto render`, el CI detecta que `docs/` quedo desactualizado y commitea la diferencia
+> automaticamente (commit `chore: re-render automático de docs/ [CI]`). Si renderizaste
+> localmente, el CI no agrega nada. Acordate de hacer `git pull` despues de un push en el
+> que te hayas olvidado de renderizar, para traerte el commit del bot.
 
 > **Nota (Windows):** si Quarto no encuentra el interprete correcto, apunta `QUARTO_PYTHON`
 > al Python del entorno virtual antes de renderizar:
@@ -88,12 +96,10 @@ Para agregar uno:
 [`_quarto.yml`](./_quarto.yml) referencia:
 
 - `theme: [cosmo, custom.scss]`
-- `cover-image: cover.png` / `favicon: cover.png`
+- `cover-image: cover.jpg` / `favicon: favicon.png` (ambos optimizados para web; el original en alta resolucion esta en el historial de git como `cover.png`)
+- `.nojekyll` (listado en `project: resources:`) — obligatorio para GitHub Pages: sin el, Jekyll excluye del sitio publicado todo archivo que empiece con `_` (como los `_intro_modX.html`).
 
-En el checkout actual existe `custom.scss`, pero no se encontro `cover.png`. Si te falta el archivo para renderizar (o queres otro estilo/imagen), tenes dos opciones:
-
-- agregar `cover.png` en `.libro-finanzas/`, o
-- ajustar/remover `cover-image` y `favicon` (y/o el tema) en [`_quarto.yml`](./_quarto.yml).
+Si queres otro estilo/imagen, ajusta `cover-image`, `favicon` y/o el tema en [`_quarto.yml`](./_quarto.yml).
 
 ## Contribuir
 
