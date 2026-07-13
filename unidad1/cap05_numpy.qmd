@@ -246,6 +246,8 @@ print(f"NumPy es ~{t_bucle/t_numpy:.0f}x más rápido")
 
 Sobre un millón de datos la diferencia es de uno a dos órdenes de magnitud. En una simulación de Monte Carlo con millones de trayectorias (Capítulo 13), esto es la diferencia entre que tu código termine en segundos o en horas.
 
+¿De dónde sale esa diferencia? Del **trabajo repetido que hace el intérprete**. En el bucle de Python, *cada una* del millón de vueltas repite la misma burocracia: mirar qué tipo tiene `x` (¿es int? ¿float? ¿string?), desempaquetar el valor del objeto que lo envuelve, decidir qué operación "elevar al cuadrado" corresponde a ese tipo, ejecutarla, y volver a empaquetar el resultado en un objeto nuevo. Un millón de elementos, un millón de veces la misma verificación. NumPy hace esa burocracia **una sola vez**: como el array es homogéneo (todos `float64`, gracias al `dtype`), sabe de antemano qué operación aplicar a todos, y delega el recorrido a un bucle compilado en C que barre la memoria contigua a toda velocidad — incluso procesando varios elementos por instrucción del procesador (SIMD). No es que Python "sea lento": es que le pedimos que vuelva a deducir lo obvio un millón de veces. La vectorización es, en el fondo, **mover la decisión fuera del bucle**.
+
 ---
 
 # Reducciones: resumir un array

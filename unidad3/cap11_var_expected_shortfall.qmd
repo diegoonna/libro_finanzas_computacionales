@@ -30,11 +30,11 @@ import matplotlib.pyplot as plt
 from scipy import stats
 
 # Configuración
-np.random.seed(42)
+rng = np.random.default_rng(42)
 valor_portafolio = 10_000_000  # $10M
 
 # Simular retornos diarios (252 días hábiles)
-retornos = np.random.normal(0.0004, 0.015, 252)
+retornos = rng.normal(0.0004, 0.015, 252)
 
 mu = np.mean(retornos)
 sigma = np.std(retornos)

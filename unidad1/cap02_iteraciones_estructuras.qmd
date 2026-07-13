@@ -173,6 +173,33 @@ print("Cotizaciones altas (mayores a 1000):", cotizaciones_altas)
 
 El patrón completo —lista vacía + `for` + `if` + `append`— es probablemente el fragmento de código más repetido de todo el análisis de datos. De 6 cotizaciones sobrevivieron 3: las que superaron el umbral, en su orden original.
 
+### Comprensiones de listas: el mismo patrón, en una línea
+
+Ese patrón es tan frecuente que Python le dedicó una sintaxis propia: la **comprensión de listas** (*list comprehension*). Dice lo mismo que el bucle, pero en el orden en que lo contarías en voz alta: *"quiero **el precio**, **para cada precio** de las cotizaciones, **si** supera 1000"*:
+
+```{pyodide-python}
+#| label: list-comprehension
+cotizaciones = [980.5, 995.0, 1005.2, 1010.0, 998.0, 1020.5]
+
+# Las cuatro líneas del filtrado anterior, en una:
+cotizaciones_altas = [precio for precio in cotizaciones if precio > 1000]
+print("Filtrar:      ", cotizaciones_altas)
+
+# También sirve para TRANSFORMAR cada elemento (sin el if):
+en_dolares = [precio / 1000 for precio in cotizaciones]
+print("Transformar:  ", en_dolares)
+
+# Y para las dos cosas a la vez: transformar lo que pasa el filtro
+altas_en_usd = [precio / 1000 for precio in cotizaciones if precio > 1000]
+print("Ambas:        ", altas_en_usd)
+```
+
+La regla de traducción mental: `[expresión for elemento in secuencia if condición]` equivale exactamente al bucle con `append` — la *expresión* es lo que se agrega, el *if* final es el filtro (y es opcional). Existe la versión para diccionarios con la misma lógica: `{clave: valor for ...}`.
+
+::: {.callout-tip title="¿Comprensión o bucle explícito?"}
+Usá la comprensión cuando la operación se lee de un vistazo: filtrar, transformar, o ambas. Cuando la lógica crece —varios `if`, acumuladores, `break`— **volvé al bucle explícito**: una comprensión de tres renglones con condiciones anidadas es más corta pero mucho más difícil de leer, y la claridad siempre gana. Vas a ver comprensiones por todo el resto del libro; ahora ya sabés leerlas.
+:::
+
 El segundo patrón es la **operación secuencial**: comparar cada elemento con el anterior. Es la esencia del análisis de series de tiempo — calcular variaciones, retornos, diferencias.
 
 ```{pyodide-python}
@@ -264,6 +291,8 @@ print(f"\n¿Mismo objeto? {cartera_original is cartera_escenario}")
 
 Ahora sí: el escenario de estrés vive en su propia lista y el original quedó intacto — que es exactamente lo que querés cuando simulás escenarios sobre una cartera.
 
+Aprovechemos ese `is` que apareció en el último `print`, porque formaliza la distinción de toda esta sección. Python tiene **dos preguntas de comparación distintas**: `==` pregunta *"¿tienen el mismo contenido?"* (igualdad) e `is` pregunta *"¿son el mismo objeto en memoria?"* (identidad — equivale a comparar sus `id()`). Dos carteras recién copiadas dan `True` con `==` (mismos valores) y `False` con `is` (objetos distintos). La regla de uso: **para comparar valores, siempre `==`**; `is` se reserva para preguntar por identidad — en la práctica, casi únicamente en `if x is None`, que es la forma idiomática de chequear "ausencia de valor".
+
 Falta una vuelta de tuerca: ¿qué pasa con las **listas anidadas**? `.copy()` hace una copia **superficial** (*shallow*): copia la lista exterior, pero las filas interiores siguen siendo **las mismas** — etiquetas compartidas otra vez, un nivel más adentro:
 
 ```{pyodide-python}
@@ -290,6 +319,51 @@ Tocamos la copia superficial y **el original cambió** — las filas eran compar
 ::: {.callout-warning title="Esto aplica a TODOS los objetos mutables"}
 Los **diccionarios** (que ves en la sección siguiente) se comportan exactamente igual: `dict_b = dict_a` comparte el objeto, `dict_a.copy()` es superficial, y un diccionario con listas adentro necesita `deepcopy`. Lo mismo vale para cualquier objeto mutable, incluidas las clases que vas a crear en el Capítulo 4. Los inmutables (números, strings, tuplas) están exentos del problema: como no se pueden modificar, compartirlos es inofensivo — por eso el Capítulo 1 no necesitó esta advertencia.
 :::
+
+---
+
+## Tuplas: la lista que no cambia
+
+En el callout anterior se coló un tipo que todavía no presentamos: la **tupla**. Es la hermana inmutable de la lista — se escribe con paréntesis en lugar de corchetes, se indexa igual, pero **no se puede modificar** después de creada: ni `append`, ni reasignar elementos. ¿Para qué querrías una lista capada? Justamente por eso: para datos que **no deben** cambiar, la inmutabilidad es una garantía, no una limitación. Una operación ejecutada (ticker, cantidad, precio) es un hecho histórico: nada debería poder editarla.
+
+```{pyodide-python}
+#| label: tuplas
+# Una operación ejecutada: un registro que no debe cambiar
+operacion = ("GD30", 100, 92.5)
+
+print("Operación completa:", operacion)
+print("Ticker:", operacion[0])   # se indexa como una lista
+
+# El "unpacking": desempaquetar la tupla en variables con nombre, de una
+ticker, cantidad, precio = operacion
+print(f"Compra de {cantidad} {ticker} a ${precio}")
+
+# La inmutabilidad es real: descomentá para ver el error
+# operacion[2] = 95.0   # TypeError: 'tuple' object does not support item assignment
+```
+
+La segunda línea destacable es el **desempaquetado** (*unpacking*): `ticker, cantidad, precio = operacion` asigna los tres elementos a tres variables de un golpe. Es la forma idiomática de "abrir" una tupla, y la vas a usar constantemente — sobre todo en bucles, gracias a dos funciones que producen tuplas:
+
+- **`enumerate(lista)`**: al recorrer, te da `(indice, elemento)` — se acabó el `range(len(...))` manual.
+- **`zip(lista_a, lista_b)`**: recorre dos listas **en paralelo**, dándote pares `(a, b)`.
+
+```{pyodide-python}
+#| label: enumerate-zip
+precios = [50.0, 52.0, 51.0, 55.0]
+tickers = ["GD30", "AL30", "GD35", "AE38"]
+
+# enumerate: índice y elemento juntos (arrancando en 1 si querés)
+for dia, precio in enumerate(precios, start=1):
+    print(f"Día {dia}: ${precio}")
+
+print()
+
+# zip: dos listas en paralelo, sin índices a mano
+for ticker, precio in zip(tickers, precios):
+    print(f"{ticker}: ${precio}")
+```
+
+Fijate lo que desapareció: ni un solo `range(len(...))`, ni un índice `[i]`. El `for` desempaqueta cada tupla directamente en variables con nombre, y el código se lee como la descripción del problema. Un beneficio extra de la inmutabilidad, que va a cobrar sentido enseguida: **una tupla sí puede ser clave de diccionario** (una lista no) — `precios[("GD30", "2024-01-15")]` es un patrón común para indexar por activo y fecha a la vez. El porqué te lo debe la sección de búsqueda, unas páginas más adelante.
 
 ---
 

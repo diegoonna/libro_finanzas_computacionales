@@ -7,12 +7,20 @@ La configuracion principal vive en [`_quarto.yml`](./_quarto.yml) y el sitio ren
 
 - [Quarto](https://quarto.org/) (para renderizar/preview)
 - Python (porque el proyecto usa `jupyter: python3` para ejecutar bloques `python`)
-- Paquetes Python usados por los ejemplos del libro (segun imports en `*.qmd`):
-  - `numpy`
-  - `pandas`
-  - `matplotlib`
-  - `scipy`
-  - `statsmodels` (econometría y series temporales: ARIMA/VAR)
+- Paquetes Python usados por los ejemplos del libro: instalar con
+
+  ```powershell
+  pip install -r requirements.txt
+  ```
+
+  (nucleo: `numpy`, `pandas`, `scipy`, `matplotlib`, `statsmodels` + el kernel de Jupyter;
+  los opcionales de datos —`yfinance`, `pandas-datareader`, `fredapi`— solo hacen falta
+  para reproducir el apendice de obtencion de datos)
+
+> **Render incremental:** el proyecto usa `freeze: auto`, asi que Quarto cachea los
+> resultados de ejecucion en `_freeze/` y solo re-ejecuta los capitulos cuyo codigo
+> cambio. El primer render construye la cache (tarda unos minutos); los siguientes
+> son casi instantaneos.
 
 ## Quick start (render local)
 
