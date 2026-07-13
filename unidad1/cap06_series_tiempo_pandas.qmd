@@ -105,6 +105,10 @@ print(f"\n¿La ida y vuelta preservó los datos? {df.equals(df_leido)}")
 
 Dos parámetros de `read_csv` que vas a usar constantemente con series de tiempo: `parse_dates=["Fecha"]` (convierte la columna a fechas de verdad en lugar de texto) e `index_col="Fecha"` (la establece como índice del DataFrame). Sin `parse_dates`, las fechas quedan como strings y ningún método temporal funciona — es la causa #1 de "pandas no me ordena por fecha".
 
+::: {.callout-note title="¿Y de dónde saco los datos?"}
+Para descargar datos reales —precios con yfinance, series macro de FRED, o datos institucionales de Bloomberg— el apéndice @sec-datos-financieros tiene la guía completa, incluido el patrón profesional: *descargar una vez, guardar a CSV, y analizar siempre desde el archivo local* con las herramientas de esta sección.
+:::
+
 ## Alineación de Índices e Integración de Datos
 
 Acá viene un problema **real** que las listas de Python no pueden resolver bien. Supongamos que seguís un bono que cotiza en Buenos Aires y una acción que cotiza en Nueva York. El 24 de marzo es feriado en Argentina (no hay precio local) pero NY opera; el 4 de julio es al revés. Si guardaras los precios en dos listas, **los índices dejarían de corresponderse** a partir del primer feriado — y cualquier cálculo conjunto (un spread, una correlación) compararía días distintos sin avisarte.
@@ -305,28 +309,118 @@ print(resumen_sector)
 
 ---
 
-# Visualización de Datos con Matplotlib
+# Visualización: cómo graficar (mini-tutorial de Matplotlib)
 
-Podemos generar gráficos directamente desde DataFrames de forma integrada.
+Llegó el momento de aprender a graficar en serio, porque **de acá al final del libro no hay capítulo sin gráficos**: fronteras eficientes, distribuciones de retornos, trayectorias simuladas, sonrisas de volatilidad. Un analista que no grafica sus datos está analizando a ciegas — el histograma que revela una cola pesada o el gráfico que delata un hueco en la serie valen más que diez tablas.
+
+## La anatomía: Figure y Axes
+
+Matplotlib organiza todo gráfico en dos piezas, y entender la diferencia elimina el 90% de la confusión inicial:
+
+- La **Figure** (`fig`) es el **lienzo completo**: la hoja donde se dibuja. Controla el tamaño total y contiene uno o más gráficos.
+- Los **Axes** (`ax`) son **cada gráfico individual** dentro del lienzo: sus ejes, sus curvas, su título, su leyenda. (El nombre confunde: un objeto Axes es *el gráfico*, no "los ejes".)
+
+De ahí el idioma que vas a ver en todo el libro — y en todo el código profesional:
+
+```python
+fig, ax = plt.subplots(figsize=(10, 5))   # un lienzo con un gráfico adentro
+```
+
+`plt.subplots()` crea las dos piezas juntas, y a partir de ahí **todo se le pide al `ax`**: dibujar (`ax.plot`), etiquetar (`ax.set_xlabel`), etc. Construyamos un gráfico completo paso a paso, con la receta de cinco pasos que repite cada figura del libro:
 
 ```{python}
-#| label: plot-complejo
-fig, ax = plt.subplots(2, 1, figsize=(10, 8), sharex=True)
+#| label: matplotlib-anatomia
+# 1. Crear lienzo y gráfico
+fig, ax = plt.subplots(figsize=(10, 4.5))
 
-# Panel 1: Precios y SMA
-df_diario["Precio"].plot(ax=ax[0], label="Precio", alpha=0.7)
-df_diario["SMA_20"].plot(ax=ax[0], label="SMA 20", color="blue", linewidth=2)
-ax[0].set_title("Evolución de Precios y Media Móvil")
-ax[0].legend()
+# 2. Dibujar los datos
+ax.plot(df_diario.index, df_diario["Precio"], linewidth=1.5, label="Precio de cierre")
 
-# Panel 2: Volatilidad
-df_diario["Vol_20"].plot(ax=ax[1], color="orange", label="Volatilidad 20d")
-ax[1].set_title("Volatilidad Móvil Anualizada")
-ax[1].legend()
+# 3. Etiquetar TODO: quien mira el gráfico no leyó tu código
+ax.set_xlabel("Fecha")
+ax.set_ylabel("Precio ($)")
+ax.set_title("Evolución del precio — la plantilla de todo gráfico del libro")
+
+# 4. Leyenda y grilla (la grilla suave ayuda a leer valores)
+ax.legend()
+ax.grid(True, alpha=0.3)
+
+# 5. Ajustar márgenes y mostrar
+plt.tight_layout()
+plt.show()
+```
+
+Esos cinco pasos —crear, dibujar, etiquetar, leyenda/grilla, mostrar— son **la plantilla**. Todo lo demás son variaciones: qué se dibuja en el paso 2 y cuántos gráficos conviven en el lienzo.
+
+## Los tres tipos de gráfico del libro
+
+Con la plantilla fija, cambiar de tipo de gráfico es cambiar una línea. Los tres que cubren el 95% del análisis financiero:
+
+- **Línea** (`ax.plot`): evolución en el tiempo — precios, curvas, trayectorias.
+- **Histograma** (`ax.hist`): la *distribución* de una variable — la herramienta central para mirar retornos.
+- **Dispersión** (`ax.scatter`): la *relación* entre dos variables — ¿se mueven juntas?
+
+```{python}
+#| label: matplotlib-tipos
+retornos = df_diario["Ret_Simple"].dropna()
+
+fig, axes = plt.subplots(1, 2, figsize=(11, 4))
+
+# Histograma: ¿cómo se distribuyen los retornos diarios?
+ax = axes[0]
+ax.hist(retornos * 100, bins=30, edgecolor="white", alpha=0.8)
+ax.set_xlabel("Retorno diario (%)")
+ax.set_ylabel("Frecuencia (días)")
+ax.set_title("Histograma: la distribución de retornos")
+ax.grid(True, alpha=0.3)
+
+# Dispersión: ¿el retorno de ayer dice algo sobre el de hoy?
+ax = axes[1]
+ax.scatter(retornos.shift(1) * 100, retornos * 100, s=15, alpha=0.6)
+ax.set_xlabel("Retorno de ayer (%)")
+ax.set_ylabel("Retorno de hoy (%)")
+ax.set_title("Dispersión: retorno vs. retorno anterior")
+ax.grid(True, alpha=0.3)
 
 plt.tight_layout()
 plt.show()
 ```
+
+Dos novedades en este bloque. Primero, `plt.subplots(1, 2)` crea **dos gráficos en el mismo lienzo** (1 fila, 2 columnas) y devuelve un array de Axes — dibujás en cada uno por separado. Segundo, leé lo que los gráficos *dicen*: el histograma muestra retornos concentrados alrededor de cero con forma de campana, y la dispersión es una **nube sin patrón** — el retorno de ayer no predice el de hoy, tu primer vistazo a la eficiencia del mercado que formalizaremos en el Capítulo 16.
+
+## El atajo de pandas: `.plot()`
+
+Pandas trae un envoltorio de matplotlib incorporado: toda Serie y DataFrame tiene un método `.plot()` que dibuja usando **el índice como eje x** automáticamente — con fechas, esto es oro. Acepta `ax=` para dirigir el dibujo a un Axes que ya creaste, así que se combina perfecto con la plantilla:
+
+```{python}
+#| label: plot-complejo
+fig, ax = plt.subplots(2, 1, figsize=(10, 7), sharex=True)
+
+# Panel 1: precio y su media móvil (dos series sobre el MISMO ax)
+df_diario["Precio"].plot(ax=ax[0], label="Precio", alpha=0.7)
+df_diario["SMA_20"].plot(ax=ax[0], label="SMA 20", linewidth=2)
+ax[0].set_ylabel("Precio ($)")
+ax[0].set_title("Precio y media móvil de 20 días")
+ax[0].legend()
+ax[0].grid(True, alpha=0.3)
+
+# Panel 2: la volatilidad móvil, compartiendo el eje de fechas (sharex)
+(df_diario["Vol_20"] * 100).plot(ax=ax[1], color="darkorange", label="Volatilidad 20d")
+ax[1].set_ylabel("Vol. anualizada (%)")
+ax[1].set_xlabel("Fecha")
+ax[1].set_title("Volatilidad móvil anualizada")
+ax[1].legend()
+ax[1].grid(True, alpha=0.3)
+
+plt.tight_layout()
+plt.show()
+```
+
+Este panel doble es el formato clásico del análisis técnico: precio arriba, indicador abajo, **compartiendo el eje de fechas** (`sharex=True`) para poder leerlos en vertical: fijate cómo los períodos de precio "nervioso" en el panel superior coinciden con los picos de volatilidad en el inferior.
+
+::: {.callout-tip title="El checklist de todo gráfico"}
+Antes de dar por terminada una figura, cuatro preguntas: ¿los **ejes** tienen etiqueta con unidades? ¿el **título** dice qué estoy mirando? ¿hay **leyenda** si conviven varias series? ¿alguien que no vio el código entiende el gráfico solo? Un gráfico sin etiquetas es un dibujo; con etiquetas, es un argumento.
+:::
 
 ---
 

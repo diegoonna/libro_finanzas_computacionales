@@ -249,7 +249,32 @@ Una **excepción** es un error que ocurre durante la ejecución del programa (ru
 - acceder a una clave inexistente en un diccionario (`KeyError`),
 - o intentar usar un tipo de dato incorrecto (`TypeError`).
 
-Si no capturamos la excepción, el programa se detiene. Con `try` / `except`, podemos capturar el error y decidir cómo responder.
+Si no capturamos la excepción, el programa se detiene **e imprime un traceback** — el "informe forense" del error. Saber leerlo es probablemente la habilidad que más tiempo te va a ahorrar en toda tu carrera, así que detengámonos un minuto.
+
+::: {.callout-tip title="Cómo leer un traceback (la habilidad subvalorada)"}
+Un traceback típico luce así:
+
+```
+Traceback (most recent call last):
+  File "analisis.py", line 42, in <module>
+    resultado = valuar_cartera(posiciones)
+  File "analisis.py", line 17, in valuar_cartera
+    total += valuacion_bono(bono, tasa)
+  File "finanzas_basicas.py", line 8, in valuacion_bono
+    return cupon / (1 + tasa) ** t
+ZeroDivisionError: division by zero
+```
+
+La receta para leerlo:
+
+1. **Empezá por la última línea**: ahí está el *tipo* de error (`ZeroDivisionError`) y el *mensaje* (`division by zero`). Es el "qué pasó".
+2. **Subí una línea**: es el lugar exacto donde explotó (`finanzas_basicas.py`, línea 8). Es el "dónde".
+3. **El resto, de abajo hacia arriba, es la cadena de llamadas**: quién llamó a quién hasta llegar ahí. El "cómo llegamos". Ojo: la línea que explotó no siempre es la culpable — acá el bug probablemente esté en quien pasó `tasa = -1`, no en la fórmula.
+
+El error de principiante es leer solo la primera línea (que es la *menos* informativa) o, peor, no leer nada y adivinar. El traceback te está diciendo exactamente qué, dónde y cómo — gratis.
+:::
+
+Con `try` / `except`, en cambio, podemos capturar el error y decidir cómo responder sin que el programa muera.
 
 ## Flujo de `try` / `except`
 
