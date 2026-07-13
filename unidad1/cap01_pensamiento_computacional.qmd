@@ -70,15 +70,11 @@ print(f"Días al vencimiento: {dias_vencimiento} | Tipo: {type(dias_vencimiento)
 
 ### Punto Flotante (`float`)
 
-Representan números reales mediante el estándar **IEEE 754**. Es el tipo estándar para precios, tasas y rendimientos.
-
-::: {.callout-warning title="Error de Punto Flotante"}
-Los números decimales como 0.1 no tienen representación binaria exacta. Para sistemas contables, usar la librería `decimal`.
-:::
+Representan números reales mediante el estándar **IEEE 754**. Es el tipo estándar para precios, tasas y rendimientos — y esconde una sorpresa que en finanzas no podés permitirte ignorar. Ejecutá esto:
 
 ```{pyodide-python}
 #| label: tipos-float
-# Demostración del error de punto flotante
+# La suma más famosa de la computación
 precio_a = 0.1
 precio_b = 0.2
 resultado = precio_a + precio_b
@@ -86,6 +82,33 @@ resultado = precio_a + precio_b
 print(f"0.1 + 0.2 = {resultado}")
 print(f"¿Es exactamente 0.3? {resultado == 0.3}")
 ```
+
+**0.1 + 0.2 no da 0.3.** No es un bug de Python: es una consecuencia de cómo las computadoras representan los números. Internamente todo se guarda en **binario** (base 2), y así como 1/3 no tiene representación decimal exacta (0.3333... infinito), **0.1 no tiene representación binaria exacta**: la computadora guarda la aproximación más cercana que entra en 64 bits. Los errores son minúsculos (del orden de $10^{-17}$), pero existen, se acumulan al operar, y rompen las comparaciones con `==`.
+
+Las dos consecuencias prácticas, que valen para todo el libro:
+
+1. **Nunca compares floats con `==`**: preguntá si están *suficientemente cerca*, con una tolerancia. Python trae `math.isclose()` exactamente para esto (y NumPy, su análogo `np.isclose`).
+2. **Para plata contable, no uses `float`**: un sistema que liquida saldos no puede tener centavos fantasma. La librería `decimal` calcula en base 10 exacta (más lenta, pero exacta), o directamente se trabaja con **enteros de centavos**.
+
+```{pyodide-python}
+#| label: float-comparacion
+import math
+from decimal import Decimal
+
+# Comparación correcta entre floats: con tolerancia
+resultado = 0.1 + 0.2
+print(f"resultado == 0.3          → {resultado == 0.3}")
+print(f"math.isclose(resultado, 0.3) → {math.isclose(resultado, 0.3)}")
+
+# Para contabilidad: decimal calcula en base 10 exacta
+suma_decimal = Decimal("0.1") + Decimal("0.2")
+print(f"\nDecimal('0.1') + Decimal('0.2') = {suma_decimal}")
+print(f"¿Es exactamente 0.3? {suma_decimal == Decimal('0.3')}")
+```
+
+::: {.callout-warning title="La regla práctica: ¿float o decimal?"}
+**`float` para análisis** (retornos, volatilidades, simulaciones, optimización): el error de $10^{-17}$ es billones de veces menor que la incertidumbre de cualquier modelo financiero, y la velocidad importa. **`decimal` o centavos enteros para contabilidad** (saldos, liquidaciones, facturación): ahí cada centavo debe cerrar exacto. Todo este libro trabaja en el mundo del análisis, así que usaremos `float` — pero sabiendo lo que sacrificamos, y sin comparar jamás con `==`.
+:::
 
 ### Booleanos (`bool`)
 

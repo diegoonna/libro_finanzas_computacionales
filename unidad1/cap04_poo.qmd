@@ -171,7 +171,23 @@ BonoLocal.mercado = "MAE"
 print(f"Ahora ambos cotizan en: {b1.mercado} / {b2.mercado}")
 ```
 
-Un solo cambio (`BonoLocal.mercado = "MAE"`) y las dos instancias lo ven — esa es la utilidad: constantes y configuración compartida viven en la clase, datos propios de cada objeto viven en la instancia. La trampa clásica asociada (un atributo de clase **mutable**, como una lista) te espera en los Errores comunes.
+Un solo cambio (`BonoLocal.mercado = "MAE"`) y las dos instancias lo ven — esa es la utilidad: constantes y configuración compartida viven en la clase, datos propios de cada objeto viven en la instancia.
+
+Pero hay una sutileza que confunde a todo el mundo la primera vez: ¿qué pasa si asignás el atributo compartido **a través de una instancia**?
+
+```{python}
+#| label: atributos-shadowing
+# Asignamos "a través de" b1... ¿cambia para todos?
+b1.mercado = "NYSE"
+
+print(f"b1.mercado: {b1.mercado}")
+print(f"b2.mercado: {b2.mercado}")
+print(f"BonoLocal.mercado: {BonoLocal.mercado}")
+```
+
+**No cambió para todos.** La asignación `b1.mercado = "NYSE"` no modificó el atributo de clase: creó un atributo **de instancia** nuevo en `b1` que, a partir de ahí, *tapa* (hace *shadowing*) al de clase — solo para `b1`. `b2` y la clase siguen en "MAE". La regla de búsqueda de Python lo explica: al leer `objeto.atributo`, primero busca en la instancia y, si no está, sube a la clase. Al **asignar** `objeto.atributo = ...`, siempre escribe en la instancia. Moraleja: los atributos de clase se modifican **por la clase** (`BonoLocal.mercado = ...`), nunca por una instancia.
+
+Esto también responde una pregunta natural: ¿da lo mismo definir un atributo en el cuerpo de la clase que dentro del `__init__`? No — son cosas distintas. En el cuerpo de la clase creás **un** atributo compartido; con `self.` dentro del `__init__` creás un atributo **por cada objeto**. Para valores inmutables la diferencia puede pasar inadvertida (por el shadowing, cada asignación posterior "individualiza" el valor), pero con valores **mutables** es un campo minado: la trampa del atributo de clase mutable te espera en los Errores comunes.
 
 ---
 

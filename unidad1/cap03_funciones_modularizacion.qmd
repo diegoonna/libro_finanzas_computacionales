@@ -132,7 +132,7 @@ El **scope** o alcance define en qué parte del programa una variable es "visibl
 
 ## Variables Globales vs. Locales
 
-Una función puede leer una variable global, pero no puede modificarla directamente a menos que se indique explícitamente (lo cual es una mala práctica en finanzas, ya que resta predictibilidad al código).
+Una función puede **leer** una variable global, pero no puede modificarla directamente: para eso existe la declaración `global tasa_mercado` dentro de la función. Que exista no significa que convenga usarla — en código financiero es una mala práctica, porque una función que modifica estado externo se vuelve impredecible (el resultado deja de depender solo de sus parámetros). En todo este libro, las funciones reciben lo que necesitan por parámetro y devuelven resultados con `return`.
 
 ```{pyodide-python}
 #| label: scope-basico
@@ -190,6 +190,47 @@ print(f"Bueno: {calcular_interes_bueno(100, 0.12)}")
 
 ::: {.callout-important title="Regla de Oro"}
 Siempre que necesites un dato dentro de una función, **pásalo como parámetro**. Evita depender de variables definidas en el "main" para que tu código sea modular y fácil de testear.
+:::
+
+## ¿Qué recibe una función cuando le pasás una lista?
+
+Cerremos el círculo con el concepto de *aliasing* del Capítulo 2 ("copiar no es lo mismo que apuntar"), porque tiene una consecuencia directa sobre las funciones. Cuando llamás `mi_funcion(cartera)`, la función **no recibe una copia** de la cartera: recibe **otra etiqueta al mismo objeto**. Con parámetros inmutables (números, strings) esto es invisible — no se pueden modificar. Pero con una **lista o diccionario**, si la función lo muta, *el llamador ve el cambio*:
+
+```{pyodide-python}
+#| label: mutar-argumentos
+def aplicar_comision(flujos):
+    """Descuenta 1% de comisión a cada flujo... modificando la lista recibida."""
+    for i in range(len(flujos)):
+        flujos[i] = flujos[i] * 0.99
+    return flujos
+
+mis_flujos = [1000.0, 1000.0, 1000.0]
+flujos_netos = aplicar_comision(mis_flujos)
+
+print(f"Flujos netos:      {flujos_netos}")
+print(f"¿Y mis originales? {mis_flujos}   ← ¡también cambiaron!")
+```
+
+La función "devolvió" los flujos netos, pero de paso **destruyó los originales** — `mis_flujos` y el parámetro `flujos` eran el mismo objeto. En un análisis real esto es venenoso: valuás la cartera dos veces y da distinto, porque la primera pasada la modificó. Hay dos diseños correctos, y ambos empiezan igual — **no mutar lo que te prestaron**:
+
+```{pyodide-python}
+#| label: no-mutar-argumentos
+def aplicar_comision_bien(flujos):
+    """Versión pura: trabaja sobre una copia y devuelve una lista nueva."""
+    netos = []
+    for f in flujos:
+        netos.append(f * 0.99)
+    return netos
+
+mis_flujos = [1000.0, 1000.0, 1000.0]
+flujos_netos = aplicar_comision_bien(mis_flujos)
+
+print(f"Flujos netos:      {flujos_netos}")
+print(f"Originales intactos: {mis_flujos}")
+```
+
+::: {.callout-tip title="La convención del oficio"}
+Una función debería **recibir datos, devolver resultados y no tocar nada más** — ni globales (la sección anterior) ni los objetos que le pasaron (esta). A las funciones que cumplen esto se las llama *puras*, y son las más fáciles de testear, reutilizar y razonar. Todas las funciones de la librería que construimos al final del capítulo son puras.
 :::
 
 ---
@@ -384,7 +425,7 @@ En general, preferí `import modulo` o `import modulo as alias` porque hacen exp
 
 # Problemática Financiera: Librería `finanzas_basicas.py`
 
-Vamos a construir una librería con funciones financieras reutilizables. En un entorno real, este archivo se importaría con `from finanzas_basicas import *`.
+Hora de cosechar lo sembrado. En los dos capítulos anteriores resolviste problemas financieros reales —interés compuesto, conversión de tasas, valuación de bonos, TIR— pero cada solución quedó atrapada en su ejemplo. Vamos a **rescatar esa lógica y empaquetarla en una librería reutilizable**: el conjunto de funciones que vas a poder importar en cualquier análisis futuro. En un entorno real, este código viviría en un archivo `finanzas_basicas.py` y se importaría con `from finanzas_basicas import valuacion_bono, tir`.
 
 ## Funciones de la Librería
 
@@ -402,7 +443,7 @@ def valor_futuro(capital, tasa, periodos):
 
 
 def valor_presente_neto(flujos, tasa):
-    """Calcula el VPN de una serie de flujos."""
+    """Calcula el VPN de una serie de flujos (el flujo 0 no se descuenta)."""
     if not flujos:
         raise ValueError("Lista de flujos vacía")
 
@@ -410,7 +451,45 @@ def valor_presente_neto(flujos, tasa):
     for t, cf in enumerate(flujos):
         vpn += cf / (1 + tasa) ** t
     return vpn
+
+
+def conversion_tasas(tna, capitalizaciones=12):
+    """Convierte una TNA con n capitalizaciones anuales a TEA."""
+    if capitalizaciones <= 0:
+        raise ValueError("Las capitalizaciones deben ser positivas")
+    return (1 + tna / capitalizaciones) ** capitalizaciones - 1
+
+
+def valuacion_bono(valor_nominal, tasa_cupon, tasa_descuento, anios):
+    """Precio de un bono bullet: cupones fijos + nominal al vencimiento.
+
+    Es la lógica del Capítulo 2, ahora encapsulada y validada.
+    """
+    if tasa_cupon < 0 or anios <= 0:
+        raise ValueError("Cupón no negativo y plazo positivo")
+
+    cupon = valor_nominal * tasa_cupon
+    precio = 0
+    for t in range(1, anios + 1):
+        flujo = cupon + (valor_nominal if t == anios else 0)
+        precio += flujo / (1 + tasa_descuento) ** t
+    return precio
+
+
+def tir(valor_nominal, tasa_cupon, anios, precio_mercado, paso=0.0001):
+    """TIR de un bono bullet por búsqueda incremental (Capítulo 2)."""
+    if precio_mercado <= 0:
+        raise ValueError("El precio debe ser positivo")
+
+    tasa = 0.0
+    while valuacion_bono(valor_nominal, tasa_cupon, tasa, anios) > precio_mercado:
+        tasa += paso
+        if tasa > 5:   # techo de seguridad: 500% anual
+            raise ValueError("No se encontró TIR razonable: revisar inputs")
+    return tasa
 ```
+
+Fijate el detalle de diseño en `tir()`: **reutiliza `valuacion_bono()`** en lugar de repetir el bucle de descuento. Las funciones de una librería se apoyan unas en otras — si mañana mejorás la valuación, la TIR mejora gratis. Notá también el "techo de seguridad": una función de librería no puede colgarse en un bucle infinito porque alguien le pasó un precio absurdo; falla rápido y con un mensaje claro.
 
 ## Usando la Librería
 
@@ -418,15 +497,29 @@ def valor_presente_neto(flujos, tasa):
 #| label: uso-libreria
 # === Uso de las funciones ===
 
-# Ejemplo 1: valor futuro
+# 1. Valor futuro de una colocación
 vf = valor_futuro(100_000, 0.08, 3)
 print(f"Valor futuro: ${vf:,.2f}")
 
-# Ejemplo 2: VPN de un proyecto
+# 2. VPN de un proyecto de inversión
 flujos = [-1000, 400, 400, 400]
 vpn = valor_presente_neto(flujos, 0.10)
 print(f"VPN: ${vpn:,.2f}")
+
+# 3. Conversión de tasas: TNA 48% con capitalización mensual → TEA
+tea = conversion_tasas(0.48, 12)
+print(f"TNA 48% mensual → TEA: {tea:.2%}")
+
+# 4. Valuación del bono del Capítulo 2, ahora en una línea
+precio = valuacion_bono(1000, 0.08, 0.10, 5)
+print(f"Precio del bono: ${precio:,.2f}")
+
+# 5. Y su TIR comprándolo a $950
+rendimiento = tir(1000, 0.08, 5, 950)
+print(f"TIR al precio de $950: {rendimiento:.2%}")
 ```
+
+Compará el punto 4 con las ~10 líneas de bucle que necesitaste en el Capítulo 2: la misma lógica, pero ahora **valuar un bono es una línea** — y con validación de inputs incluida. Ese salto de "código que escribo cada vez" a "herramienta que invoco" es exactamente lo que este capítulo vino a enseñar. En el próximo capítulo estas funciones van a dar su paso final: convertirse en *métodos* de una clase `Bono`.
 
 ---
 
@@ -459,23 +552,35 @@ precio_b = valuacion_bono(1000, 0.06, 0.08, 3)
 
 ---
 
-<!--
+# Errores comunes
+
+::: {.callout-warning title="Trampas frecuentes"}
+- **Argumento por defecto mutable**: `def agregar(flujo, lista=[])` comparte la MISMA lista entre todas las llamadas — los flujos de un bono aparecen en otro. El idioma correcto: `def agregar(flujo, lista=None)` y crear la lista adentro (`if lista is None: lista = []`).
+- **Olvidar el `return`**: una función que calcula pero no retorna devuelve `None` silenciosamente; el error explota recién más adelante ("unsupported operand type NoneType"). Si la función produce un valor, terminá con `return`.
+- **Capturar `Exception` a ciegas**: `except Exception: pass` esconde *todos* los errores, incluidos los bugs que necesitás ver. Capturá el error específico que esperás (`except ValueError:`) y dejá que el resto explote.
+- **Modificar los argumentos recibidos**: si tu función hace `flujos.append(...)` sobre la lista que le pasaron, el llamador ve su lista alterada sin saberlo. Trabajá sobre una copia (`flujos = list(flujos)`) o no mutes.
+- **Validar tarde (o nunca)**: validar los inputs al inicio de la función (como hace `valuacion_bono`) da errores claros y cercanos a la causa; sin validación, el error aparece diez llamadas más adentro con un mensaje incomprensible.
+:::
+
+---
+
 # Ejercicios Propuestos
 
 ::: {.callout-important title="Ejercicios"}
 1. **Función de amortización francesa**: Crear una función `cuota_francesa(capital, tasa, periodos)` que calcule la cuota fija de un préstamo sistema francés. Validar que los inputs sean positivos.
 
-2. **Tabla de sensibilidad**: Usar la función `valuacion_bono()` para crear una tabla que muestre el precio del bono para distintas combinaciones de yield (filas) y maturity (columnas).
+2. **Tabla de sensibilidad**: Usar la función `valuacion_bono()` para crear una tabla que muestre el precio del bono para distintas combinaciones de yield (filas) y maturity (columnas). *Pista*: dos bucles anidados.
 
 3. **Extender la librería**: Agregar una función `duration_macaulay(flujos, tasa)` que calcule la duración de Macaulay:
 $$D = \frac{\sum_{t=1}^{n} t \cdot \frac{CF_t}{(1+r)^t}}{P}$$
 
 4. **Manejo de errores robusto**: Crear una función que lea datos de un bono ingresados por el usuario (`input()`) y maneje todos los posibles errores: texto en lugar de números, tasas fuera de rango, plazos negativos, etc.
+
+5. **TIR mejorada**: la función `tir()` de la librería usa paso fijo. Reescribila con refinamiento progresivo (cuando cruza el precio, retrocede y prueba con paso 10 veces menor) y compará la precisión con la versión original.
 :::
 
 ---
 
--->
 # Referencias
 
 * Lutz, M. (2013). *Learning Python*. O'Reilly Media.
