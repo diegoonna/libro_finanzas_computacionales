@@ -5,6 +5,8 @@ abstract: |
   Introducimos las herramientas fundamentales de medición de riesgo: VaR paramétrico 
   e histórico, Expected Shortfall (CVaR), volatilidad EWMA, y tests de normalidad
   para entender las limitaciones de los modelos gaussianos.
+nocite: |
+  @jorion2006, @hull2018risk, @mcneil2015
 ---
 
 # Introducción
@@ -388,6 +390,40 @@ print(resumen.to_string(index=False))
 
 ---
 
+# Con datos reales
+
+El capítulo entero descansó sobre retornos simulados de una normal — ideal para aprender los métodos, tramposo para juzgarlos. El veredicto final se lo damos a los datos: cinco años del ETF SPY (el S&P 500), del dataset del libro (`datos/precios.csv`, ver @sec-datos-financieros).
+
+```{python}
+#| label: var-datos-reales
+precios = pd.read_csv("../datos/precios.csv", index_col="Date", parse_dates=True)
+r_spy = precios["SPY"].pct_change().dropna().values
+
+mu_spy, sigma_spy = r_spy.mean(), r_spy.std()
+p5, p1 = np.percentile(r_spy, 5), np.percentile(r_spy, 1)
+
+print(f"SPY: {len(r_spy)} ruedas ({precios.index[0]:%Y-%m} a {precios.index[-1]:%Y-%m})\n")
+print(f"{'':24}{'95%':>12}{'99%':>12}")
+print(f"{'VaR paramétrico':<24}"
+      f"${-(mu_spy + stats.norm.ppf(0.05) * sigma_spy) * valor_portafolio:>11,.0f}"
+      f"${-(mu_spy + stats.norm.ppf(0.01) * sigma_spy) * valor_portafolio:>11,.0f}")
+print(f"{'VaR histórico':<24}"
+      f"${-p5 * valor_portafolio:>11,.0f}"
+      f"${-p1 * valor_portafolio:>11,.0f}")
+print(f"{'ES histórico':<24}"
+      f"${-r_spy[r_spy < p5].mean() * valor_portafolio:>11,.0f}"
+      f"${-r_spy[r_spy < p1].mean() * valor_portafolio:>11,.0f}")
+
+jb_r, jb_p = jarque_bera(r_spy)
+print(f"\nJarque-Bera: estadístico {jb_r:,.0f}, p-value {jb_p:.2e}")
+print(f"Exceso de curtosis: {kurtosis(r_spy, fisher=True):+.2f} | "
+      f"Asimetría: {skew(r_spy):+.2f}")
+```
+
+Todo lo que el capítulo anticipó, junto y en un solo resultado. Al 95%, el paramétrico y el histórico casi coinciden — a esa profundidad de la cola, la normal todavía zafa. Al **99% se separan**: los peores días reales del S&P son peores de lo que la campana admite, y el histórico lo reporta. El ES amplifica el mensaje (la cola no solo empieza antes: es más profunda). Y el test de Jarque-Bera, que con los datos simulados no encontraba nada, acá **rechaza la normalidad sin despeinarse** — el exceso de curtosis positivo es la firma de las colas pesadas. Con datos reales, el VaR paramétrico normal es la métrica que menos deberías creerle justo donde más la necesitás.
+
+---
+
 # Errores comunes
 
 ::: {.callout-warning title="Trampas frecuentes"}
@@ -412,10 +448,27 @@ print(resumen.to_string(index=False))
 4. **Stress testing**: Calcular el VaR condicional asumiendo que la volatilidad se duplica (escenario de estrés). ¿Cuánto aumenta el VaR?
 :::
 
+
+Podés resolver estos ejercicios acá mismo: la celda ejecuta Python **en tu navegador**, sin instalar nada (la primera ejecución tarda unos segundos mientras carga el entorno; los paquetes que importes se instalan solos).
+
+```{pyodide-python}
+#| label: practica-navegador
+import numpy as np
+from scipy import stats
+
+# Para usar el dataset real del libro (requiere conexión):
+# import pandas as pd
+# from pyodide.http import open_url
+# url = "https://diegoonna.github.io/libro_finanzas_computacionales/datos/precios.csv"
+# precios = pd.read_csv(open_url(url), index_col="Date", parse_dates=True)
+
+# Tu solución acá...
+```
+
 ---
 
 # Referencias
 
-* Jorion, P. (2006). *Value at Risk*. McGraw-Hill.
-* Hull, J. (2018). *Risk Management and Financial Institutions*. Wiley.
-* McNeil, A. et al. (2015). *Quantitative Risk Management*. Princeton University Press.
+
+::: {#refs}
+:::

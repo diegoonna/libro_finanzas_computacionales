@@ -3,6 +3,7 @@ project:
   output-dir: docs
   resources:
     - .nojekyll
+    - datos/precios.csv
 
 language:
   es:
@@ -27,6 +28,7 @@ book:
   favicon: favicon.png
   reader-mode: true
   search: true
+  downloads: [pdf]
   repo-url: https://github.com/diegoonna/libro_finanzas_computacionales
   repo-actions: [edit, issue]
 
@@ -97,6 +99,19 @@ format:
     fig-responsive: true
     smooth-scroll: true
     link-external-newwindow: true
+  pdf:
+    documentclass: scrreprt
+    lang: es
+    toc: true
+    toc-depth: 2
+    number-sections: true
+    colorlinks: true
+    fig-width: 7
+    fig-height: 4.5
+    code-overflow: wrap
+    keep-tex: false
+
+bibliography: references.bib
 
 crossref:
   fig-title: "Figura"
