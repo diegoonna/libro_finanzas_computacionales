@@ -1,0 +1,2009 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="es" xml:lang="es"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.8.26">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>5&nbsp; Capítulo 5: NumPy y Cálculo Vectorizado – Finanzas Computacionales</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+  margin-bottom: 0em;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<link href="../unidad1/cap06_series_tiempo_pandas.html" rel="next">
+<link href="../unidad1/cap04_poo.html" rel="prev">
+<link href="../favicon.png" rel="icon" type="image/png">
+<script src="../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../site_libs/quarto-html/axe/axe-check.js" type="module"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-33f28b034f783b36ff4b46fdeb362ebb.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap-1be2503256a26a2aaeec4d7ff7c841df.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No se han encontrado resultados",
+    "search-matching-documents-text": "documentos encontrados",
+    "search-copy-link-title": "Copiar el enlace en la búsqueda",
+    "search-hide-matches-text": "Ocultar resultados adicionales",
+    "search-more-match-text": "resultado adicional en este documento",
+    "search-more-matches-text": "resultados adicionales en este documento",
+    "search-clear-button-title": "Borrar",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancelar",
+    "search-submit-button-title": "Enviar",
+    "search-label": "Buscar"
+  }
+}</script>
+<style>html{ scroll-behavior: smooth; }</style>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+</head>
+
+<body class="nav-sidebar docked quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Alternar barra lateral" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../unidad1/_intro_mod1.html">Módulo 1: Fundamentos y Renta Fija</a></li><li class="breadcrumb-item"><a href="../unidad1/cap05_numpy.html"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Capítulo 5: NumPy y Cálculo Vectorizado</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Alternar barra lateral" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Buscar" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation docked overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="../">Finanzas Computacionales</a> 
+        <div class="sidebar-tools-main tools-wide">
+    <a href="https://github.com/diegoonna/libro_finanzas_computacionales" title="Source Code" class="quarto-navigation-tool px-1" aria-label="Source Code"><i class="bi bi-github"></i></a>
+    <a href="../Finanzas-Computacionales.pdf" title="Download PDF" class="quarto-navigation-tool px-1" aria-label="Download PDF"><i class="bi bi-file-pdf"></i></a>
+  <a href="" class="quarto-reader-toggle quarto-navigation-tool px-1" onclick="window.quartoToggleReader(); return false;" title="Alternar modo lector">
+  <div class="quarto-reader-toggle-btn">
+  <i class="bi"></i>
+  </div>
+</a>
+</div>
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Buscar"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Bienvenida</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
+ <span class="menu-text">Módulo 1: Fundamentos y Renta Fija</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Alternar sección">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../unidad1/_intro_mod1.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Módulo 1: Fundamentos y Renta Fija</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../unidad1/cap01_pensamiento_computacional.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Capítulo 1: Pensamiento Computacional en Finanzas</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../unidad1/cap02_iteraciones_estructuras.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Capítulo 2: Iteraciones y Estructuras de Datos Nativas</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../unidad1/cap03_funciones_modularizacion.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Capítulo 3: Funciones, Excepciones y módulos</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../unidad1/cap04_poo.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Capítulo 4: Programación Orientada a Objetos (POO)</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../unidad1/cap05_numpy.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Capítulo 5: NumPy y Cálculo Vectorizado</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../unidad1/cap06_series_tiempo_pandas.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Capítulo 6: Series de Tiempo y Análisis de Datos con Pandas</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="false">
+ <span class="menu-text">Módulo 2: Teoría de Portafolios y Optimización</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="false" aria-label="Alternar sección">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../unidad2/_intro_mod2.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Módulo 2: Teoría de Portafolios y Optimización</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../unidad2/cap07_estadistica_optimizacion.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Capítulo 7: Estadística Descriptiva y Optimización Matemática</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../unidad2/cap08_markowitz.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Capítulo 8: Teoría Moderna de Portafolios (Markowitz)</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../unidad2/cap09_hrp.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Capítulo 9: Hierarchical Risk Parity (HRP)</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../unidad2/cap10_black_litterman.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Capítulo 10: El Modelo de Black-Litterman</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="false">
+ <span class="menu-text">Módulo 3: Riesgo, Simulación y Econometría</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="false" aria-label="Alternar sección">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../unidad3/_intro_mod3.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Módulo 3: Riesgo, Simulación y Econometría</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../unidad3/cap11_var_expected_shortfall.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Capítulo 11: Valor en Riesgo (VaR) y Expected Shortfall</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../unidad3/cap12_riesgo_regulacion.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Capítulo 12: Riesgo y Regulación</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../unidad3/cap13_monte_carlo.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Capítulo 13: Simulación de Monte Carlo</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../unidad3/cap14_procesos_estocasticos_activos.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Capítulo 14: Procesos Estocásticos del Precio de un Activo</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../unidad3/cap15_econometria_modelos_lineales.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Capítulo 15: Econometría y Modelos Lineales en Finanzas</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../unidad3/cap16_series_temporales_macro.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Capítulo 16: Series Temporales — ARIMA y VAR</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../unidad3/cap17_backtesting.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Capítulo 17: Backtesting de Estrategias</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="false">
+ <span class="menu-text">Módulo 4: Derivados y Volatilidad</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="false" aria-label="Alternar sección">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../unidad4/_intro_mod4.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Módulo 4: Derivados y Volatilidad</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../unidad4/cap18_derivados_vol_implicita.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Capítulo 18: Valuación de Opciones y Volatilidad Implícita</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../unidad4/cap19_delta_hedging.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Capítulo 19: Simulación de Cobertura Dinámica (Delta Hedging)</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../unidad4/cap20_volatilidad_estocastica.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Capítulo 20: Modelos de Volatilidad Estocástica</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="false">
+ <span class="menu-text">Appendices</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="false" aria-label="Alternar sección">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../apendices/python_intro.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">A</span>&nbsp; <span class="chapter-title">Introducción a Python y Puesta en Marcha</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../apendices/datos_financieros.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">B</span>&nbsp; <span class="chapter-title">Obtención de Datos Financieros</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">En esta página</h2>
+   
+  <ul>
+  <li><a href="#introducción" id="toc-introducción" class="nav-link active" data-scroll-target="#introducción"><span class="header-section-number">6</span> Introducción</a></li>
+  <li><a href="#el-problema-las-listas-no-fueron-hechas-para-calcular" id="toc-el-problema-las-listas-no-fueron-hechas-para-calcular" class="nav-link" data-scroll-target="#el-problema-las-listas-no-fueron-hechas-para-calcular"><span class="header-section-number">7</span> El problema: las listas no fueron hechas para calcular</a></li>
+  <li><a href="#el-ndarray-qué-es-y-por-qué-es-distinto" id="toc-el-ndarray-qué-es-y-por-qué-es-distinto" class="nav-link" data-scroll-target="#el-ndarray-qué-es-y-por-qué-es-distinto"><span class="header-section-number">8</span> El <code>ndarray</code>: qué es y por qué es distinto</a>
+  <ul class="collapse">
+  <li><a href="#crear-arrays" id="toc-crear-arrays" class="nav-link" data-scroll-target="#crear-arrays"><span class="header-section-number">8.1</span> Crear arrays</a></li>
+  <li><a href="#arrays-de-varias-dimensiones" id="toc-arrays-de-varias-dimensiones" class="nav-link" data-scroll-target="#arrays-de-varias-dimensiones"><span class="header-section-number">8.2</span> Arrays de varias dimensiones</a></li>
+  </ul></li>
+  <li><a href="#números-aleatorios-el-generador-moderno" id="toc-números-aleatorios-el-generador-moderno" class="nav-link" data-scroll-target="#números-aleatorios-el-generador-moderno"><span class="header-section-number">9</span> Números aleatorios: el generador moderno</a></li>
+  <li><a href="#indexado-slicing-y-máscaras-booleanas" id="toc-indexado-slicing-y-máscaras-booleanas" class="nav-link" data-scroll-target="#indexado-slicing-y-máscaras-booleanas"><span class="header-section-number">10</span> Indexado, slicing y máscaras booleanas</a>
+  <ul class="collapse">
+  <li><a href="#slicing-básico" id="toc-slicing-básico" class="nav-link" data-scroll-target="#slicing-básico"><span class="header-section-number">10.1</span> Slicing básico</a></li>
+  <li><a href="#máscaras-booleanas-filtrar-por-condición" id="toc-máscaras-booleanas-filtrar-por-condición" class="nav-link" data-scroll-target="#máscaras-booleanas-filtrar-por-condición"><span class="header-section-number">10.2</span> Máscaras booleanas: filtrar por condición</a></li>
+  </ul></li>
+  <li><a href="#vectorización-pensar-en-vectores-no-en-bucles" id="toc-vectorización-pensar-en-vectores-no-en-bucles" class="nav-link" data-scroll-target="#vectorización-pensar-en-vectores-no-en-bucles"><span class="header-section-number">11</span> Vectorización: pensar en vectores, no en bucles</a>
+  <ul class="collapse">
+  <li><a href="#cuánto-más-rápido-es-en-serio" id="toc-cuánto-más-rápido-es-en-serio" class="nav-link" data-scroll-target="#cuánto-más-rápido-es-en-serio"><span class="header-section-number">11.1</span> ¿Cuánto más rápido es, en serio?</a></li>
+  </ul></li>
+  <li><a href="#reducciones-resumir-un-array" id="toc-reducciones-resumir-un-array" class="nav-link" data-scroll-target="#reducciones-resumir-un-array"><span class="header-section-number">12</span> Reducciones: resumir un array</a>
+  <ul class="collapse">
+  <li><a href="#el-parámetro-axis-el-concepto-que-más-confunde-y-más-importa" id="toc-el-parámetro-axis-el-concepto-que-más-confunde-y-más-importa" class="nav-link" data-scroll-target="#el-parámetro-axis-el-concepto-que-más-confunde-y-más-importa"><span class="header-section-number">12.1</span> El parámetro <code>axis</code>: el concepto que más confunde (y más importa)</a></li>
+  </ul></li>
+  <li><a href="#broadcasting-operar-arrays-de-distinta-forma" id="toc-broadcasting-operar-arrays-de-distinta-forma" class="nav-link" data-scroll-target="#broadcasting-operar-arrays-de-distinta-forma"><span class="header-section-number">13</span> Broadcasting: operar arrays de distinta forma</a></li>
+  <li><a href="#álgebra-lineal-la-antesala-de-markowitz" id="toc-álgebra-lineal-la-antesala-de-markowitz" class="nav-link" data-scroll-target="#álgebra-lineal-la-antesala-de-markowitz"><span class="header-section-number">14</span> Álgebra lineal: la antesala de Markowitz</a></li>
+  <li><a href="#de-numpy-a-pandas" id="toc-de-numpy-a-pandas" class="nav-link" data-scroll-target="#de-numpy-a-pandas"><span class="header-section-number">15</span> De NumPy a Pandas</a></li>
+  <li><a href="#errores-comunes" id="toc-errores-comunes" class="nav-link" data-scroll-target="#errores-comunes"><span class="header-section-number">16</span> Errores comunes</a></li>
+  <li><a href="#ejercicios-propuestos" id="toc-ejercicios-propuestos" class="nav-link" data-scroll-target="#ejercicios-propuestos"><span class="header-section-number">17</span> Ejercicios Propuestos</a></li>
+  <li><a href="#referencias" id="toc-referencias" class="nav-link" data-scroll-target="#referencias"><span class="header-section-number">18</span> Referencias</a></li>
+  </ul>
+<div class="toc-actions"><ul><li><a href="https://github.com/diegoonna/libro_finanzas_computacionales/edit/main/unidad1/cap05_numpy.qmd" class="toc-action"><i class="bi bi-github"></i>Editar esta página</a></li><li><a href="https://github.com/diegoonna/libro_finanzas_computacionales/issues/new" class="toc-action"><i class="bi empty"></i>Informar sobre problema</a></li></ul></div></nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../unidad1/_intro_mod1.html">Módulo 1: Fundamentos y Renta Fija</a></li><li class="breadcrumb-item"><a href="../unidad1/cap05_numpy.html"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Capítulo 5: NumPy y Cálculo Vectorizado</span></a></li></ol></nav>
+<div class="quarto-title">
+<div class="quarto-title-block"><div><h1 class="title"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Capítulo 5: NumPy y Cálculo Vectorizado</span></h1><button type="button" class="btn code-tools-button" id="quarto-code-tools-source"><i class="bi"></i> Código</button></div></div>
+<p class="subtitle lead">El motor numérico de las finanzas cuantitativas en Python</p>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+<div>
+  <div class="abstract">
+    <div class="block-title">Resumen</div>
+    <p>NumPy es la librería sobre la que se construye todo el stack científico de Python (Pandas, SciPy, scikit-learn). En este capítulo entendemos por qué el <code>ndarray</code> reemplaza a las listas para trabajar con números, aprendemos a vectorizar cálculos para eliminar bucles lentos, dominamos el broadcasting y damos nuestros primeros pasos en álgebra lineal, que será la columna vertebral de la optimización de portafolios del Módulo 2.</p>
+  </div>
+</div>
+
+
+</header>
+
+
+<section id="introducción" class="level1" data-number="6">
+<h1 data-number="6"><span class="header-section-number">6</span> Introducción</h1>
+<p>Hasta ahora venimos representando datos financieros con <strong>listas</strong> y <strong>diccionarios</strong> de Python. Nos sirvieron para aprender a programar, pero tienen un problema serio: son lentas y verbosas cuando hay que hacer cuentas sobre miles de números. Y en finanzas, <em>siempre</em> hay miles de números: años de cotizaciones diarias, paneles de cientos de activos, millones de trayectorias en una simulación.</p>
+<p>Acá entra <strong>NumPy</strong> (de <em>Numerical Python</em>). Es la librería que le da a Python la capacidad de hacer cálculo numérico a la velocidad de un lenguaje compilado como C, pero con la comodidad de escribir Python. No es una librería más: es la base sobre la que están construidos Pandas, SciPy, scikit-learn y prácticamente todo lo que vas a usar de acá en adelante. Cuando en el Capítulo 6 hagas <code>pd.DataFrame</code>, por debajo hay arrays de NumPy; cuando en el Capítulo 8 optimices un portafolio de Markowitz, vas a estar multiplicando matrices de NumPy.</p>
+<div class="callout callout-style-simple callout-tip callout-titled" title="La idea de fondo">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>La idea de fondo
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Programar con NumPy es cambiar el chip: en vez de pensar <em>“recorré la lista elemento por elemento y hacé la cuenta”</em>, pensás <em>“aplicá esta operación a todo el vector de una”</em>. Eso se llama <strong>vectorización</strong>, y es la habilidad central de este capítulo.</p>
+</div>
+</div>
+<div id="setup" class="cell" data-execution_count="1">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>Por convención universal, NumPy se importa como <code>np</code>. Vas a ver ese <code>np.</code> en todo el libro (y en todo el ecosistema de Python científico), así que conviene acostumbrarse desde ya.</p>
+<hr>
+</section>
+<section id="el-problema-las-listas-no-fueron-hechas-para-calcular" class="level1" data-number="7">
+<h1 data-number="7"><span class="header-section-number">7</span> El problema: las listas no fueron hechas para calcular</h1>
+<p>Imaginá que tenés los precios de cierre de una acción durante cinco días y querés calcular el retorno simple diario, <span class="math inline">\(R_t = P_t / P_{t-1} - 1\)</span>. Con listas puras, tenés que escribir un bucle:</p>
+<div id="listas-loop" class="cell" data-execution_count="2">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>precios <span class="op">=</span> [<span class="fl">100.0</span>, <span class="fl">102.5</span>, <span class="fl">101.0</span>, <span class="fl">103.5</span>, <span class="fl">105.0</span>]</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>retornos <span class="op">=</span> []</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">1</span>, <span class="bu">len</span>(precios)):</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>    retornos.append(precios[i] <span class="op">/</span> precios[i<span class="op">-</span><span class="dv">1</span>] <span class="op">-</span> <span class="dv">1</span>)</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(retornos)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[0.02499999999999991, -0.014634146341463428, 0.024752475247524774, 0.01449275362318847]</code></pre>
+</div>
+</div>
+<p>Funciona, pero fijate todo lo que tuviste que hacer: crear una lista vacía, manejar índices, acordarte de arrancar en <code>1</code>. Y esto es para una sola acción y cinco días. Con NumPy, el mismo cálculo es una línea que se lee casi como la fórmula matemática:</p>
+<div id="numpy-vectorizado" class="cell" data-execution_count="3">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>precios <span class="op">=</span> np.array([<span class="fl">100.0</span>, <span class="fl">102.5</span>, <span class="fl">101.0</span>, <span class="fl">103.5</span>, <span class="fl">105.0</span>])</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>retornos <span class="op">=</span> precios[<span class="dv">1</span>:] <span class="op">/</span> precios[:<span class="op">-</span><span class="dv">1</span>] <span class="op">-</span> <span class="dv">1</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(retornos)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[ 0.025      -0.01463415  0.02475248  0.01449275]</code></pre>
+</div>
+</div>
+<p><code>precios[1:]</code> es “todos los precios desde el segundo” (<span class="math inline">\(P_t\)</span>) y <code>precios[:-1]</code> es “todos menos el último” (<span class="math inline">\(P_{t-1}\)</span>). NumPy divide los dos vectores <strong>elemento a elemento</strong> automáticamente. Sin bucles, sin índices, sin listas vacías. Esto no es solo más corto: sobre datos reales es <strong>decenas o cientos de veces más rápido</strong>, porque la operación corre en código C optimizado en lugar de un bucle interpretado de Python.</p>
+<hr>
+</section>
+<section id="el-ndarray-qué-es-y-por-qué-es-distinto" class="level1" data-number="8">
+<h1 data-number="8"><span class="header-section-number">8</span> El <code>ndarray</code>: qué es y por qué es distinto</h1>
+<p>El objeto central de NumPy es el <strong>array</strong> (<code>ndarray</code>, de <em>N-dimensional array</em>). A primera vista se parece a una lista, pero tiene tres diferencias que lo cambian todo:</p>
+<ol type="1">
+<li><strong>Es homogéneo</strong>: todos los elementos son del mismo tipo (todos <code>float64</code>, todos <code>int</code>, etc.). Una lista de Python puede mezclar números, strings y objetos; un array no. Esa restricción es justamente lo que lo hace rápido.</li>
+<li><strong>Es contiguo en memoria</strong>: los datos se guardan en un bloque compacto y ordenado de RAM, no desperdigados con punteros como en una lista. El procesador puede recorrerlos de corrido.</li>
+<li><strong>Opera vectorizado</strong>: las operaciones aritméticas se aplican a todo el array de una sola vez, apoyándose en instrucciones de bajo nivel del procesador.</li>
+</ol>
+<div id="array-basico" class="cell" data-execution_count="4">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>a <span class="op">=</span> np.array([<span class="dv">10</span>, <span class="dv">20</span>, <span class="dv">30</span>, <span class="dv">40</span>])</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Array:   "</span>, a)</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Tipo:    "</span>, <span class="bu">type</span>(a))</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"dtype:   "</span>, a.dtype)     <span class="co"># tipo de los elementos</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"shape:   "</span>, a.shape)     <span class="co"># forma (dimensiones)</span></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"ndim:    "</span>, a.ndim)      <span class="co"># cantidad de dimensiones</span></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"size:    "</span>, a.size)      <span class="co"># cantidad total de elementos</span></span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Array:    [10 20 30 40]
+Tipo:     &lt;class 'numpy.ndarray'&gt;
+dtype:    int64
+shape:    (4,)
+ndim:     1
+size:     4</code></pre>
+</div>
+</div>
+<p>El <strong><code>dtype</code></strong> (data type) es un concepto clave: le dice a NumPy exactamente cuántos bytes ocupa cada número y cómo interpretarlos. En finanzas trabajamos casi siempre con <code>float64</code> (números reales de doble precisión), que es el default para decimales.</p>
+<div class="callout callout-style-simple callout-note callout-titled" title="shape: la forma manda">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Nota</span>shape: la forma manda
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>El atributo <code>.shape</code> es una tupla que describe las dimensiones. Un vector de 4 elementos tiene shape <code>(4,)</code>; una matriz de 3 filas por 2 columnas tiene shape <code>(3, 2)</code>. Cuando algo falla en NumPy, el 90% de las veces es un problema de shapes que no encajan. Acostumbrate a mirar <code>.shape</code> como primer paso de debugging.</p>
+</div>
+</div>
+<section id="crear-arrays" class="level2" data-number="8.1">
+<h2 data-number="8.1" class="anchored" data-anchor-id="crear-arrays"><span class="header-section-number">8.1</span> Crear arrays</h2>
+<p>Rara vez vas a escribir los números a mano. NumPy trae funciones para generar los arrays más comunes:</p>
+<div id="creacion" class="cell" data-execution_count="5">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Desde una lista</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>np.array([<span class="fl">1.0</span>, <span class="fl">2.0</span>, <span class="fl">3.0</span>])</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Rango de valores (como range, pero array): inicio, fin (excluido), paso</span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>plazos <span class="op">=</span> np.arange(<span class="dv">0</span>, <span class="dv">12</span>, <span class="dv">3</span>)          <span class="co"># [0, 3, 6, 9] meses</span></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"arange:  "</span>, plazos)</span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a><span class="co"># N valores equiespaciados entre dos extremos (útil para grillas)</span></span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>grilla <span class="op">=</span> np.linspace(<span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">5</span>)         <span class="co"># 5 puntos entre 0 y 1</span></span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"linspace:"</span>, grilla)</span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a><span class="co"># Arrays de ceros y unos (útiles para inicializar acumuladores)</span></span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"zeros:   "</span>, np.zeros(<span class="dv">4</span>))</span>
+<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"ones:    "</span>, np.ones(<span class="dv">3</span>))</span>
+<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a><span class="co"># Matriz identidad (aparecerá en álgebra de portafolios)</span></span>
+<span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"identidad:</span><span class="ch">\n</span><span class="st">"</span>, np.eye(<span class="dv">3</span>))</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>arange:   [0 3 6 9]
+linspace: [0.   0.25 0.5  0.75 1.  ]
+zeros:    [0. 0. 0. 0.]
+ones:     [1. 1. 1.]
+identidad:
+ [[1. 0. 0.]
+ [0. 1. 0.]
+ [0. 0. 1.]]</code></pre>
+</div>
+</div>
+</section>
+<section id="arrays-de-varias-dimensiones" class="level2" data-number="8.2">
+<h2 data-number="8.2" class="anchored" data-anchor-id="arrays-de-varias-dimensiones"><span class="header-section-number">8.2</span> Arrays de varias dimensiones</h2>
+<p>Un vector es 1D; una <strong>matriz</strong> es 2D. En finanzas la matriz más importante es el <strong>panel de retornos</strong>: filas = fechas, columnas = activos.</p>
+<div id="matriz" class="cell" data-execution_count="6">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Retornos mensuales de 3 activos durante 4 meses (4 filas x 3 columnas)</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>R <span class="op">=</span> np.array([</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>    [<span class="fl">0.02</span>, <span class="op">-</span><span class="fl">0.01</span>,  <span class="fl">0.03</span>],</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>    [<span class="fl">0.01</span>,  <span class="fl">0.02</span>, <span class="op">-</span><span class="fl">0.02</span>],</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>    [<span class="op">-</span><span class="fl">0.03</span>, <span class="fl">0.01</span>,  <span class="fl">0.04</span>],</span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>    [<span class="fl">0.02</span>,  <span class="fl">0.00</span>,  <span class="fl">0.01</span>],</span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>])</span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Panel de retornos:</span><span class="ch">\n</span><span class="st">"</span>, R)</span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"</span><span class="ch">\n</span><span class="st">Shape:"</span>, R.shape, <span class="st">"→ 4 fechas, 3 activos"</span>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Panel de retornos:
+ [[ 0.02 -0.01  0.03]
+ [ 0.01  0.02 -0.02]
+ [-0.03  0.01  0.04]
+ [ 0.02  0.    0.01]]
+
+Shape: (4, 3) → 4 fechas, 3 activos</code></pre>
+</div>
+</div>
+<hr>
+</section>
+</section>
+<section id="números-aleatorios-el-generador-moderno" class="level1" data-number="9">
+<h1 data-number="9"><span class="header-section-number">9</span> Números aleatorios: el generador moderno</h1>
+<p>Buena parte de las finanzas computacionales consiste en simular escenarios, y para eso necesitamos números aleatorios. NumPy recomienda hoy usar un <strong>generador</strong> explícito, creado con <code>np.random.default_rng()</code>. Le pasamos una <strong>semilla</strong> (<code>seed</code>) para que los resultados sean reproducibles: la misma semilla da siempre los mismos “azares”, lo cual es fundamental para que tus ejemplos y los de tus compañeros coincidan.</p>
+<div id="random" class="cell" data-execution_count="7">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>rng <span class="op">=</span> np.random.default_rng(seed<span class="op">=</span><span class="dv">42</span>)</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="co"># 5 retornos diarios simulados: media 0.05%, desvío 1.5%</span></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>retornos_sim <span class="op">=</span> rng.normal(loc<span class="op">=</span><span class="fl">0.0005</span>, scale<span class="op">=</span><span class="fl">0.015</span>, size<span class="op">=</span><span class="dv">5</span>)</span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Retornos simulados:"</span>, retornos_sim)</span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Una matriz 3x3 de números uniformes entre 0 y 1</span></span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"</span><span class="ch">\n</span><span class="st">Uniformes:</span><span class="ch">\n</span><span class="st">"</span>, rng.random((<span class="dv">3</span>, <span class="dv">3</span>)))</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Retornos simulados: [ 0.00507076 -0.01509976  0.01175677  0.01460847 -0.02876553]
+
+Uniformes:
+ [[0.97562235 0.7611397  0.78606431]
+ [0.12811363 0.45038594 0.37079802]
+ [0.92676499 0.64386512 0.82276161]]</code></pre>
+</div>
+</div>
+<div class="callout callout-style-simple callout-warning callout-titled" title="Vas a ver `np.random.seed()` en código viejo">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Advertencia</span>Vas a ver <code>np.random.seed()</code> en código viejo
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Mucho código (y capítulos previos de versiones anteriores de este libro) usa el estilo antiguo <code>np.random.seed(42)</code> y <code>np.random.normal(...)</code>. Funciona, pero está considerado <em>legacy</em>. El estilo moderno con <code>default_rng()</code> es más robusto y es el que vas a encontrar en la documentación actual. Usá <code>rng.</code> de acá en adelante.</p>
+</div>
+</div>
+<hr>
+</section>
+<section id="indexado-slicing-y-máscaras-booleanas" class="level1" data-number="10">
+<h1 data-number="10"><span class="header-section-number">10</span> Indexado, slicing y máscaras booleanas</h1>
+<p>Acceder a partes de un array es donde NumPy se pone realmente potente.</p>
+<section id="slicing-básico" class="level2" data-number="10.1">
+<h2 data-number="10.1" class="anchored" data-anchor-id="slicing-básico"><span class="header-section-number">10.1</span> Slicing básico</h2>
+<p>Funciona como en las listas, con <code>[inicio:fin:paso]</code>, pero se extiende a varias dimensiones separando con comas: <code>matriz[filas, columnas]</code>.</p>
+<div id="slicing" class="cell" data-execution_count="8">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Usamos el panel R de antes</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Primera fila (retornos de la fecha 0):"</span>, R[<span class="dv">0</span>])</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Primera columna (activo 0 en el tiempo):"</span>, R[:, <span class="dv">0</span>])</span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Submatriz (2 primeras fechas, 2 primeros activos):</span><span class="ch">\n</span><span class="st">"</span>, R[:<span class="dv">2</span>, :<span class="dv">2</span>])</span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Último retorno del último activo:"</span>, R[<span class="op">-</span><span class="dv">1</span>, <span class="op">-</span><span class="dv">1</span>])</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Primera fila (retornos de la fecha 0): [ 0.02 -0.01  0.03]
+Primera columna (activo 0 en el tiempo): [ 0.02  0.01 -0.03  0.02]
+Submatriz (2 primeras fechas, 2 primeros activos):
+ [[ 0.02 -0.01]
+ [ 0.01  0.02]]
+Último retorno del último activo: 0.01</code></pre>
+</div>
+</div>
+<p>La coma es la clave: <code>R[:, 0]</code> significa “todas las filas, columna 0”. Poder pedir una columna entera de un panel sin bucles es exactamente lo que necesitamos para analizar un activo a lo largo del tiempo.</p>
+</section>
+<section id="máscaras-booleanas-filtrar-por-condición" class="level2" data-number="10.2">
+<h2 data-number="10.2" class="anchored" data-anchor-id="máscaras-booleanas-filtrar-por-condición"><span class="header-section-number">10.2</span> Máscaras booleanas: filtrar por condición</h2>
+<p>Esta es una de las herramientas más usadas en análisis financiero. Una comparación sobre un array devuelve un array de <code>True</code>/<code>False</code>, y podemos usar ese array como “filtro”:</p>
+<div id="mascaras" class="cell" data-execution_count="9">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>retornos_diarios <span class="op">=</span> np.array([<span class="fl">0.012</span>, <span class="op">-</span><span class="fl">0.008</span>, <span class="fl">0.003</span>, <span class="op">-</span><span class="fl">0.021</span>, <span class="fl">0.015</span>, <span class="op">-</span><span class="fl">0.004</span>])</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a><span class="co"># La comparación genera una máscara booleana</span></span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>mascara_perdidas <span class="op">=</span> retornos_diarios <span class="op">&lt;</span> <span class="dv">0</span></span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Máscara (días con pérdida):"</span>, mascara_perdidas)</span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Usamos la máscara para quedarnos solo con esos elementos</span></span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a>perdidas <span class="op">=</span> retornos_diarios[mascara_perdidas]</span>
+<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Retornos negativos:        "</span>, perdidas)</span>
+<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"</span><span class="ch">\n</span><span class="ss">Días con pérdida: </span><span class="sc">{</span>mascara_perdidas<span class="sc">.</span><span class="bu">sum</span>()<span class="sc">}</span><span class="ss"> de </span><span class="sc">{</span>retornos_diarios<span class="sc">.</span>size<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb16-12"><a href="#cb16-12" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Pérdida promedio: </span><span class="sc">{</span>perdidas<span class="sc">.</span>mean()<span class="sc">:.2%}</span><span class="ss">"</span>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Máscara (días con pérdida): [False  True False  True False  True]
+Retornos negativos:         [-0.008 -0.021 -0.004]
+
+Días con pérdida: 3 de 6
+Pérdida promedio: -1.10%</code></pre>
+</div>
+</div>
+<p>Fijate el truco de <code>mascara_perdidas.sum()</code>: como <code>True</code> vale 1 y <code>False</code> vale 0, sumar una máscara booleana <strong>cuenta cuántas condiciones se cumplen</strong>. Es un patrón que vas a repetir mil veces (¿cuántos días superaron el VaR?, ¿cuántos activos rindieron más que el mercado?, etc.).</p>
+<hr>
+</section>
+</section>
+<section id="vectorización-pensar-en-vectores-no-en-bucles" class="level1" data-number="11">
+<h1 data-number="11"><span class="header-section-number">11</span> Vectorización: pensar en vectores, no en bucles</h1>
+<p>Ya vimos la idea con los retornos. Generalicémosla. Las operaciones aritméticas (<code>+</code>, <code>-</code>, <code>*</code>, <code>/</code>, <code>**</code>) y las funciones de NumPy (<code>np.log</code>, <code>np.exp</code>, <code>np.sqrt</code>…) se aplican <strong>elemento a elemento</strong> sobre todo el array.</p>
+<div id="vectorizacion" class="cell" data-execution_count="10">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>precios <span class="op">=</span> np.array([<span class="fl">100.0</span>, <span class="fl">102.5</span>, <span class="fl">101.0</span>, <span class="fl">103.5</span>, <span class="fl">105.0</span>])</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Retorno logarítmico: r_t = ln(P_t / P_{t-1}), en una línea</span></span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>ret_log <span class="op">=</span> np.log(precios[<span class="dv">1</span>:] <span class="op">/</span> precios[:<span class="op">-</span><span class="dv">1</span>])</span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Retornos log:"</span>, ret_log)</span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Convertir un vector entero de tasas anuales a mensuales, todo de una</span></span>
+<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a>tasas_anuales <span class="op">=</span> np.array([<span class="fl">0.40</span>, <span class="fl">0.35</span>, <span class="fl">0.50</span>, <span class="fl">0.45</span>])</span>
+<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a>tasas_mensuales <span class="op">=</span> (<span class="dv">1</span> <span class="op">+</span> tasas_anuales) <span class="op">**</span> (<span class="dv">1</span><span class="op">/</span><span class="dv">12</span>) <span class="op">-</span> <span class="dv">1</span></span>
+<span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Tasas mensuales equivalentes:"</span>, np.<span class="bu">round</span>(tasas_mensuales, <span class="dv">4</span>))</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Retornos log: [ 0.02469261 -0.01474228  0.0244511   0.01438874]
+Tasas mensuales equivalentes: [0.0284 0.0253 0.0344 0.0314]</code></pre>
+</div>
+</div>
+<div class="callout callout-style-simple callout-tip callout-titled" title="La regla de oro">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>La regla de oro
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Si te encontrás escribiendo un <code>for</code> que recorre un array para hacer una cuenta en cada elemento, casi siempre hay una versión vectorizada más corta y mucho más rápida. Antes de escribir el bucle, preguntate: <em>“¿puedo aplicarle esto al array entero?”</em></p>
+</div>
+</div>
+<section id="cuánto-más-rápido-es-en-serio" class="level2" data-number="11.1">
+<h2 data-number="11.1" class="anchored" data-anchor-id="cuánto-más-rápido-es-en-serio"><span class="header-section-number">11.1</span> ¿Cuánto más rápido es, en serio?</h2>
+<p>No es una diferencia cosmética. Comparemos sumar el cuadrado de un millón de números con un bucle de Python contra NumPy:</p>
+<div id="benchmark" class="cell" data-execution_count="11">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> time</span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>datos <span class="op">=</span> rng.normal(size<span class="op">=</span><span class="dv">1_000_000</span>)</span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Versión con bucle Python</span></span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a>t0 <span class="op">=</span> time.perf_counter()</span>
+<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a>suma <span class="op">=</span> <span class="fl">0.0</span></span>
+<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> x <span class="kw">in</span> datos:</span>
+<span id="cb20-9"><a href="#cb20-9" aria-hidden="true" tabindex="-1"></a>    suma <span class="op">+=</span> x<span class="op">**</span><span class="dv">2</span></span>
+<span id="cb20-10"><a href="#cb20-10" aria-hidden="true" tabindex="-1"></a>t_bucle <span class="op">=</span> time.perf_counter() <span class="op">-</span> t0</span>
+<span id="cb20-11"><a href="#cb20-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-12"><a href="#cb20-12" aria-hidden="true" tabindex="-1"></a><span class="co"># Versión vectorizada</span></span>
+<span id="cb20-13"><a href="#cb20-13" aria-hidden="true" tabindex="-1"></a>t0 <span class="op">=</span> time.perf_counter()</span>
+<span id="cb20-14"><a href="#cb20-14" aria-hidden="true" tabindex="-1"></a>suma_np <span class="op">=</span> np.<span class="bu">sum</span>(datos<span class="op">**</span><span class="dv">2</span>)</span>
+<span id="cb20-15"><a href="#cb20-15" aria-hidden="true" tabindex="-1"></a>t_numpy <span class="op">=</span> time.perf_counter() <span class="op">-</span> t0</span>
+<span id="cb20-16"><a href="#cb20-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-17"><a href="#cb20-17" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Bucle Python:  </span><span class="sc">{</span>t_bucle<span class="op">*</span><span class="dv">1000</span><span class="sc">:7.1f}</span><span class="ss"> ms"</span>)</span>
+<span id="cb20-18"><a href="#cb20-18" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"NumPy:         </span><span class="sc">{</span>t_numpy<span class="op">*</span><span class="dv">1000</span><span class="sc">:7.1f}</span><span class="ss"> ms"</span>)</span>
+<span id="cb20-19"><a href="#cb20-19" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"NumPy es ~</span><span class="sc">{</span>t_bucle<span class="op">/</span>t_numpy<span class="sc">:.0f}</span><span class="ss">x más rápido"</span>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Bucle Python:    293.8 ms
+NumPy:             4.0 ms
+NumPy es ~73x más rápido</code></pre>
+</div>
+</div>
+<p>Sobre un millón de datos la diferencia es de uno a dos órdenes de magnitud. En una simulación de Monte Carlo con millones de trayectorias (Capítulo 13), esto es la diferencia entre que tu código termine en segundos o en horas.</p>
+<p>¿De dónde sale esa diferencia? Del <strong>trabajo repetido que hace el intérprete</strong>. En el bucle de Python, <em>cada una</em> del millón de vueltas repite la misma burocracia: mirar qué tipo tiene <code>x</code> (¿es int? ¿float? ¿string?), desempaquetar el valor del objeto que lo envuelve, decidir qué operación “elevar al cuadrado” corresponde a ese tipo, ejecutarla, y volver a empaquetar el resultado en un objeto nuevo. Un millón de elementos, un millón de veces la misma verificación. NumPy hace esa burocracia <strong>una sola vez</strong>: como el array es homogéneo (todos <code>float64</code>, gracias al <code>dtype</code>), sabe de antemano qué operación aplicar a todos, y delega el recorrido a un bucle compilado en C que barre la memoria contigua a toda velocidad — incluso procesando varios elementos por instrucción del procesador (SIMD). No es que Python “sea lento”: es que le pedimos que vuelva a deducir lo obvio un millón de veces. La vectorización es, en el fondo, <strong>mover la decisión fuera del bucle</strong>.</p>
+<hr>
+</section>
+</section>
+<section id="reducciones-resumir-un-array" class="level1" data-number="12">
+<h1 data-number="12"><span class="header-section-number">12</span> Reducciones: resumir un array</h1>
+<p>Una <strong>reducción</strong> toma muchos números y devuelve pocos: la suma, el promedio, el máximo, el desvío. Son la base de toda la estadística descriptiva.</p>
+<div id="reducciones" class="cell" data-execution_count="12">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>ret <span class="op">=</span> np.array([<span class="fl">0.012</span>, <span class="op">-</span><span class="fl">0.008</span>, <span class="fl">0.003</span>, <span class="op">-</span><span class="fl">0.021</span>, <span class="fl">0.015</span>, <span class="op">-</span><span class="fl">0.004</span>])</span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Suma (retorno acumulado aprox): </span><span class="sc">{</span>ret<span class="sc">.</span><span class="bu">sum</span>()<span class="sc">:.4f}</span><span class="ss">"</span>)</span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Media:                          </span><span class="sc">{</span>ret<span class="sc">.</span>mean()<span class="sc">:.4f}</span><span class="ss">"</span>)</span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Desvío estándar (volatilidad):  </span><span class="sc">{</span>ret<span class="sc">.</span>std()<span class="sc">:.4f}</span><span class="ss">"</span>)</span>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Mínimo (peor día):              </span><span class="sc">{</span>ret<span class="sc">.</span><span class="bu">min</span>()<span class="sc">:.4f}</span><span class="ss">"</span>)</span>
+<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Máximo (mejor día):             </span><span class="sc">{</span>ret<span class="sc">.</span><span class="bu">max</span>()<span class="sc">:.4f}</span><span class="ss">"</span>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Suma (retorno acumulado aprox): -0.0030
+Media:                          -0.0005
+Desvío estándar (volatilidad):  0.0122
+Mínimo (peor día):              -0.0210
+Máximo (mejor día):             0.0150</code></pre>
+</div>
+</div>
+<section id="el-parámetro-axis-el-concepto-que-más-confunde-y-más-importa" class="level2" data-number="12.1">
+<h2 data-number="12.1" class="anchored" data-anchor-id="el-parámetro-axis-el-concepto-que-más-confunde-y-más-importa"><span class="header-section-number">12.1</span> El parámetro <code>axis</code>: el concepto que más confunde (y más importa)</h2>
+<p>Cuando reducimos una <strong>matriz</strong>, tenemos que decidir <em>en qué dirección</em> resumimos. Ahí entra <code>axis</code>:</p>
+<ul>
+<li><code>axis=0</code> colapsa las <strong>filas</strong> → un resultado <strong>por columna</strong> (por activo).</li>
+<li><code>axis=1</code> colapsa las <strong>columnas</strong> → un resultado <strong>por fila</strong> (por fecha).</li>
+</ul>
+<p>Con un panel de retornos (filas = fechas, columnas = activos), esto es exactamente lo que necesitamos:</p>
+<div id="axis" class="cell" data-execution_count="13">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb24"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Panel: 4 fechas x 3 activos</span></span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>R <span class="op">=</span> np.array([</span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>    [<span class="fl">0.02</span>, <span class="op">-</span><span class="fl">0.01</span>,  <span class="fl">0.03</span>],</span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>    [<span class="fl">0.01</span>,  <span class="fl">0.02</span>, <span class="op">-</span><span class="fl">0.02</span>],</span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a>    [<span class="op">-</span><span class="fl">0.03</span>, <span class="fl">0.01</span>,  <span class="fl">0.04</span>],</span>
+<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a>    [<span class="fl">0.02</span>,  <span class="fl">0.00</span>,  <span class="fl">0.01</span>],</span>
+<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a>])</span>
+<span id="cb24-8"><a href="#cb24-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-9"><a href="#cb24-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Retorno medio DE CADA ACTIVO → colapsamos las fechas (axis=0)</span></span>
+<span id="cb24-10"><a href="#cb24-10" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Media por activo (axis=0):"</span>, R.mean(axis<span class="op">=</span><span class="dv">0</span>))</span>
+<span id="cb24-11"><a href="#cb24-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-12"><a href="#cb24-12" aria-hidden="true" tabindex="-1"></a><span class="co"># Volatilidad DE CADA ACTIVO</span></span>
+<span id="cb24-13"><a href="#cb24-13" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Vol por activo   (axis=0):"</span>, R.std(axis<span class="op">=</span><span class="dv">0</span>))</span>
+<span id="cb24-14"><a href="#cb24-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-15"><a href="#cb24-15" aria-hidden="true" tabindex="-1"></a><span class="co"># Retorno DE CADA FECHA (un portafolio equiponderado, por ejemplo) → axis=1</span></span>
+<span id="cb24-16"><a href="#cb24-16" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Media por fecha  (axis=1):"</span>, R.mean(axis<span class="op">=</span><span class="dv">1</span>))</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Media por activo (axis=0): [0.005 0.005 0.015]
+Vol por activo   (axis=0): [0.02061553 0.01118034 0.02291288]
+Media por fecha  (axis=1): [0.01333333 0.00333333 0.00666667 0.01      ]</code></pre>
+</div>
+</div>
+<div class="callout callout-style-simple callout-note callout-titled" title="Truco para no confundirte con axis">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Nota</span>Truco para no confundirte con axis
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><code>axis=0</code> “apunta hacia abajo” (recorre las filas y deja una fila-resumen), así que el resultado tiene tantos elementos como <strong>columnas</strong>. Regla mnemotécnica: el eje que ponés en <code>axis</code> es el que <strong>desaparece</strong> del shape. Si <code>R.shape</code> es <code>(4, 3)</code>, entonces <code>R.mean(axis=0).shape</code> es <code>(3,)</code>.</p>
+</div>
+</div>
+<hr>
+</section>
+</section>
+<section id="broadcasting-operar-arrays-de-distinta-forma" class="level1" data-number="13">
+<h1 data-number="13"><span class="header-section-number">13</span> Broadcasting: operar arrays de distinta forma</h1>
+<p>¿Qué pasa si querés sumarle un número a todo un array, o restarle a cada columna su propia media? NumPy tiene una regla elegante llamada <strong>broadcasting</strong>: cuando las formas no coinciden, NumPy “estira” automáticamente el array más chico para que encajen, sin copiar datos de verdad.</p>
+<p>El caso más simple ya lo usaste sin darte cuenta:</p>
+<div id="broadcast-escalar" class="cell" data-execution_count="14">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb26"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>precios <span class="op">=</span> np.array([<span class="fl">100.0</span>, <span class="fl">102.5</span>, <span class="fl">101.0</span>])</span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Sumar un escalar a un vector: el escalar se "estira" a todos los elementos</span></span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Con impuesto del 1%:"</span>, precios <span class="op">*</span> <span class="fl">1.01</span>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Con impuesto del 1%: [101.    103.525 102.01 ]</code></pre>
+</div>
+</div>
+<p>El caso poderoso es <strong>normalizar un panel</strong>: restarle a cada activo su media y dividir por su desvío (estandarización), una operación constante en modelos de factores y machine learning financiero.</p>
+<div id="broadcast-panel" class="cell" data-execution_count="15">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb28"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>R <span class="op">=</span> np.array([</span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>    [<span class="fl">0.02</span>, <span class="op">-</span><span class="fl">0.01</span>,  <span class="fl">0.03</span>],</span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>    [<span class="fl">0.01</span>,  <span class="fl">0.02</span>, <span class="op">-</span><span class="fl">0.02</span>],</span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a>    [<span class="op">-</span><span class="fl">0.03</span>, <span class="fl">0.01</span>,  <span class="fl">0.04</span>],</span>
+<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a>    [<span class="fl">0.02</span>,  <span class="fl">0.00</span>,  <span class="fl">0.01</span>],</span>
+<span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a>])</span>
+<span id="cb28-7"><a href="#cb28-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-8"><a href="#cb28-8" aria-hidden="true" tabindex="-1"></a>medias <span class="op">=</span> R.mean(axis<span class="op">=</span><span class="dv">0</span>)   <span class="co"># shape (3,) → una media por activo</span></span>
+<span id="cb28-9"><a href="#cb28-9" aria-hidden="true" tabindex="-1"></a>desvios <span class="op">=</span> R.std(axis<span class="op">=</span><span class="dv">0</span>)   <span class="co"># shape (3,) → un desvío por activo</span></span>
+<span id="cb28-10"><a href="#cb28-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-11"><a href="#cb28-11" aria-hidden="true" tabindex="-1"></a><span class="co"># R tiene shape (4,3) y medias shape (3,): broadcasting alinea por columna</span></span>
+<span id="cb28-12"><a href="#cb28-12" aria-hidden="true" tabindex="-1"></a>R_estandarizado <span class="op">=</span> (R <span class="op">-</span> medias) <span class="op">/</span> desvios</span>
+<span id="cb28-13"><a href="#cb28-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-14"><a href="#cb28-14" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Medias por activo:"</span>, np.<span class="bu">round</span>(medias, <span class="dv">4</span>))</span>
+<span id="cb28-15"><a href="#cb28-15" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"</span><span class="ch">\n</span><span class="st">Panel estandarizado (media 0, desvío 1 por columna):</span><span class="ch">\n</span><span class="st">"</span>,</span>
+<span id="cb28-16"><a href="#cb28-16" aria-hidden="true" tabindex="-1"></a>      np.<span class="bu">round</span>(R_estandarizado, <span class="dv">3</span>))</span>
+<span id="cb28-17"><a href="#cb28-17" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"</span><span class="ch">\n</span><span class="st">Verificación — media de cada columna:"</span>, np.<span class="bu">round</span>(R_estandarizado.mean(axis<span class="op">=</span><span class="dv">0</span>), <span class="dv">10</span>))</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Medias por activo: [0.005 0.005 0.015]
+
+Panel estandarizado (media 0, desvío 1 por columna):
+ [[ 0.728 -1.342  0.655]
+ [ 0.243  1.342 -1.528]
+ [-1.698  0.447  1.091]
+ [ 0.728 -0.447 -0.218]]
+
+Verificación — media de cada columna: [ 0.  0. -0.]</code></pre>
+</div>
+</div>
+<p>NumPy vio que <code>R</code> es <code>(4, 3)</code> y <code>medias</code> es <code>(3,)</code>, y entendió que tenía que restar <code>medias</code> <strong>a cada fila</strong>. No tuviste que escribir ningún bucle sobre las 4 fechas.</p>
+<div class="callout callout-style-simple callout-warning callout-titled" title="Cuándo el broadcasting falla">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Advertencia</span>Cuándo el broadcasting falla
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>El broadcasting solo funciona si las dimensiones son compatibles: o son iguales, o una de ellas es 1. Si intentás operar un <code>(4, 3)</code> con un <code>(4,)</code> vas a recibir un <code>ValueError: operands could not be broadcast together</code>. La solución suele ser reformar el vector a <code>(4, 1)</code> con <code>vector.reshape(-1, 1)</code> para que se alinee por fila en lugar de por columna. Cuando veas ese error, mirá los shapes.</p>
+</div>
+</div>
+<hr>
+</section>
+<section id="álgebra-lineal-la-antesala-de-markowitz" class="level1" data-number="14">
+<h1 data-number="14"><span class="header-section-number">14</span> Álgebra lineal: la antesala de Markowitz</h1>
+<p>Acá NumPy muestra para qué fue diseñado. La optimización de portafolios del Módulo 2 se escribe entera en lenguaje matricial, y NumPy lo implementa directo.</p>
+<p>El <strong>producto matricial</strong> se hace con el operador <code>@</code> (no con <code>*</code>, que es elemento a elemento). Veamos el cálculo más importante de toda la teoría de portafolios: el <strong>retorno esperado de un portafolio</strong>, que es el producto entre el vector de pesos <span class="math inline">\(\mathbf{w}\)</span> y el vector de retornos esperados <span class="math inline">\(\boldsymbol{\mu}\)</span>.</p>
+<div id="producto-portafolio" class="cell" data-execution_count="16">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb30"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Pesos del portafolio (40% activo 1, 35% activo 2, 25% activo 3)</span></span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>w <span class="op">=</span> np.array([<span class="fl">0.40</span>, <span class="fl">0.35</span>, <span class="fl">0.25</span>])</span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Retornos esperados anuales de cada activo</span></span>
+<span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a>mu <span class="op">=</span> np.array([<span class="fl">0.12</span>, <span class="fl">0.18</span>, <span class="fl">0.08</span>])</span>
+<span id="cb30-6"><a href="#cb30-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-7"><a href="#cb30-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Retorno esperado del portafolio: w · mu (producto punto)</span></span>
+<span id="cb30-8"><a href="#cb30-8" aria-hidden="true" tabindex="-1"></a>ret_portafolio <span class="op">=</span> w <span class="op">@</span> mu</span>
+<span id="cb30-9"><a href="#cb30-9" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Retorno esperado del portafolio: </span><span class="sc">{</span>ret_portafolio<span class="sc">:.2%}</span><span class="ss">"</span>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Retorno esperado del portafolio: 13.10%</code></pre>
+</div>
+</div>
+<p>Y ahora la estrella: la <strong>matriz de covarianzas</strong> <span class="math inline">\(\Sigma\)</span>, que resume cómo se mueven juntos los activos y es el corazón de la medición de riesgo. NumPy la calcula con <code>np.cov</code>. Con ella, la <strong>varianza del portafolio</strong> es la forma cuadrática <span class="math inline">\(\mathbf{w}^T \Sigma \mathbf{w}\)</span>:</p>
+<div id="covarianza" class="cell" data-execution_count="17">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb32"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Panel de retornos: activos en FILAS, observaciones en COLUMNAS (rowvar=True, el default de np.cov)</span></span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>rng <span class="op">=</span> np.random.default_rng(<span class="dv">7</span>)</span>
+<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a>R_hist <span class="op">=</span> rng.normal(loc<span class="op">=</span>[<span class="fl">0.001</span>, <span class="fl">0.0015</span>, <span class="fl">0.0008</span>],</span>
+<span id="cb32-4"><a href="#cb32-4" aria-hidden="true" tabindex="-1"></a>                    scale<span class="op">=</span>[<span class="fl">0.02</span>, <span class="fl">0.03</span>, <span class="fl">0.015</span>],</span>
+<span id="cb32-5"><a href="#cb32-5" aria-hidden="true" tabindex="-1"></a>                    size<span class="op">=</span>(<span class="dv">250</span>, <span class="dv">3</span>)).T   <span class="co"># .T → 3 activos x 250 días</span></span>
+<span id="cb32-6"><a href="#cb32-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-7"><a href="#cb32-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Matriz de covarianzas (3x3)</span></span>
+<span id="cb32-8"><a href="#cb32-8" aria-hidden="true" tabindex="-1"></a>Sigma <span class="op">=</span> np.cov(R_hist)</span>
+<span id="cb32-9"><a href="#cb32-9" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Matriz de covarianzas (Σ):</span><span class="ch">\n</span><span class="st">"</span>, np.<span class="bu">round</span>(Sigma, <span class="dv">6</span>))</span>
+<span id="cb32-10"><a href="#cb32-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-11"><a href="#cb32-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Varianza del portafolio: wᵀ Σ w</span></span>
+<span id="cb32-12"><a href="#cb32-12" aria-hidden="true" tabindex="-1"></a>var_portafolio <span class="op">=</span> w <span class="op">@</span> Sigma <span class="op">@</span> w</span>
+<span id="cb32-13"><a href="#cb32-13" aria-hidden="true" tabindex="-1"></a>vol_portafolio <span class="op">=</span> np.sqrt(var_portafolio)</span>
+<span id="cb32-14"><a href="#cb32-14" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"</span><span class="ch">\n</span><span class="ss">Volatilidad diaria del portafolio: </span><span class="sc">{</span>vol_portafolio<span class="sc">:.4f}</span><span class="ss">"</span>)</span>
+<span id="cb32-15"><a href="#cb32-15" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Volatilidad anualizada:            </span><span class="sc">{</span>vol_portafolio <span class="op">*</span> np<span class="sc">.</span>sqrt(<span class="dv">252</span>)<span class="sc">:.2%}</span><span class="ss">"</span>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Matriz de covarianzas (Σ):
+ [[ 3.88e-04  1.30e-05  1.20e-05]
+ [ 1.30e-05  7.42e-04 -3.90e-05]
+ [ 1.20e-05 -3.90e-05  1.97e-04]]
+
+Volatilidad diaria del portafolio: 0.0128
+Volatilidad anualizada:            20.36%</code></pre>
+</div>
+</div>
+<p>Esas dos líneas —<code>w @ mu</code> y <code>w @ Sigma @ w</code>— son, literalmente, la Teoría Moderna de Portafolios. En el Capítulo 8 le vamos a pedir a la computadora que busque los pesos <code>w</code> que minimizan ese riesgo. Todo el andamiaje matemático ya lo tenés en NumPy.</p>
+<p>El submódulo <code>np.linalg</code> completa el kit de álgebra lineal (inversas, determinantes, autovalores, resolución de sistemas):</p>
+<div id="linalg" class="cell" data-execution_count="18">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb34"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>M <span class="op">=</span> np.array([[<span class="fl">4.0</span>, <span class="fl">1.0</span>],</span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>              [<span class="fl">1.0</span>, <span class="fl">3.0</span>]])</span>
+<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Inversa:</span><span class="ch">\n</span><span class="st">"</span>, np.linalg.inv(M))</span>
+<span id="cb34-5"><a href="#cb34-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"</span><span class="ch">\n</span><span class="st">Determinante:"</span>, np.linalg.det(M))</span>
+<span id="cb34-6"><a href="#cb34-6" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Autovalores: "</span>, np.linalg.eigvals(M))</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Inversa:
+ [[ 0.27272727 -0.09090909]
+ [-0.09090909  0.36363636]]
+
+Determinante: 11.000000000000002
+Autovalores:  [4.61803399+0.j 2.38196601+0.j]</code></pre>
+</div>
+</div>
+<div class="callout callout-style-simple callout-note callout-titled" title="Guardá esto para más adelante">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Nota</span>Guardá esto para más adelante
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Black-Litterman (Capítulo 10) y la regresión por mínimos cuadrados (Capítulo 15) se resuelven invirtiendo matrices con <code>np.linalg.inv</code> y <code>np.linalg.solve</code>. El código que acabás de ver es la base de la mitad del libro.</p>
+</div>
+</div>
+<hr>
+</section>
+<section id="de-numpy-a-pandas" class="level1" data-number="15">
+<h1 data-number="15"><span class="header-section-number">15</span> De NumPy a Pandas</h1>
+<p>NumPy es potentísimo, pero tiene una limitación para el trabajo diario: los arrays no tienen <strong>etiquetas</strong>. En <code>R[:, 0]</code> vos sabés que la columna 0 es “el activo A” porque te lo acordás, no porque el array lo diga. Cuando manejás decenas de activos con fechas de por medio, eso se vuelve un problema.</p>
+<p>Ahí entra <strong>Pandas</strong> (Capítulo 6): pone etiquetas (nombres de columnas y un índice de fechas) <em>encima</em> de los arrays de NumPy. Un <code>DataFrame</code> es, en el fondo, un array de NumPy con nombres. Por eso todo lo que aprendiste acá —vectorización, broadcasting, <code>axis</code>, máscaras booleanas— se traslada casi idéntico a Pandas. No estás aprendiendo dos cosas: estás aprendiendo NumPy, y Pandas es NumPy con etiquetas.</p>
+<hr>
+</section>
+<section id="errores-comunes" class="level1" data-number="16">
+<h1 data-number="16"><span class="header-section-number">16</span> Errores comunes</h1>
+<div class="callout callout-style-simple callout-warning callout-titled" title="Trampas frecuentes con NumPy">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Advertencia</span>Trampas frecuentes con NumPy
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ul>
+<li><strong>Confundir <code>*</code> con <code>@</code></strong>: <code>A * B</code> multiplica elemento a elemento; <code>A @ B</code> es el producto matricial. Para portafolios casi siempre querés <code>@</code>.</li>
+<li><strong>Copias vs.&nbsp;vistas</strong>: un slice como <code>b = a[:2]</code> <strong>no copia</strong> los datos, es una <em>vista</em>. Si modificás <code>b</code>, modificás <code>a</code>. Si necesitás una copia independiente, usá <code>a[:2].copy()</code>.</li>
+<li><strong>Olvidarse del <code>axis</code></strong>: <code>R.mean()</code> sin <code>axis</code> promedia <em>todos</em> los elementos y te da un solo número, no uno por activo. Casi siempre querés especificar <code>axis</code>.</li>
+<li><strong>Enteros donde querías decimales</strong>: <code>np.array([1, 2, 3])</code> crea un array de enteros; dividirlo puede truncar en algunos contextos. Escribí <code>1.0</code> o pasá <code>dtype=float</code> para asegurarte de trabajar con <code>float64</code>.</li>
+</ul>
+</div>
+</div>
+<hr>
+</section>
+<section id="ejercicios-propuestos" class="level1" data-number="17">
+<h1 data-number="17"><span class="header-section-number">17</span> Ejercicios Propuestos</h1>
+<div class="callout callout-style-simple callout-important callout-titled" title="Ejercicios">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Importante</span>Ejercicios
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ol type="1">
+<li><strong>Retornos y volatilidad</strong>: dado un array de 252 precios simulados, calculá el vector de retornos logarítmicos, su media anualizada (<span class="math inline">\(\times 252\)</span>) y su volatilidad anualizada (<span class="math inline">\(\times \sqrt{252}\)</span>), todo sin usar bucles.</li>
+<li><strong>Máximo drawdown vectorizado</strong>: a partir de un vector de precios, calculá el máximo acumulado con <code>np.maximum.accumulate</code> y usalo para obtener la peor caída desde un pico (el <em>drawdown</em> máximo). <em>Pista</em>: el drawdown en cada instante es <code>precio / pico_hasta_ahora - 1</code>.</li>
+<li><strong>Panel de activos</strong>: generá con <code>rng.normal</code> un panel de retornos de 5 activos por 500 días. Calculá el retorno medio y la volatilidad de cada activo con <code>axis</code>, y estandarizá el panel con broadcasting.</li>
+<li><strong>Portafolio equiponderado</strong>: con el panel del ejercicio 3 y pesos iguales (<span class="math inline">\(w_i = 1/5\)</span>), calculá la serie de retornos del portafolio (<code>R @ w</code>) y comparala con el promedio simple por fecha.</li>
+<li><strong>Covarianza y riesgo</strong>: calculá la matriz de covarianzas del panel y la volatilidad de un portafolio con pesos <code>[0.3, 0.3, 0.2, 0.1, 0.1]</code> usando la forma cuadrática <span class="math inline">\(\mathbf{w}^T\Sigma\mathbf{w}\)</span>. ¿Es menor que el promedio de las volatilidades individuales? ¿Por qué?</li>
+</ol>
+</div>
+</div>
+<hr>
+</section>
+<section id="referencias" class="level1" data-number="18">
+<h1 data-number="18"><span class="header-section-number">18</span> Referencias</h1>
+<div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list" style="display: none">
+<div id="ref-harris2020" class="csl-entry" role="listitem">
+Harris, Charles R., K. Jarrod Millman, Stéfan J. van der Walt, et&nbsp;al. 2020. <span>«Array Programming with <span>NumPy</span>»</span>. <em>Nature</em> 585: 357-62. <a href="https://doi.org/10.1038/s41586-020-2649-2">https://doi.org/10.1038/s41586-020-2649-2</a>.
+</div>
+<div id="ref-mckinney2017" class="csl-entry" role="listitem">
+McKinney, Wes. 2017. <em>Python for Data Analysis</em>. 2.ª ed. O’Reilly Media.
+</div>
+<div id="ref-numpydoc" class="csl-entry" role="listitem">
+NumPy Development Team. s.&nbsp;f. <span>«NumPy Documentation»</span>. Accedido 13 de julio de 2026. <a href="https://numpy.org/doc/stable/">https://numpy.org/doc/stable/</a>.
+</div>
+<div id="ref-vanderplas2016" class="csl-entry" role="listitem">
+VanderPlas, Jake. 2016. <em>Python Data Science Handbook</em>. O’Reilly Media.
+</div>
+</div>
+
+
+<!-- -->
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copiado");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copiado");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+    const viewSource = window.document.getElementById('quarto-view-source') ||
+                       window.document.getElementById('quarto-code-tools-source');
+    if (viewSource) {
+      const sourceUrl = viewSource.getAttribute("data-quarto-source-url");
+      viewSource.addEventListener("click", function(e) {
+        if (sourceUrl) {
+          // rstudio viewer pane
+          if (/\bcapabilities=\b/.test(window.location)) {
+            window.open(sourceUrl);
+          } else {
+            window.location.href = sourceUrl;
+          }
+        } else {
+          const modal = new bootstrap.Modal(document.getElementById('quarto-embedded-source-code-modal'));
+          modal.show();
+        }
+        return false;
+      });
+    }
+    function toggleCodeHandler(show) {
+      return function(e) {
+        const detailsSrc = window.document.querySelectorAll(".cell > details > .sourceCode");
+        for (let i=0; i<detailsSrc.length; i++) {
+          const details = detailsSrc[i].parentElement;
+          if (show) {
+            details.open = true;
+          } else {
+            details.removeAttribute("open");
+          }
+        }
+        const cellCodeDivs = window.document.querySelectorAll(".cell > .sourceCode");
+        const fromCls = show ? "hidden" : "unhidden";
+        const toCls = show ? "unhidden" : "hidden";
+        for (let i=0; i<cellCodeDivs.length; i++) {
+          const codeDiv = cellCodeDivs[i];
+          if (codeDiv.classList.contains(fromCls)) {
+            codeDiv.classList.remove(fromCls);
+            codeDiv.classList.add(toCls);
+          } 
+        }
+        return false;
+      }
+    }
+    const hideAllCode = window.document.getElementById("quarto-hide-all-code");
+    if (hideAllCode) {
+      hideAllCode.addEventListener("click", toggleCodeHandler(false));
+    }
+    const showAllCode = window.document.getElementById("quarto-show-all-code");
+    if (showAllCode) {
+      showAllCode.addEventListener("click", toggleCodeHandler(true));
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/diegoonna\.github\.io\/libro_finanzas_computacionales\/");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+            // target, if specified
+            link.setAttribute("target", "_blank");
+            if (link.getAttribute("rel") === null) {
+              link.setAttribute("rel", "noopener");
+            }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="../unidad1/cap04_poo.html" class="pagination-link" aria-label="Capítulo 4: Programación Orientada a Objetos (POO)">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Capítulo 4: Programación Orientada a Objetos (POO)</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="../unidad1/cap06_series_tiempo_pandas.html" class="pagination-link" aria-label="Capítulo 6: Series de Tiempo y Análisis de Datos con Pandas">
+        <span class="nav-page-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Capítulo 6: Series de Tiempo y Análisis de Datos con Pandas</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav><div class="modal fade" id="quarto-embedded-source-code-modal" tabindex="-1" aria-labelledby="quarto-embedded-source-code-modal-label" aria-hidden="true"><div class="modal-dialog modal-dialog-scrollable"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="quarto-embedded-source-code-modal-label">Ejecutar el código</h5><button class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><div class="">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb36" data-shortcodes="false"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a><span class="an">title:</span><span class="co"> "Capítulo 5: NumPy y Cálculo Vectorizado"</span></span>
+<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a><span class="an">subtitle:</span><span class="co"> "El motor numérico de las finanzas cuantitativas en Python"</span></span>
+<span id="cb36-4"><a href="#cb36-4" aria-hidden="true" tabindex="-1"></a><span class="an">abstract:</span><span class="co"> |</span></span>
+<span id="cb36-5"><a href="#cb36-5" aria-hidden="true" tabindex="-1"></a><span class="co">  NumPy es la librería sobre la que se construye todo el stack científico de Python</span></span>
+<span id="cb36-6"><a href="#cb36-6" aria-hidden="true" tabindex="-1"></a><span class="co">  (Pandas, SciPy, scikit-learn). En este capítulo entendemos por qué el `ndarray`</span></span>
+<span id="cb36-7"><a href="#cb36-7" aria-hidden="true" tabindex="-1"></a><span class="co">  reemplaza a las listas para trabajar con números, aprendemos a vectorizar cálculos</span></span>
+<span id="cb36-8"><a href="#cb36-8" aria-hidden="true" tabindex="-1"></a><span class="co">  para eliminar bucles lentos, dominamos el broadcasting y damos nuestros primeros</span></span>
+<span id="cb36-9"><a href="#cb36-9" aria-hidden="true" tabindex="-1"></a><span class="co">  pasos en álgebra lineal, que será la columna vertebral de la optimización de</span></span>
+<span id="cb36-10"><a href="#cb36-10" aria-hidden="true" tabindex="-1"></a><span class="co">  portafolios del Módulo 2.</span></span>
+<span id="cb36-11"><a href="#cb36-11" aria-hidden="true" tabindex="-1"></a><span class="an">nocite:</span><span class="co"> |</span></span>
+<span id="cb36-12"><a href="#cb36-12" aria-hidden="true" tabindex="-1"></a><span class="co">  @harris2020, @mckinney2017, @vanderplas2016, @numpydoc</span></span>
+<span id="cb36-13"><a href="#cb36-13" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
+<span id="cb36-14"><a href="#cb36-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-15"><a href="#cb36-15" aria-hidden="true" tabindex="-1"></a><span class="fu"># Introducción</span></span>
+<span id="cb36-16"><a href="#cb36-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-17"><a href="#cb36-17" aria-hidden="true" tabindex="-1"></a>Hasta ahora venimos representando datos financieros con **listas** y **diccionarios** de Python. Nos sirvieron para aprender a programar, pero tienen un problema serio: son lentas y verbosas cuando hay que hacer cuentas sobre miles de números. Y en finanzas, *siempre* hay miles de números: años de cotizaciones diarias, paneles de cientos de activos, millones de trayectorias en una simulación.</span>
+<span id="cb36-18"><a href="#cb36-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-19"><a href="#cb36-19" aria-hidden="true" tabindex="-1"></a>Acá entra **NumPy** (de *Numerical Python*). Es la librería que le da a Python la capacidad de hacer cálculo numérico a la velocidad de un lenguaje compilado como C, pero con la comodidad de escribir Python. No es una librería más: es la base sobre la que están construidos Pandas, SciPy, scikit-learn y prácticamente todo lo que vas a usar de acá en adelante. Cuando en el Capítulo 6 hagas <span class="in">`pd.DataFrame`</span>, por debajo hay arrays de NumPy; cuando en el Capítulo 8 optimices un portafolio de Markowitz, vas a estar multiplicando matrices de NumPy.</span>
+<span id="cb36-20"><a href="#cb36-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-21"><a href="#cb36-21" aria-hidden="true" tabindex="-1"></a>::: {.callout-tip title="La idea de fondo"}</span>
+<span id="cb36-22"><a href="#cb36-22" aria-hidden="true" tabindex="-1"></a>Programar con NumPy es cambiar el chip: en vez de pensar *"recorré la lista elemento por elemento y hacé la cuenta"*, pensás *"aplicá esta operación a todo el vector de una"*. Eso se llama **vectorización**, y es la habilidad central de este capítulo.</span>
+<span id="cb36-23"><a href="#cb36-23" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb36-24"><a href="#cb36-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-27"><a href="#cb36-27" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb36-28"><a href="#cb36-28" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: setup</span></span>
+<span id="cb36-29"><a href="#cb36-29" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb36-30"><a href="#cb36-30" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb36-31"><a href="#cb36-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-32"><a href="#cb36-32" aria-hidden="true" tabindex="-1"></a>Por convención universal, NumPy se importa como <span class="in">`np`</span>. Vas a ver ese <span class="in">`np.`</span> en todo el libro (y en todo el ecosistema de Python científico), así que conviene acostumbrarse desde ya.</span>
+<span id="cb36-33"><a href="#cb36-33" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-34"><a href="#cb36-34" aria-hidden="true" tabindex="-1"></a>---</span>
+<span id="cb36-35"><a href="#cb36-35" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-36"><a href="#cb36-36" aria-hidden="true" tabindex="-1"></a><span class="fu"># El problema: las listas no fueron hechas para calcular</span></span>
+<span id="cb36-37"><a href="#cb36-37" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-38"><a href="#cb36-38" aria-hidden="true" tabindex="-1"></a>Imaginá que tenés los precios de cierre de una acción durante cinco días y querés calcular el retorno simple diario, $R_t = P_t / P_{t-1} - 1$. Con listas puras, tenés que escribir un bucle:</span>
+<span id="cb36-39"><a href="#cb36-39" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-42"><a href="#cb36-42" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb36-43"><a href="#cb36-43" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: listas-loop</span></span>
+<span id="cb36-44"><a href="#cb36-44" aria-hidden="true" tabindex="-1"></a>precios <span class="op">=</span> [<span class="fl">100.0</span>, <span class="fl">102.5</span>, <span class="fl">101.0</span>, <span class="fl">103.5</span>, <span class="fl">105.0</span>]</span>
+<span id="cb36-45"><a href="#cb36-45" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-46"><a href="#cb36-46" aria-hidden="true" tabindex="-1"></a>retornos <span class="op">=</span> []</span>
+<span id="cb36-47"><a href="#cb36-47" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">1</span>, <span class="bu">len</span>(precios)):</span>
+<span id="cb36-48"><a href="#cb36-48" aria-hidden="true" tabindex="-1"></a>    retornos.append(precios[i] <span class="op">/</span> precios[i<span class="op">-</span><span class="dv">1</span>] <span class="op">-</span> <span class="dv">1</span>)</span>
+<span id="cb36-49"><a href="#cb36-49" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-50"><a href="#cb36-50" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(retornos)</span>
+<span id="cb36-51"><a href="#cb36-51" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb36-52"><a href="#cb36-52" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-53"><a href="#cb36-53" aria-hidden="true" tabindex="-1"></a>Funciona, pero fijate todo lo que tuviste que hacer: crear una lista vacía, manejar índices, acordarte de arrancar en <span class="in">`1`</span>. Y esto es para una sola acción y cinco días. Con NumPy, el mismo cálculo es una línea que se lee casi como la fórmula matemática:</span>
+<span id="cb36-54"><a href="#cb36-54" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-57"><a href="#cb36-57" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb36-58"><a href="#cb36-58" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: numpy-vectorizado</span></span>
+<span id="cb36-59"><a href="#cb36-59" aria-hidden="true" tabindex="-1"></a>precios <span class="op">=</span> np.array([<span class="fl">100.0</span>, <span class="fl">102.5</span>, <span class="fl">101.0</span>, <span class="fl">103.5</span>, <span class="fl">105.0</span>])</span>
+<span id="cb36-60"><a href="#cb36-60" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-61"><a href="#cb36-61" aria-hidden="true" tabindex="-1"></a>retornos <span class="op">=</span> precios[<span class="dv">1</span>:] <span class="op">/</span> precios[:<span class="op">-</span><span class="dv">1</span>] <span class="op">-</span> <span class="dv">1</span></span>
+<span id="cb36-62"><a href="#cb36-62" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-63"><a href="#cb36-63" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(retornos)</span>
+<span id="cb36-64"><a href="#cb36-64" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb36-65"><a href="#cb36-65" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-66"><a href="#cb36-66" aria-hidden="true" tabindex="-1"></a><span class="in">`precios[1:]`</span> es "todos los precios desde el segundo" ($P_t$) y <span class="in">`precios[:-1]`</span> es "todos menos el último" ($P_{t-1}$). NumPy divide los dos vectores **elemento a elemento** automáticamente. Sin bucles, sin índices, sin listas vacías. Esto no es solo más corto: sobre datos reales es **decenas o cientos de veces más rápido**, porque la operación corre en código C optimizado en lugar de un bucle interpretado de Python.</span>
+<span id="cb36-67"><a href="#cb36-67" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-68"><a href="#cb36-68" aria-hidden="true" tabindex="-1"></a>---</span>
+<span id="cb36-69"><a href="#cb36-69" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-70"><a href="#cb36-70" aria-hidden="true" tabindex="-1"></a><span class="fu"># El `ndarray`: qué es y por qué es distinto</span></span>
+<span id="cb36-71"><a href="#cb36-71" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-72"><a href="#cb36-72" aria-hidden="true" tabindex="-1"></a>El objeto central de NumPy es el **array** (<span class="in">`ndarray`</span>, de *N-dimensional array*). A primera vista se parece a una lista, pero tiene tres diferencias que lo cambian todo:</span>
+<span id="cb36-73"><a href="#cb36-73" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-74"><a href="#cb36-74" aria-hidden="true" tabindex="-1"></a><span class="ss">1. </span>**Es homogéneo**: todos los elementos son del mismo tipo (todos <span class="in">`float64`</span>, todos <span class="in">`int`</span>, etc.). Una lista de Python puede mezclar números, strings y objetos; un array no. Esa restricción es justamente lo que lo hace rápido.</span>
+<span id="cb36-75"><a href="#cb36-75" aria-hidden="true" tabindex="-1"></a><span class="ss">2. </span>**Es contiguo en memoria**: los datos se guardan en un bloque compacto y ordenado de RAM, no desperdigados con punteros como en una lista. El procesador puede recorrerlos de corrido.</span>
+<span id="cb36-76"><a href="#cb36-76" aria-hidden="true" tabindex="-1"></a><span class="ss">3. </span>**Opera vectorizado**: las operaciones aritméticas se aplican a todo el array de una sola vez, apoyándose en instrucciones de bajo nivel del procesador.</span>
+<span id="cb36-77"><a href="#cb36-77" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-80"><a href="#cb36-80" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb36-81"><a href="#cb36-81" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: array-basico</span></span>
+<span id="cb36-82"><a href="#cb36-82" aria-hidden="true" tabindex="-1"></a>a <span class="op">=</span> np.array([<span class="dv">10</span>, <span class="dv">20</span>, <span class="dv">30</span>, <span class="dv">40</span>])</span>
+<span id="cb36-83"><a href="#cb36-83" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-84"><a href="#cb36-84" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Array:   "</span>, a)</span>
+<span id="cb36-85"><a href="#cb36-85" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Tipo:    "</span>, <span class="bu">type</span>(a))</span>
+<span id="cb36-86"><a href="#cb36-86" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"dtype:   "</span>, a.dtype)     <span class="co"># tipo de los elementos</span></span>
+<span id="cb36-87"><a href="#cb36-87" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"shape:   "</span>, a.shape)     <span class="co"># forma (dimensiones)</span></span>
+<span id="cb36-88"><a href="#cb36-88" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"ndim:    "</span>, a.ndim)      <span class="co"># cantidad de dimensiones</span></span>
+<span id="cb36-89"><a href="#cb36-89" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"size:    "</span>, a.size)      <span class="co"># cantidad total de elementos</span></span>
+<span id="cb36-90"><a href="#cb36-90" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb36-91"><a href="#cb36-91" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-92"><a href="#cb36-92" aria-hidden="true" tabindex="-1"></a>El **`dtype`** (data type) es un concepto clave: le dice a NumPy exactamente cuántos bytes ocupa cada número y cómo interpretarlos. En finanzas trabajamos casi siempre con <span class="in">`float64`</span> (números reales de doble precisión), que es el default para decimales.</span>
+<span id="cb36-93"><a href="#cb36-93" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-94"><a href="#cb36-94" aria-hidden="true" tabindex="-1"></a>::: {.callout-note title="shape: la forma manda"}</span>
+<span id="cb36-95"><a href="#cb36-95" aria-hidden="true" tabindex="-1"></a>El atributo <span class="in">`.shape`</span> es una tupla que describe las dimensiones. Un vector de 4 elementos tiene shape <span class="in">`(4,)`</span>; una matriz de 3 filas por 2 columnas tiene shape <span class="in">`(3, 2)`</span>. Cuando algo falla en NumPy, el 90% de las veces es un problema de shapes que no encajan. Acostumbrate a mirar <span class="in">`.shape`</span> como primer paso de debugging.</span>
+<span id="cb36-96"><a href="#cb36-96" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb36-97"><a href="#cb36-97" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-98"><a href="#cb36-98" aria-hidden="true" tabindex="-1"></a><span class="fu">## Crear arrays</span></span>
+<span id="cb36-99"><a href="#cb36-99" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-100"><a href="#cb36-100" aria-hidden="true" tabindex="-1"></a>Rara vez vas a escribir los números a mano. NumPy trae funciones para generar los arrays más comunes:</span>
+<span id="cb36-101"><a href="#cb36-101" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-104"><a href="#cb36-104" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb36-105"><a href="#cb36-105" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: creacion</span></span>
+<span id="cb36-106"><a href="#cb36-106" aria-hidden="true" tabindex="-1"></a><span class="co"># Desde una lista</span></span>
+<span id="cb36-107"><a href="#cb36-107" aria-hidden="true" tabindex="-1"></a>np.array([<span class="fl">1.0</span>, <span class="fl">2.0</span>, <span class="fl">3.0</span>])</span>
+<span id="cb36-108"><a href="#cb36-108" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-109"><a href="#cb36-109" aria-hidden="true" tabindex="-1"></a><span class="co"># Rango de valores (como range, pero array): inicio, fin (excluido), paso</span></span>
+<span id="cb36-110"><a href="#cb36-110" aria-hidden="true" tabindex="-1"></a>plazos <span class="op">=</span> np.arange(<span class="dv">0</span>, <span class="dv">12</span>, <span class="dv">3</span>)          <span class="co"># [0, 3, 6, 9] meses</span></span>
+<span id="cb36-111"><a href="#cb36-111" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"arange:  "</span>, plazos)</span>
+<span id="cb36-112"><a href="#cb36-112" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-113"><a href="#cb36-113" aria-hidden="true" tabindex="-1"></a><span class="co"># N valores equiespaciados entre dos extremos (útil para grillas)</span></span>
+<span id="cb36-114"><a href="#cb36-114" aria-hidden="true" tabindex="-1"></a>grilla <span class="op">=</span> np.linspace(<span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">5</span>)         <span class="co"># 5 puntos entre 0 y 1</span></span>
+<span id="cb36-115"><a href="#cb36-115" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"linspace:"</span>, grilla)</span>
+<span id="cb36-116"><a href="#cb36-116" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-117"><a href="#cb36-117" aria-hidden="true" tabindex="-1"></a><span class="co"># Arrays de ceros y unos (útiles para inicializar acumuladores)</span></span>
+<span id="cb36-118"><a href="#cb36-118" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"zeros:   "</span>, np.zeros(<span class="dv">4</span>))</span>
+<span id="cb36-119"><a href="#cb36-119" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"ones:    "</span>, np.ones(<span class="dv">3</span>))</span>
+<span id="cb36-120"><a href="#cb36-120" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-121"><a href="#cb36-121" aria-hidden="true" tabindex="-1"></a><span class="co"># Matriz identidad (aparecerá en álgebra de portafolios)</span></span>
+<span id="cb36-122"><a href="#cb36-122" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"identidad:</span><span class="ch">\n</span><span class="st">"</span>, np.eye(<span class="dv">3</span>))</span>
+<span id="cb36-123"><a href="#cb36-123" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb36-124"><a href="#cb36-124" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-125"><a href="#cb36-125" aria-hidden="true" tabindex="-1"></a><span class="fu">## Arrays de varias dimensiones</span></span>
+<span id="cb36-126"><a href="#cb36-126" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-127"><a href="#cb36-127" aria-hidden="true" tabindex="-1"></a>Un vector es 1D; una **matriz** es 2D. En finanzas la matriz más importante es el **panel de retornos**: filas = fechas, columnas = activos.</span>
+<span id="cb36-128"><a href="#cb36-128" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-131"><a href="#cb36-131" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb36-132"><a href="#cb36-132" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: matriz</span></span>
+<span id="cb36-133"><a href="#cb36-133" aria-hidden="true" tabindex="-1"></a><span class="co"># Retornos mensuales de 3 activos durante 4 meses (4 filas x 3 columnas)</span></span>
+<span id="cb36-134"><a href="#cb36-134" aria-hidden="true" tabindex="-1"></a>R <span class="op">=</span> np.array([</span>
+<span id="cb36-135"><a href="#cb36-135" aria-hidden="true" tabindex="-1"></a>    [<span class="fl">0.02</span>, <span class="op">-</span><span class="fl">0.01</span>,  <span class="fl">0.03</span>],</span>
+<span id="cb36-136"><a href="#cb36-136" aria-hidden="true" tabindex="-1"></a>    [<span class="fl">0.01</span>,  <span class="fl">0.02</span>, <span class="op">-</span><span class="fl">0.02</span>],</span>
+<span id="cb36-137"><a href="#cb36-137" aria-hidden="true" tabindex="-1"></a>    [<span class="op">-</span><span class="fl">0.03</span>, <span class="fl">0.01</span>,  <span class="fl">0.04</span>],</span>
+<span id="cb36-138"><a href="#cb36-138" aria-hidden="true" tabindex="-1"></a>    [<span class="fl">0.02</span>,  <span class="fl">0.00</span>,  <span class="fl">0.01</span>],</span>
+<span id="cb36-139"><a href="#cb36-139" aria-hidden="true" tabindex="-1"></a>])</span>
+<span id="cb36-140"><a href="#cb36-140" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-141"><a href="#cb36-141" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Panel de retornos:</span><span class="ch">\n</span><span class="st">"</span>, R)</span>
+<span id="cb36-142"><a href="#cb36-142" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"</span><span class="ch">\n</span><span class="st">Shape:"</span>, R.shape, <span class="st">"→ 4 fechas, 3 activos"</span>)</span>
+<span id="cb36-143"><a href="#cb36-143" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb36-144"><a href="#cb36-144" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-145"><a href="#cb36-145" aria-hidden="true" tabindex="-1"></a>---</span>
+<span id="cb36-146"><a href="#cb36-146" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-147"><a href="#cb36-147" aria-hidden="true" tabindex="-1"></a><span class="fu"># Números aleatorios: el generador moderno</span></span>
+<span id="cb36-148"><a href="#cb36-148" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-149"><a href="#cb36-149" aria-hidden="true" tabindex="-1"></a>Buena parte de las finanzas computacionales consiste en simular escenarios, y para eso necesitamos números aleatorios. NumPy recomienda hoy usar un **generador** explícito, creado con `np.random.default_rng()`. Le pasamos una **semilla** (<span class="in">`seed`</span>) para que los resultados sean reproducibles: la misma semilla da siempre los mismos "azares", lo cual es fundamental para que tus ejemplos y los de tus compañeros coincidan.</span>
+<span id="cb36-150"><a href="#cb36-150" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-153"><a href="#cb36-153" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb36-154"><a href="#cb36-154" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: random</span></span>
+<span id="cb36-155"><a href="#cb36-155" aria-hidden="true" tabindex="-1"></a>rng <span class="op">=</span> np.random.default_rng(seed<span class="op">=</span><span class="dv">42</span>)</span>
+<span id="cb36-156"><a href="#cb36-156" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-157"><a href="#cb36-157" aria-hidden="true" tabindex="-1"></a><span class="co"># 5 retornos diarios simulados: media 0.05%, desvío 1.5%</span></span>
+<span id="cb36-158"><a href="#cb36-158" aria-hidden="true" tabindex="-1"></a>retornos_sim <span class="op">=</span> rng.normal(loc<span class="op">=</span><span class="fl">0.0005</span>, scale<span class="op">=</span><span class="fl">0.015</span>, size<span class="op">=</span><span class="dv">5</span>)</span>
+<span id="cb36-159"><a href="#cb36-159" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Retornos simulados:"</span>, retornos_sim)</span>
+<span id="cb36-160"><a href="#cb36-160" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-161"><a href="#cb36-161" aria-hidden="true" tabindex="-1"></a><span class="co"># Una matriz 3x3 de números uniformes entre 0 y 1</span></span>
+<span id="cb36-162"><a href="#cb36-162" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"</span><span class="ch">\n</span><span class="st">Uniformes:</span><span class="ch">\n</span><span class="st">"</span>, rng.random((<span class="dv">3</span>, <span class="dv">3</span>)))</span>
+<span id="cb36-163"><a href="#cb36-163" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb36-164"><a href="#cb36-164" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-165"><a href="#cb36-165" aria-hidden="true" tabindex="-1"></a>::: {.callout-warning title="Vas a ver <span class="in">`np.random.seed()`</span> en código viejo"}</span>
+<span id="cb36-166"><a href="#cb36-166" aria-hidden="true" tabindex="-1"></a>Mucho código (y capítulos previos de versiones anteriores de este libro) usa el estilo antiguo <span class="in">`np.random.seed(42)`</span> y <span class="in">`np.random.normal(...)`</span>. Funciona, pero está considerado *legacy*. El estilo moderno con <span class="in">`default_rng()`</span> es más robusto y es el que vas a encontrar en la documentación actual. Usá <span class="in">`rng.`</span> de acá en adelante.</span>
+<span id="cb36-167"><a href="#cb36-167" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb36-168"><a href="#cb36-168" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-169"><a href="#cb36-169" aria-hidden="true" tabindex="-1"></a>---</span>
+<span id="cb36-170"><a href="#cb36-170" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-171"><a href="#cb36-171" aria-hidden="true" tabindex="-1"></a><span class="fu"># Indexado, slicing y máscaras booleanas</span></span>
+<span id="cb36-172"><a href="#cb36-172" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-173"><a href="#cb36-173" aria-hidden="true" tabindex="-1"></a>Acceder a partes de un array es donde NumPy se pone realmente potente.</span>
+<span id="cb36-174"><a href="#cb36-174" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-175"><a href="#cb36-175" aria-hidden="true" tabindex="-1"></a><span class="fu">## Slicing básico</span></span>
+<span id="cb36-176"><a href="#cb36-176" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-177"><a href="#cb36-177" aria-hidden="true" tabindex="-1"></a>Funciona como en las listas, con <span class="in">`[inicio:fin:paso]`</span>, pero se extiende a varias dimensiones separando con comas: <span class="in">`matriz[filas, columnas]`</span>.</span>
+<span id="cb36-178"><a href="#cb36-178" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-181"><a href="#cb36-181" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb36-182"><a href="#cb36-182" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: slicing</span></span>
+<span id="cb36-183"><a href="#cb36-183" aria-hidden="true" tabindex="-1"></a><span class="co"># Usamos el panel R de antes</span></span>
+<span id="cb36-184"><a href="#cb36-184" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Primera fila (retornos de la fecha 0):"</span>, R[<span class="dv">0</span>])</span>
+<span id="cb36-185"><a href="#cb36-185" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Primera columna (activo 0 en el tiempo):"</span>, R[:, <span class="dv">0</span>])</span>
+<span id="cb36-186"><a href="#cb36-186" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Submatriz (2 primeras fechas, 2 primeros activos):</span><span class="ch">\n</span><span class="st">"</span>, R[:<span class="dv">2</span>, :<span class="dv">2</span>])</span>
+<span id="cb36-187"><a href="#cb36-187" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Último retorno del último activo:"</span>, R[<span class="op">-</span><span class="dv">1</span>, <span class="op">-</span><span class="dv">1</span>])</span>
+<span id="cb36-188"><a href="#cb36-188" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb36-189"><a href="#cb36-189" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-190"><a href="#cb36-190" aria-hidden="true" tabindex="-1"></a>La coma es la clave: <span class="in">`R[:, 0]`</span> significa "todas las filas, columna 0". Poder pedir una columna entera de un panel sin bucles es exactamente lo que necesitamos para analizar un activo a lo largo del tiempo.</span>
+<span id="cb36-191"><a href="#cb36-191" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-192"><a href="#cb36-192" aria-hidden="true" tabindex="-1"></a><span class="fu">## Máscaras booleanas: filtrar por condición</span></span>
+<span id="cb36-193"><a href="#cb36-193" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-194"><a href="#cb36-194" aria-hidden="true" tabindex="-1"></a>Esta es una de las herramientas más usadas en análisis financiero. Una comparación sobre un array devuelve un array de <span class="in">`True`</span>/<span class="in">`False`</span>, y podemos usar ese array como "filtro":</span>
+<span id="cb36-195"><a href="#cb36-195" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-198"><a href="#cb36-198" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb36-199"><a href="#cb36-199" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: mascaras</span></span>
+<span id="cb36-200"><a href="#cb36-200" aria-hidden="true" tabindex="-1"></a>retornos_diarios <span class="op">=</span> np.array([<span class="fl">0.012</span>, <span class="op">-</span><span class="fl">0.008</span>, <span class="fl">0.003</span>, <span class="op">-</span><span class="fl">0.021</span>, <span class="fl">0.015</span>, <span class="op">-</span><span class="fl">0.004</span>])</span>
+<span id="cb36-201"><a href="#cb36-201" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-202"><a href="#cb36-202" aria-hidden="true" tabindex="-1"></a><span class="co"># La comparación genera una máscara booleana</span></span>
+<span id="cb36-203"><a href="#cb36-203" aria-hidden="true" tabindex="-1"></a>mascara_perdidas <span class="op">=</span> retornos_diarios <span class="op">&lt;</span> <span class="dv">0</span></span>
+<span id="cb36-204"><a href="#cb36-204" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Máscara (días con pérdida):"</span>, mascara_perdidas)</span>
+<span id="cb36-205"><a href="#cb36-205" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-206"><a href="#cb36-206" aria-hidden="true" tabindex="-1"></a><span class="co"># Usamos la máscara para quedarnos solo con esos elementos</span></span>
+<span id="cb36-207"><a href="#cb36-207" aria-hidden="true" tabindex="-1"></a>perdidas <span class="op">=</span> retornos_diarios[mascara_perdidas]</span>
+<span id="cb36-208"><a href="#cb36-208" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Retornos negativos:        "</span>, perdidas)</span>
+<span id="cb36-209"><a href="#cb36-209" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-210"><a href="#cb36-210" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"</span><span class="ch">\n</span><span class="ss">Días con pérdida: </span><span class="sc">{</span>mascara_perdidas<span class="sc">.</span><span class="bu">sum</span>()<span class="sc">}</span><span class="ss"> de </span><span class="sc">{</span>retornos_diarios<span class="sc">.</span>size<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb36-211"><a href="#cb36-211" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Pérdida promedio: </span><span class="sc">{</span>perdidas<span class="sc">.</span>mean()<span class="sc">:.2%}</span><span class="ss">"</span>)</span>
+<span id="cb36-212"><a href="#cb36-212" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb36-213"><a href="#cb36-213" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-214"><a href="#cb36-214" aria-hidden="true" tabindex="-1"></a>Fijate el truco de <span class="in">`mascara_perdidas.sum()`</span>: como <span class="in">`True`</span> vale 1 y <span class="in">`False`</span> vale 0, sumar una máscara booleana **cuenta cuántas condiciones se cumplen**. Es un patrón que vas a repetir mil veces (¿cuántos días superaron el VaR?, ¿cuántos activos rindieron más que el mercado?, etc.).</span>
+<span id="cb36-215"><a href="#cb36-215" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-216"><a href="#cb36-216" aria-hidden="true" tabindex="-1"></a>---</span>
+<span id="cb36-217"><a href="#cb36-217" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-218"><a href="#cb36-218" aria-hidden="true" tabindex="-1"></a><span class="fu"># Vectorización: pensar en vectores, no en bucles</span></span>
+<span id="cb36-219"><a href="#cb36-219" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-220"><a href="#cb36-220" aria-hidden="true" tabindex="-1"></a>Ya vimos la idea con los retornos. Generalicémosla. Las operaciones aritméticas (<span class="in">`+`</span>, <span class="in">`-`</span>, <span class="in">`*`</span>, <span class="in">`/`</span>, <span class="in">`**`</span>) y las funciones de NumPy (<span class="in">`np.log`</span>, <span class="in">`np.exp`</span>, <span class="in">`np.sqrt`</span>...) se aplican **elemento a elemento** sobre todo el array.</span>
+<span id="cb36-221"><a href="#cb36-221" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-224"><a href="#cb36-224" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb36-225"><a href="#cb36-225" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: vectorizacion</span></span>
+<span id="cb36-226"><a href="#cb36-226" aria-hidden="true" tabindex="-1"></a>precios <span class="op">=</span> np.array([<span class="fl">100.0</span>, <span class="fl">102.5</span>, <span class="fl">101.0</span>, <span class="fl">103.5</span>, <span class="fl">105.0</span>])</span>
+<span id="cb36-227"><a href="#cb36-227" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-228"><a href="#cb36-228" aria-hidden="true" tabindex="-1"></a><span class="co"># Retorno logarítmico: r_t = ln(P_t / P_{t-1}), en una línea</span></span>
+<span id="cb36-229"><a href="#cb36-229" aria-hidden="true" tabindex="-1"></a>ret_log <span class="op">=</span> np.log(precios[<span class="dv">1</span>:] <span class="op">/</span> precios[:<span class="op">-</span><span class="dv">1</span>])</span>
+<span id="cb36-230"><a href="#cb36-230" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Retornos log:"</span>, ret_log)</span>
+<span id="cb36-231"><a href="#cb36-231" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-232"><a href="#cb36-232" aria-hidden="true" tabindex="-1"></a><span class="co"># Convertir un vector entero de tasas anuales a mensuales, todo de una</span></span>
+<span id="cb36-233"><a href="#cb36-233" aria-hidden="true" tabindex="-1"></a>tasas_anuales <span class="op">=</span> np.array([<span class="fl">0.40</span>, <span class="fl">0.35</span>, <span class="fl">0.50</span>, <span class="fl">0.45</span>])</span>
+<span id="cb36-234"><a href="#cb36-234" aria-hidden="true" tabindex="-1"></a>tasas_mensuales <span class="op">=</span> (<span class="dv">1</span> <span class="op">+</span> tasas_anuales) <span class="op">**</span> (<span class="dv">1</span><span class="op">/</span><span class="dv">12</span>) <span class="op">-</span> <span class="dv">1</span></span>
+<span id="cb36-235"><a href="#cb36-235" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Tasas mensuales equivalentes:"</span>, np.<span class="bu">round</span>(tasas_mensuales, <span class="dv">4</span>))</span>
+<span id="cb36-236"><a href="#cb36-236" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb36-237"><a href="#cb36-237" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-238"><a href="#cb36-238" aria-hidden="true" tabindex="-1"></a>::: {.callout-tip title="La regla de oro"}</span>
+<span id="cb36-239"><a href="#cb36-239" aria-hidden="true" tabindex="-1"></a>Si te encontrás escribiendo un <span class="in">`for`</span> que recorre un array para hacer una cuenta en cada elemento, casi siempre hay una versión vectorizada más corta y mucho más rápida. Antes de escribir el bucle, preguntate: *"¿puedo aplicarle esto al array entero?"*</span>
+<span id="cb36-240"><a href="#cb36-240" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb36-241"><a href="#cb36-241" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-242"><a href="#cb36-242" aria-hidden="true" tabindex="-1"></a><span class="fu">## ¿Cuánto más rápido es, en serio?</span></span>
+<span id="cb36-243"><a href="#cb36-243" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-244"><a href="#cb36-244" aria-hidden="true" tabindex="-1"></a>No es una diferencia cosmética. Comparemos sumar el cuadrado de un millón de números con un bucle de Python contra NumPy:</span>
+<span id="cb36-245"><a href="#cb36-245" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-248"><a href="#cb36-248" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb36-249"><a href="#cb36-249" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: benchmark</span></span>
+<span id="cb36-250"><a href="#cb36-250" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> time</span>
+<span id="cb36-251"><a href="#cb36-251" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-252"><a href="#cb36-252" aria-hidden="true" tabindex="-1"></a>datos <span class="op">=</span> rng.normal(size<span class="op">=</span><span class="dv">1_000_000</span>)</span>
+<span id="cb36-253"><a href="#cb36-253" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-254"><a href="#cb36-254" aria-hidden="true" tabindex="-1"></a><span class="co"># Versión con bucle Python</span></span>
+<span id="cb36-255"><a href="#cb36-255" aria-hidden="true" tabindex="-1"></a>t0 <span class="op">=</span> time.perf_counter()</span>
+<span id="cb36-256"><a href="#cb36-256" aria-hidden="true" tabindex="-1"></a>suma <span class="op">=</span> <span class="fl">0.0</span></span>
+<span id="cb36-257"><a href="#cb36-257" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> x <span class="kw">in</span> datos:</span>
+<span id="cb36-258"><a href="#cb36-258" aria-hidden="true" tabindex="-1"></a>    suma <span class="op">+=</span> x<span class="op">**</span><span class="dv">2</span></span>
+<span id="cb36-259"><a href="#cb36-259" aria-hidden="true" tabindex="-1"></a>t_bucle <span class="op">=</span> time.perf_counter() <span class="op">-</span> t0</span>
+<span id="cb36-260"><a href="#cb36-260" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-261"><a href="#cb36-261" aria-hidden="true" tabindex="-1"></a><span class="co"># Versión vectorizada</span></span>
+<span id="cb36-262"><a href="#cb36-262" aria-hidden="true" tabindex="-1"></a>t0 <span class="op">=</span> time.perf_counter()</span>
+<span id="cb36-263"><a href="#cb36-263" aria-hidden="true" tabindex="-1"></a>suma_np <span class="op">=</span> np.<span class="bu">sum</span>(datos<span class="op">**</span><span class="dv">2</span>)</span>
+<span id="cb36-264"><a href="#cb36-264" aria-hidden="true" tabindex="-1"></a>t_numpy <span class="op">=</span> time.perf_counter() <span class="op">-</span> t0</span>
+<span id="cb36-265"><a href="#cb36-265" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-266"><a href="#cb36-266" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Bucle Python:  </span><span class="sc">{</span>t_bucle<span class="op">*</span><span class="dv">1000</span><span class="sc">:7.1f}</span><span class="ss"> ms"</span>)</span>
+<span id="cb36-267"><a href="#cb36-267" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"NumPy:         </span><span class="sc">{</span>t_numpy<span class="op">*</span><span class="dv">1000</span><span class="sc">:7.1f}</span><span class="ss"> ms"</span>)</span>
+<span id="cb36-268"><a href="#cb36-268" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"NumPy es ~</span><span class="sc">{</span>t_bucle<span class="op">/</span>t_numpy<span class="sc">:.0f}</span><span class="ss">x más rápido"</span>)</span>
+<span id="cb36-269"><a href="#cb36-269" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb36-270"><a href="#cb36-270" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-271"><a href="#cb36-271" aria-hidden="true" tabindex="-1"></a>Sobre un millón de datos la diferencia es de uno a dos órdenes de magnitud. En una simulación de Monte Carlo con millones de trayectorias (Capítulo 13), esto es la diferencia entre que tu código termine en segundos o en horas.</span>
+<span id="cb36-272"><a href="#cb36-272" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-273"><a href="#cb36-273" aria-hidden="true" tabindex="-1"></a>¿De dónde sale esa diferencia? Del **trabajo repetido que hace el intérprete**. En el bucle de Python, *cada una* del millón de vueltas repite la misma burocracia: mirar qué tipo tiene `x` (¿es int? ¿float? ¿string?), desempaquetar el valor del objeto que lo envuelve, decidir qué operación "elevar al cuadrado" corresponde a ese tipo, ejecutarla, y volver a empaquetar el resultado en un objeto nuevo. Un millón de elementos, un millón de veces la misma verificación. NumPy hace esa burocracia **una sola vez**: como el array es homogéneo (todos `float64`, gracias al `dtype`), sabe de antemano qué operación aplicar a todos, y delega el recorrido a un bucle compilado en C que barre la memoria contigua a toda velocidad — incluso procesando varios elementos por instrucción del procesador (SIMD). No es que Python "sea lento": es que le pedimos que vuelva a deducir lo obvio un millón de veces. La vectorización es, en el fondo, **mover la decisión fuera del bucle**.</span>
+<span id="cb36-274"><a href="#cb36-274" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-275"><a href="#cb36-275" aria-hidden="true" tabindex="-1"></a>---</span>
+<span id="cb36-276"><a href="#cb36-276" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-277"><a href="#cb36-277" aria-hidden="true" tabindex="-1"></a><span class="fu"># Reducciones: resumir un array</span></span>
+<span id="cb36-278"><a href="#cb36-278" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-279"><a href="#cb36-279" aria-hidden="true" tabindex="-1"></a>Una **reducción** toma muchos números y devuelve pocos: la suma, el promedio, el máximo, el desvío. Son la base de toda la estadística descriptiva.</span>
+<span id="cb36-280"><a href="#cb36-280" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-283"><a href="#cb36-283" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb36-284"><a href="#cb36-284" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: reducciones</span></span>
+<span id="cb36-285"><a href="#cb36-285" aria-hidden="true" tabindex="-1"></a>ret <span class="op">=</span> np.array([<span class="fl">0.012</span>, <span class="op">-</span><span class="fl">0.008</span>, <span class="fl">0.003</span>, <span class="op">-</span><span class="fl">0.021</span>, <span class="fl">0.015</span>, <span class="op">-</span><span class="fl">0.004</span>])</span>
+<span id="cb36-286"><a href="#cb36-286" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-287"><a href="#cb36-287" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Suma (retorno acumulado aprox): </span><span class="sc">{</span>ret<span class="sc">.</span><span class="bu">sum</span>()<span class="sc">:.4f}</span><span class="ss">"</span>)</span>
+<span id="cb36-288"><a href="#cb36-288" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Media:                          </span><span class="sc">{</span>ret<span class="sc">.</span>mean()<span class="sc">:.4f}</span><span class="ss">"</span>)</span>
+<span id="cb36-289"><a href="#cb36-289" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Desvío estándar (volatilidad):  </span><span class="sc">{</span>ret<span class="sc">.</span>std()<span class="sc">:.4f}</span><span class="ss">"</span>)</span>
+<span id="cb36-290"><a href="#cb36-290" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Mínimo (peor día):              </span><span class="sc">{</span>ret<span class="sc">.</span><span class="bu">min</span>()<span class="sc">:.4f}</span><span class="ss">"</span>)</span>
+<span id="cb36-291"><a href="#cb36-291" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Máximo (mejor día):             </span><span class="sc">{</span>ret<span class="sc">.</span><span class="bu">max</span>()<span class="sc">:.4f}</span><span class="ss">"</span>)</span>
+<span id="cb36-292"><a href="#cb36-292" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb36-293"><a href="#cb36-293" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-294"><a href="#cb36-294" aria-hidden="true" tabindex="-1"></a><span class="fu">## El parámetro `axis`: el concepto que más confunde (y más importa)</span></span>
+<span id="cb36-295"><a href="#cb36-295" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-296"><a href="#cb36-296" aria-hidden="true" tabindex="-1"></a>Cuando reducimos una **matriz**, tenemos que decidir *en qué dirección* resumimos. Ahí entra <span class="in">`axis`</span>:</span>
+<span id="cb36-297"><a href="#cb36-297" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-298"><a href="#cb36-298" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span><span class="in">`axis=0`</span> colapsa las **filas** → un resultado **por columna** (por activo).</span>
+<span id="cb36-299"><a href="#cb36-299" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span><span class="in">`axis=1`</span> colapsa las **columnas** → un resultado **por fila** (por fecha).</span>
+<span id="cb36-300"><a href="#cb36-300" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-301"><a href="#cb36-301" aria-hidden="true" tabindex="-1"></a>Con un panel de retornos (filas = fechas, columnas = activos), esto es exactamente lo que necesitamos:</span>
+<span id="cb36-302"><a href="#cb36-302" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-305"><a href="#cb36-305" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb36-306"><a href="#cb36-306" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: axis</span></span>
+<span id="cb36-307"><a href="#cb36-307" aria-hidden="true" tabindex="-1"></a><span class="co"># Panel: 4 fechas x 3 activos</span></span>
+<span id="cb36-308"><a href="#cb36-308" aria-hidden="true" tabindex="-1"></a>R <span class="op">=</span> np.array([</span>
+<span id="cb36-309"><a href="#cb36-309" aria-hidden="true" tabindex="-1"></a>    [<span class="fl">0.02</span>, <span class="op">-</span><span class="fl">0.01</span>,  <span class="fl">0.03</span>],</span>
+<span id="cb36-310"><a href="#cb36-310" aria-hidden="true" tabindex="-1"></a>    [<span class="fl">0.01</span>,  <span class="fl">0.02</span>, <span class="op">-</span><span class="fl">0.02</span>],</span>
+<span id="cb36-311"><a href="#cb36-311" aria-hidden="true" tabindex="-1"></a>    [<span class="op">-</span><span class="fl">0.03</span>, <span class="fl">0.01</span>,  <span class="fl">0.04</span>],</span>
+<span id="cb36-312"><a href="#cb36-312" aria-hidden="true" tabindex="-1"></a>    [<span class="fl">0.02</span>,  <span class="fl">0.00</span>,  <span class="fl">0.01</span>],</span>
+<span id="cb36-313"><a href="#cb36-313" aria-hidden="true" tabindex="-1"></a>])</span>
+<span id="cb36-314"><a href="#cb36-314" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-315"><a href="#cb36-315" aria-hidden="true" tabindex="-1"></a><span class="co"># Retorno medio DE CADA ACTIVO → colapsamos las fechas (axis=0)</span></span>
+<span id="cb36-316"><a href="#cb36-316" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Media por activo (axis=0):"</span>, R.mean(axis<span class="op">=</span><span class="dv">0</span>))</span>
+<span id="cb36-317"><a href="#cb36-317" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-318"><a href="#cb36-318" aria-hidden="true" tabindex="-1"></a><span class="co"># Volatilidad DE CADA ACTIVO</span></span>
+<span id="cb36-319"><a href="#cb36-319" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Vol por activo   (axis=0):"</span>, R.std(axis<span class="op">=</span><span class="dv">0</span>))</span>
+<span id="cb36-320"><a href="#cb36-320" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-321"><a href="#cb36-321" aria-hidden="true" tabindex="-1"></a><span class="co"># Retorno DE CADA FECHA (un portafolio equiponderado, por ejemplo) → axis=1</span></span>
+<span id="cb36-322"><a href="#cb36-322" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Media por fecha  (axis=1):"</span>, R.mean(axis<span class="op">=</span><span class="dv">1</span>))</span>
+<span id="cb36-323"><a href="#cb36-323" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb36-324"><a href="#cb36-324" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-325"><a href="#cb36-325" aria-hidden="true" tabindex="-1"></a>::: {.callout-note title="Truco para no confundirte con axis"}</span>
+<span id="cb36-326"><a href="#cb36-326" aria-hidden="true" tabindex="-1"></a><span class="in">`axis=0`</span> "apunta hacia abajo" (recorre las filas y deja una fila-resumen), así que el resultado tiene tantos elementos como **columnas**. Regla mnemotécnica: el eje que ponés en `axis` es el que **desaparece** del shape. Si <span class="in">`R.shape`</span> es <span class="in">`(4, 3)`</span>, entonces <span class="in">`R.mean(axis=0).shape`</span> es <span class="in">`(3,)`</span>.</span>
+<span id="cb36-327"><a href="#cb36-327" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb36-328"><a href="#cb36-328" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-329"><a href="#cb36-329" aria-hidden="true" tabindex="-1"></a>---</span>
+<span id="cb36-330"><a href="#cb36-330" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-331"><a href="#cb36-331" aria-hidden="true" tabindex="-1"></a><span class="fu"># Broadcasting: operar arrays de distinta forma</span></span>
+<span id="cb36-332"><a href="#cb36-332" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-333"><a href="#cb36-333" aria-hidden="true" tabindex="-1"></a>¿Qué pasa si querés sumarle un número a todo un array, o restarle a cada columna su propia media? NumPy tiene una regla elegante llamada **broadcasting**: cuando las formas no coinciden, NumPy "estira" automáticamente el array más chico para que encajen, sin copiar datos de verdad.</span>
+<span id="cb36-334"><a href="#cb36-334" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-335"><a href="#cb36-335" aria-hidden="true" tabindex="-1"></a>El caso más simple ya lo usaste sin darte cuenta:</span>
+<span id="cb36-336"><a href="#cb36-336" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-339"><a href="#cb36-339" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb36-340"><a href="#cb36-340" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: broadcast-escalar</span></span>
+<span id="cb36-341"><a href="#cb36-341" aria-hidden="true" tabindex="-1"></a>precios <span class="op">=</span> np.array([<span class="fl">100.0</span>, <span class="fl">102.5</span>, <span class="fl">101.0</span>])</span>
+<span id="cb36-342"><a href="#cb36-342" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-343"><a href="#cb36-343" aria-hidden="true" tabindex="-1"></a><span class="co"># Sumar un escalar a un vector: el escalar se "estira" a todos los elementos</span></span>
+<span id="cb36-344"><a href="#cb36-344" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Con impuesto del 1%:"</span>, precios <span class="op">*</span> <span class="fl">1.01</span>)</span>
+<span id="cb36-345"><a href="#cb36-345" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb36-346"><a href="#cb36-346" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-347"><a href="#cb36-347" aria-hidden="true" tabindex="-1"></a>El caso poderoso es **normalizar un panel**: restarle a cada activo su media y dividir por su desvío (estandarización), una operación constante en modelos de factores y machine learning financiero.</span>
+<span id="cb36-348"><a href="#cb36-348" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-351"><a href="#cb36-351" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb36-352"><a href="#cb36-352" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: broadcast-panel</span></span>
+<span id="cb36-353"><a href="#cb36-353" aria-hidden="true" tabindex="-1"></a>R <span class="op">=</span> np.array([</span>
+<span id="cb36-354"><a href="#cb36-354" aria-hidden="true" tabindex="-1"></a>    [<span class="fl">0.02</span>, <span class="op">-</span><span class="fl">0.01</span>,  <span class="fl">0.03</span>],</span>
+<span id="cb36-355"><a href="#cb36-355" aria-hidden="true" tabindex="-1"></a>    [<span class="fl">0.01</span>,  <span class="fl">0.02</span>, <span class="op">-</span><span class="fl">0.02</span>],</span>
+<span id="cb36-356"><a href="#cb36-356" aria-hidden="true" tabindex="-1"></a>    [<span class="op">-</span><span class="fl">0.03</span>, <span class="fl">0.01</span>,  <span class="fl">0.04</span>],</span>
+<span id="cb36-357"><a href="#cb36-357" aria-hidden="true" tabindex="-1"></a>    [<span class="fl">0.02</span>,  <span class="fl">0.00</span>,  <span class="fl">0.01</span>],</span>
+<span id="cb36-358"><a href="#cb36-358" aria-hidden="true" tabindex="-1"></a>])</span>
+<span id="cb36-359"><a href="#cb36-359" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-360"><a href="#cb36-360" aria-hidden="true" tabindex="-1"></a>medias <span class="op">=</span> R.mean(axis<span class="op">=</span><span class="dv">0</span>)   <span class="co"># shape (3,) → una media por activo</span></span>
+<span id="cb36-361"><a href="#cb36-361" aria-hidden="true" tabindex="-1"></a>desvios <span class="op">=</span> R.std(axis<span class="op">=</span><span class="dv">0</span>)   <span class="co"># shape (3,) → un desvío por activo</span></span>
+<span id="cb36-362"><a href="#cb36-362" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-363"><a href="#cb36-363" aria-hidden="true" tabindex="-1"></a><span class="co"># R tiene shape (4,3) y medias shape (3,): broadcasting alinea por columna</span></span>
+<span id="cb36-364"><a href="#cb36-364" aria-hidden="true" tabindex="-1"></a>R_estandarizado <span class="op">=</span> (R <span class="op">-</span> medias) <span class="op">/</span> desvios</span>
+<span id="cb36-365"><a href="#cb36-365" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-366"><a href="#cb36-366" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Medias por activo:"</span>, np.<span class="bu">round</span>(medias, <span class="dv">4</span>))</span>
+<span id="cb36-367"><a href="#cb36-367" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"</span><span class="ch">\n</span><span class="st">Panel estandarizado (media 0, desvío 1 por columna):</span><span class="ch">\n</span><span class="st">"</span>,</span>
+<span id="cb36-368"><a href="#cb36-368" aria-hidden="true" tabindex="-1"></a>      np.<span class="bu">round</span>(R_estandarizado, <span class="dv">3</span>))</span>
+<span id="cb36-369"><a href="#cb36-369" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"</span><span class="ch">\n</span><span class="st">Verificación — media de cada columna:"</span>, np.<span class="bu">round</span>(R_estandarizado.mean(axis<span class="op">=</span><span class="dv">0</span>), <span class="dv">10</span>))</span>
+<span id="cb36-370"><a href="#cb36-370" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb36-371"><a href="#cb36-371" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-372"><a href="#cb36-372" aria-hidden="true" tabindex="-1"></a>NumPy vio que <span class="in">`R`</span> es <span class="in">`(4, 3)`</span> y <span class="in">`medias`</span> es <span class="in">`(3,)`</span>, y entendió que tenía que restar <span class="in">`medias`</span> **a cada fila**. No tuviste que escribir ningún bucle sobre las 4 fechas.</span>
+<span id="cb36-373"><a href="#cb36-373" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-374"><a href="#cb36-374" aria-hidden="true" tabindex="-1"></a>::: {.callout-warning title="Cuándo el broadcasting falla"}</span>
+<span id="cb36-375"><a href="#cb36-375" aria-hidden="true" tabindex="-1"></a>El broadcasting solo funciona si las dimensiones son compatibles: o son iguales, o una de ellas es 1. Si intentás operar un <span class="in">`(4, 3)`</span> con un <span class="in">`(4,)`</span> vas a recibir un <span class="in">`ValueError: operands could not be broadcast together`</span>. La solución suele ser reformar el vector a <span class="in">`(4, 1)`</span> con <span class="in">`vector.reshape(-1, 1)`</span> para que se alinee por fila en lugar de por columna. Cuando veas ese error, mirá los shapes.</span>
+<span id="cb36-376"><a href="#cb36-376" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb36-377"><a href="#cb36-377" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-378"><a href="#cb36-378" aria-hidden="true" tabindex="-1"></a>---</span>
+<span id="cb36-379"><a href="#cb36-379" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-380"><a href="#cb36-380" aria-hidden="true" tabindex="-1"></a><span class="fu"># Álgebra lineal: la antesala de Markowitz</span></span>
+<span id="cb36-381"><a href="#cb36-381" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-382"><a href="#cb36-382" aria-hidden="true" tabindex="-1"></a>Acá NumPy muestra para qué fue diseñado. La optimización de portafolios del Módulo 2 se escribe entera en lenguaje matricial, y NumPy lo implementa directo.</span>
+<span id="cb36-383"><a href="#cb36-383" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-384"><a href="#cb36-384" aria-hidden="true" tabindex="-1"></a>El **producto matricial** se hace con el operador `@` (no con `*`, que es elemento a elemento). Veamos el cálculo más importante de toda la teoría de portafolios: el **retorno esperado de un portafolio**, que es el producto entre el vector de pesos $\mathbf{w}$ y el vector de retornos esperados $\boldsymbol{\mu}$.</span>
+<span id="cb36-385"><a href="#cb36-385" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-388"><a href="#cb36-388" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb36-389"><a href="#cb36-389" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: producto-portafolio</span></span>
+<span id="cb36-390"><a href="#cb36-390" aria-hidden="true" tabindex="-1"></a><span class="co"># Pesos del portafolio (40% activo 1, 35% activo 2, 25% activo 3)</span></span>
+<span id="cb36-391"><a href="#cb36-391" aria-hidden="true" tabindex="-1"></a>w <span class="op">=</span> np.array([<span class="fl">0.40</span>, <span class="fl">0.35</span>, <span class="fl">0.25</span>])</span>
+<span id="cb36-392"><a href="#cb36-392" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-393"><a href="#cb36-393" aria-hidden="true" tabindex="-1"></a><span class="co"># Retornos esperados anuales de cada activo</span></span>
+<span id="cb36-394"><a href="#cb36-394" aria-hidden="true" tabindex="-1"></a>mu <span class="op">=</span> np.array([<span class="fl">0.12</span>, <span class="fl">0.18</span>, <span class="fl">0.08</span>])</span>
+<span id="cb36-395"><a href="#cb36-395" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-396"><a href="#cb36-396" aria-hidden="true" tabindex="-1"></a><span class="co"># Retorno esperado del portafolio: w · mu (producto punto)</span></span>
+<span id="cb36-397"><a href="#cb36-397" aria-hidden="true" tabindex="-1"></a>ret_portafolio <span class="op">=</span> w <span class="op">@</span> mu</span>
+<span id="cb36-398"><a href="#cb36-398" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Retorno esperado del portafolio: </span><span class="sc">{</span>ret_portafolio<span class="sc">:.2%}</span><span class="ss">"</span>)</span>
+<span id="cb36-399"><a href="#cb36-399" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb36-400"><a href="#cb36-400" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-401"><a href="#cb36-401" aria-hidden="true" tabindex="-1"></a>Y ahora la estrella: la **matriz de covarianzas** $\Sigma$, que resume cómo se mueven juntos los activos y es el corazón de la medición de riesgo. NumPy la calcula con `np.cov`. Con ella, la **varianza del portafolio** es la forma cuadrática $\mathbf{w}^T \Sigma \mathbf{w}$:</span>
+<span id="cb36-402"><a href="#cb36-402" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-405"><a href="#cb36-405" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb36-406"><a href="#cb36-406" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: covarianza</span></span>
+<span id="cb36-407"><a href="#cb36-407" aria-hidden="true" tabindex="-1"></a><span class="co"># Panel de retornos: activos en FILAS, observaciones en COLUMNAS (rowvar=True, el default de np.cov)</span></span>
+<span id="cb36-408"><a href="#cb36-408" aria-hidden="true" tabindex="-1"></a>rng <span class="op">=</span> np.random.default_rng(<span class="dv">7</span>)</span>
+<span id="cb36-409"><a href="#cb36-409" aria-hidden="true" tabindex="-1"></a>R_hist <span class="op">=</span> rng.normal(loc<span class="op">=</span>[<span class="fl">0.001</span>, <span class="fl">0.0015</span>, <span class="fl">0.0008</span>],</span>
+<span id="cb36-410"><a href="#cb36-410" aria-hidden="true" tabindex="-1"></a>                    scale<span class="op">=</span>[<span class="fl">0.02</span>, <span class="fl">0.03</span>, <span class="fl">0.015</span>],</span>
+<span id="cb36-411"><a href="#cb36-411" aria-hidden="true" tabindex="-1"></a>                    size<span class="op">=</span>(<span class="dv">250</span>, <span class="dv">3</span>)).T   <span class="co"># .T → 3 activos x 250 días</span></span>
+<span id="cb36-412"><a href="#cb36-412" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-413"><a href="#cb36-413" aria-hidden="true" tabindex="-1"></a><span class="co"># Matriz de covarianzas (3x3)</span></span>
+<span id="cb36-414"><a href="#cb36-414" aria-hidden="true" tabindex="-1"></a>Sigma <span class="op">=</span> np.cov(R_hist)</span>
+<span id="cb36-415"><a href="#cb36-415" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Matriz de covarianzas (Σ):</span><span class="ch">\n</span><span class="st">"</span>, np.<span class="bu">round</span>(Sigma, <span class="dv">6</span>))</span>
+<span id="cb36-416"><a href="#cb36-416" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-417"><a href="#cb36-417" aria-hidden="true" tabindex="-1"></a><span class="co"># Varianza del portafolio: wᵀ Σ w</span></span>
+<span id="cb36-418"><a href="#cb36-418" aria-hidden="true" tabindex="-1"></a>var_portafolio <span class="op">=</span> w <span class="op">@</span> Sigma <span class="op">@</span> w</span>
+<span id="cb36-419"><a href="#cb36-419" aria-hidden="true" tabindex="-1"></a>vol_portafolio <span class="op">=</span> np.sqrt(var_portafolio)</span>
+<span id="cb36-420"><a href="#cb36-420" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"</span><span class="ch">\n</span><span class="ss">Volatilidad diaria del portafolio: </span><span class="sc">{</span>vol_portafolio<span class="sc">:.4f}</span><span class="ss">"</span>)</span>
+<span id="cb36-421"><a href="#cb36-421" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Volatilidad anualizada:            </span><span class="sc">{</span>vol_portafolio <span class="op">*</span> np<span class="sc">.</span>sqrt(<span class="dv">252</span>)<span class="sc">:.2%}</span><span class="ss">"</span>)</span>
+<span id="cb36-422"><a href="#cb36-422" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb36-423"><a href="#cb36-423" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-424"><a href="#cb36-424" aria-hidden="true" tabindex="-1"></a>Esas dos líneas —<span class="in">`w @ mu`</span> y <span class="in">`w @ Sigma @ w`</span>— son, literalmente, la Teoría Moderna de Portafolios. En el Capítulo 8 le vamos a pedir a la computadora que busque los pesos <span class="in">`w`</span> que minimizan ese riesgo. Todo el andamiaje matemático ya lo tenés en NumPy.</span>
+<span id="cb36-425"><a href="#cb36-425" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-426"><a href="#cb36-426" aria-hidden="true" tabindex="-1"></a>El submódulo <span class="in">`np.linalg`</span> completa el kit de álgebra lineal (inversas, determinantes, autovalores, resolución de sistemas):</span>
+<span id="cb36-427"><a href="#cb36-427" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-430"><a href="#cb36-430" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb36-431"><a href="#cb36-431" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: linalg</span></span>
+<span id="cb36-432"><a href="#cb36-432" aria-hidden="true" tabindex="-1"></a>M <span class="op">=</span> np.array([[<span class="fl">4.0</span>, <span class="fl">1.0</span>],</span>
+<span id="cb36-433"><a href="#cb36-433" aria-hidden="true" tabindex="-1"></a>              [<span class="fl">1.0</span>, <span class="fl">3.0</span>]])</span>
+<span id="cb36-434"><a href="#cb36-434" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-435"><a href="#cb36-435" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Inversa:</span><span class="ch">\n</span><span class="st">"</span>, np.linalg.inv(M))</span>
+<span id="cb36-436"><a href="#cb36-436" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"</span><span class="ch">\n</span><span class="st">Determinante:"</span>, np.linalg.det(M))</span>
+<span id="cb36-437"><a href="#cb36-437" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Autovalores: "</span>, np.linalg.eigvals(M))</span>
+<span id="cb36-438"><a href="#cb36-438" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb36-439"><a href="#cb36-439" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-440"><a href="#cb36-440" aria-hidden="true" tabindex="-1"></a>::: {.callout-note title="Guardá esto para más adelante"}</span>
+<span id="cb36-441"><a href="#cb36-441" aria-hidden="true" tabindex="-1"></a>Black-Litterman (Capítulo 10) y la regresión por mínimos cuadrados (Capítulo 15) se resuelven invirtiendo matrices con <span class="in">`np.linalg.inv`</span> y <span class="in">`np.linalg.solve`</span>. El código que acabás de ver es la base de la mitad del libro.</span>
+<span id="cb36-442"><a href="#cb36-442" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb36-443"><a href="#cb36-443" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-444"><a href="#cb36-444" aria-hidden="true" tabindex="-1"></a>---</span>
+<span id="cb36-445"><a href="#cb36-445" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-446"><a href="#cb36-446" aria-hidden="true" tabindex="-1"></a><span class="fu"># De NumPy a Pandas</span></span>
+<span id="cb36-447"><a href="#cb36-447" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-448"><a href="#cb36-448" aria-hidden="true" tabindex="-1"></a>NumPy es potentísimo, pero tiene una limitación para el trabajo diario: los arrays no tienen **etiquetas**. En <span class="in">`R[:, 0]`</span> vos sabés que la columna 0 es "el activo A" porque te lo acordás, no porque el array lo diga. Cuando manejás decenas de activos con fechas de por medio, eso se vuelve un problema.</span>
+<span id="cb36-449"><a href="#cb36-449" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-450"><a href="#cb36-450" aria-hidden="true" tabindex="-1"></a>Ahí entra **Pandas** (Capítulo 6): pone etiquetas (nombres de columnas y un índice de fechas) *encima* de los arrays de NumPy. Un <span class="in">`DataFrame`</span> es, en el fondo, un array de NumPy con nombres. Por eso todo lo que aprendiste acá —vectorización, broadcasting, <span class="in">`axis`</span>, máscaras booleanas— se traslada casi idéntico a Pandas. No estás aprendiendo dos cosas: estás aprendiendo NumPy, y Pandas es NumPy con etiquetas.</span>
+<span id="cb36-451"><a href="#cb36-451" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-452"><a href="#cb36-452" aria-hidden="true" tabindex="-1"></a>---</span>
+<span id="cb36-453"><a href="#cb36-453" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-454"><a href="#cb36-454" aria-hidden="true" tabindex="-1"></a><span class="fu"># Errores comunes</span></span>
+<span id="cb36-455"><a href="#cb36-455" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-456"><a href="#cb36-456" aria-hidden="true" tabindex="-1"></a>::: {.callout-warning title="Trampas frecuentes con NumPy"}</span>
+<span id="cb36-457"><a href="#cb36-457" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Confundir `*` con `@`**: <span class="in">`A * B`</span> multiplica elemento a elemento; <span class="in">`A @ B`</span> es el producto matricial. Para portafolios casi siempre querés <span class="in">`@`</span>.</span>
+<span id="cb36-458"><a href="#cb36-458" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Copias vs. vistas**: un slice como `b = a[:2]` **no copia** los datos, es una *vista*. Si modificás <span class="in">`b`</span>, modificás <span class="in">`a`</span>. Si necesitás una copia independiente, usá <span class="in">`a[:2].copy()`</span>.</span>
+<span id="cb36-459"><a href="#cb36-459" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Olvidarse del `axis`**: <span class="in">`R.mean()`</span> sin <span class="in">`axis`</span> promedia *todos* los elementos y te da un solo número, no uno por activo. Casi siempre querés especificar <span class="in">`axis`</span>.</span>
+<span id="cb36-460"><a href="#cb36-460" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Enteros donde querías decimales**: <span class="in">`np.array([1, 2, 3])`</span> crea un array de enteros; dividirlo puede truncar en algunos contextos. Escribí <span class="in">`1.0`</span> o pasá <span class="in">`dtype=float`</span> para asegurarte de trabajar con <span class="in">`float64`</span>.</span>
+<span id="cb36-461"><a href="#cb36-461" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb36-462"><a href="#cb36-462" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-463"><a href="#cb36-463" aria-hidden="true" tabindex="-1"></a>---</span>
+<span id="cb36-464"><a href="#cb36-464" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-465"><a href="#cb36-465" aria-hidden="true" tabindex="-1"></a><span class="fu"># Ejercicios Propuestos</span></span>
+<span id="cb36-466"><a href="#cb36-466" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-467"><a href="#cb36-467" aria-hidden="true" tabindex="-1"></a>::: {.callout-important title="Ejercicios"}</span>
+<span id="cb36-468"><a href="#cb36-468" aria-hidden="true" tabindex="-1"></a><span class="ss">1. </span>**Retornos y volatilidad**: dado un array de 252 precios simulados, calculá el vector de retornos logarítmicos, su media anualizada ($\times 252$) y su volatilidad anualizada ($\times \sqrt{252}$), todo sin usar bucles.</span>
+<span id="cb36-469"><a href="#cb36-469" aria-hidden="true" tabindex="-1"></a><span class="ss">2. </span>**Máximo drawdown vectorizado**: a partir de un vector de precios, calculá el máximo acumulado con <span class="in">`np.maximum.accumulate`</span> y usalo para obtener la peor caída desde un pico (el *drawdown* máximo). *Pista*: el drawdown en cada instante es <span class="in">`precio / pico_hasta_ahora - 1`</span>.</span>
+<span id="cb36-470"><a href="#cb36-470" aria-hidden="true" tabindex="-1"></a><span class="ss">3. </span>**Panel de activos**: generá con <span class="in">`rng.normal`</span> un panel de retornos de 5 activos por 500 días. Calculá el retorno medio y la volatilidad de cada activo con <span class="in">`axis`</span>, y estandarizá el panel con broadcasting.</span>
+<span id="cb36-471"><a href="#cb36-471" aria-hidden="true" tabindex="-1"></a><span class="ss">4. </span>**Portafolio equiponderado**: con el panel del ejercicio 3 y pesos iguales ($w_i = 1/5$), calculá la serie de retornos del portafolio (<span class="in">`R @ w`</span>) y comparala con el promedio simple por fecha.</span>
+<span id="cb36-472"><a href="#cb36-472" aria-hidden="true" tabindex="-1"></a><span class="ss">5. </span>**Covarianza y riesgo**: calculá la matriz de covarianzas del panel y la volatilidad de un portafolio con pesos <span class="in">`[0.3, 0.3, 0.2, 0.1, 0.1]`</span> usando la forma cuadrática $\mathbf{w}^T\Sigma\mathbf{w}$. ¿Es menor que el promedio de las volatilidades individuales? ¿Por qué?</span>
+<span id="cb36-473"><a href="#cb36-473" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb36-474"><a href="#cb36-474" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-475"><a href="#cb36-475" aria-hidden="true" tabindex="-1"></a>---</span>
+<span id="cb36-476"><a href="#cb36-476" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-477"><a href="#cb36-477" aria-hidden="true" tabindex="-1"></a><span class="fu"># Referencias</span></span>
+<span id="cb36-478"><a href="#cb36-478" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-479"><a href="#cb36-479" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-480"><a href="#cb36-480" aria-hidden="true" tabindex="-1"></a>::: {#refs}</span>
+<span id="cb36-481"><a href="#cb36-481" aria-hidden="true" tabindex="-1"></a>:::</span>
+</code></pre></div><button title="Copiar al portapapeles" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></div>
+</div></div></div></div></div>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+<p>Finanzas Computacionales con Python fue escrito por la Cátedra de Finanzas Computacionales — UADE.</p>
+</div>   
+    <div class="nav-footer-center">
+      &nbsp;
+    <div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/diegoonna/libro_finanzas_computacionales/edit/main/unidad1/cap05_numpy.qmd" class="toc-action"><i class="bi bi-github"></i>Editar esta página</a></li><li><a href="https://github.com/diegoonna/libro_finanzas_computacionales/issues/new" class="toc-action"><i class="bi empty"></i>Informar sobre problema</a></li></ul></div></div>
+    <div class="nav-footer-right">
+<p>Este libro fue construido con <a href="https://quarto.org/">Quarto</a>.</p>
+</div>
+  </div>
+</footer>
+
+
+
+
+<script src="../site_libs/quarto-html/zenscroll-min.js"></script>
+</body></html>
