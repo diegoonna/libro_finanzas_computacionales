@@ -8,6 +8,8 @@ abstract: |
   data snooping, cómo calcular e interpretar el p-value de una estrategia, el
   análisis walk-forward como estándar profesional, y las métricas correctas para
   juzgar el desempeño fuera de muestra.
+nocite: |
+  @lopezdeprado2018, @bailey2014, @harvey2015, @white2000
 ---
 
 # Introducción
@@ -251,6 +253,36 @@ Un backtest confiable sigue esta secuencia — y el orden importa:
 
 ---
 
+# Con datos reales
+
+Todo el capítulo trabajó sobre ruido fabricado, donde sabíamos la respuesta de antemano. El examen final es con datos donde **nadie** sabe la respuesta: corremos el walk-forward completo sobre cinco años del SPY, del dataset del libro (`datos/precios.csv`, ver @sec-datos-financieros).
+
+```{python}
+#| label: wf-datos-reales
+precios = pd.read_csv("../datos/precios.csv", index_col="Date", parse_dates=True)
+r_spy = precios["SPY"].pct_change().dropna().values
+
+oos_spy, elec_spy = walk_forward(r_spy, n_train=504, n_test=126, ventanas=range(2, 62))
+
+print(f"Tramos operados: {len(elec_spy)} | Ventanas elegidas: {elec_spy}")
+evaluar(oos_spy, "Momentum SPY (walk-forward)")
+evaluar(r_spy[-len(oos_spy):], "Buy & hold SPY (mismo período)")
+
+_ = reporte(oos_spy, "Momentum SPY (OOS)")
+print()
+_ = reporte(r_spy[-len(oos_spy):], "Buy & hold SPY")
+```
+
+Este resultado es una clase entera de honestidad estadística, así que leelo despacio:
+
+- **Las ventanas elegidas son estables entre tramos** — nada del salto errático que vimos sobre ruido puro. Eso sugiere que el momentum del índice tiene *algo* de estructura real.
+- El Sharpe out-of-sample es positivo, pero el **p-value no baja del umbral**: con ~2.5 años de track record OOS, la fórmula $t \approx \text{Sharpe} \times \sqrt{\text{años}}$ hace su trabajo implacable. Un Sharpe cercano a 1 con dos años y medio de datos **no es evidencia suficiente** — verificalo vos mismo con la fórmula.
+- Y la comparación que un backtest siempre debe incluir: en el mismo período, **comprar y no hacer nada rindió más**. El período OOS fue mayormente alcista, y toda estrategia que pasa tiempo en cash paga ese costo. El consuelo del momentum es un drawdown máximo menor — es una estrategia *defensiva*, y su valor aparecería en un bear market largo, no en este tramo. Elegir el benchmark correcto es parte del protocolo.
+
+Ah, y esto es *antes* de costos de transacción. La conclusión metodológica —no sobre el momentum sino sobre el oficio— es que un backtest honesto casi nunca da un veredicto rotundo: da matices, condiciones y un p-value incómodo. Desconfiá de los que no.
+
+---
+
 # Errores comunes
 
 ::: {.callout-warning title="Trampas frecuentes"}
@@ -270,14 +302,29 @@ Un backtest confiable sigue esta secuencia — y el orden importa:
 2. **Bonferroni en acción**: con el experimento anterior, aplicá la corrección de Bonferroni ($\alpha/60$) al p-value del mejor Sharpe IS. ¿Sobrevive alguno?
 3. **Walk-forward con edge**: sembrá una señal real débil (drift condicional a la señal de momentum) y verificá que el walk-forward la detecta: parámetros estables y Sharpe OOS positivo.
 4. **Sensibilidad a costos**: para la estrategia con edge del capítulo, encontrá el costo por operación que lleva su Sharpe neto a cero. ¿Es un costo realista para un inversor minorista?
-5. **Tu propio protocolo**: elegí una regla simple (cruce de medias móviles, por ejemplo), escribí la hipótesis económica ANTES de correr nada, y ejecutá el protocolo completo de 7 pasos sobre datos reales. Documentá cuántas variantes probaste.
+5. **Tu propio protocolo**: elegí una regla simple (cruce de medias móviles, por ejemplo), escribí la hipótesis económica ANTES de correr nada, y ejecutá el protocolo completo de 7 pasos sobre alguna de las acciones del dataset del libro (`datos/precios.csv`). Documentá cuántas variantes probaste.
 :::
+
+
+Podés resolver estos ejercicios acá mismo: la celda ejecuta Python **en tu navegador**, sin instalar nada (la primera ejecución tarda unos segundos mientras carga el entorno; los paquetes que importes se instalan solos).
+
+```{pyodide-python}
+#| label: practica-navegador
+import numpy as np
+
+# Para usar el dataset real del libro (requiere conexión):
+# import pandas as pd
+# from pyodide.http import open_url
+# url = "https://diegoonna.github.io/libro_finanzas_computacionales/datos/precios.csv"
+# precios = pd.read_csv(open_url(url), index_col="Date", parse_dates=True)
+
+# Tu solución acá...
+```
 
 ---
 
 # Referencias
 
-* López de Prado, M. (2018). *Advances in Financial Machine Learning*. Wiley. [Capítulos 11–14].
-* Bailey, D., Borwein, J., López de Prado, M., & Zhu, Q. (2014). *Pseudo-Mathematics and Financial Charlatanism: The Effects of Backtest Overfitting on Out-of-Sample Performance*. Notices of the AMS, 61(5), 458–471.
-* Harvey, C., & Liu, Y. (2015). *Backtesting*. The Journal of Portfolio Management, 42(1), 13–28.
-* White, H. (2000). *A Reality Check for Data Snooping*. Econometrica, 68(5), 1097–1126.
+
+::: {#refs}
+:::

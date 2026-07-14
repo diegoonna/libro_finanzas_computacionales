@@ -9,6 +9,8 @@ abstract: |
   volatilidad —la evidencia de que el mercado no le cree a Black-Scholes— y
   calculamos las griegas, los tableros de sensibilidad que gobiernan la gestión
   de un book de opciones.
+nocite: |
+  @black1973, @merton1973, @hull2018options, @derman2016
 ---
 
 # Introducción
@@ -292,11 +294,21 @@ El gamma concentrado alrededor del strike, y cada vez más puntiagudo al acercar
 5. **P&L de un día**: para la call del capítulo, calculá la ganancia/pérdida aproximada si mañana $S$ sube 2% y la vol cae 1 punto, usando $\Delta \cdot dS + \frac{1}{2}\Gamma \cdot dS^2 + \text{Vega} \cdot d\sigma + \Theta \cdot dt$. Verificá repreciando con la fórmula exacta.
 :::
 
+
+Podés resolver estos ejercicios acá mismo: la celda ejecuta Python **en tu navegador**, sin instalar nada (la primera ejecución tarda unos segundos mientras carga el entorno; los paquetes que importes se instalan solos).
+
+```{pyodide-python}
+#| label: practica-navegador
+import numpy as np
+from scipy.stats import norm
+
+# Tu solución acá...
+```
+
 ---
 
 # Referencias
 
-* Black, F., & Scholes, M. (1973). *The Pricing of Options and Corporate Liabilities*. Journal of Political Economy, 81(3), 637–654.
-* Merton, R. (1973). *Theory of Rational Option Pricing*. Bell Journal of Economics, 4(1), 141–183.
-* Hull, J. (2018). *Options, Futures, and Other Derivatives*. Pearson.
-* Derman, E., & Miller, M. (2016). *The Volatility Smile*. Wiley.
+
+::: {#refs}
+:::

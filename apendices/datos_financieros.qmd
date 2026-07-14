@@ -1,6 +1,11 @@
+---
+nocite: |
+  @fred, @yfinance, @xbbg, @blpapi
+---
+
 # Obtención de Datos Financieros {#sec-datos-financieros}
 
-A lo largo del libro trabajamos con datos simulados: son reproducibles, no dependen de internet y dejan el foco en los conceptos. Pero varios ejercicios te invitan a "descargar datos reales" — y en el trabajo profesional, conseguir datos limpios es la mitad del oficio. Este apéndice presenta las tres fuentes que cubren el 95% de las necesidades: **yfinance** (precios de mercado, gratis), **FRED** (macro, gratis) y **Bloomberg** (el estándar institucional, pago).
+A lo largo del libro trabajamos sobre todo con datos simulados: son reproducibles, no dependen de internet y dejan el foco en los conceptos. Los complementa el dataset real congelado del repositorio (`datos/precios.csv`, descripto más abajo), que alimenta las secciones "Con datos reales". Pero tarde o temprano vas a querer tus propios datos — y en el trabajo profesional, conseguir datos limpios es la mitad del oficio. Este apéndice presenta las tres fuentes que cubren el 95% de las necesidades: **yfinance** (precios de mercado, gratis), **FRED** (macro, gratis) y **Bloomberg** (el estándar institucional, pago).
 
 ::: {.callout-warning title="Los bloques de este apéndice no se ejecutan en el libro"}
 A diferencia del resto del libro, el código de este apéndice está marcado como **no ejecutable** (`eval: false`): requiere conexión a internet, claves de API o —en el caso de Bloomberg— una terminal con licencia. Las salidas que se muestran son ejemplos ilustrativos. Copiá el código a tu entorno para correrlo de verdad.
@@ -27,6 +32,28 @@ precios = pd.read_csv("datos/aapl.csv", index_col="Date", parse_dates=True)
 ```
 
 Beneficios: tus resultados son reproducibles (el archivo no cambia), el análisis corre sin internet, y no castigás a la API gratuita con cien pedidos idénticos por día.
+
+## El dataset del libro: `datos/precios.csv`
+
+El libro practica lo que predica: aplicamos este patrón una vez y **congelamos el resultado en el repositorio**, en [`datos/precios.csv`](https://github.com/diegoonna/libro_finanzas_computacionales/blob/main/datos/precios.csv). Es el archivo que usan las secciones "Con datos reales" de los capítulos 8, 9, 11 y 17 — todas trabajan sobre los mismos datos, y cualquiera puede reproducirlas sin claves de API ni conexión.
+
+Qué contiene:
+
+- **Precios diarios ajustados** (dividendos y splits incluidos — el retorno total del que habla el Capítulo 8), redondeados a 4 decimales.
+- **Período**: julio 2021 a junio 2026 (~1250 ruedas). Incluye el bear market de 2022, el ciclo de suba de tasas y el boom de la IA — cinco años con de todo.
+- **10 tickers** elegidos para cubrir sectores bien distintos: tecnología (AAPL, MSFT, NVDA), financiero (JPM), energía (XOM), consumo defensivo (KO, JNJ, WMT), medios (DIS), más el ETF **SPY** como proxy del mercado.
+
+Para cargarlo, desde cualquier capítulo del libro (o desde tu clon del repositorio):
+
+```{python}
+#| eval: false
+import pandas as pd
+
+precios = pd.read_csv("datos/precios.csv", index_col="Date", parse_dates=True)
+retornos = precios.pct_change().dropna()
+```
+
+El archivo se regeneró por última vez en **julio de 2026** con `yfinance` y `auto_adjust=True`, siguiendo exactamente el patrón de dos etapas de arriba. Si querés actualizarlo o cambiar el universo, el script es el de la sección anterior con la lista de tickers completa — pero recordá que al hacerlo tus números dejarán de coincidir con los impresos en el libro: ese es justamente el costo de la frescura que el congelamiento evita.
 
 ## yfinance: precios de mercado, gratis
 
@@ -158,7 +185,5 @@ La regla práctica: **yfinance para aprender y prototipar, FRED para macro, Bloo
 
 ## Referencias
 
-* FRED — Federal Reserve Bank of St. Louis. [fred.stlouisfed.org](https://fred.stlouisfed.org)
-* yfinance — documentación. [github.com/ranaroussi/yfinance](https://github.com/ranaroussi/yfinance)
-* xbbg — Bloomberg para Python. [github.com/alpha-xone/xbbg](https://github.com/alpha-xone/xbbg)
-* Bloomberg Desktop API (BLPAPI). [bloomberg.com/professional/support/api-library](https://www.bloomberg.com/professional/support/api-library/)
+::: {#refs}
+:::

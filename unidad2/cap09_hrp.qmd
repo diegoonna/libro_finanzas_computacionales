@@ -9,6 +9,8 @@ abstract: |
   similitud con clustering jerárquico y repartir el capital de arriba hacia abajo
   según el riesgo de cada grupo. En este capítulo implementamos HRP desde cero y
   lo comparamos con Markowitz.
+nocite: |
+  @lopezdeprado2016, @lopezdeprado2018, @raffinot2017
 ---
 
 # Introducción: el talón de Aquiles de Markowitz
@@ -270,6 +272,43 @@ HRP renuncia a usar información que Markowitz sí usa (las correlaciones exacta
 
 ---
 
+# Con datos reales
+
+La simulación nos dejó controlar la estructura de correlaciones; ahora veamos si HRP la **descubre solo** en datos de mercado. Usamos el dataset del libro (`datos/precios.csv`, ver @sec-datos-financieros): 9 acciones de sectores distintos, cinco años de precios diarios ajustados.
+
+```{python}
+#| label: hrp-datos-reales
+precios = pd.read_csv("../datos/precios.csv", index_col="Date", parse_dates=True)
+r_real = precios.drop(columns="SPY").pct_change().dropna()   # SPY es un índice, no un activo más
+
+# El pipeline completo de HRP, tal cual lo construimos
+dist_real = np.sqrt((1 - r_real.corr()) / 2)
+enlaces_real = hierarchy.linkage(squareform(dist_real.values), method="single")
+
+fig, ax = plt.subplots(figsize=(9, 4))
+hierarchy.dendrogram(enlaces_real, labels=r_real.columns.tolist(), ax=ax)
+ax.set_title("Dendrograma de 9 acciones reales (2021–2026)")
+ax.set_ylabel("Distancia")
+plt.tight_layout()
+plt.show()
+```
+
+Mirá el dendrograma antes de seguir: **nadie le dijo al algoritmo qué sector es cada empresa**, y sin embargo las tecnológicas (AAPL, MSFT, NVDA) se abrazan en un cluster compacto, y las defensivas de consumo (KO, JNJ, WMT) forman el suyo. La estructura jerárquica que López de Prado postula no es una hipótesis: está en los datos.
+
+```{python}
+#| label: hrp-pesos-reales
+orden_real = r_real.columns[hierarchy.leaves_list(enlaces_real)].tolist()
+w_hrp_real = hrp(r_real.cov(), orden_real)
+w_mkw_real = pd.Series(pesos_min_varianza(r_real.cov().values), index=r_real.columns)
+
+comparacion = pd.DataFrame({"HRP": w_hrp_real, "Markowitz mín. var.": w_mkw_real})
+print((comparacion * 100).round(1).astype(str) + " %")
+```
+
+La comparación repite lo que vimos en la simulación, ahora sin trucos. Buscá en la columna de Markowitz las tecnológicas: **shortea una para comprar otra** — la apuesta fina entre "gemelos" que en el experimento sintético identificamos como puro ruido muestral, reproducida con datos de verdad. Con 9 activos el daño es contenido; con 50 o 100, esos cortos se multiplican. HRP, en cambio, asigna a **todos** los activos pesos positivos y moderados, dándole más capital al cluster defensivo y repartiendo dentro de cada grupo. Es la cartera que podrías ejecutar mañana sin explicarle nada raro a un comité de inversiones.
+
+---
+
 # Errores comunes
 
 ::: {.callout-warning title="Trampas frecuentes"}
@@ -288,13 +327,32 @@ HRP renuncia a usar información que Markowitz sí usa (las correlaciones exacta
 2. **Más activos**: extendé la simulación a 10 activos con 3 grupos de correlación y verificá que los bloques aparecen en la matriz quasi-diagonalizada.
 3. **Equiponderada como referencia**: agregá al experimento fuera de muestra la cartera equiponderada ($w_i = 1/N$). ¿Dónde queda respecto de Markowitz y HRP?
 4. **Estrés de correlación**: aumentá la correlación de los "gemelos" a 0.99 y observá qué pasa con los pesos de Markowitz y con los de HRP.
-5. **HRP con datos reales**: descargá retornos de 8–10 acciones de distintos sectores, corré el pipeline completo y analizá si el dendrograma recupera los sectores.
+5. **HRP con otro linkage sobre datos reales**: repetí la sección "Con datos reales" usando `method="ward"` en lugar de `single`. ¿Cambian los clusters? ¿Y los pesos? ¿Cuál te resulta más creíble económicamente?
 :::
+
+
+Podés resolver estos ejercicios acá mismo: la celda ejecuta Python **en tu navegador**, sin instalar nada (la primera ejecución tarda unos segundos mientras carga el entorno; los paquetes que importes se instalan solos).
+
+```{pyodide-python}
+#| label: practica-navegador
+import numpy as np
+import pandas as pd
+from scipy.cluster import hierarchy
+from scipy.spatial.distance import squareform
+
+# Para usar el dataset real del libro (requiere conexión):
+# import pandas as pd
+# from pyodide.http import open_url
+# url = "https://diegoonna.github.io/libro_finanzas_computacionales/datos/precios.csv"
+# precios = pd.read_csv(open_url(url), index_col="Date", parse_dates=True)
+
+# Tu solución acá...
+```
 
 ---
 
 # Referencias
 
-* López de Prado, M. (2016). *Building Diversified Portfolios that Outperform Out of Sample*. The Journal of Portfolio Management, 42(4), 59–69.
-* López de Prado, M. (2018). *Advances in Financial Machine Learning*. Wiley. [Capítulo 16].
-* Raffinot, T. (2017). *Hierarchical Clustering-Based Asset Allocation*. The Journal of Portfolio Management.
+
+::: {#refs}
+:::

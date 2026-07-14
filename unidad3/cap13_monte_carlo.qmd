@@ -9,6 +9,8 @@ abstract: |
   vectorizada, calculamos VaR y Expected Shortfall por simulación, estudiamos la
   convergencia del método y lo aceleramos con variables antitéticas. Cerramos
   valuando una opción, el puente hacia el Módulo 4.
+nocite: |
+  @glasserman2003, @hull2018options, @boyle1977
 ---
 
 # Introducción
@@ -268,10 +270,22 @@ La simulación reproduce la fórmula cerrada — y esa es justamente la gracia: 
 5. **Opción asiática**: valuá una call asiática (el payoff usa el *promedio* de la trayectoria: $\max(\bar{S} - K, 0)$). ¿Por qué acá Monte Carlo es imprescindible?
 :::
 
+
+Podés resolver estos ejercicios acá mismo: la celda ejecuta Python **en tu navegador**, sin instalar nada (la primera ejecución tarda unos segundos mientras carga el entorno; los paquetes que importes se instalan solos).
+
+```{pyodide-python}
+#| label: practica-navegador
+import numpy as np
+
+rng = np.random.default_rng(42)
+
+# Tu solución acá...
+```
+
 ---
 
 # Referencias
 
-* Glasserman, P. (2003). *Monte Carlo Methods in Financial Engineering*. Springer.
-* Hull, J. (2018). *Options, Futures, and Other Derivatives*. Pearson.
-* Boyle, P. (1977). *Options: A Monte Carlo Approach*. Journal of Financial Economics, 4(3), 323–338.
+
+::: {#refs}
+:::

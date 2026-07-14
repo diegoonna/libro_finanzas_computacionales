@@ -9,6 +9,8 @@ abstract: |
   paper de 1952 no responde: qué métrica optimizar (Sharpe, Sortino, varianza),
   cómo tratar los dividendos, qué rol juega la renta fija, cuándo trabajar con
   retornos reales y cuándo con excesos de retorno.
+nocite: |
+  @markowitz1952, @sharpe1966, @sortino1991, @elton2014, @dimson2002
 ---
 
 # Introducción
@@ -359,6 +361,61 @@ Nada de esto "refuta" a Markowitz: define la agenda de todo lo que sigue en el l
 
 ---
 
+# Con datos reales
+
+Todo el capítulo trabajó con un universo inventado de 4 activos, donde nosotros elegimos $\boldsymbol{\mu}$ y $\Sigma$. Cerremos con el ejercicio completo sobre **datos de mercado**: el libro incluye en [`datos/precios.csv`](https://github.com/diegoonna/libro_finanzas_computacionales/blob/main/datos/precios.csv) cinco años de precios diarios ajustados (jul-2021 a jun-2026) de 9 acciones de sectores distintos más el ETF SPY (ver el @sec-datos-financieros para los detalles del dataset).
+
+```{python}
+#| label: datos-reales
+import pandas as pd
+
+precios = pd.read_csv("../datos/precios.csv", index_col="Date", parse_dates=True)
+acciones = [c for c in precios.columns if c != "SPY"]   # SPY lo reservamos como "mercado"
+
+# Retornos mensuales (más estables que los diarios para estimar μ)
+r_mensual = precios[acciones].resample("ME").last().pct_change().dropna()
+
+mu_real = r_mensual.mean().values * 12                  # anualizado
+Sigma_real = r_mensual.cov().values * 12
+
+print(f"Observaciones mensuales: {len(r_mensual)}")
+print(f"{'Ticker':<8}{'μ anual':>9}{'σ anual':>9}")
+for t, m, s in zip(acciones, mu_real, np.sqrt(np.diag(Sigma_real))):
+    print(f"{t:<8}{m:>8.1%}{s:>9.1%}")
+```
+
+Con $\boldsymbol{\mu}$ y $\Sigma$ estimados, el resto es exactamente el código que ya escribimos:
+
+```{python}
+#| label: datos-reales-optimizacion
+n_r = len(acciones)
+w0_r = np.ones(n_r) / n_r
+bounds_r = [(0, 1)] * n_r
+
+# GMV
+res_gmv_r = minimize(vol_portafolio, w0_r, args=(Sigma_real,),
+                     method="SLSQP", bounds=bounds_r,
+                     constraints=[{"type": "eq", "fun": lambda w: w.sum() - 1}])
+
+# Tangente
+res_tan_r = minimize(neg_sharpe, w0_r, args=(mu_real, Sigma_real, rf),
+                     method="SLSQP", bounds=bounds_r,
+                     constraints=[{"type": "eq", "fun": lambda w: w.sum() - 1}])
+
+print(f"{'Ticker':<8}{'GMV':>8}{'Tangente':>10}")
+for t, wg, wt in zip(acciones, res_gmv_r.x, res_tan_r.x):
+    print(f"{t:<8}{wg:>8.1%}{wt:>10.1%}")
+
+ret_tan_r = res_tan_r.x @ mu_real
+vol_tan_r = np.sqrt(res_tan_r.x @ Sigma_real @ res_tan_r.x)
+print(f"\nTangente: retorno {ret_tan_r:.1%}, vol {vol_tan_r:.1%}, "
+      f"Sharpe {(ret_tan_r - rf) / vol_tan_r:.2f}")
+```
+
+El resultado ilustra en carne propia las advertencias del capítulo. Mirá primero la tabla de $\mu$ estimados: NVDA con un retorno anualizado altísimo (la ola de la IA cayó entera dentro de la ventana), DIS en terreno negativo. El portafolio tangente **se toma esos números al pie de la letra**: asigna cero a más de la mitad del universo y concentra el capital en los cuatro o cinco tickers que mejor combinaron retorno y volatilidad *en esa muestra*. ¿De verdad creés que NVDA va a repetir ese μ los próximos cinco años? El optimizador sí. El GMV, que no usa $\boldsymbol{\mu}$, queda bastante más repartido y cargado en los activos defensivos. Esa fragilidad frente al $\mu$ estimado es exactamente el problema que atacan HRP (capítulo siguiente) y Black-Litterman (Capítulo 10) — y ahora la viste con datos de verdad.
+
+---
+
 # Errores comunes
 
 ::: {.callout-warning title="Trampas frecuentes"}
@@ -379,15 +436,39 @@ Nada de esto "refuta" a Markowitz: define la agenda de todo lo que sigue en el l
 3. **Short-selling**: recalculá la frontera con `bounds=[(-1, 2)]` (cortos permitidos). ¿Cuánto mejora? ¿Los pesos resultantes te parecen implementables?
 4. **Efecto dividendos**: bajá 3 puntos el $\mu$ del activo "Value" (simulando que ignoraste su dividendo) y mirá cómo cambia el portafolio tangente. ¿Te parece un cambio proporcional al error?
 5. **Deflactar**: simulá 10 años de retornos nominales mensuales con inflación mensual del 2%, estimá la frontera en nominal y en real, y compará los pesos.
-6. **Datos reales**: descargá precios ajustados de 5 acciones y un ETF de bonos, estimá $\mu$ y $\Sigma$ con retornos mensuales, y construí frontera, GMV y tangente.
+6. **Datos reales, más allá del dataset**: partiendo del código de la sección "Con datos reales", agregá al universo un ETF de bonos (por ejemplo TLT, descargándolo como muestra el @sec-datos-financieros) y compará las fronteras con y sin renta fija — la versión real del gráfico de este capítulo.
 :::
+
+
+Podés resolver estos ejercicios acá mismo: la celda ejecuta Python **en tu navegador**, sin instalar nada (la primera ejecución tarda unos segundos mientras carga el entorno; los paquetes que importes se instalan solos).
+
+```{pyodide-python}
+#| label: practica-navegador
+import numpy as np
+from scipy.optimize import minimize
+
+# El universo del capítulo, listo para experimentar:
+mu = np.array([0.14, 0.10, 0.07, 0.05])
+vols = np.array([0.28, 0.20, 0.14, 0.06])
+corr = np.array([[1.00, 0.65, 0.45, 0.10],
+                 [0.65, 1.00, 0.50, 0.15],
+                 [0.45, 0.50, 1.00, 0.20],
+                 [0.10, 0.15, 0.20, 1.00]])
+Sigma = np.outer(vols, vols) * corr
+
+# Para usar el dataset real del libro (requiere conexión):
+# import pandas as pd
+# from pyodide.http import open_url
+# url = "https://diegoonna.github.io/libro_finanzas_computacionales/datos/precios.csv"
+# precios = pd.read_csv(open_url(url), index_col="Date", parse_dates=True)
+
+# Tu solución acá...
+```
 
 ---
 
 # Referencias
 
-* Markowitz, H. (1952). *Portfolio Selection*. The Journal of Finance, 7(1), 77–91.
-* Sharpe, W. (1966). *Mutual Fund Performance*. The Journal of Business, 39(1), 119–138.
-* Sortino, F., & van der Meer, R. (1991). *Downside Risk*. The Journal of Portfolio Management, 17(4), 27–31.
-* Elton, E., Gruber, M., Brown, S., & Goetzmann, W. (2014). *Modern Portfolio Theory and Investment Analysis*. Wiley.
-* Dimson, E., Marsh, P., & Staunton, M. (2002). *Triumph of the Optimists: 101 Years of Global Investment Returns*. Princeton University Press.
+
+::: {#refs}
+:::

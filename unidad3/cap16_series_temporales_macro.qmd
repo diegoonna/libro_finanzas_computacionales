@@ -7,6 +7,8 @@ abstract: |
   el concepto de estacionariedad y cómo diagnosticarla (test ADF), la identificación
   de modelos con ACF/PACF, el ajuste y pronóstico con ARIMA, y los modelos VAR para
   sistemas de varias series macro con sus funciones de impulso-respuesta.
+nocite: |
+  @box2015, @hamilton1994, @sims1980, @granger1974
 ---
 
 # Introducción
@@ -279,11 +281,22 @@ Los bancos centrales usan VARs (y variantes: SVAR, BVAR, FAVAR) como caballo de 
 5. **VAR de tres variables**: agregá al sistema una variable de "actividad" que dependa negativamente de la tasa, re-estimá el VAR y analizá las nuevas IRF.
 :::
 
+
+Podés resolver estos ejercicios acá mismo: la celda ejecuta Python **en tu navegador**, sin instalar nada (la primera ejecución tarda unos segundos mientras carga el entorno; los paquetes que importes se instalan solos).
+
+```{pyodide-python}
+#| label: practica-navegador
+import numpy as np
+import statsmodels.api as sm
+from statsmodels.tsa.arima.model import ARIMA
+
+# Tu solución acá...
+```
+
 ---
 
 # Referencias
 
-* Box, G., Jenkins, G., Reinsel, G., & Ljung, G. (2015). *Time Series Analysis: Forecasting and Control*. Wiley.
-* Hamilton, J. (1994). *Time Series Analysis*. Princeton University Press.
-* Sims, C. (1980). *Macroeconomics and Reality*. Econometrica, 48(1), 1–48.
-* Granger, C., & Newbold, P. (1974). *Spurious Regressions in Econometrics*. Journal of Econometrics, 2(2), 111–120.
+
+::: {#refs}
+:::
