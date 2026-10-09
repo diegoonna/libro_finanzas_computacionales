@@ -12,7 +12,7 @@ nocite: |
   @harris2020, @mckinney2017, @vanderplas2016, @numpydoc
 ---
 
-# Introducción
+# Introducción {.unnumbered}
 
 Hasta ahora venimos representando datos financieros con **listas** y **diccionarios** de Python. Nos sirvieron para aprender a programar, pero tienen un problema serio: son lentas y verbosas cuando hay que hacer cuentas sobre miles de números. Y en finanzas, *siempre* hay miles de números: años de cotizaciones diarias, paneles de cientos de activos, millones de trayectorias en una simulación.
 
@@ -31,7 +31,7 @@ Por convención universal, NumPy se importa como `np`. Vas a ver ese `np.` en to
 
 ---
 
-# El problema: las listas no fueron hechas para calcular
+## El problema: las listas no fueron hechas para calcular
 
 Imaginá que tenés los precios de cierre de una acción durante cinco días y querés calcular el retorno simple diario, $R_t = P_t / P_{t-1} - 1$. Con listas puras, tenés que escribir un bucle:
 
@@ -59,15 +59,109 @@ print(retornos)
 
 `precios[1:]` es "todos los precios desde el segundo" ($P_t$) y `precios[:-1]` es "todos menos el último" ($P_{t-1}$). NumPy divide los dos vectores **elemento a elemento** automáticamente. Sin bucles, sin índices, sin listas vacías. Esto no es solo más corto: sobre datos reales es **decenas o cientos de veces más rápido**, porque la operación corre en código C optimizado en lugar de un bucle interpretado de Python.
 
+La @fig-slicing-retornos muestra el truco: los dos recortes son el mismo array **desfasado una posición**, así que al ponerlos uno sobre otro cada precio queda alineado con el del día anterior.
+
+```{python}
+#| label: fig-slicing-retornos
+#| echo: false
+#| fig-cap: "Retornos sin bucles: `precios[1:]` (Pₜ) y `precios[:-1]` (Pₜ₋₁) son el mismo array corrido una posición. Divididos elemento a elemento, cada columna produce el retorno de un día."
+import sys; sys.path.insert(0, "..")
+from _esquemas import *
+
+def _esquema():
+    fig, ax = lienzo(14.5, 6.8)
+    w, x0 = 1.7, 3.6
+    precios = [100.0, 102.5, 101.0, 103.5, 105.0]
+    retornos = [precios[i + 1] / precios[i] - 1 for i in range(4)]
+
+    def rotulo(y, s):
+        texto(ax, 0.2, y + 0.35, s, tam=10, mono=True, ha="left", color=PRIMARIO, peso="bold")
+
+    rotulo(5.6, "precios")
+    arriba = fila_de_celdas(ax, x0, 5.6, [f"{p:.1f}" for p in precios], w=w, rellenos=FONDO_GRIS)
+    for i in range(5):
+        texto(ax, x0 + i * w + w / 2, 6.55, f"[{i}]", tam=8, color=GRIS, mono=True)
+
+    # precios[1:] queda alineado con su posición; precios[:-1] se corre una a la derecha
+    rotulo(3.9, "precios[1:]")
+    fila_de_celdas(ax, x0 + w, 3.9, [f"{p:.1f}" for p in precios[1:]], w=w, rellenos=FONDO_PRIMARIO)
+    rotulo(2.6, "precios[:-1]")
+    fila_de_celdas(ax, x0 + w, 2.6, [f"{p:.1f}" for p in precios[:-1]], w=w, rellenos=FONDO_SECUNDARIO)
+    for i in range(1, 5):
+        flecha(ax, (arriba[i][0], 5.6), (arriba[i][0], 4.6), color=PRIMARIO, lw=1)
+    for i in range(4):
+        flecha(ax, (arriba[i][0] + 0.2, 5.6), (arriba[i + 1][0] - 0.2, 3.3),
+               color=SECUNDARIO, lw=0.9, ls="--")
+    texto(ax, x0 + w / 2, 3.25, "÷", tam=16, color=TEXTO)
+
+    rotulo(0.6, "retornos")
+    fila_de_celdas(ax, x0 + w, 0.6, [f"{r:+.2%}" for r in retornos], w=w, rellenos=FONDO_ACENTO)
+    texto(ax, x0 + 3 * w, 1.85, "cada columna:  Pₜ ÷ Pₜ₋₁ − 1   (las cuatro a la vez, sin bucle)",
+          tam=9, color=GRIS)
+    texto(ax, x0 + w / 2, 0.95, "=", tam=14, color=TEXTO)
+    texto(ax, x0 + w / 2, 4.25, "Pₜ", tam=10, color=PRIMARIO)
+    texto(ax, x0 + w / 2, 2.95, "Pₜ₋₁", tam=10, color=SECUNDARIO)
+
+    plt.tight_layout()
+    plt.show()
+
+_esquema()
+```
+
+
 ---
 
-# El `ndarray`: qué es y por qué es distinto
+## El `ndarray`: qué es y por qué es distinto
 
 El objeto central de NumPy es el **array** (`ndarray`, de *N-dimensional array*). A primera vista se parece a una lista, pero tiene tres diferencias que lo cambian todo:
 
 1. **Es homogéneo**: todos los elementos son del mismo tipo (todos `float64`, todos `int`, etc.). Una lista de Python puede mezclar números, strings y objetos; un array no. Esa restricción es justamente lo que lo hace rápido.
 2. **Es contiguo en memoria**: los datos se guardan en un bloque compacto y ordenado de RAM, no desperdigados con punteros como en una lista. El procesador puede recorrerlos de corrido.
 3. **Opera vectorizado**: las operaciones aritméticas se aplican a todo el array de una sola vez, apoyándose en instrucciones de bajo nivel del procesador.
+
+
+La @fig-lista-vs-ndarray muestra la diferencia de fondo entre los puntos 1 y 2: una lista guarda *referencias* a objetos sueltos; un array guarda los números mismos, uno al lado del otro.
+
+```{python}
+#| label: fig-lista-vs-ndarray
+#| echo: false
+#| fig-cap: "Una lista de Python guarda referencias a objetos `float` independientes, cada uno en su lugar de la memoria. Un `ndarray` guarda los valores crudos en un bloque contiguo de 8 bytes por número, todos del mismo tipo."
+import sys; sys.path.insert(0, "..")
+from _esquemas import *
+
+def _esquema():
+    fig, ax = lienzo(17, 7)
+
+    # Lista de Python: una fila de punteros a objetos dispersos
+    texto(ax, 0.3, 6.6, "Lista de Python", tam=11, peso="bold", color=PRIMARIO, ha="left")
+    punteros = fila_de_celdas(ax, 0.5, 4.9, ["●"] * 4, w=1.0, rellenos=FONDO_GRIS, mono=False)
+    texto(ax, 2.5, 5.9, "referencias (punteros)", tam=8, color=GRIS)
+    objetos = [(0.4, 2.3, "100.0"), (3.3, 3.4, "102.5"), (1.9, 0.5, "101.0"), (5.2, 1.4, "103.5")]
+    for (cx, cy), (x, y, v) in zip(punteros, objetos):
+        caja(ax, x, y, 2.0, 1.0, f"float\n{v}", relleno=FONDO_PRIMARIO, mono=True, tam=8)
+        flecha(ax, (cx, cy - 0.2), (x + 1.0, y + 1.0), color=PRIMARIO, lw=1)
+    texto(ax, 4.2, 0.1, "cada número es un objeto aparte (tipo + valor), disperso en RAM",
+          tam=8, color=ACENTO)
+
+    ax.plot([8.4, 8.4], [0.2, 6.8], color=GRIS, lw=0.8, ls=":")
+
+    # ndarray: un bloque contiguo de float64
+    texto(ax, 8.9, 6.6, "ndarray de NumPy", tam=11, peso="bold", color=PRIMARIO, ha="left")
+    texto(ax, 9.0, 5.6, "dtype=float64   shape=(4,)", tam=9, mono=True, color=SECUNDARIO, ha="left")
+    caja(ax, 8.9, 3.3, 7.8, 1.8, color=SECUNDARIO, ls="--", lw=1, redondeo=0.1)
+    fila_de_celdas(ax, 9.2, 3.7, ["100.0", "102.5", "101.0", "103.5"], w=1.8, h=1.0,
+                   rellenos=FONDO_SECUNDARIO, tam=10)
+    for i, b in enumerate([0, 8, 16, 24]):
+        texto(ax, 9.2 + i * 1.8, 3.05, f"byte {b}", tam=7, color=GRIS, ha="left", mono=True)
+    texto(ax, 12.8, 2.2, "un solo bloque contiguo: 8 bytes por número,\n"
+          "todos del mismo tipo → el procesador los recorre de corrido",
+          tam=8, color=SECUNDARIO)
+
+    plt.tight_layout()
+    plt.show()
+
+_esquema()
+```
 
 ```{python}
 #| label: array-basico
@@ -87,7 +181,7 @@ El **`dtype`** (data type) es un concepto clave: le dice a NumPy exactamente cu�
 El atributo `.shape` es una tupla que describe las dimensiones. Un vector de 4 elementos tiene shape `(4,)`; una matriz de 3 filas por 2 columnas tiene shape `(3, 2)`. Cuando algo falla en NumPy, el 90% de las veces es un problema de shapes que no encajan. Acostumbrate a mirar `.shape` como primer paso de debugging.
 :::
 
-## Crear arrays
+### Crear arrays
 
 Rara vez vas a escribir los números a mano. NumPy trae funciones para generar los arrays más comunes:
 
@@ -112,7 +206,7 @@ print("ones:    ", np.ones(3))
 print("identidad:\n", np.eye(3))
 ```
 
-## Arrays de varias dimensiones
+### Arrays de varias dimensiones
 
 Un vector es 1D; una **matriz** es 2D. En finanzas la matriz más importante es el **panel de retornos**: filas = fechas, columnas = activos.
 
@@ -132,7 +226,7 @@ print("\nShape:", R.shape, "→ 4 fechas, 3 activos")
 
 ---
 
-# Números aleatorios: el generador moderno
+## Números aleatorios: el generador moderno
 
 Buena parte de las finanzas computacionales consiste en simular escenarios, y para eso necesitamos números aleatorios. NumPy recomienda hoy usar un **generador** explícito, creado con `np.random.default_rng()`. Le pasamos una **semilla** (`seed`) para que los resultados sean reproducibles: la misma semilla da siempre los mismos "azares", lo cual es fundamental para que tus ejemplos y los de tus compañeros coincidan.
 
@@ -149,16 +243,16 @@ print("\nUniformes:\n", rng.random((3, 3)))
 ```
 
 ::: {.callout-warning title="Vas a ver `np.random.seed()` en código viejo"}
-Mucho código (y capítulos previos de versiones anteriores de este libro) usa el estilo antiguo `np.random.seed(42)` y `np.random.normal(...)`. Funciona, pero está considerado *legacy*. El estilo moderno con `default_rng()` es más robusto y es el que vas a encontrar en la documentación actual. Usá `rng.` de acá en adelante.
+Mucho código que vas a encontrar en internet usa el estilo antiguo `np.random.seed(42)` y `np.random.normal(...)`. Funciona, pero está considerado *legacy*. El estilo moderno con `default_rng()` es más robusto y es el que vas a encontrar en la documentación actual. Usá `rng.` de acá en adelante.
 :::
 
 ---
 
-# Indexado, slicing y máscaras booleanas
+## Indexado, slicing y máscaras booleanas
 
 Acceder a partes de un array es donde NumPy se pone realmente potente.
 
-## Slicing básico
+### Slicing básico
 
 Funciona como en las listas, con `[inicio:fin:paso]`, pero se extiende a varias dimensiones separando con comas: `matriz[filas, columnas]`.
 
@@ -173,7 +267,7 @@ print("Último retorno del último activo:", R[-1, -1])
 
 La coma es la clave: `R[:, 0]` significa "todas las filas, columna 0". Poder pedir una columna entera de un panel sin bucles es exactamente lo que necesitamos para analizar un activo a lo largo del tiempo.
 
-## Máscaras booleanas: filtrar por condición
+### Máscaras booleanas: filtrar por condición
 
 Esta es una de las herramientas más usadas en análisis financiero. Una comparación sobre un array devuelve un array de `True`/`False`, y podemos usar ese array como "filtro":
 
@@ -197,7 +291,7 @@ Fijate el truco de `mascara_perdidas.sum()`: como `True` vale 1 y `False` vale 0
 
 ---
 
-# Vectorización: pensar en vectores, no en bucles
+## Vectorización: pensar en vectores, no en bucles
 
 Ya vimos la idea con los retornos. Generalicémosla. Las operaciones aritméticas (`+`, `-`, `*`, `/`, `**`) y las funciones de NumPy (`np.log`, `np.exp`, `np.sqrt`...) se aplican **elemento a elemento** sobre todo el array.
 
@@ -219,7 +313,7 @@ print("Tasas mensuales equivalentes:", np.round(tasas_mensuales, 4))
 Si te encontrás escribiendo un `for` que recorre un array para hacer una cuenta en cada elemento, casi siempre hay una versión vectorizada más corta y mucho más rápida. Antes de escribir el bucle, preguntate: *"¿puedo aplicarle esto al array entero?"*
 :::
 
-## ¿Cuánto más rápido es, en serio?
+### ¿Cuánto más rápido es, en serio?
 
 No es una diferencia cosmética. Comparemos sumar el cuadrado de un millón de números con un bucle de Python contra NumPy:
 
@@ -252,7 +346,7 @@ Sobre un millón de datos la diferencia es de uno a dos órdenes de magnitud. En
 
 ---
 
-# Reducciones: resumir un array
+## Reducciones: resumir un array
 
 Una **reducción** toma muchos números y devuelve pocos: la suma, el promedio, el máximo, el desvío. Son la base de toda la estadística descriptiva.
 
@@ -267,7 +361,7 @@ print(f"Mínimo (peor día):              {ret.min():.4f}")
 print(f"Máximo (mejor día):             {ret.max():.4f}")
 ```
 
-## El parámetro `axis`: el concepto que más confunde (y más importa)
+### El parámetro `axis`: el concepto que más confunde (y más importa)
 
 Cuando reducimos una **matriz**, tenemos que decidir *en qué dirección* resumimos. Ahí entra `axis`:
 
@@ -296,13 +390,67 @@ print("Vol por activo   (axis=0):", R.std(axis=0))
 print("Media por fecha  (axis=1):", R.mean(axis=1))
 ```
 
+
+La @fig-axis lo muestra sobre el panel `R`: la dirección de la flecha es la dirección en la que se **colapsa** el array.
+
+```{python}
+#| label: fig-axis
+#| echo: false
+#| fig-cap: "El parámetro `axis` sobre un panel de 4 fechas × 3 activos. `axis=0` colapsa las filas (hacia abajo) y deja un valor por activo; `axis=1` colapsa las columnas (hacia la derecha) y deja un valor por fecha."
+import numpy as np
+import sys; sys.path.insert(0, "..")
+from _esquemas import *
+
+def _esquema():
+    R = np.array([[0.02, -0.01, 0.03],
+                  [0.01, 0.02, -0.02],
+                  [-0.03, 0.01, 0.04],
+                  [0.02, 0.00, 0.01]])
+
+    fig, ax = lienzo(16, 7)
+    w, h, x0, y0 = 1.4, 0.7, 4.6, 2.4
+
+    # Panel de retornos: filas = fechas, columnas = activos
+    for j, nombre in enumerate(["Activo A", "Activo B", "Activo C"]):
+        texto(ax, x0 + j * w + w / 2, y0 + 4 * h + 0.3, nombre, tam=8, color=PRIMARIO, peso="bold")
+    for i in range(4):
+        texto(ax, x0 - 0.45, y0 + (3 - i) * h + h / 2, f"t{i + 1}", tam=9, color=PRIMARIO, peso="bold")
+        fila_de_celdas(ax, x0, y0 + (3 - i) * h, [f"{v:+.2f}" for v in R[i]], w=w, h=h,
+                       rellenos=FONDO_GRIS)
+    texto(ax, x0 + 1.5 * w, y0 + 4 * h + 0.85, "R.shape = (4, 3)", tam=10, mono=True)
+
+    # axis=0: colapsa las filas (hacia abajo) → un valor por activo
+    for j in range(3):
+        cx = x0 + j * w + w / 2
+        flecha(ax, (cx, y0 - 0.05), (cx, 1.2), color=SECUNDARIO, lw=1.6)
+    fila_de_celdas(ax, x0, 0.4, [f"{v:+.3f}" for v in R.mean(axis=0)], w=w, h=h,
+                   rellenos=FONDO_SECUNDARIO)
+    texto(ax, x0 - 0.3, 0.75, "R.mean(axis=0)\n→ shape (3,)\nuno por ACTIVO", tam=9,
+          color=SECUNDARIO, ha="right")
+
+    # axis=1: colapsa las columnas (hacia la derecha) → un valor por fecha
+    xr = x0 + 3 * w
+    for i in range(4):
+        cy = y0 + (3 - i) * h + h / 2
+        flecha(ax, (xr + 0.05, cy), (xr + 1.6, cy), color=ACENTO, lw=1.6)
+        caja(ax, xr + 1.65, y0 + (3 - i) * h, w, h, f"{R[i].mean():+.4f}", color=PRIMARIO,
+             relleno=FONDO_ACENTO, mono=True, tam=9, lw=1.2, redondeo=0.02)
+    texto(ax, xr + 1.65 + w + 0.3, y0 + 2 * h, "R.mean(axis=1)\n→ shape (4,)\nuno por FECHA",
+          tam=9, color=ACENTO, ha="left")
+
+    plt.tight_layout()
+    plt.show()
+
+_esquema()
+```
+
 ::: {.callout-note title="Truco para no confundirte con axis"}
 `axis=0` "apunta hacia abajo" (recorre las filas y deja una fila-resumen), así que el resultado tiene tantos elementos como **columnas**. Regla mnemotécnica: el eje que ponés en `axis` es el que **desaparece** del shape. Si `R.shape` es `(4, 3)`, entonces `R.mean(axis=0).shape` es `(3,)`.
 :::
 
 ---
 
-# Broadcasting: operar arrays de distinta forma
+## Broadcasting: operar arrays de distinta forma
 
 ¿Qué pasa si querés sumarle un número a todo un array, o restarle a cada columna su propia media? NumPy tiene una regla elegante llamada **broadcasting**: cuando las formas no coinciden, NumPy "estira" automáticamente el array más chico para que encajen, sin copiar datos de verdad.
 
@@ -339,6 +487,58 @@ print("\nPanel estandarizado (media 0, desvío 1 por columna):\n",
 print("\nVerificación — media de cada columna:", np.round(R_estandarizado.mean(axis=0), 10))
 ```
 
+
+La @fig-broadcasting muestra lo que NumPy "imagina" para hacer la resta: repite el vector de medias en cada fila (las copias fantasma), pero sin copiar memoria de verdad.
+
+```{python}
+#| label: fig-broadcasting
+#| echo: false
+#| fig-cap: "Broadcasting en `R - medias`: el vector de forma (3,) se estira virtualmente a (4, 3), repitiéndose en cada fila, y la resta se hace elemento a elemento."
+import numpy as np
+import sys; sys.path.insert(0, "..")
+from _esquemas import *
+
+def _esquema():
+    R = np.array([[0.02, -0.01, 0.03],
+                  [0.01, 0.02, -0.02],
+                  [-0.03, 0.01, 0.04],
+                  [0.02, 0.00, 0.01]])
+    medias = R.mean(axis=0)
+
+    fig, ax = lienzo(17.5, 4.6)
+    w, h, y0 = 1.25, 0.65, 0.9
+
+    def matriz(x, valores, relleno, fmt="{:+.3f}", ls="-", alpha=1.0):
+        for i, fila in enumerate(valores):
+            fila_de_celdas(ax, x, y0 + (3 - i) * h, [fmt.format(v) for v in fila], w=w, h=h,
+                           rellenos=relleno, tam=8, ls=ls, alpha=alpha)
+
+    matriz(0.3, R, FONDO_GRIS)
+    texto(ax, 0.3 + 1.5 * w, 0.45, "R   (4, 3)", tam=9, mono=True)
+    texto(ax, 4.55, y0 + 2 * h, "−", tam=18)
+
+    # El vector de medias y sus copias "fantasma": así lo ve NumPy, sin copiar datos
+    xm = 5.1
+    fila_de_celdas(ax, xm, y0 + 3 * h, [f"{v:+.3f}" for v in medias], w=w, h=h,
+                   rellenos=FONDO_SECUNDARIO, tam=8)
+    for i in range(1, 4):
+        fila_de_celdas(ax, xm, y0 + (3 - i) * h, [f"{v:+.3f}" for v in medias], w=w, h=h,
+                       rellenos=FONDO_SECUNDARIO, tam=8, ls="--", alpha=0.35)
+    texto(ax, xm + 1.5 * w, 0.45, "medias   (3,) → se estira a (4, 3)", tam=9, mono=True,
+          color=SECUNDARIO)
+    texto(ax, xm + 1.5 * w, y0 + 4 * h + 0.3, "se repite por fila (sin copiar memoria)",
+          tam=8, color=SECUNDARIO)
+    texto(ax, 9.35, y0 + 2 * h, "=", tam=18)
+
+    matriz(9.9, R - medias, FONDO_ACENTO)
+    texto(ax, 9.9 + 1.5 * w, 0.45, "R − medias   (4, 3)", tam=9, mono=True, color=ACENTO)
+
+    plt.tight_layout()
+    plt.show()
+
+_esquema()
+```
+
 NumPy vio que `R` es `(4, 3)` y `medias` es `(3,)`, y entendió que tenía que restar `medias` **a cada fila**. No tuviste que escribir ningún bucle sobre las 4 fechas.
 
 ::: {.callout-warning title="Cuándo el broadcasting falla"}
@@ -347,7 +547,7 @@ El broadcasting solo funciona si las dimensiones son compatibles: o son iguales,
 
 ---
 
-# Álgebra lineal: la antesala de Markowitz
+## Álgebra lineal: la antesala de Markowitz
 
 Acá NumPy muestra para qué fue diseñado. La optimización de portafolios del Módulo 2 se escribe entera en lenguaje matricial, y NumPy lo implementa directo.
 
@@ -407,7 +607,7 @@ Black-Litterman (Capítulo 10) y la regresión por mínimos cuadrados (Capítulo
 
 ---
 
-# De NumPy a Pandas
+## De NumPy a Pandas
 
 NumPy es potentísimo, pero tiene una limitación para el trabajo diario: los arrays no tienen **etiquetas**. En `R[:, 0]` vos sabés que la columna 0 es "el activo A" porque te lo acordás, no porque el array lo diga. Cuando manejás decenas de activos con fechas de por medio, eso se vuelve un problema.
 
@@ -415,18 +615,18 @@ Ahí entra **Pandas** (Capítulo 6): pone etiquetas (nombres de columnas y un í
 
 ---
 
-# Errores comunes
+## Errores comunes
 
 ::: {.callout-warning title="Trampas frecuentes con NumPy"}
 - **Confundir `*` con `@`**: `A * B` multiplica elemento a elemento; `A @ B` es el producto matricial. Para portafolios casi siempre querés `@`.
 - **Copias vs. vistas**: un slice como `b = a[:2]` **no copia** los datos, es una *vista*. Si modificás `b`, modificás `a`. Si necesitás una copia independiente, usá `a[:2].copy()`.
 - **Olvidarse del `axis`**: `R.mean()` sin `axis` promedia *todos* los elementos y te da un solo número, no uno por activo. Casi siempre querés especificar `axis`.
-- **Enteros donde querías decimales**: `np.array([1, 2, 3])` crea un array de enteros; dividirlo puede truncar en algunos contextos. Escribí `1.0` o pasá `dtype=float` para asegurarte de trabajar con `float64`.
+- **Enteros donde querías decimales**: `np.array([1, 2, 3])` crea un array de enteros, y asignarle un decimal lo trunca sin avisar (`a[0] = 2.7` guarda `2`). Escribí `1.0` o pasá `dtype=float` para asegurarte de trabajar con `float64`.
 :::
 
 ---
 
-# Ejercicios Propuestos
+## Ejercicios Propuestos
 
 ::: {.callout-important title="Ejercicios"}
 1. **Retornos y volatilidad**: dado un array de 252 precios simulados, calculá el vector de retornos logarítmicos, su media anualizada ($\times 252$) y su volatilidad anualizada ($\times \sqrt{252}$), todo sin usar bucles.
@@ -438,7 +638,7 @@ Ahí entra **Pandas** (Capítulo 6): pone etiquetas (nombres de columnas y un í
 
 ---
 
-# Referencias
+## Referencias
 
 
 ::: {#refs}

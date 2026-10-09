@@ -11,7 +11,7 @@ nocite: |
   @ruppert2015, @virtanen2020, @cont2001
 ---
 
-# Introducción
+# Introducción {.unnumbered}
 
 Este módulo trata de una pregunta: *¿cómo repartir el capital entre activos?* Para responderla con rigor necesitamos dos habilidades previas.
 
@@ -31,9 +31,9 @@ rng = np.random.default_rng(42)
 
 ---
 
-# Estadística descriptiva de retornos
+## Estadística descriptiva de retornos
 
-## Los cuatro momentos
+### Los cuatro momentos
 
 Una distribución de retornos se resume, en primera aproximación, con cuatro números — los **momentos**:
 
@@ -41,6 +41,53 @@ Una distribución de retornos se resume, en primera aproximación, con cuatro n�
 2. **Varianza / volatilidad** ($\sigma$): cuánto se dispersan los retornos alrededor de la media. Es la medida clásica de riesgo.
 3. **Asimetría** (*skewness*): ¿la distribución se estira más hacia un lado? Skewness **negativa** = derrumbes ocasionales más grandes que las subas (típico de acciones); **positiva** = sorpresas buenas más grandes (típico de estrategias tipo lotería).
 4. **Curtosis** (*kurtosis*): ¿cuánta masa hay en las **colas**? Curtosis en exceso positiva significa que los eventos extremos son **más frecuentes** que bajo una distribución normal. En finanzas, casi siempre lo son.
+
+La @fig-formas-distribucion muestra qué miden los dos últimos momentos, que son los menos intuitivos: la asimetría deforma la campana hacia un lado, y la curtosis la vuelve más puntiaguda en el centro y más pesada en las colas.
+
+```{python}
+#| label: fig-formas-distribucion
+#| echo: false
+#| fig-cap: "Asimetría y curtosis frente a una normal con la misma media y el mismo desvío. Izquierda: asimetría negativa, con una cola izquierda larga (derrumbes ocasionales). Derecha: colas pesadas, con más masa en los extremos y en el centro, y menos en los hombros."
+import sys; sys.path.insert(0, "..")
+from _esquemas import *
+import numpy as np
+from scipy import stats
+
+def _esquema():
+    x = np.linspace(-5, 5, 400)
+    normal = stats.norm.pdf(x)
+    fig, (izq, der) = plt.subplots(1, 2, figsize=(11, 3.8))
+
+    # Asimetría: skew-normal con sesgo a la baja, estandarizada a media 0 y desvío 1
+    a = -6
+    d = stats.skewnorm(a)
+    sesgada = d.pdf(x * d.std() + d.mean()) * d.std()
+    izq.plot(x, normal, color=GRIS, lw=2, ls="--", label="Normal")
+    izq.fill_between(x, sesgada, color=ACENTO, alpha=0.25)
+    izq.plot(x, sesgada, color=ACENTO, lw=2, label="Asimetría negativa")
+    izq.annotate("cola izquierda larga:\nderrumbes ocasionales", xy=(-3.0, 0.03), xytext=(-4.8, 0.25),
+                 fontsize=9, color=ACENTO, arrowprops=dict(arrowstyle="-|>", color=ACENTO))
+    izq.set_title("Asimetría (skewness)", fontsize=11, color=PRIMARIO, fontweight="bold")
+
+    # Curtosis: t de Student con 3 g.l., reescalada a desvío 1
+    t = stats.t(df=3, scale=1 / np.sqrt(3))
+    der.plot(x, normal, color=GRIS, lw=2, ls="--", label="Normal")
+    der.fill_between(x, t.pdf(x), color=PRIMARIO, alpha=0.2)
+    der.plot(x, t.pdf(x), color=PRIMARIO, lw=2, label="Colas pesadas (t de Student)")
+    der.annotate("más masa en las colas:\nextremos más frecuentes", xy=(3.2, 0.012), xytext=(1.3, 0.3),
+                 fontsize=9, color=PRIMARIO, arrowprops=dict(arrowstyle="-|>", color=PRIMARIO))
+    der.set_title("Curtosis (colas pesadas)", fontsize=11, color=PRIMARIO, fontweight="bold")
+
+    for ax in (izq, der):
+        ax.set_xlabel("Retorno estandarizado (desvíos)")
+        ax.set_yticks([])
+        ax.legend(frameon=False, fontsize=9, loc="upper right")
+        ax.spines[["top", "right", "left"]].set_visible(False)
+    plt.tight_layout()
+    plt.show()
+
+_esquema()
+```
 
 ```{python}
 #| label: estadistica
@@ -58,7 +105,11 @@ print(f"  Curtosis (exceso):  {stats.kurtosis(retornos):.4f}")
 ```
 
 ::: {.callout-note title="¿Por qué ×252 y ×√252?"}
-Hay ~252 ruedas bursátiles por año. Las **medias se suman** en el tiempo (252 días de retorno medio diario), pero las **varianzas** son las que se suman —no los desvíos—, así que la volatilidad escala con la **raíz** del tiempo: $\sigma_{anual} = \sigma_{diaria}\sqrt{252}$. Confundir estas dos reglas es el error de anualización más común.
+Hay ~252 ruedas bursátiles por año. Si los retornos diarios son independientes entre sí, tanto la **media** como la **varianza** de un año son 252 veces las diarias. Pero el desvío es la *raíz* de la varianza, así que la volatilidad escala con la raíz del tiempo: $\sigma_{anual} = \sigma_{diaria}\sqrt{252}$. Confundir estas dos reglas es el error de anualización más común. (El supuesto de independencia en la práctica se cumple solo aproximadamente, pero es el estándar de la industria.)
+:::
+
+::: {.callout-note title="`np.std` y pandas `.std()` no dan lo mismo"}
+`np.std` divide por $n$ (desvío *poblacional*, `ddof=0`), mientras que pandas `.std()` y `np.cov` dividen por $n-1$ (desvío *muestral*, `ddof=1`). Con 252 datos la diferencia es de apenas 0.2%, pero si comparás resultados de las dos librerías y no coinciden, casi siempre es esto. Para alinearlos, usá `np.std(x, ddof=1)`.
 :::
 
 Como simulamos con `rng.normal`, la asimetría y la curtosis dan cerca de cero. Con retornos reales de acciones el panorama es otro: asimetría negativa y curtosis bien positiva. Veámoslo generando retornos más realistas, con "sustos" ocasionales:
@@ -76,7 +127,7 @@ print(f"{'Asimetría':<22}{stats.skew(retornos):>16.3f}{stats.skew(ret_real):>12
 print(f"{'Curtosis (exceso)':<22}{stats.kurtosis(retornos):>16.3f}{stats.kurtosis(ret_real):>12.3f}")
 ```
 
-## Visualizar la distribución
+### Visualizar la distribución
 
 El histograma con la normal teórica superpuesta es el gráfico de diagnóstico básico: muestra de un vistazo si las colas y la asimetría se apartan del modelo normal.
 
@@ -103,7 +154,7 @@ plt.show()
 
 En el panel derecho se ve la firma de los retornos financieros reales: una **cola izquierda pesada** que la campana normal no alcanza a cubrir. Los días de crisis existen, y la normal los declara casi imposibles.
 
-## Test de normalidad: Jarque-Bera
+### Test de normalidad: Jarque-Bera
 
 El ojo engaña; mejor un test formal. El test de **Jarque-Bera** pregunta exactamente lo que nos importa: *¿la asimetría y la curtosis de estos datos son compatibles con una distribución normal?* Su hipótesis nula ($H_0$) es "los datos son normales".
 
@@ -124,7 +175,7 @@ Si los retornos reales no son normales, ¿por qué media-varianza, Black-Scholes
 
 ---
 
-# Funciones lambda: el pegamento de la optimización
+## Funciones lambda: el pegamento de la optimización
 
 Antes de optimizar, un mini-desvío de Python. Los optimizadores reciben *funciones* como argumentos, y muchas veces son funciones de una sola línea que no ameritan un `def` con nombre. Para eso existen las **lambdas**: funciones anónimas de una expresión.
 
@@ -139,13 +190,76 @@ for x in [0, 2, 3.5, 5]:
 
 Las vas a ver constantemente en las **restricciones** de los optimizadores: `{"type": "eq", "fun": lambda w: w.sum() - 1}` se lee como "la función `w.sum() - 1` debe valer cero", es decir, los pesos deben sumar 1.
 
+::: {.callout-warning title="Lambdas dentro de un bucle: el truco `r=r_obj`"}
+Una lambda no guarda el *valor* de las variables que usa: guarda la variable misma, y la lee recién cuando se ejecuta. Si creás lambdas dentro de un bucle, todas terminan viendo el **último** valor:
+
+```python
+fs = [lambda x: x + k for k in range(3)]
+print([f(0) for f in fs])          # [2, 2, 2]  ← todas usan k = 2
+fs = [lambda x, k=k: x + k for k in range(3)]
+print([f(0) for f in fs])          # [0, 1, 2]  ← el default congela cada valor
+```
+
+El argumento por defecto se evalúa al *crear* la lambda, así que congela el valor de esa vuelta. Vas a ver este truco en el próximo capítulo (`lambda w, r=r_obj: w @ mu - r`), al armar una restricción distinta para cada punto de la frontera.
+:::
+
 ---
 
-# Optimización con `scipy.optimize`
+## Optimización con `scipy.optimize`
 
-## La idea: descenso guiado
+### La idea: descenso guiado
 
 `minimize` recibe una función objetivo y un punto de partida, y se mueve iterativamente "cuesta abajo" hasta encontrar un mínimo. No necesitás decirle cómo: los algoritmos (usaremos **SLSQP**, que soporta restricciones) estiman la pendiente y deciden el próximo paso.
+
+La @fig-descenso-guiado muestra la idea con un "valle" de dos variables: desde el punto de partida, cada paso baja en la dirección de mayor pendiente. Los pasos son largos donde el terreno es empinado y se acortan cerca del fondo. SLSQP es bastante más astuto que este descenso básico (en la parábola del código de abajo llega en dos pasos), pero la lógica de fondo es la misma.
+
+```{python}
+#| label: fig-descenso-guiado
+#| echo: false
+#| fig-cap: "Descenso por gradiente sobre f(x, y) = (x − 3)² + 4(y − 5)². Las curvas de nivel unen puntos con el mismo valor de la función; el camino baja desde (0, 0) hasta el mínimo en (3, 5)."
+import sys; sys.path.insert(0, "..")
+from _esquemas import *
+import numpy as np
+
+def _esquema():
+    # Un "valle" alargado: f(x, y) = (x - 3)² + 4 (y - 5)², mínimo en (3, 5)
+    def grad(p):
+        return np.array([2 * (p[0] - 3), 8 * (p[1] - 5)])
+
+    # Descenso por gradiente: en cada paso, moverse cuesta abajo según la pendiente
+    camino = [np.array([0.0, 0.0])]
+    for _ in range(25):
+        camino.append(camino[-1] - 0.1 * grad(camino[-1]))
+    camino = np.array(camino)
+
+    X, Y = np.meshgrid(np.linspace(-0.8, 5, 200), np.linspace(-0.8, 6.5, 200))
+    Z = (X - 3) ** 2 + 4 * (Y - 5) ** 2
+
+    fig, ax = plt.subplots(figsize=(7.5, 5))
+    niveles = ax.contour(X, Y, Z, levels=[0.3, 1.5, 4, 9, 20, 40, 70, 100], cmap="Blues_r",
+                         linewidths=1)
+    ax.clabel(niveles, fontsize=8, fmt="%g")
+    ax.plot(camino[:, 0], camino[:, 1], "-o", color=ACENTO, lw=1.8, ms=4, zorder=4,
+            label="Pasos cuesta abajo")
+    ax.scatter(*camino[0], s=90, color=TEXTO, zorder=5)
+    ax.annotate("punto de partida x0", camino[0], xytext=(10, -4), textcoords="offset points",
+                fontsize=9)
+    ax.scatter(3, 5, marker="*", s=280, color=SECUNDARIO, zorder=5, label="Mínimo (3, 5)")
+    ax.annotate("pasos largos donde\nla pendiente es fuerte", camino[1], xytext=(1.0, 2.2),
+                fontsize=9, color=ACENTO, arrowprops=dict(arrowstyle="-|>", color=ACENTO))
+    ax.annotate("pasos cortos cerca\ndel fondo del valle", camino[12], xytext=(3.3, 3.0),
+                fontsize=9, color=ACENTO, arrowprops=dict(arrowstyle="-|>", color=ACENTO))
+    ax.set_xlabel("x")
+    ax.set_ylabel("y")
+    ax.set_aspect("equal")
+    ax.legend(loc="upper left", fontsize=9)
+    ax.grid(alpha=0.2)
+    plt.tight_layout()
+    plt.show()
+
+_esquema()
+```
+
 
 ```{python}
 #| label: minimize-basico
@@ -162,13 +276,36 @@ print(f"Valor mínimo: {resultado.fun:.6f}")
 print(f"Convergió: {resultado.success}")
 ```
 
+La @fig-anatomia-minimize resume las piezas de una llamada a `minimize`, que vas a repetir en todo el módulo:
+
+```{mermaid}
+%%| label: fig-anatomia-minimize
+%%| fig-cap: "Anatomía de `scipy.optimize.minimize`: qué le pasamos (objetivo, datos fijos, punto de partida, límites y restricciones) y qué hay que revisar en lo que devuelve antes de usarlo."
+flowchart LR
+    F["<b>fun</b><br/>función objetivo<br/><i>qué minimizar</i>"] --> M
+    A["<b>args</b><br/>datos fijos<br/>(μ, Σ, λ)"] --> M
+    X0["<b>x0</b><br/>punto de partida"] --> M
+    B["<b>bounds</b><br/>límites por variable<br/>(0 ≤ wᵢ ≤ 1)"] --> M
+    C["<b>constraints</b><br/>restricciones<br/>(Σ wᵢ = 1)"] --> M
+    M[["<b>minimize(..., method='SLSQP')</b>"]] --> R["<b>resultado</b><br/>.x → dónde<br/>.fun → cuánto vale<br/>.success → ¿convergió?"]
+    R --> Q{"¿success?"}
+    Q -- Sí --> U(["usar res.x"])
+    Q -- No --> V(["revisar x0, restricciones<br/>o escala del problema"])
+    classDef entrada fill:#e0e9f4,stroke:#1e3a5f
+    classDef ok fill:#eef2e3,stroke:#637238
+    classDef alerta fill:#fde8dc,stroke:#c2410c
+    class F,A,X0,B,C entrada
+    class U ok
+    class Q,V alerta
+```
+
 Tres cosas para mirar siempre en el resultado: `x` (dónde está el óptimo), `fun` (cuánto vale la función ahí) y `success` (si el algoritmo convergió — **nunca uses un resultado sin chequearlo**).
 
 ::: {.callout-tip title="Maximizar = minimizar el negativo"}
 `scipy` solo minimiza. Cuando quieras **maximizar** algo (utilidad, Sharpe), minimizá su negativo: max $f(x)$ ⟺ min $-f(x)$. Por eso vas a ver funciones llamadas `utilidad_negativa` o `neg_sharpe` en todo el libro.
 :::
 
-## Optimización con restricciones: primer portafolio óptimo
+### Optimización con restricciones: primer portafolio óptimo
 
 Ahora un problema financiero de verdad. Un inversor con **aversión al riesgo** $\lambda$ valora un portafolio según su utilidad media-varianza:
 
@@ -203,15 +340,55 @@ for aversion in [1, 3, 10]:
 
 El resultado cuenta una historia coherente: a medida que sube la aversión al riesgo, el óptimo **migra del activo agresivo al defensivo**, sacrificando retorno esperado a cambio de menos volatilidad. Tres inversores con la misma información y distinta tolerancia obtienen tres carteras distintas — y las tres son "óptimas" para quien las tiene.
 
+La @fig-pesos-vs-aversion extiende la tabla a un barrido continuo de $\lambda$: con aversión muy baja, todo va al activo agresivo; a medida que $\lambda$ crece, el defensivo gana terreno rápido al principio y cada vez más lento después.
+
+```{python}
+#| label: fig-pesos-vs-aversion
+#| echo: false
+#| fig-cap: "Pesos óptimos de media-varianza según la aversión al riesgo λ. Las líneas punteadas marcan los tres valores de la tabla anterior."
+import sys; sys.path.insert(0, "..")
+from _esquemas import *
+import numpy as np
+from scipy.optimize import minimize
+
+def _esquema():
+    # Usa utilidad_negativa, mu, Sigma, bounds y restricciones definidos en el capítulo
+    lambdas = np.linspace(0.5, 20, 80)
+    pesos = np.array([
+        minimize(utilidad_negativa, x0=[0.5, 0.5], args=(mu, Sigma, lam), method="SLSQP",
+                 bounds=bounds, constraints=restricciones).x
+        for lam in lambdas
+    ])
+
+    fig, ax = plt.subplots(figsize=(9, 4))
+    ax.stackplot(lambdas, pesos[:, 0] * 100, pesos[:, 1] * 100,
+                 labels=["Activo agresivo (10%, vol 20%)", "Activo defensivo (6%, vol 10%)"],
+                 colors=[ACENTO, PRIMARIO], alpha=0.85)
+    for lam in (1, 3, 10):
+        ax.axvline(lam, color="white", lw=1.2, ls="--")
+        ax.text(lam, 102, f"λ={lam}", ha="center", fontsize=9, color=TEXTO)
+    ax.set_xlim(lambdas[0], lambdas[-1])
+    ax.set_ylim(0, 108)
+    ax.set_xlabel("Aversión al riesgo λ")
+    ax.set_ylabel("Peso en la cartera (%)")
+    ax.legend(loc="lower right", fontsize=9, framealpha=0.9)
+    ax.spines[["top", "right"]].set_visible(False)
+    plt.tight_layout()
+    plt.show()
+
+_esquema()
+```
+
 Este mecanismo —función objetivo + restricciones + `minimize`— es exactamente el que escala a la **frontera eficiente completa** del próximo capítulo. Ya tenés todas las piezas.
 
 ---
 
-# Errores comunes
+## Errores comunes
 
 ::: {.callout-warning title="Trampas frecuentes"}
 - **No chequear `resultado.success`**: si el optimizador no convergió, `resultado.x` puede ser basura con aspecto respetable.
 - **Anualizar la volatilidad con ×252** en lugar de ×√252.
+- **Comparar `np.std` con pandas `.std()`**: el primero usa `ddof=0` y el segundo `ddof=1`; con pocos datos la diferencia se nota.
 - **Confundir curtosis con "exceso de curtosis"**: `scipy.stats.kurtosis` devuelve el *exceso* (normal = 0). Otras librerías devuelven la curtosis cruda (normal = 3).
 - **Interpretar un p-value alto como prueba de normalidad**: "no rechazar $H_0$" no es "aceptar $H_0$"; con pocas observaciones, el test simplemente no tiene potencia para detectar la anormalidad.
 - **Punto de partida absurdo**: `minimize` es un buscador local. Con restricciones complejas, un `x0` razonable (p. ej., pesos equiponderados) evita óptimos locales o fallas de convergencia.
@@ -219,7 +396,7 @@ Este mecanismo —función objetivo + restricciones + `minimize`— es exactamen
 
 ---
 
-# Ejercicios Propuestos
+## Ejercicios Propuestos
 
 ::: {.callout-important title="Ejercicios"}
 1. **Análisis comparado**: simulá (o descargá) retornos de 3 activos y armá una tabla con los cuatro momentos de cada uno. ¿Cuál elegirías por Sharpe? ¿Cambia tu respuesta al mirar la asimetría?
@@ -243,7 +420,7 @@ from scipy import stats
 
 ---
 
-# Referencias
+## Referencias
 
 
 ::: {#refs}

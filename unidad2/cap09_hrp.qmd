@@ -13,7 +13,7 @@ nocite: |
   @lopezdeprado2016, @lopezdeprado2018, @raffinot2017
 ---
 
-# Introducción: el talón de Aquiles de Markowitz
+# Introducción: el talón de Aquiles de Markowitz {.unnumbered}
 
 En el capítulo anterior celebramos la elegancia de la frontera eficiente. Ahora toca la mala noticia: en la práctica, la optimización de media-varianza tiene fama de producir carteras **inestables y extremas**. Los operadores la llaman, con sorna, *"error maximizer"*: una máquina de maximizar errores.
 
@@ -36,7 +36,7 @@ np.set_printoptions(precision=4, suppress=True)
 rng = np.random.default_rng(42)
 ```
 
-## Experimento: la inestabilidad en acción
+### Experimento: la inestabilidad en acción {.unnumbered}
 
 Simulamos retornos de 5 activos donde dos de ellos están **muy correlacionados**, y calculamos la cartera de mínima varianza de Markowitz con dos muestras distintas de la misma historia. Si el método fuera robusto, ambas muestras deberían dar carteras parecidas.
 
@@ -68,7 +68,32 @@ for seed in [1, 2]:
     print(f"Muestra {seed}: pesos = {np.round(w, 3)}")
 ```
 
-Mirá los dos primeros activos: entre una muestra y otra los pesos **saltan violentamente**, e incluso aparecen posiciones cortas grandes que se compensan entre los gemelos. El optimizador está apostando fuerte a diferencias entre los activos 0 y 1 que son puro ruido muestral. Con carteras reales de 50 o 100 activos, este efecto se agrava.
+Mirá los dos primeros activos en la @fig-inestabilidad-pesos: entre una muestra y otra **intercambian su peso** —el que tenía mucho pasa a tener casi nada, y viceversa, con alguna posición corta de por medio—, mientras los otros tres activos apenas se mueven. El optimizador está apostando a diferencias entre los activos 0 y 1 que son puro ruido muestral: como son casi sustitutos, cualquier mínima ventaja estimada en uno se traduce en sacarle peso al otro. Con carteras reales de 50 o 100 activos y gemelos más correlacionados, el efecto se agrava hasta producir cortos grandes que se compensan entre sí.
+
+```{python}
+#| label: fig-inestabilidad-pesos
+#| echo: false
+#| fig-cap: "Pesos de mínima varianza estimados con dos muestras de la misma realidad. Los activos 0 y 1 (casi gemelos) intercambian su peso; el resto queda estable."
+import sys; sys.path.insert(0, "..")
+from _esquemas import *
+import numpy as np
+
+def _esquema():
+    # Usa simular_retornos y pesos_min_varianza del capítulo
+    muestras = {f"Muestra {s}": pesos_min_varianza(np.cov(simular_retornos(500, s).T))
+                for s in (1, 2)}
+    fig, ax = plt.subplots(figsize=(9, 3.8))
+    barras_comparadas(ax, [f"Activo {i}" for i in range(5)], muestras,
+                      colores=[PRIMARIO, ACENTO])
+    ax.axvspan(-0.5, 1.5, color=FONDO_ACENTO, alpha=0.5, zorder=0)
+    ax.text(0.5, ax.get_ylim()[1] * 0.92, "los «gemelos»", ha="center", fontsize=9, color=ACENTO)
+    ax.set_ylabel("Peso de mínima varianza")
+    ax.yaxis.set_major_formatter(plt.FuncFormatter(lambda v, _: f"{v:.0%}"))
+    plt.tight_layout()
+    plt.show()
+
+_esquema()
+```
 
 ::: {.callout-note title="El diagnóstico de López de Prado"}
 Marcos López de Prado (2016) resumió el problema así: la optimización clásica trata a todos los activos como sustitutos potenciales de todos, cuando en realidad los mercados tienen **estructura jerárquica**: las acciones bancarias se parecen entre sí, los bonos entre sí, y recién después compiten los grupos. Ignorar esa jerarquía obliga a invertir una matriz enorme y frágil. Usarla permite repartir el capital **sin invertir nada**.
@@ -76,9 +101,36 @@ Marcos López de Prado (2016) resumió el problema así: la optimización clási
 
 La propuesta, **Hierarchical Risk Parity (HRP)**, tiene tres pasos: (1) agrupar activos por similitud, (2) reordenarlos según esos grupos, y (3) repartir el capital descendiendo por el árbol de grupos. Vamos paso a paso.
 
+La @fig-pipeline-hrp muestra la tubería completa antes de entrar en cada paso.
+
+```{mermaid}
+%%| label: fig-pipeline-hrp
+%%| fig-cap: "La tubería de HRP. Los dos primeros pasos solo usan correlaciones para descubrir y ordenar la estructura; el tercero reparte el capital usando varianzas de grupos, sin invertir nunca la matriz completa."
+flowchart LR
+    R["Retornos"] --> C["Correlación ρ"]
+    subgraph P1["Paso 1: clustering"]
+        D["Distancia<br/>√((1−ρ)/2)"] --> L["linkage<br/>(dendrograma)"]
+    end
+    subgraph P2["Paso 2: reordenar"]
+        O["Orden de<br/>las hojas"]
+    end
+    subgraph P3["Paso 3: bisección"]
+        B["Partir en mitades<br/>y repartir por<br/>varianza inversa"]
+    end
+    C --> D
+    L --> O
+    O --> B
+    S["Covarianzas Σ<br/>(por bloques,<br/>sin invertir)"] --> B
+    B --> W(["Pesos HRP"])
+    classDef dato fill:#e0e9f4,stroke:#1e3a5f
+    classDef fin fill:#eef2e3,stroke:#637238
+    class R,C,S dato
+    class W fin
+```
+
 ---
 
-# Paso 1: Tree clustering — agrupar activos por similitud
+## Paso 1: Tree clustering — agrupar activos por similitud
 
 Primero necesitamos medir qué tan "parecidos" son dos activos. Partimos de la correlación $\rho_{ij}$ y la convertimos en una **distancia**:
 
@@ -115,7 +167,7 @@ El dendrograma cuenta la historia que el optimizador de Markowitz nunca ve: los 
 
 ---
 
-# Paso 2: Quasi-diagonalización — reordenar la matriz
+## Paso 2: Quasi-diagonalización — reordenar la matriz
 
 El segundo paso es puramente organizativo: **reordenar los activos según el orden de las hojas del árbol**, de modo que los activos similares queden contiguos. Con ese orden, la matriz de covarianzas queda "casi diagonal por bloques": las covarianzas grandes se concentran cerca de la diagonal.
 
@@ -144,7 +196,7 @@ En este ejemplo chico el reordenamiento es sutil, pero con decenas de activos el
 
 ---
 
-# Paso 3: Recursive bisection — repartir el capital por el árbol
+## Paso 3: Recursive bisection — repartir el capital por el árbol
 
 Acá está el corazón de HRP. En lugar de resolver un sistema global (que exigiría invertir $\Sigma$), repartimos el capital **de arriba hacia abajo**:
 
@@ -153,6 +205,8 @@ Acá está el corazón de HRP. En lugar de resolver un sistema global (que exigi
 3. Le damos más capital a la mitad **menos riesgosa**, en proporción inversa a su varianza:
    $$\alpha_1 = 1 - \frac{V_1}{V_1 + V_2}, \qquad \alpha_2 = 1 - \alpha_1$$
 4. Repetimos recursivamente dentro de cada mitad, hasta llegar a activos individuales.
+
+Un detalle de implementación: esta versión parte la lista ordenada **por la mitad**, como el paper original de 2016, y no siguiendo exactamente las ramas del dendrograma. Gracias al reordenamiento del Paso 2, las mitades igual tienden a respetar los grupos; existen variantes que cortan siguiendo los clusters del árbol.
 
 Para medir el riesgo de un grupo usamos la cartera *inverse-variance* dentro del grupo (cada activo pesa lo inverso de su varianza), que tiene forma cerrada y **solo usa la diagonal** —nada de inversas de matrices completas.
 
@@ -204,6 +258,75 @@ print((w_hrp * 100).round(1).astype(str) + " %")
 print(f"\nSuma: {w_hrp.sum():.1%}")
 ```
 
+La @fig-biseccion-arbol muestra el recorrido completo de la bisección para este universo: cada flecha lleva el factor que recibe esa mitad, y cada caja, el capital acumulado.
+
+```{python}
+#| label: fig-biseccion-arbol
+#| echo: false
+#| fig-cap: "Bisección recursiva sobre los 5 activos del ejemplo. En cada nodo el capital se reparte entre las dos mitades en proporción inversa a su varianza; el peso final de cada activo es el producto de los factores del camino."
+import sys; sys.path.insert(0, "..")
+from _esquemas import *
+
+def _esquema():
+    # Recorre la misma bisección que hrp(), usando cov, tickers_ordenados y
+    # varianza_cluster del capítulo, y dibuja el árbol con el capital de cada nodo.
+    hojas = list(tickers_ordenados)
+    paso_x, paso_y, w_caja, h_caja = 3.4, 2.3, 3.0, 1.15
+
+    def construir(grupo, capital, nivel):
+        nodo = {"grupo": grupo, "capital": capital, "nivel": nivel, "hijos": []}
+        if len(grupo) > 1:
+            mitad = len(grupo) // 2
+            izq, der = grupo[:mitad], grupo[mitad:]
+            v_izq, v_der = varianza_cluster(cov, izq), varianza_cluster(cov, der)
+            alpha = 1 - v_izq / (v_izq + v_der)
+            nodo["alpha"] = alpha
+            nodo["hijos"] = [construir(izq, capital * alpha, nivel + 1),
+                             construir(der, capital * (1 - alpha), nivel + 1)]
+        return nodo
+
+    def ubicar(nodo):
+        if not nodo["hijos"]:
+            nodo["x"] = hojas.index(nodo["grupo"][0]) * paso_x + paso_x / 2
+        else:
+            for h in nodo["hijos"]:
+                ubicar(h)
+            nodo["x"] = sum(h["x"] for h in nodo["hijos"]) / 2
+
+    raiz = construir(hojas, 1.0, 0)
+    ubicar(raiz)
+    def medir(n):
+        return max([n["nivel"]] + [medir(h) for h in n["hijos"]])
+    profundidad = medir(raiz)
+
+    ancho, alto = len(hojas) * paso_x, (profundidad + 1) * paso_y + 0.4
+    fig, ax = lienzo(ancho, alto)
+
+    def dibujar(nodo):
+        y = alto - 0.4 - nodo["nivel"] * paso_y - h_caja
+        hoja = not nodo["hijos"]
+        nombre = nodo["grupo"][0] if hoja else (
+            "todos" if nodo["nivel"] == 0 else " · ".join(nodo["grupo"]))
+        if not hoja and len(nombre) > 24:
+            nombre = f"{len(nodo['grupo'])} activos"
+        caja(ax, nodo["x"] - w_caja / 2, y, w_caja, h_caja,
+             f"{nombre}\n{nodo['capital']:.1%}", tam=8.5,
+             relleno=FONDO_SECUNDARIO if hoja else FONDO_PRIMARIO,
+             color=SECUNDARIO if hoja else PRIMARIO, peso="bold" if hoja else "normal")
+        for i, h in enumerate(nodo["hijos"]):
+            y_h = alto - 0.4 - h["nivel"] * paso_y
+            frac = nodo["alpha"] if i == 0 else 1 - nodo["alpha"]
+            flecha(ax, (nodo["x"], y), (h["x"], y_h), f"×{frac:.2f}", color=GRIS, tam=8,
+                   color_texto=ACENTO, desplazamiento=(0.45 if i else -0.45, 0))
+            dibujar(h)
+
+    dibujar(raiz)
+    plt.tight_layout()
+    plt.show()
+
+_esquema()
+```
+
 Observá el resultado: los dos bancos —que comparten casi todo su riesgo— **se reparten entre sí la porción del capital que le toca a su grupo**, en lugar de recibir cada uno una apuesta independiente. Los activos diversificadores reciben pesos sustanciales y **no aparece ninguna posición corta ni extrema**. Y en todo el proceso no invertimos una sola matriz.
 
 ::: {.callout-tip title="Por qué esto es 'risk parity' jerárquico"}
@@ -212,7 +335,7 @@ En cada bifurcación, el capital se reparte de manera inversamente proporcional 
 
 ---
 
-# HRP vs. Markowitz: la prueba fuera de muestra
+## HRP vs. Markowitz: la prueba fuera de muestra
 
 La comparación justa no es "qué cartera se ve mejor" sino **cuál funciona con datos que no vio**. Repetimos muchas veces el experimento: estimamos ambas carteras con un período de entrenamiento y medimos su volatilidad en el período siguiente.
 
@@ -272,7 +395,7 @@ HRP renuncia a usar información que Markowitz sí usa (las correlaciones exacta
 
 ---
 
-# Con datos reales
+## Con datos reales
 
 La simulación nos dejó controlar la estructura de correlaciones; ahora veamos si HRP la **descubre solo** en datos de mercado. Usamos el dataset del libro (`datos/precios.csv`, ver @sec-datos-financieros): 9 acciones de sectores distintos, cinco años de precios diarios ajustados.
 
@@ -305,11 +428,36 @@ comparacion = pd.DataFrame({"HRP": w_hrp_real, "Markowitz mín. var.": w_mkw_rea
 print((comparacion * 100).round(1).astype(str) + " %")
 ```
 
+La @fig-pesos-reales-hrp pone las dos columnas lado a lado, en el orden del dendrograma:
+
+```{python}
+#| label: fig-pesos-reales-hrp
+#| echo: false
+#| fig-cap: "Pesos HRP frente a mínima varianza de Markowitz con datos reales, en el orden del dendrograma. Las barras bajo cero son posiciones cortas."
+import sys; sys.path.insert(0, "..")
+from _esquemas import *
+
+def _esquema():
+    # Usa la tabla comparacion (HRP vs. Markowitz) del capítulo, en el orden del dendrograma
+    tabla = comparacion.loc[orden_real]
+    fig, ax = plt.subplots(figsize=(10, 4))
+    barras_comparadas(ax, tabla.index.tolist(),
+                      {"HRP": tabla["HRP"].values,
+                       "Markowitz mín. var.": tabla["Markowitz mín. var."].values},
+                      colores=[SECUNDARIO, PRIMARIO])
+    ax.set_ylabel("Peso en la cartera")
+    ax.yaxis.set_major_formatter(plt.FuncFormatter(lambda v, _: f"{v:.0%}"))
+    plt.tight_layout()
+    plt.show()
+
+_esquema()
+```
+
 La comparación repite lo que vimos en la simulación, ahora sin trucos. Buscá en la columna de Markowitz las tecnológicas: **shortea una para comprar otra** — la apuesta fina entre "gemelos" que en el experimento sintético identificamos como puro ruido muestral, reproducida con datos de verdad. Con 9 activos el daño es contenido; con 50 o 100, esos cortos se multiplican. HRP, en cambio, asigna a **todos** los activos pesos positivos y moderados, dándole más capital al cluster defensivo y repartiendo dentro de cada grupo. Es la cartera que podrías ejecutar mañana sin explicarle nada raro a un comité de inversiones.
 
 ---
 
-# Errores comunes
+## Errores comunes
 
 ::: {.callout-warning title="Trampas frecuentes"}
 - **Pasarle a `linkage` la matriz cuadrada directamente**: `scipy` espera la forma *condensada* (vector triangular); usá `squareform(dist)` o interpretará las filas como observaciones.
@@ -320,7 +468,7 @@ La comparación repite lo que vimos en la simulación, ahora sin trucos. Buscá 
 
 ---
 
-# Ejercicios Propuestos
+## Ejercicios Propuestos
 
 ::: {.callout-important title="Ejercicios"}
 1. **Sensibilidad al linkage**: repetí el clustering con `method="ward"` y `method="complete"`. ¿Cambia el orden de las hojas? ¿Y los pesos finales?
@@ -351,7 +499,7 @@ from scipy.spatial.distance import squareform
 
 ---
 
-# Referencias
+## Referencias
 
 
 ::: {#refs}

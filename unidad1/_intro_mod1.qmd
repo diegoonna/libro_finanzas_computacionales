@@ -10,7 +10,28 @@ Todo el mundo dice que "hay que aprender a programar", pero los cursos genérico
 
 La secuencia de los seis capítulos es una escalera donde cada peldaño resuelve la limitación del anterior. Arrancás con **variables y decisiones** (Capítulo 1): suficiente para calcular el valor tiempo del dinero, pero incómodo apenas hay muchos números. Las **estructuras de datos y los bucles** (Capítulo 2) resuelven eso: ahora podés recorrer los treinta cupones de un bono sin escribir treinta líneas. Pero el código se repite, así que lo encapsulás en **funciones** reutilizables (Capítulo 3), y cuando las funciones y los datos que las acompañan empiezan a viajar juntos por todos lados, los unís en **objetos** (Capítulo 4): la clase `Bono` que sabe valuarse a sí misma.
 
-Los últimos dos peldaños cambian de escala. **NumPy** (Capítulo 5) reemplaza los bucles por operaciones vectorizadas: la diferencia entre esperar horas y esperar segundos cuando los datos son miles. Y **Pandas** (Capítulo 6) le pone nombres y fechas a esos números para trabajar con series de tiempo reales — el pan de cada día del análisis financiero. Al cerrar el módulo vas a haber construido, con tus propias manos, una librería de valuación de renta fija y una curva de tasas.
+Los últimos dos peldaños cambian de escala. **NumPy** (Capítulo 5) reemplaza los bucles por operaciones vectorizadas: la diferencia entre esperar horas y esperar segundos cuando los datos son miles. Y **Pandas** (Capítulo 6) le pone nombres y fechas a esos números para trabajar con series de tiempo reales — el pan de cada día del análisis financiero. Al cerrar el módulo vas a haber construido, con tus propias manos, una librería de valuación de renta fija y una curva de tasas. La @fig-escalera-mod1 resume el recorrido: cada flecha es la limitación que empuja al capítulo siguiente, y en cursiva está lo que construís en cada uno.
+
+```{mermaid}
+%%| label: fig-escalera-mod1
+%%| fig-cap: "La escalera del módulo: cada capítulo resuelve la limitación del anterior (flechas) y produce una pieza financiera concreta (en cursiva)."
+flowchart TB
+    subgraph F1[" "]
+        direction LR
+        C1["<b>Cap. 1 · Variables y decisiones</b><br/><i>VF, VP y tasas</i>"] -->|"muchos números"| C2["<b>Cap. 2 · Bucles y estructuras</b><br/><i>precio y TIR de un bono</i>"]
+        C2 -->|"código repetido"| C3["<b>Cap. 3 · Funciones</b><br/><i>finanzas_basicas.py</i>"]
+    end
+    subgraph F2[" "]
+        direction LR
+        C4["<b>Cap. 4 · Objetos</b><br/><i>clase Bono</i>"] -->|"bucles lentos"| C5["<b>Cap. 5 · NumPy</b><br/><i>retornos y Σ</i>"]
+        C5 -->|"datos sin etiquetas"| C6["<b>Cap. 6 · Pandas</b><br/><i>curva spot</i>"]
+    end
+    F1 -->|"datos y funciones separados"| F2
+    classDef cap fill:#e0e9f4,stroke:#1e3a5f,color:#1f2937
+    class C1,C2,C3,C4,C5,C6 cap
+    style F1 fill:none,stroke:none
+    style F2 fill:none,stroke:none
+```
 
 ::: {.callout-note title="¿Y si nunca programaste?" appearance="simple"}
 Este módulo no asume ningún conocimiento previo de programación. Lo único que necesitás es paciencia para ejecutar cada bloque de código, romperlo, y volverlo a ejecutar. Programar se aprende con los dedos, no con los ojos.
@@ -24,7 +45,7 @@ Al completar este módulo, vas a ser capaz de:
 
 1. **Programar en Python** con fluidez: variables, tipos, control de flujo, funciones y clases.
 2. **Modelar instrumentos de renta fija** como objetos reutilizables.
-3. **Valuar bonos** mediante flujos de fondos descontados y calcular TIR, duración y convexidad.
+3. **Valuar bonos** mediante flujos de fondos descontados y calcular su TIR (y, como extensión, su duración).
 4. **Vectorizar cálculos** con NumPy: retornos, matrices de covarianzas, álgebra lineal.
 5. **Manipular series de tiempo** con Pandas y construir curvas de tasas desde precios de mercado.
 

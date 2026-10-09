@@ -12,6 +12,24 @@ El recorrido tiene forma de tesis, antítesis y síntesis. Primero armamos las h
 
 Después viene la parte que los libros suelen esquivar: **en la práctica, Markowitz falla**. Es hipersensible a estimaciones que son puro ruido, y produce carteras extremas que ningún gestor firmaría. Los últimos dos capítulos presentan las dos respuestas modernas más importantes a ese problema, que atacan por flancos opuestos: **HRP** (López de Prado, 2016) esquiva la matemática frágil usando clustering jerárquico, y **Black-Litterman** (Goldman Sachs, 1992) disciplina las estimaciones partiendo del equilibrio del mercado y mezclándolo con tus opiniones según tu confianza. Al final del módulo no solo vas a saber optimizar un portafolio: vas a saber **cuándo desconfiar del optimizador** — que es la habilidad que separa al que aprendió la fórmula del que entiende el problema.
 
+La @fig-mapa-mod2 resume ese recorrido.
+
+```{mermaid}
+%%| label: fig-mapa-mod2
+%%| fig-cap: "El arco del módulo: herramientas, la tesis de Markowitz, su problema práctico y las dos respuestas modernas, que atacan flancos opuestos."
+flowchart LR
+    C7["<b>Cap. 7</b><br/>Estadística y optimización<br/><i>las herramientas</i>"] --> C8["<b>Cap. 8 · Markowitz</b><br/>frontera eficiente<br/><i>la tesis</i>"]
+    C8 --> X{{"<b>El problema</b><br/>hipersensible a μ,<br/>frágil al invertir Σ"}}
+    X -->|"esquivar Σ⁻¹"| C9["<b>Cap. 9 · HRP</b><br/>clustering jerárquico"]
+    X -->|"disciplinar μ"| C10["<b>Cap. 10 · Black-Litterman</b><br/>equilibrio + views"]
+    classDef cap fill:#e0e9f4,stroke:#1e3a5f,color:#1f2937
+    classDef prob fill:#fde8dc,stroke:#c2410c,color:#1f2937
+    classDef sol fill:#eef2e3,stroke:#637238,color:#1f2937
+    class C7,C8 cap
+    class X prob
+    class C9,C10 sol
+```
+
 ::: {.callout-note title="Lo que este módulo asume" appearance="simple"}
 Usamos intensivamente el álgebra matricial de NumPy (Capítulo 5) — en particular `@`, `np.linalg` y la matriz de covarianzas — y la estadística descriptiva del Capítulo 6. Si esos temas no te quedaron firmes, vale la pena repasarlos antes de entrar a Markowitz.
 :::

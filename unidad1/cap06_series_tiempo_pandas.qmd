@@ -9,7 +9,7 @@ nocite: |
   @mckinney2017, @hilpisch2018, @pandasdoc
 ---
 
-# Introducción
+# Introducción {.unnumbered}
 
 En el capítulo anterior descubriste el poder de NumPy, pero también su limitación: los arrays no tienen **etiquetas**. `R[:, 0]` es "la columna 0", y vos tenés que acordarte de que esa columna es el GD30 y de que la fila 40 es el 3 de marzo. Con dos activos se tolera; con doscientos activos y diez años de fechas, es inmanejable.
 
@@ -19,7 +19,7 @@ Este capítulo recorre esa maquinaria y cierra integrando todo en un caso real d
 
 ---
 
-# Las estructuras: Series y DataFrames
+## Las estructuras: Series y DataFrames
 
 **Pandas** se integra perfectamente con el ecosistema que venimos usando (NumPy y Matplotlib). Sus dos estructuras centrales son la Serie (1D) y el DataFrame (2D).
 
@@ -33,7 +33,7 @@ import matplotlib.pyplot as plt
 plt.style.use('ggplot')
 ```
 
-## Series (1D)
+### Series (1D)
 Una **Serie** es un array unidimensional con un índice de etiquetas. Compará con el array de NumPy: ahí el "lunes" era la posición 0 y tenías que recordarlo; acá el dato **lleva puesta su etiqueta**.
 
 ```{python}
@@ -47,9 +47,9 @@ print(f"\nMedia: {precios_serie.mean():.2f}")
 print(f"Desvío estándar: {precios_serie.std():.2f}")
 ```
 
-Fijate la salida: cada precio aparece junto a su día, y los métodos estadísticos (`mean`, `std`) vienen incorporados — no hace falta importar nada más. El desvío de ~4.6 sobre una media de 113 nos dice que esta serie se mueve alrededor de un 4% por día: volátil.
+Fijate la salida: cada precio aparece junto a su día, y los métodos estadísticos (`mean`, `std`) vienen incorporados — no hace falta importar nada más. Ojo con la lectura del desvío (~4.6 sobre una media de 113): mide cuánto se dispersan los *niveles* de precio alrededor de su promedio, **no** cuánto se mueve el precio por día. La volatilidad —el riesgo de verdad— se mide sobre los *retornos*, y la calculamos más adelante en este capítulo.
 
-## DataFrames (2D)
+### DataFrames (2D)
 Un **DataFrame** es la estructura tabular (filas y columnas) que vas a usar el 90% del tiempo. Técnicamente, cada columna es una Serie, y todas comparten el mismo índice. Armemos una tabla de bonos soberanos argentinos:
 
 ```{python}
@@ -57,7 +57,7 @@ Un **DataFrame** es la estructura tabular (filas y columnas) que vas a usar el 9
 datos = {
     "Ticker": ["GD30", "GD35", "GD38", "GD41", "GD46"],
     "Precio": [92.5, 85.3, 78.1, 72.4, 65.8],
-    "Cercanía": [0.08, 0.07, 0.065, 0.06, 0.055]
+    "Cupón": [0.08, 0.07, 0.065, 0.06, 0.055]
 }
 
 df = pd.DataFrame(datos)
@@ -66,7 +66,61 @@ print(df)
 
 Un diccionario de listas se convierte directamente en tabla: las claves son las columnas. Notá el patrón financiero en los datos: a mayor plazo del bono (GD30 → GD46), menor precio — el tiempo descuenta.
 
-## Exploración Inicial
+La @fig-anatomia-dataframe separa las piezas de un DataFrame de series de tiempo, el formato que vas a usar en el resto del libro: un índice que etiqueta las filas, nombres que etiquetan las columnas y, en el medio, un array de NumPy.
+
+```{python}
+#| label: fig-anatomia-dataframe
+#| echo: false
+#| fig-cap: "Anatomía de un DataFrame. El índice (aquí, fechas) etiqueta las filas; las columnas etiquetan las variables; los valores son un `ndarray` de NumPy. Cada columna, por separado, es una Serie que comparte el índice."
+import sys; sys.path.insert(0, "..")
+from _esquemas import *
+
+def _esquema():
+    fig, ax = lienzo(15, 6.6)
+    wi, wc, h = 2.4, 1.6, 0.65
+    x0, y_top = 3.2, 4.4
+    fechas = ["2023-03-22", "2023-03-23", "2023-03-24", "2023-03-27"]
+    gd30 = [100.0, 101.5, 101.5, 102.0]
+    aapl = [50.0, 50.8, 51.2, 51.5]
+
+    # Encabezado: nombres de columnas
+    caja(ax, x0, y_top, wi, h, "", color=GRIS, relleno="white", lw=1, redondeo=0.02)
+    fila_de_celdas(ax, x0 + wi, y_top, ["GD30", "AAPL"], w=wc, h=h, rellenos=FONDO_PRIMARIO,
+                   tam=10)
+    # Índice + valores
+    for i, (f, a, b) in enumerate(zip(fechas, gd30, aapl)):
+        y = y_top - (i + 1) * h
+        caja(ax, x0, y, wi, h, f, color=GRIS, relleno=FONDO_GRIS, mono=True, tam=9, lw=1,
+             redondeo=0.02)
+        fila_de_celdas(ax, x0 + wi, y, [f"{a:.1f}", f"{b:.1f}"], w=wc, h=h, rellenos="white")
+
+    # Resaltes
+    y_base = y_top - 4 * h
+    caja(ax, x0 + wi - 0.08, y_base - 0.08, 2 * wc + 0.16, 4 * h + 0.16, color=ACENTO, ls="--",
+         lw=1.6, redondeo=0.05)
+    caja(ax, x0 + wi + 0.06, y_base + 0.04, wc - 0.12, 5 * h - 0.08 + 0.02, color=SECUNDARIO,
+         lw=2.2, redondeo=0.05)
+
+    # Anotaciones
+    flecha(ax, (1.6, 0.9), (x0 + wi / 2, y_base - 0.05), color=GRIS)
+    texto(ax, 1.4, 0.55, "índice (DatetimeIndex):\nla etiqueta de cada fila", tam=9, color=TEXTO)
+    flecha(ax, (x0 + wi + wc, 5.8), (x0 + wi + wc, y_top + h + 0.03), color=PRIMARIO)
+    texto(ax, x0 + wi + wc, 6.15, "columnas: la etiqueta de cada variable", tam=9, color=PRIMARIO)
+    flecha(ax, (11.3, 3.4), (x0 + wi + 2 * wc + 0.1, 2.7), color=ACENTO)
+    texto(ax, 11.4, 3.65, "valores: un ndarray\nde NumPy  (.to_numpy())", tam=9, color=ACENTO,
+          ha="left")
+    flecha(ax, (11.3, 1.3), (x0 + wi + wc / 2 + 0.2, y_base + 0.1), color=SECUNDARIO, curva=-0.2)
+    texto(ax, 11.4, 1.2, "cada columna es una Serie\n(df[\"GD30\"]) que comparte\nel índice",
+          tam=9, color=SECUNDARIO, ha="left")
+
+    plt.tight_layout()
+    plt.show()
+
+_esquema()
+```
+
+
+### Exploración Inicial
 Regla de oro del análisis de datos: **antes de calcular nada, mirá qué tenés**. Pandas trae cuatro métodos de inspección que deberían ser tu reflejo automático al cargar cualquier dataset:
 
 ```{python}
@@ -86,9 +140,9 @@ print(df.describe().round(2))
 
 ---
 
-# Lectura, Escritura y Alineación de Datos
+## Lectura, Escritura y Alineación de Datos
 
-## I/O de Archivos
+### I/O de Archivos
 En la práctica, los datos no se tipean a mano: llegan en archivos (CSV, Excel) exportados de un sistema o descargados de un proveedor. Pandas lee y escribe todos los formatos usuales (`read_csv`, `read_excel`, `to_csv`, `to_excel`). Hagamos el ciclo completo — guardar nuestra tabla de bonos y volver a leerla — que es además la forma de verificar que entendés el formato:
 
 ```{python}
@@ -111,7 +165,7 @@ Dos parámetros de `read_csv` que vas a usar constantemente con series de tiempo
 Para descargar datos reales —precios con yfinance, series macro de FRED, o datos institucionales de Bloomberg— el apéndice @sec-datos-financieros tiene la guía completa, incluido el patrón profesional: *descargar una vez, guardar a CSV, y analizar siempre desde el archivo local* con las herramientas de esta sección.
 :::
 
-## Alineación de Índices e Integración de Datos
+### Alineación de Índices e Integración de Datos
 
 Acá viene un problema **real** que las listas de Python no pueden resolver bien. Supongamos que seguís un bono que cotiza en Buenos Aires y una acción que cotiza en Nueva York. El 24 de marzo es feriado en Argentina (no hay precio local) pero NY opera; el 4 de julio es al revés. Si guardaras los precios en dos listas, **los índices dejarían de corresponderse** a partir del primer feriado — y cualquier cálculo conjunto (un spread, una correlación) compararía días distintos sin avisarte.
 
@@ -154,9 +208,9 @@ print(df_unido)
 
 ---
 
-# Selección y Filtrado
+## Selección y Filtrado
 
-## Indexación: .loc vs .iloc
+### Indexación: .loc vs .iloc
 - `.loc`: Busca por **etiquetas** de índice y nombres de columnas.
 - `.iloc`: Busca por **posición numérica** (0-indexed).
 
@@ -170,7 +224,7 @@ df_idx = df.set_index("Ticker")
 print(f"Precio GD30 (.loc):\n{df_idx.loc['GD30', 'Precio']}")
 ```
 
-## Filtrado Booleano y Máscaras
+### Filtrado Booleano y Máscaras
 Permite filtrar filas según condiciones lógicas o pertenencia a listas mediante `.isin()`.
 
 ```{python}
@@ -186,7 +240,7 @@ print(df[df["Ticker"].isin(tickers_interes)])
 
 ---
 
-# Manejo de Fechas y Series Temporales
+## Manejo de Fechas y Series Temporales
 
 Pandas es excepcionalmente potente para trabajar con frecuencias temporales. Primero convertimos datos a tipo fecha con `pd.to_datetime()` y establecemos un `DatetimeIndex`.
 
@@ -198,7 +252,7 @@ df_time = pd.DataFrame({"Precio": [100, 101, 102.5]}, index=pd.to_datetime(fecha
 print(df_time.index)
 ```
 
-## Resample: Cambio de Frecuencias
+### Resample: Cambio de Frecuencias
 El método `resample()` permite agrupar datos por períodos (diario `"D"`, semanal `"W"`, fin de mes `"ME"`) y aplicar funciones de agregación.
 
 ```{python}
@@ -220,7 +274,7 @@ De 100 días hábiles quedaron 5 puntas de mes. Elegimos `.last()` porque para p
 
 ---
 
-# Limpieza y Transformación de Datos
+## Limpieza y Transformación de Datos
 
 Los datos financieros reales vienen con "agujeros" (`NaN`): feriados, activos que no cotizaron, errores del proveedor. Ya vimos cómo la alineación los hace visibles; ahora, qué hacer con ellos. El kit: `isna()` para detectarlos, `dropna()` para eliminar las filas afectadas, y `fillna()` para rellenarlos — en particular con `ffill` (*forward fill*: arrastrar el último valor válido).
 
@@ -240,6 +294,68 @@ print("\nPanel con ffill():")
 print(panel_limpio)
 ```
 
+
+La @fig-alineacion-ffill resume el recorrido completo, desde las dos series con calendarios distintos hasta el panel limpio:
+
+```{python}
+#| label: fig-alineacion-ffill
+#| echo: false
+#| fig-cap: "De dos calendarios a un panel. `pd.concat` alinea por fecha y deja `NaN` donde un mercado no operó; `ffill()` rellena cada hueco con el último precio conocido de esa columna."
+import sys; sys.path.insert(0, "..")
+from _esquemas import *
+
+def _esquema():
+    fig, ax = lienzo(18, 8.4)
+    wf, wv, h = 1.5, 1.3, 0.6
+    NAN = "NaN"
+
+    def tabla(x, y_top, titulo, columnas, filas, rellenos):
+        """Tabla con columna de fechas; ``rellenos[i][j]`` colorea cada valor."""
+        texto(ax, x + (wf + wv * len(columnas)) / 2, y_top + h + 0.35, titulo, tam=10,
+              peso="bold", color=PRIMARIO)
+        caja(ax, x, y_top, wf, h, "fecha", color=GRIS, relleno="white", lw=1, redondeo=0.02,
+             tam=8, color_texto=GRIS)
+        fila_de_celdas(ax, x + wf, y_top, columnas, w=wv, h=h, rellenos=FONDO_PRIMARIO, tam=9)
+        for i, (fecha, *valores) in enumerate(filas):
+            y = y_top - (i + 1) * h
+            caja(ax, x, y, wf, h, fecha, color=GRIS, relleno=FONDO_GRIS, mono=True, tam=8,
+                 lw=1, redondeo=0.02)
+            fila_de_celdas(ax, x + wf, y, valores, w=wv, h=h, rellenos=rellenos[i], tam=8)
+
+    # Entradas: dos series con calendarios distintos
+    tabla(0.3, 7.0, "BYMA", ["GD30"],
+          [("03-22", "100.0"), ("03-23", "101.5"), ("03-27", "102.0"), ("07-04", "103.2")],
+          [["white"]] * 4)
+    tabla(0.3, 3.3, "NYSE", ["AAPL"],
+          [("03-22", "50.0"), ("03-23", "50.8"), ("03-24", "51.2"), ("03-27", "51.5")],
+          [["white"]] * 4)
+
+    # concat(axis=1): alinea por fecha y marca los huecos
+    filas = [("03-22", "100.0", "50.0"), ("03-23", "101.5", "50.8"), ("03-24", NAN, "51.2"),
+             ("03-27", "102.0", "51.5"), ("07-04", "103.2", NAN)]
+    rell = [[FONDO_ACENTO if v == NAN else "white" for v in f[1:]] for f in filas]
+    flecha(ax, (3.2, 4.0), (5.1, 4.0), "pd.concat(\naxis=1)", color=PRIMARIO, tam=8,
+           desplazamiento=(0, 0.55))
+    tabla(5.3, 5.2, "panel  (outer: todas las fechas)", ["GD30", "AAPL"], filas, rell)
+
+    # ffill(): cada hueco toma el último valor conocido
+    lleno = [("03-22", "100.0", "50.0"), ("03-23", "101.5", "50.8"), ("03-24", "101.5", "51.2"),
+             ("03-27", "102.0", "51.5"), ("07-04", "103.2", "51.5")]
+    rell2 = [[FONDO_SECUNDARIO if a == NAN else "white" for a in f[1:]] for f in filas]
+    flecha(ax, (9.6, 4.0), (11.6, 4.0), ".ffill()", color=SECUNDARIO, tam=9,
+           desplazamiento=(0, 0.35))
+    tabla(11.8, 5.2, "panel.ffill()", ["GD30", "AAPL"], lleno, rell2)
+    texto(ax, 13.85, 1.35, "el hueco se rellena con el\núltimo precio conocido (↓)",
+          tam=8, color=SECUNDARIO)
+    texto(ax, 7.35, 1.35, "NaN: Pandas no inventa datos,\nte muestra dónde faltan",
+          tam=8, color=ACENTO)
+
+    plt.tight_layout()
+    plt.show()
+
+_esquema()
+```
+
 Compará las dos opciones sobre el caso concreto: `dropna()` tira los días de feriado enteros (perdés también el precio del mercado que **sí** operó), mientras que `ffill()` conserva todo, asumiendo que el precio del activo sin cotización "sigue siendo el del último cierre". Para precios, esa suposición es económicamente razonable — por eso `ffill` es el default en finanzas — pero no es gratis: el precio arrastrado es *viejo*, y en un día de crisis puede estar muy lejos del valor real.
 
 ::: {.callout-tip title="Forward Fill en Finanzas"}
@@ -248,16 +364,16 @@ Compará las dos opciones sobre el caso concreto: `dropna()` tira los días de f
 
 ---
 
-# Operaciones Vectorizadas y Cálculos Financieros
+## Operaciones Vectorizadas y Cálculos Financieros
 
 Pandas optimiza operaciones sobre columnas enteras sin necesidad de bucles `for`.
 
-## Movimientos y Variaciones
+### Movimientos y Variaciones
 - `.shift(n)`: Desplaza los datos $n$ posiciones (útil para comparar $P_t$ vs $P_{t-1}$).
 - `.pct_change()`: Calcula el retorno simple: $(P_t / P_{t-1}) - 1$.
 - `.diff()`: Calcula la diferencia absoluta: $P_t - P_{t-1}$.
 
-## Tipos de Retornos
+### Tipos de Retornos
 1. **Retorno Simple**: $R = (P_t / P_{t-1}) - 1$. Es aditivo entre activos en el mismo momento (el retorno de una cartera es el promedio ponderado de los retornos simples).
 2. **Retorno Logarítmico**: $r = \ln(P_t / P_{t-1})$. Es aditivo a lo largo del tiempo (el retorno de un año es la suma de los diarios) y simétrico.
 
@@ -273,7 +389,7 @@ print(f"Volatilidad diaria:    {df_diario['Ret_Simple'].std():.4%}")
 
 Dos lecturas de la salida. Primero, la **primera fila tiene `NaN`**: el primer día no tiene "día anterior" con quien compararse — es el mismo desfasaje que manejaste a mano con `range(len - 1)` en el Capítulo 2, ahora automático. Segundo, el retorno simple y el logarítmico son casi idénticos: para movimientos diarios chicos (±1%) la diferencia es despreciable; se separa en movimientos grandes.
 
-## Ventanas Móviles (Rolling)
+### Ventanas Móviles (Rolling)
 Una pregunta constante en finanzas: *¿cómo viene el activo **últimamente**?* No en toda su historia — en los últimos 20 días, 60 días. Las **ventanas móviles** (`rolling`) calculan una estadística sobre una ventana que se desliza por la serie: la base de las medias móviles y de la volatilidad histórica.
 
 ```{python}
@@ -292,9 +408,27 @@ Mirá las filas impresas: las primeras 19 observaciones de `SMA_20` son `NaN` �
 
 ---
 
-# Agrupación (Groupby)
+## Agrupación (Groupby)
 
 Sigue el mecanismo **Split-Apply-Combine**: dividimos el dataset por una categoría (Ticker, Sector), aplicamos una función y combinamos los resultados.
+
+
+```{mermaid}
+%%| label: fig-split-apply-combine
+%%| fig-cap: "Split-Apply-Combine con `groupby`: el DataFrame se parte por sector, a cada grupo se le aplica la misma función y los resultados se combinan en una tabla nueva, una fila por grupo."
+flowchart LR
+    D["<b>df_panel</b><br/>YPF · Energía · 0.05<br/>PAMP · Energía · 0.03<br/>GGAL · Bancos · −0.01<br/>BMA · Bancos · 0.02"]
+    D -->|split| E["<b>Energía</b><br/>0.05, 0.03"]
+    D -->|split| B["<b>Bancos</b><br/>−0.01, 0.02"]
+    E -->|"apply mean()"| E2["0.040"]
+    B -->|"apply mean()"| B2["0.005"]
+    E2 --> C["<b>combine</b><br/>Bancos → 0.005<br/>Energía → 0.040"]
+    B2 --> C
+    classDef grupo fill:#e0e9f4,stroke:#1e3a5f
+    classDef res fill:#eef2e3,stroke:#637238
+    class E,B grupo
+    class E2,B2,C res
+```
 
 ```{python}
 #| label: groupby-ejemplo
@@ -311,16 +445,76 @@ print(resumen_sector)
 
 ---
 
-# Visualización: cómo graficar (mini-tutorial de Matplotlib)
+## Visualización: cómo graficar (mini-tutorial de Matplotlib)
 
 Llegó el momento de aprender a graficar en serio, porque **de acá al final del libro no hay capítulo sin gráficos**: fronteras eficientes, distribuciones de retornos, trayectorias simuladas, sonrisas de volatilidad. Un analista que no grafica sus datos está analizando a ciegas — el histograma que revela una cola pesada o el gráfico que delata un hueco en la serie valen más que diez tablas.
 
-## La anatomía: Figure y Axes
+### La anatomía: Figure y Axes
 
 Matplotlib organiza todo gráfico en dos piezas, y entender la diferencia elimina el 90% de la confusión inicial:
 
 - La **Figure** (`fig`) es el **lienzo completo**: la hoja donde se dibuja. Controla el tamaño total y contiene uno o más gráficos.
 - Los **Axes** (`ax`) son **cada gráfico individual** dentro del lienzo: sus ejes, sus curvas, su título, su leyenda. (El nombre confunde: un objeto Axes es *el gráfico*, no "los ejes".)
+
+
+La @fig-figure-axes pone nombre a cada parte de un gráfico y a la llamada que la produce:
+
+```{python}
+#| label: fig-figure-axes
+#| echo: false
+#| fig-cap: "Anatomía de un gráfico de Matplotlib. La Figure (borde punteado) es el lienzo completo; el Axes (borde verde) es el gráfico, con sus ejes y su contenido. Cada elemento se agrega con un método del `ax`."
+import numpy as np
+from matplotlib.patches import Rectangle
+import sys; sys.path.insert(0, "..")
+from _esquemas import *
+
+def _esquema():
+    rng = np.random.default_rng(3)
+    precio = 100 + rng.normal(0.1, 1, 60).cumsum()
+    media = np.convolve(precio, np.ones(10) / 10, mode="valid")
+
+    fig, ax = plt.subplots(figsize=(10, 5.2))
+    fig.patch.set_facecolor(FONDO_GRIS)
+    fig.subplots_adjust(left=0.1, right=0.66, top=0.84, bottom=0.17)
+    fig.add_artist(Rectangle((0.004, 0.006), 0.992, 0.988, transform=fig.transFigure,
+                             fill=False, edgecolor=PRIMARIO, linewidth=2.5, linestyle="--"))
+    fig.text(0.02, 0.03, "Figure  (fig): el lienzo completo", fontsize=11, color=PRIMARIO,
+             fontweight="bold")
+
+    ax.plot(precio, color=PRIMARIO, linewidth=1.5, label="Precio")
+    ax.plot(range(9, 60), media, color=ACENTO, linewidth=2, label="Media móvil")
+    ax.set_title("Título del gráfico")
+    ax.set_xlabel("Eje x (fecha)")
+    ax.set_ylabel("Eje y (precio)")
+    ax.legend(loc="upper left")
+    ax.grid(True, alpha=0.3)
+    for lado in ("top", "right", "bottom", "left"):
+        ax.spines[lado].set_color(SECUNDARIO)
+        ax.spines[lado].set_linewidth(2)
+
+    # Llamadas que producen cada parte
+    notas = [
+        ((0.5, 1.03), (1.12, 1.08), "ax.set_title(...)", PRIMARIO),
+        ((0.25, 0.86), (1.12, 0.86), "ax.legend()", PRIMARIO),
+        ((0.75, 0.55), (1.12, 0.62), "ax.plot(x, y)", ACENTO),
+        ((0.98, 0.25), (1.12, 0.36), "Axes  (ax): UN gráfico,\ncon sus ejes y su contenido",
+         SECUNDARIO),
+        ((0.5, -0.1), (1.12, 0.06), "ax.set_xlabel(...)", PRIMARIO),
+    ]
+    for xy, xytext, s, color in notas:
+        ax.annotate(s, xy=xy, xycoords="axes fraction", xytext=xytext,
+                    textcoords="axes fraction", fontsize=10, color=color, va="center",
+                    fontweight="bold" if s.startswith("Axes") else "normal",
+                    family=None if s.startswith("Axes") else MONO,
+                    arrowprops=dict(arrowstyle="-|>", color=color, lw=1.2,
+                                    connectionstyle="arc3,rad=-0.15"))
+    ax.annotate("ax.set_ylabel(...)", xy=(-0.1, 0.5), xycoords="axes fraction",
+                xytext=(-0.08, 1.12), textcoords="axes fraction", fontsize=10, color=PRIMARIO,
+                family=MONO, arrowprops=dict(arrowstyle="-|>", color=PRIMARIO, lw=1.2))
+    plt.show()
+
+_esquema()
+```
 
 De ahí el idioma que vas a ver en todo el libro — y en todo el código profesional:
 
@@ -354,7 +548,7 @@ plt.show()
 
 Esos cinco pasos —crear, dibujar, etiquetar, leyenda/grilla, mostrar— son **la plantilla**. Todo lo demás son variaciones: qué se dibuja en el paso 2 y cuántos gráficos conviven en el lienzo.
 
-## Los tres tipos de gráfico del libro
+### Los tres tipos de gráfico del libro
 
 Con la plantilla fija, cambiar de tipo de gráfico es cambiar una línea. Los tres que cubren el 95% del análisis financiero:
 
@@ -390,7 +584,7 @@ plt.show()
 
 Dos novedades en este bloque. Primero, `plt.subplots(1, 2)` crea **dos gráficos en el mismo lienzo** (1 fila, 2 columnas) y devuelve un array de Axes — dibujás en cada uno por separado. Segundo, leé lo que los gráficos *dicen*: el histograma muestra retornos concentrados alrededor de cero con forma de campana, y la dispersión es una **nube sin patrón** — el retorno de ayer no predice el de hoy, tu primer vistazo a la eficiencia del mercado que formalizaremos en el Capítulo 16.
 
-## El atajo de pandas: `.plot()`
+### El atajo de pandas: `.plot()`
 
 Pandas trae un envoltorio de matplotlib incorporado: toda Serie y DataFrame tiene un método `.plot()` que dibuja usando **el índice como eje x** automáticamente — con fechas, esto es oro. Acepta `ax=` para dirigir el dibujo a un Axes que ya creaste, así que se combina perfecto con la plantilla:
 
@@ -426,13 +620,36 @@ Antes de dar por terminada una figura, cuatro preguntas: ¿los **ejes** tienen e
 
 ---
 
-# Caso de Uso: Construcción de la Curva de Rendimientos
+## Caso de Uso: Construcción de la Curva de Rendimientos
 
 Este caso integra casi todo el capítulo —DataFrames, iteración, operaciones vectorizadas— para resolver un problema central de la renta fija: **construir la curva de tasas** a partir de precios de bonos que se cotizan en el mercado.
 
-## ¿Por qué necesitamos "construir" una curva?
+### ¿Por qué necesitamos "construir" una curva?
 
 En el mercado no observamos directamente las tasas *spot* (la tasa de un instrumento que paga todo al vencimiento, sin cupones intermedios). Lo que observamos son **precios de bonos con cupón**, y cada uno mezcla tasas de muchos plazos a la vez. La técnica del **bootstrapping** desarma esa mezcla plazo por plazo: usa el bono a 1 año para despejar la tasa a 1 año, y con esa tasa ya conocida despeja la de 2 años del bono a 2 años, y así sucesivamente. Es como armar la curva "tirando del hilo".
+
+
+La @fig-bootstrapping muestra la cadena: cada tasa que se despeja se convierte en un insumo para el paso siguiente.
+
+```{mermaid}
+%%| label: fig-bootstrapping
+%%| fig-cap: "Bootstrapping de la curva spot. Cada bono, junto con las tasas ya despejadas, deja una sola incógnita: la tasa spot de su propio plazo. Con dos spots consecutivas se obtiene la forward implícita entre ellas."
+flowchart LR
+    B1["Bono 1 año<br/>precio 100.0"] --> Z1(["z₁"])
+    Z1 -->|"usa z₁"| B2["Bono 2 años<br/>precio 100.5"]
+    B2 --> Z2(["z₂"])
+    Z2 -->|"usa z₁, z₂"| B3["Bono 3 años<br/>precio 99.8"]
+    B3 --> Z3(["z₃"])
+    Z3 -->|"usa z₁…z₃"| BN["…"]
+    Z2 -.-> F12["forward f₁,₂"]
+    Z3 -.-> F23["forward f₂,₃"]
+    classDef bono fill:#e0e9f4,stroke:#1e3a5f
+    classDef spot fill:#eef2e3,stroke:#637238
+    classDef fwd fill:#fde8dc,stroke:#c2410c
+    class B1,B2,B3,BN bono
+    class Z1,Z2,Z3 spot
+    class F12,F23 fwd
+```
 
 Para un bono a $n$ años con cupón anual $C$ y valor nominal $VN$, su precio es la suma de todos los flujos descontados a la tasa spot correspondiente a cada plazo:
 
@@ -469,7 +686,7 @@ print("Curva Spot (tasas cero-cupón):")
 print((tasas_spot * 100).round(3).astype(str) + " %")
 ```
 
-## De la curva spot a las tasas forward
+### De la curva spot a las tasas forward
 
 La curva spot responde *"¿a qué tasa presto hoy por 3 años?"*. Pero muchas veces queremos saber otra cosa: *"¿qué tasa está descontando el mercado para el año que va del 2 al 3?"*. Esa es la **tasa forward implícita**, y sale de un argumento de no-arbitraje: invertir 3 años a la spot $z_3$ debe rendir lo mismo que invertir 2 años a $z_2$ y luego reinvertir 1 año a la forward $f_{2,3}$:
 
@@ -490,14 +707,12 @@ print((curva * 100).round(3))
 
 Cuando las forward están **por encima** de las spot, el mercado espera que las tasas suban (curva creciente): cada tramo nuevo "empuja" el promedio hacia arriba.
 
-## Interpolar la curva para plazos intermedios
+### Interpolar la curva para plazos intermedios
 
 Nuestra curva tiene puntos solo en 1, 2, 3, 4 y 5 años, pero en la práctica necesitamos descontar flujos que caen en cualquier fecha (por ejemplo, a 2,5 años). Para eso **interpolamos**. Pandas trae `interpolate()`, que rellena los huecos de un índice: reindexamos la curva a una grilla más fina y dejamos que complete linealmente.
 
 ```{python}
 #| label: interpolacion-curva
-import numpy as np
-
 # Grilla de plazos cada medio año, de 1 a 5
 grilla = np.arange(1.0, 5.5, 0.5)
 
@@ -528,7 +743,7 @@ Interpolar linealmente es simple y transparente, pero los operadores de renta fi
 
 ---
 
-# Errores comunes
+## Errores comunes
 
 ::: {.callout-warning title="Trampas frecuentes"}
 - **Fechas como texto**: si olvidás `parse_dates` (o `pd.to_datetime`), las fechas quedan como strings: se ordenan alfabéticamente, `resample` falla y los gráficos salen desordenados. Verificá con `df.index.dtype`.
@@ -540,7 +755,7 @@ Interpolar linealmente es simple y transparente, pero los operadores de renta fi
 
 ---
 
-# Ejercicios Propuestos
+## Ejercicios Propuestos
 
 ::: {.callout-important title="Desafíos"}
 1. **Volatilidad comparada**: A partir de una serie de precios simulada, compará la volatilidad móvil de 30 días contra la de 90 días en un mismo gráfico. ¿Cuál reacciona más rápido a un shock?
@@ -552,7 +767,7 @@ Interpolar linealmente es simple y transparente, pero los operadores de renta fi
 
 ---
 
-# Referencias
+## Referencias
 
 
 ::: {#refs}

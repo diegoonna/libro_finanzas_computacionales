@@ -1,5 +1,5 @@
 ---
-title: "Capítulo 3: Funciones, Excepciones y módulos"
+title: "Capítulo 3: Funciones, Excepciones y Módulos"
 subtitle: "Creando una Librería Financiera Reutilizable"
 abstract: |
   Funciones con parámetros, `*args`, scope, manejo de errores. Construimos
@@ -8,15 +8,35 @@ nocite: |
   @lutz2013, @fabozzi2015
 ---
 
-# Introducción
+# Introducción {.unnumbered}
 
-Hasta ahora hemos escrito código de forma lineal. Esta semana aprendemos a **encapsular lógica** en funciones reutilizables, siguiendo el principio **DRY** (*Don't Repeat Yourself*). Al final, tendremos nuestra propia librería `finanzas_basicas.py`.
+Hasta ahora hemos escrito código de forma lineal. En este capítulo aprendemos a **encapsular lógica** en funciones reutilizables, siguiendo el principio **DRY** (*Don't Repeat Yourself*). Al final, tendremos nuestra propia librería `finanzas_basicas.py`.
 
 ---
 
-# Definición de Funciones
+## Definición de Funciones
 
 Una función es un bloque de código reutilizable que recibe **parámetros** y devuelve un **resultado**.
+
+La mejor forma de pensar una función es como una **caja negra con un contrato** (@fig-funcion-caja-negra): entran parámetros, sale un resultado por `return`, y quien la usa no necesita saber qué pasa adentro.
+
+```{mermaid}
+%%| label: fig-funcion-caja-negra
+%%| fig-cap: "Una función como caja negra: recibe datos por sus parámetros y entrega el resultado con `return`. Una función bien diseñada no lee ni modifica nada por fuera de ese contrato."
+flowchart LR
+    P1["capital = 100_000"] --> F
+    P2["tasa = 0.08"] --> F
+    P3["periodos = 10"] --> F
+    F[["<b>valor_futuro()</b><br/>capital×(1+tasa)^periodos"]] -->|return| R(["215,892.50"])
+    F -. "no toca" .-> X["variables globales,<br/>listas ajenas"]
+    classDef entrada fill:#e0e9f4,stroke:#1e3a5f
+    classDef salida fill:#eef2e3,stroke:#637238
+    classDef prohibido fill:#fde8dc,stroke:#c2410c,stroke-dasharray:4 3
+    class P1,P2,P3 entrada
+    class R salida
+    class X prohibido
+```
+
 
 ```{pyodide-python}
 #| label: funcion-basica
@@ -41,7 +61,7 @@ vf = valor_futuro(100_000, 0.08, 10)
 print(f"Valor futuro: ${vf:,.2f}")
 ```
 
-## Recibir y devolver múltiples valores
+### Recibir y devolver múltiples valores
 
 En Python, una función puede **recibir varios parámetros** y también **devolver más de un resultado**.
 Esto es útil en finanzas cuando, a partir de los mismos datos, queremos obtener más de un indicador.
@@ -65,7 +85,7 @@ print(f"Rendimiento total: {rendimiento:.2%}")
 Cuando devolvemos varios valores, Python los empaqueta en una tupla.
 Luego podemos "desempaquetarlos" en variables separadas para trabajar con cada resultado de forma clara.
 
-## Parámetros por Defecto
+### Parámetros por Defecto
 
 ```{pyodide-python}
 #| label: params-default
@@ -81,7 +101,7 @@ print(f"VP a 1 año: ${vp1:,.2f}")
 print(f"VP a 5 años: ${vp2:,.2f}")
 ```
 
-## Argumentos Variables (`*args`)
+### Argumentos Variables (`*args`)
 
 Hasta ahora vimos funciones con una cantidad fija de parámetros.  
 Pero en problemas financieros muchas veces no sabemos de antemano cuántos valores vamos a procesar (por ejemplo, una serie de flujos que puede tener 3, 10 o 30 períodos).
@@ -125,14 +145,40 @@ Si cada dato tiene un rol distinto y fijo (por ejemplo `capital`, `tasa`, `perio
 
 ---
 
-# Scope (Alcance) de las Variables
+## Scope (Alcance) de las Variables
 
 El **scope** o alcance define en qué parte del programa una variable es "visible" y puede ser utilizada. En Python, distinguimos principalmente entre dos niveles:
 
 1.  **Scope Global (Main)**: Variables definidas fuera de cualquier función. Son visibles en todo el archivo, incluso dentro de las funciones.
 2.  **Scope Local**: Variables definidas dentro de una función. Solo existen mientras la función se está ejecutando y no pueden verse desde fuera.
 
-## Variables Globales vs. Locales
+
+La @fig-scope muestra los dos niveles como cajas anidadas. Cuando Python encuentra un nombre adentro de una función, lo busca **primero en la caja local** y, solo si no lo encuentra, sube a la global. Por eso `calcular_rendimiento` ve `tasa_mercado`, y por eso afuera no existe `variable_interna`.
+
+```{mermaid}
+%%| label: fig-scope
+%%| fig-cap: "Scope global y local. Cada llamada a una función crea su propia caja local, que desaparece al terminar. Para resolver un nombre, Python busca primero en la caja local y después en la global; desde afuera nunca se ve lo de adentro."
+flowchart TB
+    subgraph G["Scope GLOBAL (el archivo)"]
+        direction TB
+        g1["tasa_mercado = 0.05"]
+        g2["ticker = 'AAPL'"]
+        subgraph L1["Scope LOCAL"]
+            l1["<b>calcular_rendimiento(monto)</b><br/>monto = 1000"]
+            l2["usa tasa_mercado: no está acá,<br/>sube y la encuentra en global"]
+        end
+        subgraph L2["Scope LOCAL"]
+            l3["<b>cambiar_ticker_local()</b><br/>ticker = 'GGAL'<br/>(variable NUEVA que tapa a la global)"]
+        end
+    end
+    l2 -. "1° local, 2° global" .-> g1
+    classDef glob fill:#e0e9f4,stroke:#1e3a5f
+    classDef loc fill:#eef2e3,stroke:#637238
+    class g1,g2 glob
+    class l1,l2,l3 loc
+```
+
+### Variables Globales vs. Locales
 
 Una función puede **leer** una variable global, pero no puede modificarla directamente: para eso existe la declaración `global tasa_mercado` dentro de la función. Que exista no significa que convenga usarla — en código financiero es una mala práctica, porque una función que modifica estado externo se vuelve impredecible (el resultado deja de depender solo de sus parámetros). En todo este libro, las funciones reciben lo que necesitan por parámetro y devuelven resultados con `return`.
 
@@ -155,7 +201,7 @@ operacion_interna()
 # print(variable_interna) 
 ```
 
-## El concepto de "Shadowing" (Sombreado)
+### El concepto de "Shadowing" (Sombreado)
 
 Si definimos una variable dentro de una función con el mismo nombre que una global, la versión local "sombra" a la global durante la ejecución de esa función.
 
@@ -171,7 +217,7 @@ cambiar_ticker_local()
 print(f"Fuera de la función (Global): {ticker}")
 ```
 
-## ¿Por qué evitar las variables globales?
+### ¿Por qué evitar las variables globales?
 
 En el desarrollo de software financiero, la **pureza** de las funciones es fundamental. Una función ideal es aquella que, para los mismos parámetros, siempre devuelve el mismo resultado sin depender de "estados externos".
 
@@ -194,7 +240,7 @@ print(f"Bueno: {calcular_interes_bueno(100, 0.12)}")
 Siempre que necesites un dato dentro de una función, **pásalo como parámetro**. Evita depender de variables definidas en el "main" para que tu código sea modular y fácil de testear.
 :::
 
-## ¿Qué recibe una función cuando le pasás una lista?
+### ¿Qué recibe una función cuando le pasás una lista?
 
 Cerremos el círculo con el concepto de *aliasing* del Capítulo 2 ("copiar no es lo mismo que apuntar"), porque tiene una consecuencia directa sobre las funciones. Cuando llamás `mi_funcion(cartera)`, la función **no recibe una copia** de la cartera: recibe **otra etiqueta al mismo objeto**. Con parámetros inmutables (números, strings) esto es invisible — no se pueden modificar. Pero con una **lista o diccionario**, si la función lo muta, *el llamador ve el cambio*:
 
@@ -237,12 +283,12 @@ Una función debería **recibir datos, devolver resultados y no tocar nada más*
 
 ---
 
-# Manejo de Errores: `try` / `except`
+## Manejo de Errores: `try` / `except`
 
 En el mundo real, los datos financieros casi nunca llegan "perfectos": pueden venir incompletos, en formato incorrecto o fuera de rango.
 El manejo de excepciones con `try` / `except` permite que el programa sea **robusto**, evitando que se rompa ante errores esperables.
 
-## ¿Qué es una excepción?
+### ¿Qué es una excepción?
 
 Una **excepción** es un error que ocurre durante la ejecución del programa (runtime), por ejemplo:
 
@@ -278,7 +324,7 @@ El error de principiante es leer solo la primera línea (que es la *menos* infor
 
 Con `try` / `except`, en cambio, podemos capturar el error y decidir cómo responder sin que el programa muera.
 
-## Flujo de `try` / `except`
+### Flujo de `try` / `except`
 
 La estructura general es:
 
@@ -294,7 +340,7 @@ La idea clave es separar:
 - **camino normal** (cálculo esperado),
 - de **camino de error** (qué hacemos cuando algo falla).
 
-## Ejemplo base: validación y captura en VPN
+### Ejemplo base: validación y captura en VPN
 
 ```{pyodide-python}
 #| label: try-except
@@ -318,7 +364,7 @@ except ValueError as e:
     print(f"Error capturado: {e}")
 ```
 
-## Capturar múltiples excepciones
+### Capturar múltiples excepciones
 
 Podemos manejar cada tipo de error de forma distinta:
 
@@ -337,12 +383,31 @@ except TypeError:
 
 Esto es útil porque no todos los errores deben tener el mismo mensaje o tratamiento.
 
-## Uso de `else` y `finally`
+### Uso de `else` y `finally`
 
 Además de `except`, Python ofrece dos bloques muy útiles:
 
 - `else`: se ejecuta si **no** hubo excepción en `try`.
 - `finally`: se ejecuta **siempre**, haya error o no.
+
+
+La @fig-try-except-flujo junta los cuatro bloques en un solo recorrido. La clave es que, de las dos ramas del medio, **se ejecuta exactamente una**, mientras que `finally` se ejecuta siempre.
+
+```{mermaid}
+%%| label: fig-try-except-flujo
+%%| fig-cap: "Recorrido de `try`/`except`/`else`/`finally`. Si el bloque `try` lanza una excepción del tipo capturado, se ejecuta `except`; si no, `else`. En ambos casos, `finally` corre al final."
+flowchart TD
+    T["<b>try:</b><br/>tasa = parse_tasa(entrada)"] --> Q{"¿se lanzó<br/>ValueError?"}
+    Q -- Sí --> E["<b>except ValueError:</b><br/>avisar que no es un número"]
+    Q -- No --> L["<b>else:</b><br/>usar la tasa válida"]
+    E --> F["<b>finally:</b><br/>se ejecuta SIEMPRE<br/>(cerrar archivos, conexiones)"]
+    L --> F
+    F --> S([el programa sigue])
+    classDef error fill:#fde8dc,stroke:#c2410c
+    classDef ok fill:#eef2e3,stroke:#637238
+    class E error
+    class L ok
+```
 
 ```{pyodide-python}
 #| label: try-except-else-finally
@@ -363,7 +428,7 @@ finally:
 
 En análisis financiero real, `finally` suele usarse para cerrar archivos, conexiones o liberar recursos.
 
-## `raise`: generar errores de negocio explícitos
+### `raise`: generar errores de negocio explícitos
 
 No solo capturamos errores: también podemos **lanzarlos** cuando una regla financiera no se cumple.
 
@@ -385,7 +450,7 @@ except ValueError as e:
     print(f"Dato inválido: {e}")
 ```
 
-## Buenas prácticas en `try` / `except`
+### Buenas prácticas en `try` / `except`
 
 1. Capturar errores **específicos** (`ValueError`, `TypeError`, etc.), no usar `except:` genérico salvo casos muy controlados.
 2. Mantener el bloque `try` **pequeño** (solo las líneas que pueden fallar).
@@ -400,11 +465,11 @@ Primero validamos reglas financieras, luego capturamos errores inevitables del m
 
 ---
 
-# Módulos y librerías en Python
+## Módulos y librerías en Python
 
 Cuando un programa crece, no conviene dejar todo en un solo archivo. Python permite **organizar el código en módulos** para reutilizar funciones, mantener orden y facilitar el testing.
 
-## ¿Para qué sirve un módulo?
+### ¿Para qué sirve un módulo?
 
 Un **módulo** es, en la práctica, un archivo `.py` con funciones, variables o clases.
 
@@ -415,7 +480,7 @@ Nos sirve para:
 - evitar duplicación de código (principio DRY),
 - y mejorar mantenimiento y legibilidad.
 
-## Diferencia entre módulo y librería
+### Diferencia entre módulo y librería
 
 - **Módulo**: un archivo Python individual, por ejemplo `finanzas_basicas.py`.
 - **Librería**: un conjunto de módulos relacionados que resuelven un dominio o problema.  
@@ -423,7 +488,7 @@ Nos sirve para:
 
 En cursos introductorios, a veces se dice "librería" para referirse a un solo archivo propio. Técnicamente, ese archivo es un **módulo**, aunque puede ser el primer paso para construir una librería más completa.
 
-## Formas de importar: `import`, `from`, `as`
+### Formas de importar: `import`, `from`, `as`
 
 ```{pyodide-python}
 # 1) import modulo
@@ -450,11 +515,11 @@ En general, preferí `import modulo` o `import modulo as alias` porque hacen exp
 
 ---
 
-# Problemática Financiera: Librería `finanzas_basicas.py`
+## Problemática Financiera: Librería `finanzas_basicas.py`
 
 Hora de cosechar lo sembrado. En los dos capítulos anteriores resolviste problemas financieros reales —interés compuesto, conversión de tasas, valuación de bonos, TIR— pero cada solución quedó atrapada en su ejemplo. Vamos a **rescatar esa lógica y empaquetarla en una librería reutilizable**: el conjunto de funciones que vas a poder importar en cualquier análisis futuro. En un entorno real, este código viviría en un archivo `finanzas_basicas.py` y se importaría con `from finanzas_basicas import valuacion_bono, tir`.
 
-## Funciones de la Librería
+### Funciones de la Librería
 
 ```{pyodide-python}
 #| label: libreria
@@ -516,9 +581,34 @@ def tir(valor_nominal, tasa_cupon, anios, precio_mercado, paso=0.0001):
     return tasa
 ```
 
-Fijate el detalle de diseño en `tir()`: **reutiliza `valuacion_bono()`** en lugar de repetir el bucle de descuento. Las funciones de una librería se apoyan unas en otras — si mañana mejorás la valuación, la TIR mejora gratis. Notá también el "techo de seguridad": una función de librería no puede colgarse en un bucle infinito porque alguien le pasó un precio absurdo; falla rápido y con un mensaje claro.
+Fijate el detalle de diseño en `tir()`: **reutiliza `valuacion_bono()`** en lugar de repetir el bucle de descuento. La @fig-dependencias-libreria muestra cómo quedan conectadas las piezas: el script de análisis solo conoce los nombres de las funciones, y dentro de la librería unas se apoyan en otras.
 
-## Usando la Librería
+```{mermaid}
+%%| label: fig-dependencias-libreria
+%%| fig-cap: "Estructura de `finanzas_basicas.py`. El análisis importa las funciones que necesita; dentro del módulo, `tir()` delega la valuación en `valuacion_bono()`, así que cualquier mejora en esta última se hereda automáticamente."
+flowchart LR
+    subgraph M["finanzas_basicas.py (módulo)"]
+        direction TB
+        VF["valor_futuro()"]
+        VPN["valor_presente_neto()"]
+        CT["conversion_tasas()"]
+        VB["valuacion_bono()"]
+        TIR["tir()"] -->|"llama en cada<br/>tasa candidata"| VB
+    end
+    A["analisis.py<br/><i>from finanzas_basicas import ...</i>"] --> VF
+    A --> VPN
+    A --> CT
+    A --> VB
+    A --> TIR
+    classDef mod fill:#e0e9f4,stroke:#1e3a5f
+    classDef uso fill:#eef2e3,stroke:#637238
+    class VF,VPN,CT,VB,TIR mod
+    class A uso
+```
+
+Las funciones de una librería se apoyan unas en otras — si mañana mejorás la valuación, la TIR mejora gratis. Notá también el "techo de seguridad": una función de librería no puede colgarse en un bucle infinito porque alguien le pasó un precio absurdo; falla rápido y con un mensaje claro.
+
+### Usando la Librería
 
 ```{pyodide-python}
 #| label: uso-libreria
@@ -550,7 +640,7 @@ Compará el punto 4 con las ~10 líneas de bucle que necesitaste en el Capítulo
 
 ---
 
-# Principio DRY: Don't Repeat Yourself
+## Principio DRY: Don't Repeat Yourself
 El principio **DRY** (*Don't Repeat Yourself*) propone evitar duplicar la misma lógica en distintos lugares del código.
 Cuando repetimos fórmulas o bloques manualmente, aumentamos el riesgo de inconsistencias: si cambia un supuesto (por ejemplo, la tasa o la frecuencia), debemos corregir múltiples líneas y es fácil olvidar alguna.
 
@@ -579,7 +669,7 @@ precio_b = valuacion_bono(1000, 0.06, 0.08, 3)
 
 ---
 
-# Errores comunes
+## Errores comunes
 
 ::: {.callout-warning title="Trampas frecuentes"}
 - **Argumento por defecto mutable**: `def agregar(flujo, lista=[])` comparte la MISMA lista entre todas las llamadas — los flujos de un bono aparecen en otro. El idioma correcto: `def agregar(flujo, lista=None)` y crear la lista adentro (`if lista is None: lista = []`).
@@ -591,7 +681,7 @@ precio_b = valuacion_bono(1000, 0.06, 0.08, 3)
 
 ---
 
-# Ejercicios Propuestos
+## Ejercicios Propuestos
 
 ::: {.callout-important title="Ejercicios"}
 1. **Función de amortización francesa**: Crear una función `cuota_francesa(capital, tasa, periodos)` que calcule la cuota fija de un préstamo sistema francés. Validar que los inputs sean positivos.
@@ -608,7 +698,7 @@ $$D = \frac{\sum_{t=1}^{n} t \cdot \frac{CF_t}{(1+r)^t}}{P}$$
 
 ---
 
-# Referencias
+## Referencias
 
 
 ::: {#refs}

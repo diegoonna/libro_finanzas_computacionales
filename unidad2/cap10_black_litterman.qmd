@@ -12,7 +12,7 @@ nocite: |
   @black1992, @idzorek2007, @meucci2010
 ---
 
-# Introducción: por qué Markowitz solo no alcanza
+# Introducción: por qué Markowitz solo no alcanza {.unnumbered}
 
 En el Capítulo 8 aprendimos a construir la frontera eficiente. Pero si intentás usar Markowitz "puro" con datos reales, te chocás con un problema incómodo: **el modelo es extremadamente sensible a los retornos esperados** $\boldsymbol{\mu}$ que le das de entrada. Cambiás la estimación del retorno de un activo en medio punto y la cartera óptima se da vuelta por completo, concentrándose en dos o tres posiciones extremas (a veces con ventas en corto gigantes).
 
@@ -26,15 +26,18 @@ El problema de fondo es que $\boldsymbol{\mu}$ es lo más difícil de estimar en
 Markowitz te pregunta *"¿cuánto va a rendir cada activo?"* y se cree tu respuesta al pie de la letra. Black-Litterman te pregunta *"¿en qué diferís del mercado, y cuán seguro estás?"* — una pregunta mucho más honesta y fácil de responder.
 :::
 
+La @fig-pipeline-bl, al final del capítulo, resume el recorrido completo en un solo diagrama; volvé a ella si en algún paso perdés el hilo.
+
 ```{python}
 #| label: setup
 import numpy as np
+import matplotlib.pyplot as plt
 np.set_printoptions(precision=4, suppress=True)
 ```
 
 ---
 
-# La intuición: combinar una creencia previa con nueva información
+## La intuición: combinar una creencia previa con nueva información
 
 Antes de la matemática, la intuición, porque es el corazón del modelo.
 
@@ -45,11 +48,56 @@ Imaginate que querés estimar cuánto va a rendir una acción. Tenés dos fuente
 
 ¿Con qué te quedás? Ni una ni otra a ciegas: hacés un **promedio ponderado por tu confianza**. Si tu análisis es muy sólido, tu estimación final se acerca al 12%; si tenés dudas, se queda cerca del 8% del mercado. Y si tu opinión coincide con el mercado, no cambia nada.
 
+La @fig-mezcla-bayesiana dibuja ese razonamiento con números: cada fuente es una campana centrada en su estimación, más angosta cuanto más confiable. La combinación cae entre ambas, más cerca de la más precisa, y es más angosta que las dos: juntar información reduce la incertidumbre.
+
+```{python}
+#| label: fig-mezcla-bayesiana
+#| echo: false
+#| fig-cap: "Combinar el equilibrio (8% ± 2%) con una view (12% ± 3%): el resultado es un promedio ponderado por precisión, 9.2% ± 1.7%, más cerca del equilibrio porque es la fuente más precisa."
+import sys; sys.path.insert(0, "..")
+from _esquemas import *
+import numpy as np
+from scipy import stats
+
+def _esquema():
+    # Un activo: el mercado descuenta 8% (±2%), nuestra view dice 12% (±3%)
+    pi, s_pi = 0.08, 0.02
+    q, s_q = 0.12, 0.03
+    precision = 1 / s_pi**2 + 1 / s_q**2
+    mu_post = (pi / s_pi**2 + q / s_q**2) / precision
+    s_post = np.sqrt(1 / precision)
+
+    x = np.linspace(0.0, 0.22, 400)
+    fig, ax = plt.subplots(figsize=(9, 4.2))
+    for m, s, color, etiqueta in [(pi, s_pi, PRIMARIO, "Equilibrio del mercado: 8% ± 2%"),
+                                  (q, s_q, ACENTO, "Tu view: 12% ± 3%"),
+                                  (mu_post, s_post, SECUNDARIO,
+                                   f"Black-Litterman: {mu_post:.1%} ± {s_post:.1%}")]:
+        y = stats.norm.pdf(x, m, s)
+        ax.plot(x * 100, y, color=color, lw=2.2, label=etiqueta)
+        ax.fill_between(x * 100, y, color=color, alpha=0.12)
+        ax.axvline(m * 100, color=color, lw=1, ls=":")
+
+    ax.annotate("la mezcla queda más cerca\nde la fuente más precisa\n(y es más angosta que ambas)",
+                xy=(mu_post * 100, stats.norm.pdf(mu_post, mu_post, s_post) * 0.75),
+                xytext=(15, 9), fontsize=9, color=SECUNDARIO,
+                arrowprops=dict(arrowstyle="-|>", color=SECUNDARIO))
+    ax.set_xlabel("Retorno esperado anual (%)")
+    ax.set_yticks([])
+    ax.legend(loc="upper right", fontsize=9, frameon=False)
+    ax.spines[["top", "right", "left"]].set_visible(False)
+    plt.tight_layout()
+    plt.show()
+
+_esquema()
+```
+
+
 Ese mecanismo —partir de una creencia y moverla hacia la nueva evidencia en proporción a la confianza— es exactamente lo que formaliza Black-Litterman. En la literatura vas a ver que la versión completa se deriva como una actualización bayesiana (*prior* + verosimilitud → *posterior*), pero **no hace falta la maquinaria bayesiana** para entenderlo ni usarlo: se puede escribir como un conjunto de operaciones matriciales cerradas. Ese es el camino que vamos a tomar.
 
 ---
 
-# Paso 1: los retornos implícitos de equilibrio (optimización inversa)
+## Paso 1: los retornos implícitos de equilibrio (optimización inversa)
 
 La primera pieza es la creencia de partida: ¿cuáles son los retornos que el mercado está asumiendo? Acá viene el truco más lindo del modelo.
 
@@ -98,7 +146,7 @@ El coeficiente de aversión al riesgo se puede estimar como $\delta = (\mu_{mkt}
 
 ---
 
-# Paso 2: expresar las views del inversor
+## Paso 2: expresar las views del inversor
 
 Ahora incorporamos nuestras opiniones. Black-Litterman las representa con tres objetos:
 
@@ -126,7 +174,7 @@ print("Matriz P (picks):\n", P)
 print("\nVector Q (views):", Q)
 ```
 
-Para la incertidumbre $\Omega$, una convención estándar (Idzorek) es hacerla proporcional a la varianza de la propia view bajo el modelo: views sobre activos más volátiles arrastran más incertidumbre. Aparece también un parámetro escalar $\tau$ (chico, ~0.025–0.05) que refleja la confianza global en el equilibrio.
+Para la incertidumbre $\Omega$, una convención estándar (He y Litterman, 1999) es hacerla proporcional a la varianza de la propia view bajo el modelo: views sobre activos más volátiles arrastran más incertidumbre. Aparece también un parámetro escalar $\tau$ (chico, ~0.025–0.05) que refleja la confianza global en el equilibrio. Una alternativa popular es la de Idzorek (2007): en lugar de fijar $\Omega$ directamente, le pide al inversor un **porcentaje de confianza** (de 0 a 100%) para cada view y deduce $\Omega$ a partir de él.
 
 ```{python}
 #| label: omega
@@ -138,13 +186,68 @@ Omega = np.diag(np.diag(P @ (tau * Sigma) @ P.T))
 print("Matriz Ω (incertidumbre de las views):\n", Omega)
 ```
 
+La @fig-anatomia-views junta las tres piezas: cada fila es una view, y se lee de izquierda a derecha.
+
+```{python}
+#| label: fig-anatomia-views
+#| echo: false
+#| fig-cap: "Anatomía de las views del capítulo. Cada fila de P indica qué activos involucra la view (+1 compra, −1 vende, 0 no participa); Q dice qué retorno afirma, y Ω, cuánta incertidumbre le asignamos."
+import sys; sys.path.insert(0, "..")
+from _esquemas import *
+
+def _esquema():
+    # Usa P, Q, Omega y activos del capítulo
+    fig, ax = lienzo(17, 4.3)
+    w, h, x0, y_top = 2.1, 0.9, 3.6, 2.2
+    vistas = ["View 1\n(absoluta)", "View 2\n(relativa)"]
+
+    def color(v):
+        return FONDO_SECUNDARIO if v > 0 else (FONDO_ACENTO if v < 0 else "white")
+
+    # P: filas = views, columnas = activos
+    texto(ax, x0 + 1.5 * w, y_top + h + 1.05, "P  (qué activos toca cada view)", tam=10,
+          peso="bold", color=PRIMARIO)
+    for j, a in enumerate(activos):
+        texto(ax, x0 + j * w + w / 2, y_top + h + 0.35, a, tam=8.5, color=PRIMARIO)
+    for i, v in enumerate(vistas):
+        y = y_top - i * h
+        texto(ax, x0 - 0.2, y + h / 2, v, tam=8.5, ha="right", color=TEXTO)
+        fila_de_celdas(ax, x0, y, [f"{p:+.0f}" if p else "0" for p in P[i]], w=w, h=h,
+                       rellenos=[color(p) for p in P[i]], tam=11)
+
+    # Q: lo que afirma cada view
+    xq = x0 + 3 * w + 1.0
+    texto(ax, xq + 0.9, y_top + h + 1.05, "Q", tam=10, peso="bold", color=PRIMARIO)
+    texto(ax, xq + 0.9, y_top + h + 0.35, "qué afirma", tam=8.5, color=PRIMARIO)
+    for i in range(2):
+        caja(ax, xq, y_top - i * h, 1.8, h, f"{Q[i]:.0%}", relleno=FONDO_PRIMARIO, mono=True,
+             tam=11, lw=1.2, redondeo=0.02)
+
+    # Ω: incertidumbre de cada view (diagonal)
+    xo = xq + 2.8
+    texto(ax, xo + 1.0, y_top + h + 1.05, "Ω (diagonal)", tam=10, peso="bold", color=PRIMARIO)
+    texto(ax, xo + 1.0, y_top + h + 0.35, "cuánto dudás", tam=8.5, color=PRIMARIO)
+    for i in range(2):
+        caja(ax, xo, y_top - i * h, 2.0, h, f"{Omega[i, i]:.5f}", relleno=FONDO_GRIS, mono=True,
+             tam=10, lw=1.2, redondeo=0.02)
+
+    texto(ax, x0 + 1.5 * w, 0.45,
+          "View 1: +1 en EU  →  «EU rendirá 12%»\n"
+          "View 2: +1 en USA y −1 en Bonos  →  «USA superará a Bonos por 4%»",
+          tam=9, color=TEXTO)
+    plt.tight_layout()
+    plt.show()
+
+_esquema()
+```
+
 ::: {.callout-tip title="El sentido de Ω"}
 $\Omega$ es la perilla de confianza. Si ponés valores **chicos**, le estás diciendo al modelo "estoy muy seguro de estas views" y el resultado se pegará a $Q$. Si los ponés **grandes**, el modelo casi las ignora y se queda con el equilibrio $\Pi$. Es la traducción matemática del "cuán seguro estás" de la introducción.
 :::
 
 ---
 
-# Paso 3: la fórmula maestra de Black-Litterman
+## Paso 3: la fórmula maestra de Black-Litterman
 
 Con el equilibrio $\boldsymbol{\Pi}$ y las views $(P, Q, \Omega)$, combinamos ambas fuentes en un único vector de retornos esperados ajustados, $\boldsymbol{\mu}_{BL}$. Esta es la célebre *fórmula maestra*:
 
@@ -173,13 +276,13 @@ for a, pi, m in zip(activos, Pi, mu_BL):
     print(f"{a:<14}{pi:>13.2%}{m:>17.2%}")
 ```
 
-Leé la tabla con calma: los retornos ajustados se **movieron desde el equilibrio hacia nuestras views**. Acciones EU subió hacia el 12% que afirmamos; USA subió (y Bonos bajó) por la view relativa. Pero ningún valor saltó descontroladamente: el modelo mezcló, no reemplazó. Eso es precisamente lo que le faltaba a Markowitz.
+Leé la tabla con calma: los retornos ajustados se **movieron desde el equilibrio hacia nuestras views**. Acciones EU subió del 2.5% al 7.2%: bastante, pero lejos del 12% que afirmamos, porque el modelo pondera esa view contra el equilibrio. USA también subió, empujado por la view relativa. Ningún valor saltó hasta la view: el modelo mezcló, no reemplazó. Eso es precisamente lo que le faltaba a Markowitz.
 
-Fijate también que se movió el retorno de activos **sobre los que no opinamos directamente**: como Bonos está correlacionado con los demás, la fórmula propaga la información a través de $\Sigma$. Es una consecuencia elegante de trabajar con todas las covarianzas juntas.
+Fijate también un efecto menos obvio: Bonos **subió** (de 0.4% a 0.7%), aunque la view 2 lo ponía *por debajo* de USA. La razón es que la fórmula propaga la información a través de $\Sigma$: si EU y USA rinden más, y Bonos está (poco, pero) correlacionado con ellos, su retorno esperado también se ajusta. Las views no actúan aisladas: viajan por las covarianzas.
 
 ---
 
-# Paso 4: del retorno ajustado a la cartera óptima
+## Paso 4: del retorno ajustado a la cartera óptima
 
 El vector $\boldsymbol{\mu}_{BL}$ es un input de retornos esperados **mucho más robusto** que un promedio histórico. Ahora sí lo metemos en la optimización de Markowitz para obtener los pesos. Sin restricciones adicionales, los pesos óptimos tienen forma cerrada:
 
@@ -197,22 +300,46 @@ for a, wm, wb in zip(activos, w_mkt, w_BL):
 print(f"\nSuma de pesos BL: {w_BL.sum():.1%}")
 ```
 
-Cuando **no hay views**, $\mathbf{w}_{BL}$ reproduce la cartera de mercado (por construcción: es el punto de partida). Al agregar opiniones, el modelo **se desvía del mercado solo en la dirección de esas views**: sobrepondera lo que creemos que va a rendir más y reduce lo que va a rendir menos, de forma proporcional y sensata. Compará esto con Markowitz puro, donde una view chica podía generar una posición apalancada extrema.
+Cuando **no hay views**, $\mathbf{w}_{BL}$ reproduce la cartera de mercado (por construcción: es el punto de partida). Al agregar opiniones, el modelo **se desvía del mercado en la dirección de esas views**, y la magnitud del desvío depende de dos cosas: cuánto difiere cada view del equilibrio y cuánto confiás en ella. Acá la view sobre EU es muy agresiva —12% contra un equilibrio de 2.5%—, y la cartera sin restricciones lo refleja: Acciones EU pasa del 30% a casi 130%, y los pesos suman cerca de 200%, es decir, una cartera apalancada. No es un error del modelo: es lo que implica *creer* esa view con esa confianza. Por eso en la práctica se combinan views más moderadas con las restricciones del recuadro siguiente. La @fig-equilibrio-vs-bl muestra los dos desplazamientos juntos.
+
+```{python}
+#| label: fig-equilibrio-vs-bl
+#| echo: false
+#| fig-cap: "Del equilibrio a Black-Litterman. Izquierda: los retornos esperados se desplazan desde Π hacia las views. Derecha: la cartera sin restricciones sobrepondera fuertemente Acciones EU y suma casi 200% (apalancada)."
+import sys; sys.path.insert(0, "..")
+from _esquemas import *
+
+def _esquema():
+    # Usa activos, Pi, mu_BL, w_mkt y w_BL del capítulo
+    fig, (izq, der) = plt.subplots(1, 2, figsize=(11, 4))
+    barras_comparadas(izq, activos, {"Equilibrio Π": Pi, "Black-Litterman μ_BL": mu_BL},
+                      fmt="{:.1%}", colores=[GRIS, PRIMARIO])
+    izq.set_title("Retornos esperados", fontsize=11, color=PRIMARIO, fontweight="bold")
+    barras_comparadas(der, activos, {"Cartera de mercado": w_mkt, "Cartera BL": w_BL},
+                      colores=[GRIS, ACENTO])
+    der.set_title("Pesos de la cartera", fontsize=11, color=PRIMARIO, fontweight="bold")
+    for ax in (izq, der):
+        ax.yaxis.set_major_formatter(plt.FuncFormatter(lambda v, _: f"{v:.0%}"))
+        ax.legend(frameon=False, fontsize=8.5, loc="upper right")
+    plt.tight_layout()
+    plt.show()
+
+_esquema()
+```
+
 
 ::: {.callout-warning title="Detalle práctico"}
-Los pesos de arriba pueden no sumar exactamente 1 y pueden incluir cortos. En la práctica se re-normalizan y se agregan restricciones (no negatividad, límites por activo) resolviendo la optimización con `scipy.optimize.minimize`, como en el Capítulo 8, pero usando $\boldsymbol{\mu}_{BL}$ como retornos esperados.
+Los pesos de arriba no suman 1 (acá, casi 2) y pueden incluir cortos. En la práctica se re-normalizan y se agregan restricciones (no negatividad, límites por activo) resolviendo la optimización con `scipy.optimize.minimize`, como en el Capítulo 8, pero usando $\boldsymbol{\mu}_{BL}$ como retornos esperados.
 :::
 
 ---
 
-# Visualizando el efecto de la confianza
+## Visualizando el efecto de la confianza
 
 Para cerrar la intuición, veamos cómo la confianza en las views gobierna el resultado. Escalamos $\Omega$ con un factor: valores chicos = mucha confianza, grandes = poca.
 
 ```{python}
 #| label: efecto-confianza
-import matplotlib.pyplot as plt
-
 factores = np.logspace(-1.5, 1.5, 40)   # de mucha a poca confianza
 trayectorias = []
 
@@ -243,7 +370,7 @@ A la izquierda (mucha confianza) los retornos se acercan a lo que afirman las vi
 
 ---
 
-# Recapitulando el flujo
+## Recapitulando el flujo
 
 El modelo completo es una tubería de cuatro pasos:
 
@@ -252,11 +379,33 @@ El modelo completo es una tubería de cuatro pasos:
 3. **Fórmula maestra** → $\boldsymbol{\mu}_{BL}$ (la mezcla ponderada por precisión).
 4. **Optimización** → $\mathbf{w}_{BL}$ (la cartera final).
 
+
+```{mermaid}
+%%| label: fig-pipeline-bl
+%%| fig-cap: "La tubería de Black-Litterman. El equilibrio sale del mercado sin estimar retornos a mano; las views entran con su incertidumbre; la fórmula maestra las mezcla y el resultado alimenta la optimización."
+flowchart LR
+    WM["w_mkt<br/><i>pesos de mercado</i>"] --> PI
+    S["Σ<br/><i>covarianzas</i>"] --> PI
+    D["δ<br/><i>aversión al riesgo</i>"] --> PI
+    PI["<b>1 · Equilibrio</b><br/>Π = δ Σ w_mkt"] --> FM
+    V["<b>2 · Views</b><br/>P, Q, Ω"] --> FM
+    T["τ<br/><i>confianza en el<br/>equilibrio</i>"] --> FM
+    FM[["<b>3 · Fórmula maestra</b>"]] --> MU["μ_BL"]
+    MU --> OPT[["<b>4 · Optimización</b><br/>w = Σ⁻¹ μ_BL / δ<br/>o minimize()"]]
+    OPT --> W(["w_BL"])
+    classDef dato fill:#e0e9f4,stroke:#1e3a5f
+    classDef view fill:#fde8dc,stroke:#c2410c
+    classDef fin fill:#eef2e3,stroke:#637238
+    class WM,S,D,T,PI dato
+    class V view
+    class MU,W fin
+```
+
 La gran ventaja: cada paso tiene una interpretación económica clara, y en ningún momento tuvimos que inventar retornos esperados de la nada. Por eso Black-Litterman es, todavía hoy, uno de los modelos de asignación de activos más usados en la industria.
 
 ---
 
-# Errores comunes
+## Errores comunes
 
 ::: {.callout-warning title="Trampas frecuentes"}
 - **Confundir $\tau$ con $\Omega$**: $\tau$ escala la incertidumbre *global* del equilibrio; $\Omega$ es la incertidumbre *de cada view*. Son perillas distintas.
@@ -267,7 +416,7 @@ La gran ventaja: cada paso tiene una interpretación económica clara, y en ning
 
 ---
 
-# Ejercicios Propuestos
+## Ejercicios Propuestos
 
 ::: {.callout-important title="Ejercicios"}
 1. **Sin views**: corré el modelo sin ninguna view (saltando la fórmula maestra, $\boldsymbol{\mu}_{BL} = \boldsymbol{\Pi}$) y verificá que $\mathbf{w}_{BL}$ reproduce la cartera de mercado $\mathbf{w}_{mkt}$.
@@ -289,7 +438,7 @@ import numpy as np
 
 ---
 
-# Referencias
+## Referencias
 
 
 ::: {#refs}

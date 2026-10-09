@@ -10,7 +10,7 @@ nocite: |
 
 # Introducción {.unnumbered}
 
-En este  primer capítulo se establecen las bases del pensamiento computacional y cómo traducir problemas financieros a instrucciones que Python pueda ejecutar. Se desarrollarán conceptos sobre variables, tipos de datos, operadores y estructuras de control, aplicándolos al cálculo de interés compuesto y al análisis de valor presente.
+En este primer capítulo se establecen las bases del pensamiento computacional y cómo traducir problemas financieros a instrucciones que Python pueda ejecutar. Se desarrollarán conceptos sobre variables, tipos de datos, operadores y estructuras de control, aplicándolos al cálculo de interés compuesto y al análisis de valor presente.
 
 ::: {.callout-tip title="Entorno de Trabajo"}
 Recomendamos usar **Jupyter Notebooks** (local) o **Google Colab** (en la nube). Ambos permiten ejecutar código Python de forma interactiva, celda por celda.
@@ -21,7 +21,7 @@ Recomendamos usar **Jupyter Notebooks** (local) o **Google Colab** (en la nube).
 
 ## Concepto de Variable: Gestión de Memoria y Referencias
 
-Es importante no pensar en las variables simplemente solamente como cajas abstractas, sino comprender cómo la computadora administra sus recursos físicos (RAM). Cuando procesamos miles de datos financieros o realizamos millones de iteraciones en una simulación, la gestión de la memoria se vuelve un factor crítico para el rendimiento (latencia y capacidad).
+Es importante no pensar en las variables simplemente como cajas abstractas, sino comprender cómo la computadora administra sus recursos físicos (RAM). Cuando procesamos miles de datos financieros o realizamos millones de iteraciones en una simulación, la gestión de la memoria se vuelve un factor crítico para el rendimiento (latencia y capacidad).
 
 Una variable se define a través de tres componentes fundamentales:
 
@@ -42,6 +42,51 @@ precio = 150.75
 print(f"Precio nuevo:   {precio} | Dirección de memoria: {id(precio)}")
 ```
 
+La @fig-variable-etiqueta muestra lo que acaba de pasar en memoria: la reasignación no "pisó" el número viejo, sino que **despegó la etiqueta** y la pegó sobre un objeto nuevo. Por eso cambió el `id`.
+
+```{python}
+#| label: fig-variable-etiqueta
+#| echo: false
+#| fig-cap: "Las variables son etiquetas. Reasignar `precio` no modifica el objeto 150.50: crea uno nuevo (150.75) y mueve la etiqueta. El objeto viejo, sin etiquetas, queda libre para que Python recupere esa memoria."
+import sys; sys.path.insert(0, "..")
+from _esquemas import *
+
+def _esquema():
+    fig, (izq, der) = paneles(2, 8.5, 5)
+
+    def memoria(ax):
+        caja(ax, 4.0, 0.3, 4.3, 4.0, color=GRIS, ls="--", lw=1, redondeo=0.2)
+        texto(ax, 6.15, 4.0, "Memoria (RAM)", tam=9, color=GRIS)
+
+    def etiqueta(ax, y, nombre="precio"):
+        caja(ax, 0.3, y, 2.2, 0.8, nombre, color=SECUNDARIO, relleno=FONDO_SECUNDARIO,
+             mono=True, peso="bold")
+
+    # Antes: la etiqueta apunta al primer objeto
+    texto(izq, 4.25, 4.75, "precio = 150.50", tam=11, mono=True, peso="bold", color=PRIMARIO)
+    memoria(izq)
+    etiqueta(izq, 2.0)
+    caja(izq, 4.6, 1.6, 3.1, 1.6, "float\n150.50", relleno=FONDO_PRIMARIO, mono=True, tam=11)
+    texto(izq, 6.15, 1.25, "id: 0x7f3a…10", tam=8, color=GRIS, mono=True)
+    flecha(izq, (2.5, 2.4), (4.6, 2.4), color=SECUNDARIO, lw=2)
+
+    # Después: la etiqueta se mueve a un objeto NUEVO
+    texto(der, 4.25, 4.75, "precio = 150.75", tam=11, mono=True, peso="bold", color=PRIMARIO)
+    memoria(der)
+    etiqueta(der, 2.6)
+    caja(der, 4.6, 2.35, 3.1, 1.3, "float\n150.75", relleno=FONDO_PRIMARIO, mono=True, tam=11)
+    texto(der, 6.15, 2.12, "id: 0x7f3a…58  (nuevo)", tam=8, color=GRIS, mono=True)
+    caja(der, 4.6, 0.55, 3.1, 1.1, "float\n150.50", color=GRIS, ls="--", mono=True,
+         tam=10, color_texto=GRIS)
+    flecha(der, (2.5, 3.0), (4.6, 3.0), color=SECUNDARIO, lw=2)
+    texto(der, 2.0, 1.1, "sin etiquetas:\nPython lo libera", tam=8, color=GRIS)
+
+    plt.tight_layout()
+    plt.show()
+
+_esquema()
+```
+
 ::: {.callout-note title="Mutabilidad e Inmutabilidad"}
 Algunos objetos pueden ser modificados después de su creación (**mutables**, como las listas) y otros no (**inmutables**, como los números y strings). Desarrollaremos este concepto en profundidad al estudiar estructuras de datos más adelante.
 :::
@@ -52,9 +97,9 @@ Algunos objetos pueden ser modificados después de su creación (**mutables**, c
 
 Python utiliza **tipado dinámico**: no necesitamos declarar el tipo de dato explícitamente. A continuación, exploraremos algunos de los tipos de datos fundamentales que utilizaremos para modelar instrumentos y variables financieras.
 
-## Tipos Numéricos
+### Tipos Numéricos
 
-### Enteros (`int`)
+#### Enteros (`int`)
 
 Representan números del conjunto $\mathbb{Z}$ y tienen precisión arbitraria.
 
@@ -70,7 +115,7 @@ lotes = 10
 print(f"Días al vencimiento: {dias_vencimiento} | Tipo: {type(dias_vencimiento)}")
 ```
 
-### Punto Flotante (`float`)
+#### Punto Flotante (`float`)
 
 Representan números reales mediante el estándar **IEEE 754**. Es el tipo estándar para precios, tasas y rendimientos — y esconde una sorpresa que en finanzas no podés permitirte ignorar. Ejecutá esto:
 
@@ -142,7 +187,7 @@ print(f"Instrumento: {instrumento}")
 
 ## Conversión de Tipos (Casting)
 
-Los datos del mundo real frecuentemente llegan como texto (desde CSVs o APIs). Tambie, los datos que ingresan los usuario. Por lo que es necesario convertirlos explícitamente.
+Los datos del mundo real frecuentemente llegan como texto (desde CSVs o APIs), y lo mismo pasa con lo que ingresa el usuario. Por eso es necesario convertirlos explícitamente.
 
 ```{pyodide-python}
 #| label: casting
@@ -161,7 +206,7 @@ print(f"Monto operado: ${monto_operado:,.2f}")
 
 ## Operadores
 
-## Operadores Aritméticos
+### Operadores Aritméticos
 
 ```{pyodide-python}
 #| label: operadores-aritmeticos
@@ -178,7 +223,7 @@ valor_futuro = capital * (1 + tasa) ** periodos
 print(f"Valor futuro a {periodos} años: ${valor_futuro:,.2f}")
 ```
 
-## Operadores de Comparación y Lógicos
+### Operadores de Comparación y Lógicos
 
 | Operador | Significado |
 |----------|-------------|
@@ -200,7 +245,7 @@ print(f"¿Señal de compra? {señal_compra}")
 
 ## Entrada y Salida de Datos
 
-## F-Strings (Formato Moderno)
+### F-Strings (Formato Moderno)
 
 ```{pyodide-python}
 #| label: f-strings
@@ -214,7 +259,7 @@ print(f"Capital: ${capital:,}")
 print(f"Interés generado: ${interes:,.2f}")
 ```
 
-## Input del Usuario
+### Input del Usuario
 
 ::: {.callout-note}
 `input()` siempre devuelve un `str`. Debe combinarse con `float()` o `int()` para obtener números.
@@ -231,7 +276,28 @@ print(f"Interés generado: ${interes:,.2f}")
 
 Los algoritmos financieros requieren tomar decisiones basadas en condiciones de mercado.
 
-## Caso Práctico: Algoritmo de Decisión de Inversión
+Antes de leer el código, mirá su forma en la @fig-decision-inversion: las condiciones se evalúan **en orden, de arriba hacia abajo**, y apenas una se cumple se ejecuta su rama y se ignora el resto. El `else` es la red de seguridad: atrapa todo lo que no cumplió ninguna condición.
+
+```{mermaid}
+%%| label: fig-decision-inversion
+%%| fig-cap: "El algoritmo de decisión como diagrama de flujo: `if`, `elif` y `else` se evalúan en orden y solo se ejecuta la primera rama cuya condición es verdadera."
+flowchart TD
+    A([Inicio]) --> B{"<b>if</b><br/>VPN A > VPN B<br/>y riesgo A ≠ alto?"}
+    B -- Sí --> R1["Invertir en A"]
+    B -- No --> C{"<b>elif</b><br/>VPN B > 0?"}
+    C -- Sí --> R2["Invertir en B"]
+    C -- No --> R3["<b>else</b><br/>No invertir"]
+    R1 --> F([Fin])
+    R2 --> F
+    R3 --> F
+    classDef rama fill:#eef2e3,stroke:#637238
+    classDef cond fill:#e0e9f4,stroke:#1e3a5f
+    class R1,R2,R3 rama
+    class B,C cond
+```
+
+
+### Caso Práctico: Algoritmo de Decisión de Inversión
 
 ```{pyodide-python}
 #| label: decision-inversion
@@ -240,7 +306,6 @@ vpn_proyecto_a = 150_000
 vpn_proyecto_b = 120_000
 riesgo_a = "alto"
 riesgo_b = "bajo"
-umbral_riesgo = "medio"  # tolerancia del inversor
 
 print("=" * 50)
 print("ALGORITMO DE DECISIÓN DE INVERSIÓN")
@@ -260,7 +325,48 @@ else:
 
 ## Problemática Financiera: Valor Tiempo del Dinero (TVM)
 
-## Interés Compuesto
+Todo el capítulo gira alrededor de una idea: **un peso hoy no vale lo mismo que un peso mañana**. La @fig-linea-tiempo-tvm la resume en una línea de tiempo: capitalizar es llevar plata hacia el futuro, y descontar es traerla al presente. Las tres secciones que siguen son variaciones de esas dos flechas.
+
+```{python}
+#| label: fig-linea-tiempo-tvm
+#| echo: false
+#| fig-cap: "Valor tiempo del dinero: capitalizar lleva un monto de hoy (VP) al período n multiplicando por (1+r)^n; descontar hace el camino inverso, dividiendo."
+import sys; sys.path.insert(0, "..")
+from _esquemas import *
+
+def _esquema():
+    fig, ax = lienzo(14, 5)
+
+    # Eje del tiempo
+    y0 = 2.5
+    flecha(ax, (0.8, y0), (13.4, y0), color=TEXTO, lw=1.2)
+    marcas = [(1.5, "0"), (3.7, "1"), (5.9, "2"), (8.1, "3"), (12.3, "n")]
+    for x, s in marcas:
+        ax.plot([x, x], [y0 - 0.12, y0 + 0.12], color=TEXTO, lw=1.2)
+        texto(ax, x, y0 - 0.45, s, tam=10)
+    texto(ax, 10.2, y0 - 0.45, "…", tam=12)
+    texto(ax, 13.4, y0 - 0.45, "t", tam=10, color=GRIS)
+    texto(ax, 1.5, y0 - 0.9, "hoy", tam=8, color=GRIS)
+
+    # Los dos extremos
+    vp = caja(ax, 0.6, 3.3, 1.8, 0.9, "VP", relleno=FONDO_PRIMARIO, peso="bold", tam=12)
+    vf = caja(ax, 11.4, 3.3, 1.8, 0.9, "VF", relleno=FONDO_PRIMARIO, peso="bold", tam=12)
+
+    # Capitalizar (hacia adelante) y descontar (hacia atrás)
+    flecha(ax, (2.4, 4.0), (11.4, 4.0), r"capitalizar:  VF = VP $\times\,(1+r)^n$",
+           color=SECUNDARIO, curva=-0.18, lw=2, desplazamiento=(0, 1.2), tam=11)
+    flecha(ax, (11.6, 2.1), (1.4, 2.1),
+           r"descontar:  VP = VF $\div\,(1+r)^n$", color=ACENTO, curva=-0.18, lw=2,
+           desplazamiento=(0, -1.25), tam=11)
+
+    plt.tight_layout()
+    plt.show()
+
+_esquema()
+```
+
+
+### Interés Compuesto
 
 La fórmula fundamental:
 
@@ -290,7 +396,7 @@ print(f"Valor futuro:     ${valor_futuro:,.2f}")
 print(f"Interés ganado:   ${interes_ganado:,.2f}")
 ```
 
-## Conversión de Tasas
+### Conversión de Tasas
 
 ```{pyodide-python}
 #| label: conversion-tasas
@@ -308,7 +414,21 @@ tasa_continua = math.log(1 + tea)
 print(f"TEA: {tea:.2%} → Tasa continua: {tasa_continua:.4f}")
 ```
 
-## Valor Presente
+Las tres tasas describen **el mismo rendimiento** expresado de formas distintas. La @fig-conversion-tasas muestra el mapa de conversiones: conviene tenerlo a mano, porque en Argentina las tasas se publican como TNA y casi todos los modelos piden TEA o tasa continua.
+
+```{mermaid}
+%%| label: fig-conversion-tasas
+%%| fig-cap: "Mapa de conversión de tasas. Todas expresan el mismo rendimiento; la fórmula de cada flecha pasa de una forma a la otra (m = capitalizaciones por año)."
+flowchart LR
+    TNA["<b>TNA</b><br/>nominal anual"] -->|"(1 + TNA/m)^m − 1"| TEA["<b>TEA</b><br/>efectiva anual"]
+    TEA -->|"ln(1 + TEA)"| TC["<b>Tasa continua</b>"]
+    TEA -->|"(1 + TEA)^(1/12) − 1"| TEM["<b>TEM</b><br/>efectiva mensual"]
+    TC -->|"e^tc − 1"| TEA
+    classDef tasa fill:#e0e9f4,stroke:#1e3a5f
+    class TNA,TEA,TC,TEM tasa
+```
+
+### Valor Presente
 
 $$VP = \frac{VF}{(1 + r)^n}$$
 
