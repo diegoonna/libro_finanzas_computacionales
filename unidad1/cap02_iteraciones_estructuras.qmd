@@ -67,7 +67,29 @@ A veces necesitamos alterar el recorrido normal de un bucle:
 *   **`break`**: termina el bucle inmediatamente y sigue en la primera línea después del bloque. Útil cuando ya encontraste lo que buscabas — seguir iterando sería perder tiempo.
 *   **`continue`**: abandona la vuelta actual y salta directo a la siguiente. Útil para **ignorar** casos que no te interesan sin frenar el proceso.
 
-Un uso típico de `break` en finanzas: monitorear precios y **cortar apenas se dispara una alerta**.
+La @fig-while-break-continue resume el recorrido de un `while` con sus dos desvíos. Fijate que `break` y `continue` hacen cosas opuestas: uno **sale** del bucle, el otro **vuelve** a la condición salteando lo que falta de la vuelta.
+
+```{mermaid}
+%%| label: fig-while-break-continue
+%%| fig-cap: "Anatomía de un bucle `while`. La condición se evalúa antes de cada vuelta; `break` abandona el bucle de inmediato y `continue` saltea el resto de la vuelta actual y vuelve a evaluar la condición."
+flowchart TD
+    A([Antes del bucle]) --> C{"¿condición<br/>verdadera?"}
+    C -- No --> F([Primera línea<br/>después del bucle])
+    C -- Sí --> B1["cuerpo: primera parte"]
+    B1 --> K{"¿continue?"}
+    K -- Sí --> C
+    K -- No --> BR{"¿break?"}
+    BR -- Sí --> F
+    BR -- No --> B2["cuerpo: resto<br/>(acumulador, contador)"]
+    B2 --> C
+    classDef cond fill:#e0e9f4,stroke:#1e3a5f
+    classDef salto fill:#fde8dc,stroke:#c2410c
+    class C cond
+    class K,BR salto
+```
+
+
+Un uso típico de `break` en finanzas: monitorear precios y **cortar apenas se dispara una alerta**. (Por ahora pensá `precios` como una secuencia de valores a la que se accede por posición con `precios[indice]`; las listas se formalizan más abajo en este capítulo.)
 
 ```{pyodide-python}
 #| label: break-ejemplo
@@ -127,7 +149,7 @@ Mirá el orden de las líneas: `i = i + 1` está *antes* del `if` con `continue`
 
 Cuando sabés de antemano **cuántas vueltas** hay que dar —"para cada uno de los 4 años", "para cada precio de la lista"— la herramienta natural es el bucle `for`. Recorre uno por uno los elementos de una secuencia, sin que tengas que manejar índices ni condiciones de corte a mano: menos código, menos lugares donde equivocarse.
 
-La función `range()` genera secuencias de números para iterar: `range(1, 5)` produce 1, 2, 3, 4 (el extremo derecho **no** se incluye — la convención de Python que ya viste en las listas).
+La función `range()` genera secuencias de números para iterar: `range(1, 5)` produce 1, 2, 3, 4 (el extremo derecho **no** se incluye — una convención que vas a reencontrar en todo Python, slicing incluido).
 
 ```{pyodide-python}
 #| label: for-interes-simple
@@ -147,7 +169,7 @@ for anio in range(1, anios + 1):
     print(f"Fin del Año {anio}: El capital total es ${capital_total}")
 ```
 
-Observá el patrón de la salida: el capital crece **$25 por año, siempre lo mismo** (520, 545... espera, 525, 550, 575, 600). Es una recta. Compará mentalmente con el interés *compuesto* del Capítulo 1, donde cada año los intereses generan nuevos intereses y el crecimiento se acelera. Con estos números la diferencia a 4 años es chica ($600 vs ~$607.75), pero a 30 años es enorme ($1250 vs ~$2161): la diferencia entre una recta y una exponencial. Que puedas *ver* esa diferencia recorriendo año por año es exactamente el poder del bucle.
+Observá el patrón de la salida: el capital crece **$25 por año, siempre lo mismo** (525, 550, 575, 600). Es una recta. Compará mentalmente con el interés *compuesto* del Capítulo 1, donde cada año los intereses generan nuevos intereses y el crecimiento se acelera. Con estos números la diferencia a 4 años es chica ($600 vs ~$607.75), pero a 30 años es enorme ($1250 vs ~$2161): la diferencia entre una recta y una exponencial. Que puedas *ver* esa diferencia recorriendo año por año es exactamente el poder del bucle.
 
 ---
 
@@ -318,6 +340,89 @@ print("Copia profunda (intacta):                ", profunda[0])
 
 Tocamos la copia superficial y **el original cambió** — las filas eran compartidas. La copia profunda (`copy.deepcopy`) duplica la estructura completa y queda verdaderamente aislada. La regla práctica: para listas "planas", `.copy()` alcanza; para estructuras anidadas (matrices, listas de diccionarios), `deepcopy`.
 
+
+La @fig-aliasing-copias pone en un solo dibujo las tres situaciones de esta sección. Volvé a ella cada vez que una variable "cambie sola": casi siempre hay dos etiquetas apuntando al mismo objeto.
+
+```{python}
+#| label: fig-aliasing-copias
+#| echo: false
+#| fig-cap: "Etiquetas y objetos. ① `b = a` no copia: pega una segunda etiqueta sobre la misma lista. ② `.copy()` crea una lista nueva e independiente. ③ Con listas anidadas, `.copy()` duplica solo la lista exterior (las filas siguen compartidas) y `deepcopy` duplica todo."
+import sys; sys.path.insert(0, "..")
+from _esquemas import *
+
+def _esquema():
+    fig, ax = lienzo(18, 11.5)
+
+    def etiqueta(x, y, nombre, w=2.6):
+        caja(ax, x, y, w, 0.75, nombre, color=SECUNDARIO, relleno=FONDO_SECUNDARIO,
+             mono=True, tam=9, peso="bold")
+        return (x + w, y + 0.375)
+
+    def titulo(x, y, s):
+        texto(ax, x, y, s, tam=11, peso="bold", color=PRIMARIO, ha="left")
+
+    # ① b = a: dos etiquetas, un solo objeto
+    titulo(0.2, 11.0, "①  cartera_b = cartera_a")
+    a = etiqueta(0.3, 9.4, "cartera_a")
+    b = etiqueta(0.3, 7.9, "cartera_b")
+    celdas = fila_de_celdas(ax, 4.2, 8.6, ["100.0", "250.0", "80.0", "500.0"], w=1.1,
+                            rellenos=[FONDO_PRIMARIO] * 3 + [FONDO_ACENTO])
+    flecha(ax, a, (4.2, 9.1), color=SECUNDARIO)
+    flecha(ax, b, (4.2, 8.8), color=SECUNDARIO)
+    texto(ax, 6.4, 7.95, "UN solo objeto: el append por b\nse ve también por a",
+          tam=8, color=ACENTO)
+
+    # ② .copy(): dos objetos independientes
+    titulo(9.6, 11.0, "②  escenario = original.copy()")
+    o = etiqueta(9.7, 9.4, "original")
+    e = etiqueta(9.7, 7.9, "escenario")
+    fila_de_celdas(ax, 13.6, 9.4, ["100.0", "250.0", "80.0"], w=1.1, rellenos=FONDO_PRIMARIO)
+    fila_de_celdas(ax, 13.6, 7.9, ["80.0", "200.0", "64.0"], w=1.1, rellenos=FONDO_ACENTO)
+    flecha(ax, o, (13.6, 9.775), color=SECUNDARIO)
+    flecha(ax, e, (13.6, 8.275), color=SECUNDARIO)
+    texto(ax, 15.25, 7.45, "dos objetos: el estrés no toca el original", tam=8, color=SECUNDARIO)
+
+    ax.plot([0.2, 17.8], [6.75, 6.75], color=GRIS, lw=0.8, ls=":")
+
+    # ③ Listas anidadas: superficial vs. profunda
+    titulo(0.2, 6.25, "③  Listas anidadas:  .copy() copia la cáscara · copy.deepcopy() copia todo")
+    m = etiqueta(0.3, 4.6, "matriz_original", w=3.3)
+    s = etiqueta(0.3, 3.1, "superficial", w=3.3)
+    p = etiqueta(0.3, 0.7, "profunda", w=3.3)
+
+    def cascara(y):
+        return fila_de_celdas(ax, 5.0, y, ["●", "●"], w=1.3, rellenos=FONDO_GRIS, mono=False)
+
+    cm, cs, cp = cascara(4.6), cascara(3.1), cascara(0.7)
+    texto(ax, 5.65, 5.65, "[0]", tam=8, color=GRIS, mono=True)
+    texto(ax, 6.95, 5.65, "[1]", tam=8, color=GRIS, mono=True)
+    texto(ax, 6.3, 0.35, "lista exterior", tam=8, color=GRIS)
+    texto(ax, 11.7, 5.95, "filas (listas interiores)", tam=8, color=GRIS)
+    for origen, y in [(m, 4.975), (s, 3.475), (p, 1.075)]:
+        flecha(ax, origen, (5.0, y), color=SECUNDARIO)
+
+    # Filas compartidas por original y superficial
+    fila_de_celdas(ax, 10.5, 4.9, ["999.9", "101.2"], w=1.2, rellenos=[FONDO_ACENTO, FONDO_PRIMARIO])
+    fila_de_celdas(ax, 10.5, 3.2, ["45.0", "45.5"], w=1.2, rellenos=FONDO_PRIMARIO)
+    for c in (cm, cs):
+        flecha(ax, (c[0][0] + 0.3, c[0][1]), (10.5, 5.25), color=PRIMARIO, lw=1)
+        flecha(ax, (c[1][0] + 0.3, c[1][1]), (10.5, 3.55), color=PRIMARIO, lw=1)
+    texto(ax, 15.4, 5.25, "filas COMPARTIDAS:\nsuperficial[0][0] = 999.9\ncambia el original",
+          tam=8, color=ACENTO)
+
+    # Filas propias de la copia profunda
+    fila_de_celdas(ax, 10.5, 1.3, ["100.5", "101.2"], w=1.2, rellenos=FONDO_SECUNDARIO)
+    fila_de_celdas(ax, 10.5, 0.2, ["45.0", "45.5"], w=1.2, rellenos=FONDO_SECUNDARIO)
+    flecha(ax, (cp[0][0] + 0.3, cp[0][1]), (10.5, 1.65), color=PRIMARIO, lw=1)
+    flecha(ax, (cp[1][0] + 0.3, cp[1][1]), (10.5, 0.55), color=PRIMARIO, lw=1)
+    texto(ax, 15.4, 1.1, "filas PROPIAS:\nquedó intacta", tam=8, color=SECUNDARIO)
+
+    plt.tight_layout()
+    plt.show()
+
+_esquema()
+```
+
 ::: {.callout-warning title="Esto aplica a TODOS los objetos mutables"}
 Los **diccionarios** (que ves en la sección siguiente) se comportan exactamente igual: `dict_b = dict_a` comparte el objeto, `dict_a.copy()` es superficial, y un diccionario con listas adentro necesita `deepcopy`. Lo mismo vale para cualquier objeto mutable, incluidas las clases que vas a crear en el Capítulo 4. Los inmutables (números, strings, tuplas) están exentos del problema: como no se pueden modificar, compartirlos es inofensivo — por eso el Capítulo 1 no necesitó esta advertencia.
 :::
@@ -481,6 +586,25 @@ $$P = \sum_{t=1}^{n} \frac{C}{(1+r)^t} + \frac{VN}{(1+r)^n}$$
 
 Esa sumatoria $\sum$ que en el papel se lee de un vistazo es, computacionalmente, **un bucle `for` con un acumulador** — exactamente lo que venís practicando.
 
+La @fig-flujos-bono muestra la sumatoria en acción: cada flujo futuro se "trae a hoy" dividiendo por $(1+r)^t$, y el precio del bono es la pila de esos valores presentes. Notá cuánto se achica el último flujo (1080 → ~671) por estar a 5 años.
+
+```{python}
+#| label: fig-flujos-bono
+#| echo: false
+#| fig-cap: "Valuación del bono como suma de flujos descontados: a la derecha, los flujos que paga en cada año; en t = 0, el valor presente de cada uno apilado. La altura total de la pila es el precio."
+import sys; sys.path.insert(0, "..")
+from _esquemas import *
+
+def _esquema():
+    fig, ax = plt.subplots(figsize=(8, 4.2))
+    linea_de_flujos(ax, [80, 80, 80, 80, 1080], tasa=0.10, ymax=1250)
+    plt.tight_layout()
+    plt.show()
+
+_esquema()
+```
+
+
 ```{pyodide-python}
 #| label: caso-valuacion-bono
 # Bono: valor nominal 1000, cupón 8% anual, 5 años, tasa de descuento 10%
@@ -508,6 +632,25 @@ print(f"\nPrecio justo del bono: ${valor_presente:.2f}")
 El bono vale **menos que su valor nominal** (unos $924 contra $1000). Tiene sentido económico: paga cupones del 8% pero el mercado exige 10% — nadie paga $1000 por algo que rinde menos que la alternativa, así que el precio baja hasta compensar. Un bono cotiza *bajo la par* cuando su cupón está por debajo de la tasa de mercado.
 
 Ahora la pregunta inversa, que es la que se hace el inversor real: el bono **cotiza** a un precio dado — ¿qué rendimiento me da si lo compro a ese precio? Esa tasa es la **TIR** (Tasa Interna de Retorno): la tasa de descuento que hace que el valor presente de los flujos iguale al precio de mercado. No se puede despejar algebraicamente, pero se puede **buscar por tanteo**: probamos tasas cada vez más altas hasta que el valor presente cae por debajo del precio. Un `while` con búsqueda incremental — el mismo patrón del ejemplo del ahorro.
+
+
+Antes del código, la estructura de la búsqueda en la @fig-busqueda-tir: dos bucles, uno adentro del otro, cada uno con su trabajo.
+
+```{mermaid}
+%%| label: fig-busqueda-tir
+%%| fig-cap: "Búsqueda incremental de la TIR: el `while` externo propone tasas cada vez más altas; el `for` interno valúa el bono a cada tasa candidata; el `break` corta cuando el valor presente cae hasta el precio de mercado."
+flowchart TD
+    I(["tasa = 0"]) --> W
+    subgraph W["while True: probar tasas"]
+        direction TB
+        V["<b>for</b> t en 1..n:<br/>vp += flujo_t / (1 + tasa)^t"] --> Q{"¿vp ≤ precio?"}
+        Q -- "No: la tasa<br/>es baja" --> S["tasa += paso"]
+        S --> V
+    end
+    Q -- "Sí" --> B(["break → TIR ≈ tasa"])
+    classDef fin fill:#eef2e3,stroke:#637238
+    class B fin
+```
 
 ```{pyodide-python}
 #| label: caso-tir
