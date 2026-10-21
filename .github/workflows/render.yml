@@ -29,7 +29,7 @@ concurrency:
 
 jobs:
   render:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04   # fijado: ubuntu-latest migra a Ubuntu 26 desde oct-2026
     # Un render normal tarda minutos. Sin este tope, un render colgado (pasó en
     # oct-2026: 6 h hasta que GitHub lo canceló) bloquea todo hasta el límite.
     timeout-minutes: 45
@@ -39,7 +39,7 @@ jobs:
       QUARTO_CHROMIUM: /usr/bin/google-chrome
     steps:
       - name: Checkout con historial completo
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
           fetch-depth: 0
 
@@ -50,7 +50,7 @@ jobs:
         uses: chetan/git-restore-mtime-action@v2
 
       - name: Instalar Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v7
         with:
           python-version: "3.13"   # la de las versiones fijadas en requirements.txt
           cache: pip
@@ -101,10 +101,10 @@ jobs:
   # Chequeo de links rotos en las fuentes del libro. No bloquea la publicación:
   # si un link externo murió, avisa (job en rojo) pero el render corre igual.
   links:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04   # fijado: ubuntu-latest migra a Ubuntu 26 desde oct-2026
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Chequear links con lychee
         uses: lycheeverse/lychee-action@v2
