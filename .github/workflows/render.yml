@@ -68,6 +68,7 @@ jobs:
       - name: Instalar el soporte de español para LaTeX
         run: |
           TLMGR="$(command -v tlmgr || find "$HOME/.TinyTeX/bin" -name tlmgr | head -1)"
+          "$TLMGR" update --self   # el TinyTeX recién instalado puede traer un tlmgr viejo
           "$TLMGR" install babel-spanish hyphen-spanish
 
       # Render completo (web + PDF). Si falla (casi siempre por el PDF), el paso
@@ -114,5 +115,6 @@ jobs:
             --max-retries 2
             --exclude 'bloomberg\.com'
             --exclude 'linkedin\.com'
+            --exclude 'scholar\.google\.com'
             "**/*.qmd" "README.md"
           fail: true
