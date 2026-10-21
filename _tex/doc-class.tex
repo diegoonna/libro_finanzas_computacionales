@@ -1,0 +1,23 @@
+% Copia del partial doc-class.tex de Quarto, con una línea agregada adelante.
+% El atajo de comillas «<<...>>» de babel-spanish vuelve activos los caracteres
+% < y >, y eso rompe el hook que KOMA-Script (scrreprt, la clase del libro)
+% engancha a \@startsection: el PDF no compila ("Generic hooks cannot be added
+% to '\@startsection'"). El libro no usa esas comillas, así que se desactivan.
+\PassOptionsToPackage{es-noquoting}{babel}
+\documentclass[
+$for(babel-otherlangs)$
+  $babel-otherlangs$,
+$endfor$
+$if(babel-lang)$
+  $babel-lang$,
+$endif$
+$if(fontsize)$
+  $fontsize$,
+$endif$
+$if(papersize)$
+  $papersize$paper,
+$endif$
+$for(classoption)$
+  $classoption$$sep$,
+$endfor$
+]{$documentclass$}

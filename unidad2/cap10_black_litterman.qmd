@@ -35,6 +35,13 @@ import matplotlib.pyplot as plt
 np.set_printoptions(precision=4, suppress=True)
 ```
 
+```{python}
+#| include: false
+import sys; sys.path.insert(0, "..")
+from _esquemas import aplicar_estilo
+aplicar_estilo()
+```
+
 ---
 
 ## La intuición: combinar una creencia previa con nueva información
@@ -339,7 +346,8 @@ Los pesos de arriba no suman 1 (acá, casi 2) y pueden incluir cortos. En la pr�
 Para cerrar la intuición, veamos cómo la confianza en las views gobierna el resultado. Escalamos $\Omega$ con un factor: valores chicos = mucha confianza, grandes = poca.
 
 ```{python}
-#| label: efecto-confianza
+#| label: fig-efecto-confianza
+#| fig-cap: "Retornos esperados de Black-Litterman de cada activo según la confianza en las views (factor de escala de Ω, en escala log). Cada línea punteada es el retorno de equilibrio Π del activo del mismo color."
 factores = np.logspace(-1.5, 1.5, 40)   # de mucha a poca confianza
 trayectorias = []
 
@@ -353,8 +361,8 @@ trayectorias = np.array(trayectorias)
 
 fig, ax = plt.subplots(figsize=(9, 5))
 for i, a in enumerate(activos):
-    ax.plot(factores, trayectorias[:, i] * 100, linewidth=2, label=a)
-    ax.axhline(Pi[i] * 100, linestyle=":", alpha=0.4)
+    linea, = ax.plot(factores, trayectorias[:, i] * 100, linewidth=2, label=a)
+    ax.axhline(Pi[i] * 100, linestyle=":", alpha=0.6, color=linea.get_color())  # su equilibrio
 
 ax.set_xscale("log")
 ax.set_xlabel("Factor de escala de Ω  (← más confianza en las views | menos confianza →)")
@@ -366,7 +374,7 @@ plt.tight_layout()
 plt.show()
 ```
 
-A la izquierda (mucha confianza) los retornos se acercan a lo que afirman las views; a la derecha (poca confianza) vuelven a las líneas punteadas del equilibrio. **El modelo nunca te deja "irte" más allá de tus propias views ni ignorar del todo al mercado**: interpola entre ambos de manera controlada.
+En la @fig-efecto-confianza, a la izquierda (mucha confianza) los retornos se acercan a lo que afirman las views; a la derecha (poca confianza) vuelven a las líneas punteadas del equilibrio. **El modelo nunca te deja "irte" más allá de tus propias views ni ignorar del todo al mercado**: interpola entre ambos de manera controlada.
 
 ---
 

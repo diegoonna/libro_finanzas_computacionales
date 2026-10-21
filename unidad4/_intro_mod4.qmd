@@ -12,6 +12,27 @@ La historia arranca con la pregunta más elegante de las finanzas del siglo XX: 
 
 Después bajamos al llano: el **delta hedging** (Capítulo 19) es la réplica puesta en práctica, simulada día a día como la viviría un trader — con su error de cobertura, sus costos y el gamma mordiendo cerca del vencimiento. Es, en el fondo, la demostración experimental de Black-Scholes. Y el cierre (Capítulo 20) enfrenta lo que la sonrisa venía gritando: la volatilidad no es una constante, es un proceso con vida propia. Los modelos de **Heston** y **SABR** la tratan como tal, reproducen la sonrisa desde los fundamentos, y son la puerta de entrada al pricing profesional moderno.
 
+La @fig-mapa-mod4 muestra cómo se encadenan los tres capítulos y qué traen del módulo anterior.
+
+```{mermaid}
+%%| label: fig-mapa-mod4
+%%| fig-cap: "El arco del módulo. Black-Scholes se apoya en el GBM; la réplica que lo justifica se pone a prueba en el delta hedging; la sonrisa que contradice la volatilidad constante lleva a los modelos de volatilidad estocástica."
+flowchart LR
+    P13["Cap. 13<br/>GBM y Monte Carlo"] --> C18
+    P14["Cap. 14<br/>saltos y colas"] --> X
+    C18["<b>Cap. 18 · Black-Scholes</b><br/>precio, vol implícita,<br/>griegas"] -->|"la réplica,<br/>día a día"| C19["<b>Cap. 19 · Delta hedging</b><br/>error de cobertura,<br/>gamma, costos"]
+    C18 --> X{{"<b>La sonrisa</b><br/>σ no es constante"}}
+    X --> C20["<b>Cap. 20 · Vol estocástica</b><br/>Heston, SABR"]
+    classDef previo fill:#f1f5f9,stroke:#94a3b8,color:#1f2937
+    classDef cap fill:#e0e9f4,stroke:#1e3a5f,color:#1f2937
+    classDef prob fill:#fde8dc,stroke:#c2410c,color:#1f2937
+    classDef sol fill:#eef2e3,stroke:#637238,color:#1f2937
+    class P13,P14 previo
+    class C18,C19 cap
+    class X prob
+    class C20 sol
+```
+
 ::: {.callout-note title="Qué necesitás tener fresco" appearance="simple"}
 Este módulo apoya todo su peso sobre la simulación de Monte Carlo y el GBM (Capítulo 13), los procesos con saltos (Capítulo 14) y las nociones de colas y curtosis (Capítulos 7 y 11). Si venís directo, perfecto; si no, un repaso rápido de esos capítulos hace que este módulo fluya.
 :::

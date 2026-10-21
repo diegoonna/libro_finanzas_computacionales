@@ -29,6 +29,13 @@ from scipy import stats
 rng = np.random.default_rng(42)
 ```
 
+```{python}
+#| include: false
+import sys; sys.path.insert(0, "..")
+from _esquemas import aplicar_estilo
+aplicar_estilo()
+```
+
 ---
 
 ## Estadística descriptiva de retornos
@@ -112,7 +119,7 @@ Hay ~252 ruedas bursátiles por año. Si los retornos diarios son independientes
 `np.std` divide por $n$ (desvío *poblacional*, `ddof=0`), mientras que pandas `.std()` y `np.cov` dividen por $n-1$ (desvío *muestral*, `ddof=1`). Con 252 datos la diferencia es de apenas 0.2%, pero si comparás resultados de las dos librerías y no coinciden, casi siempre es esto. Para alinearlos, usá `np.std(x, ddof=1)`.
 :::
 
-Como simulamos con `rng.normal`, la asimetría y la curtosis dan cerca de cero. Con retornos reales de acciones el panorama es otro: asimetría negativa y curtosis bien positiva. Veámoslo generando retornos más realistas, con "sustos" ocasionales:
+Como simulamos con `rng.normal`, la asimetría y la curtosis dan cerca de cero. Con retornos reales de acciones el panorama es otro: curtosis bien positiva y, con frecuencia, asimetría negativa (lo vamos a comprobar con datos de mercado al final de esta sección). Veámoslo primero generando retornos más realistas, con "sustos" ocasionales:
 
 ```{python}
 #| label: retornos-realistas
@@ -132,16 +139,17 @@ print(f"{'Curtosis (exceso)':<22}{stats.kurtosis(retornos):>16.3f}{stats.kurtosi
 El histograma con la normal teórica superpuesta es el gráfico de diagnóstico básico: muestra de un vistazo si las colas y la asimetría se apartan del modelo normal.
 
 ```{python}
-#| label: histograma
+#| label: fig-histograma-crisis
+#| fig-cap: "Histogramas de los dos conjuntos de retornos simulados con la normal ajustada encima. Con días de crisis (derecha), aparece una cola izquierda que la campana no cubre."
 fig, axes = plt.subplots(1, 2, figsize=(11, 4), sharey=True)
 
 for ax, datos, titulo in [(axes[0], retornos, "Retornos ~normales"),
                           (axes[1], ret_real, "Retornos con días de crisis")]:
     ax.hist(datos, bins=40, density=True, alpha=0.7,
-            color="steelblue", edgecolor="white")
+            color="#94a3b8", edgecolor="white")
     x = np.linspace(datos.min(), datos.max(), 200)
     ax.plot(x, stats.norm.pdf(x, datos.mean(), datos.std()),
-            "r-", linewidth=2, label="Normal teórica")
+            color="#c2410c", linewidth=2, label="Normal teórica")
     ax.set_title(titulo)
     ax.set_xlabel("Retorno diario")
     ax.legend()
@@ -152,7 +160,7 @@ plt.tight_layout()
 plt.show()
 ```
 
-En el panel derecho se ve la firma de los retornos financieros reales: una **cola izquierda pesada** que la campana normal no alcanza a cubrir. Los días de crisis existen, y la normal los declara casi imposibles.
+En el panel derecho de la @fig-histograma-crisis se ve la firma de los retornos financieros reales: una **cola izquierda pesada** que la campana normal no alcanza a cubrir. Los días de crisis existen, y la normal los declara casi imposibles.
 
 ### Test de normalidad: Jarque-Bera
 
@@ -168,6 +176,25 @@ for nombre, datos in [("Simulados normales", retornos),
     veredicto = "NO son normales" if p_value < 0.05 else "compatibles con normalidad"
     print(f"{nombre:<22} JB={stat_jb:8.2f}  p-value={p_value:.4f} → {veredicto}")
 ```
+
+### Con datos reales: los hechos estilizados
+
+Los "días de crisis" de arriba los fabricamos nosotros. ¿Aparecen solos en datos de mercado? Apliquemos las mismas medidas a los diez activos del dataset del libro (`datos/precios.csv`, ver @sec-datos-financieros): cinco años de retornos diarios de 9 acciones y del S&P 500.
+
+```{python}
+#| label: momentos-datos-reales
+precios = pd.read_csv("../datos/precios.csv", index_col="Date", parse_dates=True)
+r_mercado = precios.pct_change().dropna()
+
+momentos = pd.DataFrame({
+    "Asimetría": r_mercado.apply(stats.skew),
+    "Curtosis (exceso)": r_mercado.apply(stats.kurtosis),
+    "p-value JB": r_mercado.apply(lambda col: stats.jarque_bera(col)[1]),
+})
+print(momentos.sort_values("Curtosis (exceso)").round(3))
+```
+
+La tabla separa lo universal de lo que depende de la muestra. **La curtosis es universal**: los diez activos tienen exceso de curtosis positivo, desde 1.3 (XOM) hasta más de 10 (WMT), y el test de Jarque-Bera rechaza la normalidad en todos, con p-values que se redondean a cero. Las colas pesadas no son una rareza de un activo: son la regla. **La asimetría, en cambio, no tiene un signo fijo**: en estos cinco años, mayormente alcistas, sale negativa en algunos activos y positiva en otros, incluido el propio S&P 500. Y ahí hay una lección: la asimetría positiva del índice la explica **un solo día**, el rebote de +10.5% del 9 de abril de 2025; si se saca ese día de la muestra, la asimetría pasa de +0.31 a −0.43. Un estimador basado en el cubo de los desvíos queda a merced de un puñado de días extremos, y esa fragilidad es otra cara de las colas pesadas. La asimetría negativa es un rasgo frecuente en muestras largas, pero conviene medirla con desconfianza.
 
 ::: {.callout-warning title="¿Y entonces por qué usamos la normal?"}
 Si los retornos reales no son normales, ¿por qué media-varianza, Black-Scholes y media industria asumen normalidad? Porque es **tratable** y suele ser una aproximación razonable *en el centro* de la distribución. El problema aparece **en las colas** — justamente donde vive el riesgo extremo. Por eso el Módulo 3 dedica capítulos enteros (VaR, Expected Shortfall, procesos con saltos) a medir lo que la normal esconde. Usá la normal, pero sabiendo qué te está simplificando.

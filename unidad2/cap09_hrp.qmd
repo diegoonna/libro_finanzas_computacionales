@@ -36,6 +36,13 @@ np.set_printoptions(precision=4, suppress=True)
 rng = np.random.default_rng(42)
 ```
 
+```{python}
+#| include: false
+import sys; sys.path.insert(0, "..")
+from _esquemas import aplicar_estilo
+aplicar_estilo()
+```
+
 ### Experimento: la inestabilidad en acción {.unnumbered}
 
 Simulamos retornos de 5 activos donde dos de ellos están **muy correlacionados**, y calculamos la cartera de mínima varianza de Markowitz con dos muestras distintas de la misma historia. Si el método fuera robusto, ambas muestras deberían dar carteras parecidas.
@@ -154,7 +161,11 @@ dist = np.sqrt((1 - corr) / 2)
 
 # Clustering jerárquico (single linkage, como en el paper original)
 enlaces = hierarchy.linkage(squareform(dist.values), method="single")
+```
 
+```{python}
+#| label: fig-dendrograma-simulado
+#| fig-cap: "Dendrograma de los cinco activos simulados. La altura de cada unión es la distancia a la que se juntan los grupos: los dos bancos se unen primero, muy abajo."
 fig, ax = plt.subplots(figsize=(8, 4))
 hierarchy.dendrogram(enlaces, labels=corr.columns.tolist(), ax=ax)
 ax.set_title("Dendrograma: la estructura jerárquica del universo de activos")
@@ -163,7 +174,7 @@ plt.tight_layout()
 plt.show()
 ```
 
-El dendrograma cuenta la historia que el optimizador de Markowitz nunca ve: los dos bancos forman un grupo compacto (distancia chica), y recién después se conectan con el resto. HRP va a usar exactamente esa estructura.
+El dendrograma de la @fig-dendrograma-simulado cuenta la historia que el optimizador de Markowitz nunca ve: los dos bancos forman un grupo compacto (distancia chica), y recién después se conectan con el resto. HRP va a usar exactamente esa estructura.
 
 ---
 
@@ -180,7 +191,11 @@ print("Orden jerárquico:", tickers_ordenados)
 
 # Reordenamos la matriz de correlaciones con ese orden
 corr_ordenada = corr.iloc[orden, orden]
+```
 
+```{python}
+#| label: fig-quasi-diagonal
+#| fig-cap: "La matriz de correlaciones antes y después de reordenarla según las hojas del dendrograma. Reordenada, los activos parecidos quedan contiguos y las correlaciones altas se agrupan cerca de la diagonal."
 fig, axes = plt.subplots(1, 2, figsize=(10, 4))
 for ax, m, titulo in [(axes[0], corr, "Original"),
                       (axes[1], corr_ordenada, "Quasi-diagonalizada")]:
@@ -192,7 +207,7 @@ fig.colorbar(im, ax=axes, shrink=0.8, label="Correlación")
 plt.show()
 ```
 
-En este ejemplo chico el reordenamiento es sutil, pero con decenas de activos el efecto es dramático: los bloques de color (sectores, regiones) se vuelven visibles a simple vista. La matriz reordenada es el "mapa" sobre el que repartiremos el capital.
+En este ejemplo chico el reordenamiento de la @fig-quasi-diagonal es sutil, pero con decenas de activos el efecto es dramático: los bloques de color (sectores, regiones) se vuelven visibles a simple vista. La matriz reordenada es el "mapa" sobre el que repartiremos el capital.
 
 ---
 
@@ -374,7 +389,8 @@ print(f"  HRP:                       {vol_hrp.mean():.2%}  (desvío entre sims: 
 ```
 
 ```{python}
-#| label: comparacion-grafico
+#| label: fig-vol-oos
+#| fig-cap: "Distribución de la volatilidad realizada fuera de muestra en 200 simulaciones, para Markowitz de mínima varianza y para HRP."
 fig, ax = plt.subplots(figsize=(9, 4))
 ax.hist(vol_mkw * 100, bins=30, alpha=0.6, label="Markowitz (mín. varianza)")
 ax.hist(vol_hrp * 100, bins=30, alpha=0.6, label="HRP")
@@ -387,7 +403,7 @@ plt.tight_layout()
 plt.show()
 ```
 
-El patrón típico (y el que reporta el paper original): dentro de la muestra Markowitz siempre "gana" —por definición minimiza la varianza *de esos datos*—, pero **fuera de muestra HRP es más estable y frecuentemente más eficiente**, porque no gastó grados de libertad ajustándose al ruido. La distribución de HRP suele ser más angosta: menos sorpresas.
+La @fig-vol-oos muestra el patrón típico (y el que reporta el paper original): dentro de la muestra Markowitz siempre "gana" —por definición minimiza la varianza *de esos datos*—, pero **fuera de muestra HRP es más estable y frecuentemente más eficiente**, porque no gastó grados de libertad ajustándose al ruido. La distribución de HRP suele ser más angosta: menos sorpresas.
 
 ::: {.callout-warning title="HRP no es magia"}
 HRP renuncia a usar información que Markowitz sí usa (las correlaciones exactas entre grupos lejanos y los retornos esperados). Si tus estimaciones de $\mu$ y $\Sigma$ fueran perfectas, Markowitz sería imbatible. HRP gana justamente porque en el mundo real **nunca lo son**. La elección depende de cuánto confiás en tus estimaciones — un tema que retomamos en el capítulo siguiente con Black-Litterman, que ataca el mismo problema desde otro ángulo: mejorar las estimaciones en lugar de esquivarlas.
@@ -400,7 +416,8 @@ HRP renuncia a usar información que Markowitz sí usa (las correlaciones exacta
 La simulación nos dejó controlar la estructura de correlaciones; ahora veamos si HRP la **descubre solo** en datos de mercado. Usamos el dataset del libro (`datos/precios.csv`, ver @sec-datos-financieros): 9 acciones de sectores distintos, cinco años de precios diarios ajustados.
 
 ```{python}
-#| label: hrp-datos-reales
+#| label: fig-dendrograma-real
+#| fig-cap: "Dendrograma de las 9 acciones del dataset del libro (retornos diarios 2021–2026), construido solo a partir de sus correlaciones."
 precios = pd.read_csv("../datos/precios.csv", index_col="Date", parse_dates=True)
 r_real = precios.drop(columns="SPY").pct_change().dropna()   # SPY es un índice, no un activo más
 
@@ -416,7 +433,7 @@ plt.tight_layout()
 plt.show()
 ```
 
-Mirá el dendrograma antes de seguir: **nadie le dijo al algoritmo qué sector es cada empresa**, y sin embargo las tecnológicas (AAPL, MSFT, NVDA) se abrazan en un cluster compacto, y las defensivas de consumo (KO, JNJ, WMT) forman el suyo. La estructura jerárquica que López de Prado postula no es una hipótesis: está en los datos.
+Mirá la @fig-dendrograma-real antes de seguir: **nadie le dijo al algoritmo qué sector es cada empresa**, y sin embargo las tecnológicas (AAPL, MSFT, NVDA) se abrazan en un cluster compacto, y las defensivas de consumo (KO, JNJ, WMT) forman el suyo. La estructura jerárquica que López de Prado postula no es una hipótesis: está en los datos.
 
 ```{python}
 #| label: hrp-pesos-reales

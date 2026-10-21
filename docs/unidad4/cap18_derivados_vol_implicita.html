@@ -127,6 +127,10 @@ div.csl-indent {
   }
 }</script>
 <style>html{ scroll-behavior: smooth; }</style>
+<meta name="mermaid-theme" content="neutral">
+<script src="../site_libs/quarto-diagram/mermaid.min.js"></script>
+<script src="../site_libs/quarto-diagram/mermaid-init.js"></script>
+<link href="../site_libs/quarto-diagram/mermaid.css" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/monaco-editor@0.46.0/min/vs/editor/editor.main.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer">
   
@@ -782,17 +786,19 @@ window.Quarto = {
     <h2 id="toc-title">En esta página</h2>
    
   <ul>
-  <li><a href="#introducción" id="toc-introducción" class="nav-link active" data-scroll-target="#introducción"><span class="header-section-number">19</span> Introducción</a></li>
-  <li><a href="#la-fórmula-de-black-scholes" id="toc-la-fórmula-de-black-scholes" class="nav-link" data-scroll-target="#la-fórmula-de-black-scholes"><span class="header-section-number">20</span> La fórmula de Black-Scholes</a>
+  <li><a href="#introducción" id="toc-introducción" class="nav-link active" data-scroll-target="#introducción">Introducción</a>
   <ul class="collapse">
-  <li><a href="#qué-mueve-el-precio-de-una-opción" id="toc-qué-mueve-el-precio-de-una-opción" class="nav-link" data-scroll-target="#qué-mueve-el-precio-de-una-opción"><span class="header-section-number">20.1</span> ¿Qué mueve el precio de una opción?</a></li>
+  <li><a href="#la-fórmula-de-black-scholes" id="toc-la-fórmula-de-black-scholes" class="nav-link" data-scroll-target="#la-fórmula-de-black-scholes"><span class="header-section-number">18.1</span> La fórmula de Black-Scholes</a>
+  <ul class="collapse">
+  <li><a href="#qué-mueve-el-precio-de-una-opción" id="toc-qué-mueve-el-precio-de-una-opción" class="nav-link" data-scroll-target="#qué-mueve-el-precio-de-una-opción"><span class="header-section-number">18.1.1</span> ¿Qué mueve el precio de una opción?</a></li>
   </ul></li>
-  <li><a href="#volatilidad-implícita-leer-la-fórmula-al-revés" id="toc-volatilidad-implícita-leer-la-fórmula-al-revés" class="nav-link" data-scroll-target="#volatilidad-implícita-leer-la-fórmula-al-revés"><span class="header-section-number">21</span> Volatilidad implícita: leer la fórmula al revés</a></li>
-  <li><a href="#la-sonrisa-de-volatilidad" id="toc-la-sonrisa-de-volatilidad" class="nav-link" data-scroll-target="#la-sonrisa-de-volatilidad"><span class="header-section-number">22</span> La sonrisa de volatilidad</a></li>
-  <li><a href="#las-griegas-el-tablero-de-control" id="toc-las-griegas-el-tablero-de-control" class="nav-link" data-scroll-target="#las-griegas-el-tablero-de-control"><span class="header-section-number">23</span> Las griegas: el tablero de control</a></li>
-  <li><a href="#errores-comunes" id="toc-errores-comunes" class="nav-link" data-scroll-target="#errores-comunes"><span class="header-section-number">24</span> Errores comunes</a></li>
-  <li><a href="#ejercicios-propuestos" id="toc-ejercicios-propuestos" class="nav-link" data-scroll-target="#ejercicios-propuestos"><span class="header-section-number">25</span> Ejercicios Propuestos</a></li>
-  <li><a href="#referencias" id="toc-referencias" class="nav-link" data-scroll-target="#referencias"><span class="header-section-number">26</span> Referencias</a></li>
+  <li><a href="#volatilidad-implícita-leer-la-fórmula-al-revés" id="toc-volatilidad-implícita-leer-la-fórmula-al-revés" class="nav-link" data-scroll-target="#volatilidad-implícita-leer-la-fórmula-al-revés"><span class="header-section-number">18.2</span> Volatilidad implícita: leer la fórmula al revés</a></li>
+  <li><a href="#la-sonrisa-de-volatilidad" id="toc-la-sonrisa-de-volatilidad" class="nav-link" data-scroll-target="#la-sonrisa-de-volatilidad"><span class="header-section-number">18.3</span> La sonrisa de volatilidad</a></li>
+  <li><a href="#las-griegas-el-tablero-de-control" id="toc-las-griegas-el-tablero-de-control" class="nav-link" data-scroll-target="#las-griegas-el-tablero-de-control"><span class="header-section-number">18.4</span> Las griegas: el tablero de control</a></li>
+  <li><a href="#errores-comunes" id="toc-errores-comunes" class="nav-link" data-scroll-target="#errores-comunes"><span class="header-section-number">18.5</span> Errores comunes</a></li>
+  <li><a href="#ejercicios-propuestos" id="toc-ejercicios-propuestos" class="nav-link" data-scroll-target="#ejercicios-propuestos"><span class="header-section-number">18.6</span> Ejercicios Propuestos</a></li>
+  <li><a href="#referencias" id="toc-referencias" class="nav-link" data-scroll-target="#referencias"><span class="header-section-number">18.7</span> Referencias</a></li>
+  </ul></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/diegoonna/libro_finanzas_computacionales/edit/main/unidad4/cap18_derivados_vol_implicita.qmd" class="toc-action"><i class="bi bi-github"></i>Editar esta página</a></li><li><a href="https://github.com/diegoonna/libro_finanzas_computacionales/issues/new" class="toc-action"><i class="bi empty"></i>Informar sobre problema</a></li></ul></div></nav>
     </div>
@@ -835,25 +841,39 @@ window.Quarto = {
 </header>
 
 
-<section id="introducción" class="level1" data-number="19">
-<h1 data-number="19"><span class="header-section-number">19</span> Introducción</h1>
+<section id="introducción" class="level1 unnumbered">
+<h1 class="unnumbered">Introducción</h1>
 <p>Una <strong>opción de compra</strong> (<em>call</em>) da el derecho —no la obligación— de comprar un activo a un precio pactado <span class="math inline">\(K\)</span> (el <em>strike</em>) en una fecha futura <span class="math inline">\(T\)</span>. Una <em>put</em>, el derecho de vender. La pregunta que define al capítulo: <strong>¿cuánto vale hoy ese derecho?</strong></p>
+<p>Antes de valuar, conviene tener a la vista qué paga cada contrato al vencimiento. La <a href="#fig-payoffs" class="quarto-xref">Figura&nbsp;<span>18.1</span></a> muestra las cuatro posiciones básicas: el comprador paga una prima hoy a cambio de un pago asimétrico; el vendedor cobra la prima y asume ese pago.</p>
+<div id="cell-fig-payoffs" class="cell" data-execution_count="1">
+<div class="cell-output cell-output-display">
+<div id="fig-payoffs" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-payoffs-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="cap18_derivados_vol_implicita_files/figure-html/fig-payoffs-output-1.png" width="949" height="603" class="figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-payoffs-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figura&nbsp;18.1: Resultado al vencimiento de las cuatro posiciones básicas (strike K = 100, prima de Black-Scholes con 6 meses y vol 25%). La línea punteada es el pago bruto; la llena, el resultado neto de la prima. El comprador de una opción pierde como mucho la prima; el vendedor gana como mucho la prima.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
 <p>La respuesta tiene una historia célebre. En 1973, Fischer Black, Myron Scholes y Robert Merton demostraron que —bajo ciertos supuestos— el precio de una opción <strong>no depende de la expectativa de nadie</strong> sobre si el activo va a subir o bajar. Depende de algo más sutil: de que la opción se puede <em>replicar</em> comprando y vendiendo dinámicamente el activo subyacente. Y si dos cosas tienen los mismos flujos, deben valer lo mismo (no-arbitraje). De esa lógica sale una fórmula cerrada, la más famosa de las finanzas.</p>
 <p>En este capítulo la implementamos, y enseguida la damos vuelta: en el mercado real, la fórmula no se usa para calcular precios (los precios se <em>observan</em> en pantalla) sino para traducirlos a un lenguaje común: la <strong>volatilidad implícita</strong>.</p>
-<div id="setup" class="cell" data-execution_count="1">
+<div id="setup" class="cell" data-execution_count="2">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> scipy.stats <span class="im">import</span> norm</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <hr>
-</section>
-<section id="la-fórmula-de-black-scholes" class="level1" data-number="20">
-<h1 data-number="20"><span class="header-section-number">20</span> La fórmula de Black-Scholes</h1>
+<section id="la-fórmula-de-black-scholes" class="level2" data-number="18.1">
+<h2 data-number="18.1" class="anchored" data-anchor-id="la-fórmula-de-black-scholes"><span class="header-section-number">18.1</span> La fórmula de Black-Scholes</h2>
 <p>Para una call europea sobre un activo que sigue un GBM (Capítulo 13) con volatilidad <span class="math inline">\(\sigma\)</span>, con tasa libre de riesgo <span class="math inline">\(r\)</span>:</p>
 <p><span class="math display">\[C = S_0\, N(d_1) - K e^{-rT} N(d_2)\]</span></p>
 <p><span class="math display">\[d_1 = \frac{\ln(S_0/K) + (r + \sigma^2/2)\,T}{\sigma\sqrt{T}}, \qquad d_2 = d_1 - \sigma\sqrt{T}\]</span></p>
 <p>donde <span class="math inline">\(N(\cdot)\)</span> es la función de distribución normal estándar. La fórmula tiene una lectura económica directa que ayuda a memorizarla: es <strong>lo que recibís menos lo que pagás, ponderado por probabilidades</strong> (en el mundo neutral al riesgo): <span class="math inline">\(N(d_2)\)</span> es la probabilidad de ejercer, <span class="math inline">\(K e^{-rT} N(d_2)\)</span> el valor presente esperado de lo que pagás si ejercés, y <span class="math inline">\(S_0 N(d_1)\)</span> el valor esperado de lo que recibís.</p>
-<div id="bsm" class="cell" data-execution_count="2">
+<div id="bsm" class="cell" data-execution_count="4">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> bs_call(S, K, T, r, sigma):</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""Precio Black-Scholes de una call europea."""</span></span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>    d1 <span class="op">=</span> (np.log(S <span class="op">/</span> K) <span class="op">+</span> (r <span class="op">+</span> <span class="fl">0.5</span> <span class="op">*</span> sigma<span class="op">**</span><span class="dv">2</span>) <span class="op">*</span> T) <span class="op">/</span> (sigma <span class="op">*</span> np.sqrt(T))</span>
@@ -900,10 +920,10 @@ Verificación de paridad put-call:
 <p>Black-Scholes supone: volatilidad <span class="math inline">\(\sigma\)</span> <strong>constante y conocida</strong>, trayectorias continuas (sin saltos — ya sabemos por el Capítulo 14 que es falso), tasa constante, sin costos de transacción y posibilidad de operar continuamente. Cada supuesto se viola en la realidad, y la genialidad práctica del mercado fue inventar una forma de <em>medir</em> esas violaciones: la sonrisa de volatilidad que veremos enseguida.</p>
 </div>
 </div>
-<section id="qué-mueve-el-precio-de-una-opción" class="level2" data-number="20.1">
-<h2 data-number="20.1" class="anchored" data-anchor-id="qué-mueve-el-precio-de-una-opción"><span class="header-section-number">20.1</span> ¿Qué mueve el precio de una opción?</h2>
+<section id="qué-mueve-el-precio-de-una-opción" class="level3" data-number="18.1.1">
+<h3 data-number="18.1.1" class="anchored" data-anchor-id="qué-mueve-el-precio-de-una-opción"><span class="header-section-number">18.1.1</span> ¿Qué mueve el precio de una opción?</h3>
 <p>Antes de invertir la fórmula, desarrollemos intuición sobre cómo responde el precio a sus inputs:</p>
-<div id="cell-sensibilidad-visual" class="cell" data-execution_count="3">
+<div id="cell-fig-sensibilidad-call" class="cell" data-execution_count="5">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>S_grid <span class="op">=</span> np.linspace(<span class="dv">60</span>, <span class="dv">140</span>, <span class="dv">100</span>)</span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>fig, axes <span class="op">=</span> plt.subplots(<span class="dv">1</span>, <span class="dv">2</span>, figsize<span class="op">=</span>(<span class="dv">11</span>, <span class="dv">4</span>))</span>
@@ -935,25 +955,66 @@ Verificación de paridad put-call:
 <span id="cb4-29"><a href="#cb4-29" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
 <span id="cb4-30"><a href="#cb4-30" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="cap18_derivados_vol_implicita_files/figure-html/sensibilidad-visual-output-1.png" id="sensibilidad-visual" width="1047" height="374" class="figure-img"></p>
+<div id="fig-sensibilidad-call" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-sensibilidad-call-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="cap18_derivados_vol_implicita_files/figure-html/fig-sensibilidad-call-output-1.png" width="1045" height="372" class="figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-sensibilidad-call-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figura&nbsp;18.2: Izquierda: valor de la call contra el precio del subyacente para tres plazos; cuanto más cerca del vencimiento, más se parece al payoff. Derecha: valor de la call contra la volatilidad para tres strikes; siempre creciente.
+</figcaption>
 </figure>
 </div>
 </div>
 </div>
-<p>El panel derecho contiene la clave de todo el capítulo: <strong>el precio de una opción crece monótonamente con la volatilidad</strong>. Tiene sentido económico: la opción te protege de la baja (perdés como mucho la prima) y te deja toda la suba — más dispersión solo puede favorecerte. Esa monotonía significa que la relación precio ↔︎ volatilidad es <strong>uno a uno</strong>: dado un precio, existe una única <span class="math inline">\(\sigma\)</span> que lo genera. Podemos invertir la fórmula.</p>
+<p>El panel derecho de la <a href="#fig-sensibilidad-call" class="quarto-xref">Figura&nbsp;<span>18.2</span></a> contiene la clave de todo el capítulo: <strong>el precio de una opción crece monótonamente con la volatilidad</strong>. Tiene sentido económico: la opción te protege de la baja (perdés como mucho la prima) y te deja toda la suba — más dispersión solo puede favorecerte. Esa monotonía significa que la relación precio ↔︎ volatilidad es <strong>uno a uno</strong>: dado un precio, existe una única <span class="math inline">\(\sigma\)</span> que lo genera. Podemos invertir la fórmula.</p>
 <hr>
 </section>
 </section>
-<section id="volatilidad-implícita-leer-la-fórmula-al-revés" class="level1" data-number="21">
-<h1 data-number="21"><span class="header-section-number">21</span> Volatilidad implícita: leer la fórmula al revés</h1>
+<section id="volatilidad-implícita-leer-la-fórmula-al-revés" class="level2" data-number="18.2">
+<h2 data-number="18.2" class="anchored" data-anchor-id="volatilidad-implícita-leer-la-fórmula-al-revés"><span class="header-section-number">18.2</span> Volatilidad implícita: leer la fórmula al revés</h2>
 <p>En el mercado, el precio de la opción se <strong>observa</strong> — lo pone la oferta y la demanda. De los cinco inputs de Black-Scholes, cuatro son observables (<span class="math inline">\(S\)</span>, <span class="math inline">\(K\)</span>, <span class="math inline">\(T\)</span>, <span class="math inline">\(r\)</span>). El único invisible es <span class="math inline">\(\sigma\)</span>. Entonces el uso real de la fórmula es el inverso: <em>¿qué volatilidad está “implicando” este precio de mercado?</em></p>
 <p><span class="math display">\[\sigma_{impl} : \quad C_{BS}(S, K, T, r, \sigma_{impl}) = C_{mercado}\]</span></p>
+<p>La <a href="#fig-bs-ida-vuelta" class="quarto-xref">Figura&nbsp;<span>18.3</span></a> muestra los dos usos de la misma fórmula: de ida, para valuar; de vuelta, para traducir precios observados a volatilidad.</p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div id="fig-bs-ida-vuelta" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-bs-ida-vuelta-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div>
+<pre class="mermaid mermaid-js" data-label="fig-bs-ida-vuelta">flowchart LR
+    subgraph IDA["Ida: valuar"]
+        direction LR
+        A1["S, K, T, r"] --&gt; B1[["Black-Scholes"]]
+        V1["σ&lt;br/&gt;&lt;i&gt;supuesta&lt;/i&gt;"] --&gt; B1
+        B1 --&gt; P1(["precio teórico"])
+    end
+    subgraph VUELTA["Vuelta: leer el mercado"]
+        direction LR
+        A2["S, K, T, r"] --&gt; N2[["Newton-Raphson&lt;br/&gt;&lt;i&gt;invierte Black-Scholes&lt;/i&gt;"]]
+        P2["precio&lt;br/&gt;&lt;i&gt;observado&lt;/i&gt;"] --&gt; N2
+        N2 --&gt; V2(["σ implícita"])
+    end
+    classDef dato fill:#e0e9f4,stroke:#1e3a5f,color:#1f2937
+    classDef clave fill:#fde8dc,stroke:#c2410c,color:#1f2937
+    classDef fin fill:#eef2e3,stroke:#637238,color:#1f2937
+    class A1,A2 dato
+    class V1,P2 clave
+    class P1,V2 fin
+</pre>
+</div>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-bs-ida-vuelta-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figura&nbsp;18.3: La misma fórmula en dos direcciones. De ida, la volatilidad es un input y el precio es el resultado. De vuelta, el precio lo pone el mercado y lo que se despeja es la volatilidad implícita; como no hay fórmula cerrada, se resuelve con Newton-Raphson.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
 <p>No hay fórmula cerrada para despejar <span class="math inline">\(\sigma\)</span>; hay que resolver numéricamente. El método clásico es <strong>Newton-Raphson</strong>: arrancar de un <span class="math inline">\(\sigma\)</span> tentativo y corregirlo usando la pendiente de la función,</p>
 <p><span class="math display">\[\sigma_{n+1} = \sigma_n - \frac{C_{BS}(\sigma_n) - C_{mercado}}{\partial C / \partial \sigma}\]</span></p>
 <p>donde la derivada del denominador tiene nombre propio —<strong>vega</strong>— y fórmula cerrada. Cada iteración pregunta: “¿me pasé o me quedé corto? ¿y cuán sensible es el precio acá?” y da un paso proporcional al error.</p>
-<div id="vol-implicita" class="cell" data-execution_count="4">
+<div id="vol-implicita" class="cell" data-execution_count="6">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> vega(S, K, T, r, sigma):</span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""Vega: derivada del precio respecto de la volatilidad."""</span></span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>    d1 <span class="op">=</span> (np.log(S <span class="op">/</span> K) <span class="op">+</span> (r <span class="op">+</span> <span class="fl">0.5</span> <span class="op">*</span> sigma<span class="op">**</span><span class="dv">2</span>) <span class="op">*</span> T) <span class="op">/</span> (sigma <span class="op">*</span> np.sqrt(T))</span>
@@ -980,13 +1041,28 @@ Verificación de paridad put-call:
 <pre><code>σ original: 30.00%  →  σ recuperada: 30.0000%</code></pre>
 </div>
 </div>
+<p>La <a href="#fig-newton-iteraciones" class="quarto-xref">Figura&nbsp;<span>18.4</span></a> muestra por qué Newton converge tan rápido. Cada paso reemplaza la curva por su recta tangente (cuya pendiente es el vega) y salta al punto donde esa recta alcanza el precio de mercado.</p>
+<div id="cell-fig-newton-iteraciones" class="cell" data-execution_count="7">
+<div class="cell-output cell-output-display">
+<div id="fig-newton-iteraciones" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-newton-iteraciones-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="cap18_derivados_vol_implicita_files/figure-html/fig-newton-iteraciones-output-1.png" width="901" height="430" class="figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-newton-iteraciones-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figura&nbsp;18.4: Newton-Raphson buscando la volatilidad implícita de una call fuera del dinero (K = 125, 6 meses) cotizada a 30% de vol, arrancando lejos, en σ₀ = 60%. Cada tangente (pendiente = vega) cae sobre el precio de mercado en el siguiente intento; al tercer paso el error ya es invisible a esta escala.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
 <p>Newton converge en un puñado de iteraciones porque el precio es suave y monótono en <span class="math inline">\(\sigma\)</span>. La volatilidad implícita es <strong>el idioma en que se cotizan las opciones</strong>: los operadores no dicen “la call vale $8.26”, dicen “está en 30 de vol” — un número comparable entre strikes, plazos y subyacentes.</p>
 <hr>
 </section>
-<section id="la-sonrisa-de-volatilidad" class="level1" data-number="22">
-<h1 data-number="22"><span class="header-section-number">22</span> La sonrisa de volatilidad</h1>
+<section id="la-sonrisa-de-volatilidad" class="level2" data-number="18.3">
+<h2 data-number="18.3" class="anchored" data-anchor-id="la-sonrisa-de-volatilidad"><span class="header-section-number">18.3</span> La sonrisa de volatilidad</h2>
 <p>Y acá viene el descubrimiento que cambió la industria. Si Black-Scholes fuera literalmente cierto, la volatilidad implícita sería <strong>la misma para todos los strikes</strong> — es un parámetro del activo, no del contrato. Grafiquemos qué se observa en el mercado real:</p>
-<div id="cell-smile" class="cell" data-execution_count="5">
+<div id="cell-fig-smile" class="cell" data-execution_count="8">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>strikes <span class="op">=</span> np.arange(<span class="dv">80</span>, <span class="dv">121</span>, <span class="dv">2</span>)</span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>S, T, r <span class="op">=</span> <span class="dv">100</span>, <span class="fl">0.5</span>, <span class="fl">0.05</span></span>
 <span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -999,11 +1075,11 @@ Verificación de paridad put-call:
 <span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>vols_impl <span class="op">=</span> [implied_vol(p, S, K_i, T, r) <span class="cf">for</span> p, K_i <span class="kw">in</span> <span class="bu">zip</span>(precios_mkt, strikes)]</span>
 <span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>fig, ax <span class="op">=</span> plt.subplots(figsize<span class="op">=</span>(<span class="dv">9</span>, <span class="dv">5</span>))</span>
-<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>ax.plot(strikes, np.array(vols_impl) <span class="op">*</span> <span class="dv">100</span>, <span class="st">"o-"</span>, color<span class="op">=</span><span class="st">"steelblue"</span>,</span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>ax.plot(strikes, np.array(vols_impl) <span class="op">*</span> <span class="dv">100</span>, <span class="st">"o-"</span>, color<span class="op">=</span><span class="st">"#1e3a5f"</span>,</span>
 <span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a>        label<span class="op">=</span><span class="st">"Vol implícita observada"</span>)</span>
-<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a>ax.axhline(<span class="dv">20</span>, color<span class="op">=</span><span class="st">"red"</span>, linestyle<span class="op">=</span><span class="st">"--"</span>, alpha<span class="op">=</span><span class="fl">0.6</span>,</span>
+<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a>ax.axhline(<span class="dv">20</span>, color<span class="op">=</span><span class="st">"#c2410c"</span>, linestyle<span class="op">=</span><span class="st">"--"</span>, alpha<span class="op">=</span><span class="fl">0.6</span>,</span>
 <span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a>           label<span class="op">=</span><span class="st">"Lo que Black-Scholes predice (σ constante)"</span>)</span>
-<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a>ax.axvline(<span class="dv">100</span>, color<span class="op">=</span><span class="st">"gray"</span>, linestyle<span class="op">=</span><span class="st">":"</span>, alpha<span class="op">=</span><span class="fl">0.5</span>)</span>
+<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a>ax.axvline(<span class="dv">100</span>, color<span class="op">=</span><span class="st">"#94a3b8"</span>, linestyle<span class="op">=</span><span class="st">":"</span>, alpha<span class="op">=</span><span class="fl">0.5</span>)</span>
 <span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a>ax.annotate(<span class="st">"puts protectivas</span><span class="ch">\n</span><span class="st">(caras)"</span>, xy<span class="op">=</span>(<span class="dv">84</span>, <span class="fl">24.5</span>), fontsize<span class="op">=</span><span class="dv">9</span>, ha<span class="op">=</span><span class="st">"center"</span>)</span>
 <span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a>ax.set_xlabel(<span class="st">"Strike K"</span>)</span>
 <span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a>ax.set_ylabel(<span class="st">"Volatilidad implícita (%)"</span>)</span>
@@ -1013,18 +1089,38 @@ Verificación de paridad put-call:
 <span id="cb7-24"><a href="#cb7-24" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
 <span id="cb7-25"><a href="#cb7-25" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="cap18_derivados_vol_implicita_files/figure-html/smile-output-1.png" id="smile" width="855" height="470" class="figure-img"></p>
+<div id="fig-smile" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-smile-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="cap18_derivados_vol_implicita_files/figure-html/fig-smile-output-1.png" width="854" height="468" class="figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-smile-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figura&nbsp;18.5: Volatilidad implícita por strike, recuperada de precios de mercado. Si Black-Scholes fuera literalmente cierto, todos los puntos caerían sobre la línea horizontal.
+</figcaption>
 </figure>
 </div>
 </div>
 </div>
-<p>La curva no es plana: las opciones <strong>fuera del dinero se cotizan a volatilidades más altas</strong>, con la rama izquierda (puts de strikes bajos) típicamente más empinada — por su forma, <em>sonrisa</em> o <em>mueca</em> (smirk). ¿Qué está diciendo el mercado?</p>
+<p>La curva de la <a href="#fig-smile" class="quarto-xref">Figura&nbsp;<span>18.5</span></a> no es plana: las opciones <strong>fuera del dinero se cotizan a volatilidades más altas</strong>, con la rama izquierda (puts de strikes bajos) típicamente más empinada — por su forma, <em>sonrisa</em> o <em>mueca</em> (smirk). ¿Qué está diciendo el mercado?</p>
 <ul>
 <li><strong>Las colas existen</strong>: los compradores pagan más (en vol) por las opciones que pagan en escenarios extremos, porque saben —desde el crash de 1987, cuando nació la sonrisa— que esos escenarios son más probables de lo que la normal admite. Es la curtosis del Capítulo 14 cotizada en pantalla.</li>
 <li><strong>La asimetría también</strong>: la rama izquierda más cara refleja que los derrumbes son más violentos que los rallies, y que hay demanda estructural de protección (puts como seguro).</li>
 </ul>
+<p>La <a href="#fig-colas-sonrisa" class="quarto-xref">Figura&nbsp;<span>18.6</span></a> muestra la cadena completa con una put fuera del dinero. Si el mercado cree en una distribución con la cola izquierda más pesada que la lognormal de Black-Scholes, esa put vale más; y la única forma de que Black-Scholes reproduzca ese precio más alto es con una volatilidad más alta.</p>
+<div id="cell-fig-colas-sonrisa" class="cell" data-execution_count="9">
+<div class="cell-output cell-output-display">
+<div id="fig-colas-sonrisa" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-colas-sonrisa-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="cap18_derivados_vol_implicita_files/figure-html/fig-colas-sonrisa-output-1.png" width="902" height="411" class="figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-colas-sonrisa-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figura&nbsp;18.6: Por qué existe la sonrisa. Dos distribuciones del precio a 6 meses con la misma media y la misma volatilidad (20%): la lognormal de Black-Scholes y otra con la cola izquierda pesada. La put de strike 80 solo paga en la zona sombreada; con la cola pesada vale bastante más, y para reproducir ese precio Black-Scholes necesita una volatilidad implícita más alta.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
 <div class="callout callout-style-simple callout-important callout-titled" title="La sonrisa es el puente del libro">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -1040,8 +1136,8 @@ Verificación de paridad put-call:
 </div>
 <hr>
 </section>
-<section id="las-griegas-el-tablero-de-control" class="level1" data-number="23">
-<h1 data-number="23"><span class="header-section-number">23</span> Las griegas: el tablero de control</h1>
+<section id="las-griegas-el-tablero-de-control" class="level2" data-number="18.4">
+<h2 data-number="18.4" class="anchored" data-anchor-id="las-griegas-el-tablero-de-control"><span class="header-section-number">18.4</span> Las griegas: el tablero de control</h2>
 <p>Quien tiene una posición en opciones necesita saber cómo cambia su valor cuando se mueve el mundo. Las <strong>griegas</strong> son esas derivadas parciales:</p>
 <table class="caption-top table">
 <colgroup>
@@ -1081,7 +1177,7 @@ Verificación de paridad put-call:
 </table>
 <p>Para Black-Scholes existen fórmulas cerradas (delta de una call = <span class="math inline">\(N(d_1)\)</span>), pero conviene dominar el método general de <strong>diferencias finitas</strong> —perturbar el input, repreciar, dividir— porque funciona con <em>cualquier</em> modelo de pricing, tenga fórmula o sea un Monte Carlo:</p>
 <p><span class="math display">\[\Delta \approx \frac{C(S + h) - C(S - h)}{2h}\]</span></p>
-<div id="griegas" class="cell" data-execution_count="6">
+<div id="griegas" class="cell" data-execution_count="10">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> griegas_call(S, K, T, r, sigma, dS<span class="op">=</span><span class="fl">0.01</span>, dsig<span class="op">=</span><span class="fl">0.0001</span>, dT<span class="op">=</span><span class="dv">1</span><span class="op">/</span><span class="dv">365</span>):</span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""Griegas de una call por diferencias finitas centradas."""</span></span>
 <span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>    delta <span class="op">=</span> (bs_call(S <span class="op">+</span> dS, K, T, r, sigma) <span class="op">-</span> bs_call(S <span class="op">-</span> dS, K, T, r, sigma)) <span class="op">/</span> (<span class="dv">2</span> <span class="op">*</span> dS)</span>
@@ -1108,7 +1204,22 @@ Verificación de paridad put-call:
 </div>
 </div>
 <p>Interpretá los números: delta ≈ 0.57 (la call al dinero se mueve ~57 centavos por cada dólar del subyacente), gamma positivo (ese delta <em>crece</em> si el activo sube — la convexidad que hace valiosas a las opciones), vega positivo (la opción es una posición comprada en volatilidad) y theta negativo (cada día que pasa, el derecho vale menos: el tiempo es el alquiler que paga el comprador).</p>
-<div id="cell-griegas-perfil" class="cell" data-execution_count="7">
+<p>Delta y gamma tienen una lectura geométrica directa, y la <a href="#fig-taylor-griegas" class="quarto-xref">Figura&nbsp;<span>18.7</span></a> la muestra: el delta es la pendiente de la curva de precio en el punto actual; el gamma, su curvatura. La recta del delta alcanza para movimientos chicos; para movimientos grandes, hace falta la parábola que agrega el gamma.</p>
+<div id="cell-fig-taylor-griegas" class="cell" data-execution_count="11">
+<div class="cell-output cell-output-display">
+<div id="fig-taylor-griegas" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-taylor-griegas-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="cap18_derivados_vol_implicita_files/figure-html/fig-taylor-griegas-output-1.png" width="901" height="430" class="figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-taylor-griegas-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figura&nbsp;18.7: Delta y gamma como geometría. La recta es la aproximación de primer orden (delta); la parábola agrega la curvatura (gamma). La distancia entre la recta y la curva, ½Γ(ΔS)², crece con el cuadrado del movimiento: es el término que el próximo capítulo convierte en error de cobertura.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<div id="cell-fig-perfil-griegas" class="cell" data-execution_count="12">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>S_grid <span class="op">=</span> np.linspace(<span class="dv">60</span>, <span class="dv">140</span>, <span class="dv">120</span>)</span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>fig, axes <span class="op">=</span> plt.subplots(<span class="dv">1</span>, <span class="dv">2</span>, figsize<span class="op">=</span>(<span class="dv">11</span>, <span class="dv">4</span>))</span>
@@ -1136,18 +1247,23 @@ Verificación de paridad put-call:
 <span id="cb10-25"><a href="#cb10-25" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
 <span id="cb10-26"><a href="#cb10-26" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="cap18_derivados_vol_implicita_files/figure-html/griegas-perfil-output-1.png" id="griegas-perfil" width="1047" height="374" class="figure-img"></p>
+<div id="fig-perfil-griegas" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-perfil-griegas-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="cap18_derivados_vol_implicita_files/figure-html/fig-perfil-griegas-output-1.png" width="1045" height="372" class="figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-perfil-griegas-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figura&nbsp;18.8: Delta (izquierda) y gamma (derecha) de la call en función del precio del subyacente, a 6 meses y a 18 días del vencimiento. Cerca del vencimiento, el delta salta de 0 a 1 en un rango estrecho y el gamma se vuelve un pico alrededor del strike.
+</figcaption>
 </figure>
 </div>
 </div>
 </div>
-<p>El gamma concentrado alrededor del strike, y cada vez más puntiagudo al acercarse el vencimiento, es el protagonista del próximo capítulo: es lo que hace que cubrir una opción <strong>cerca del vencimiento y cerca del strike</strong> sea un deporte de riesgo.</p>
+<p>El gamma de la <a href="#fig-perfil-griegas" class="quarto-xref">Figura&nbsp;<span>18.8</span></a>, concentrado alrededor del strike y cada vez más puntiagudo al acercarse el vencimiento, es el protagonista del próximo capítulo: es lo que hace que cubrir una opción <strong>cerca del vencimiento y cerca del strike</strong> sea un deporte de riesgo.</p>
 <hr>
 </section>
-<section id="errores-comunes" class="level1" data-number="24">
-<h1 data-number="24"><span class="header-section-number">24</span> Errores comunes</h1>
+<section id="errores-comunes" class="level2" data-number="18.5">
+<h2 data-number="18.5" class="anchored" data-anchor-id="errores-comunes"><span class="header-section-number">18.5</span> Errores comunes</h2>
 <div class="callout callout-style-simple callout-warning callout-titled" title="Trampas frecuentes">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -1169,8 +1285,8 @@ Verificación de paridad put-call:
 </div>
 <hr>
 </section>
-<section id="ejercicios-propuestos" class="level1" data-number="25">
-<h1 data-number="25"><span class="header-section-number">25</span> Ejercicios Propuestos</h1>
+<section id="ejercicios-propuestos" class="level2" data-number="18.6">
+<h2 data-number="18.6" class="anchored" data-anchor-id="ejercicios-propuestos"><span class="header-section-number">18.6</span> Ejercicios Propuestos</h2>
 <div class="callout callout-style-simple callout-important callout-titled" title="Ejercicios">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -1195,9 +1311,9 @@ Verificación de paridad put-call:
 <noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
 <hr>
 </section>
-<section id="referencias" class="level1" data-number="26">
-<h1 data-number="26"><span class="header-section-number">26</span> Referencias</h1>
-<div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list">
+<section id="referencias" class="level2" data-number="18.7">
+<h2 data-number="18.7" class="anchored" data-anchor-id="referencias"><span class="header-section-number">18.7</span> Referencias</h2>
+<div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list" style="display: none">
 <div id="ref-black1973" class="csl-entry" role="listitem">
 Black, Fischer, y Myron Scholes. 1973. <span>«The Pricing of Options and Corporate Liabilities»</span>. <em>Journal of Political Economy</em> 81 (3): 637-54.
 </div>
@@ -1215,6 +1331,7 @@ Merton, Robert C. 1973. <span>«Theory of Rational Option Pricing»</span>. <em>
 
 <!-- -->
 
+</section>
 </section>
 
 </main> <!-- /main -->
@@ -1701,305 +1818,531 @@ Merton, Robert C. 1973. <span>«Theory of Rational Option Pricing»</span>. <em>
 <span id="cb11-13"><a href="#cb11-13" aria-hidden="true" tabindex="-1"></a><span class="co">  @black1973, @merton1973, @hull2018options, @derman2016</span></span>
 <span id="cb11-14"><a href="#cb11-14" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
 <span id="cb11-15"><a href="#cb11-15" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-16"><a href="#cb11-16" aria-hidden="true" tabindex="-1"></a><span class="fu"># Introducción</span></span>
+<span id="cb11-16"><a href="#cb11-16" aria-hidden="true" tabindex="-1"></a><span class="fu"># Introducción {.unnumbered}</span></span>
 <span id="cb11-17"><a href="#cb11-17" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb11-18"><a href="#cb11-18" aria-hidden="true" tabindex="-1"></a>Una **opción de compra** (*call*) da el derecho —no la obligación— de comprar un activo a un precio pactado $K$ (el *strike*) en una fecha futura $T$. Una *put*, el derecho de vender. La pregunta que define al capítulo: **¿cuánto vale hoy ese derecho?**</span>
 <span id="cb11-19"><a href="#cb11-19" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-20"><a href="#cb11-20" aria-hidden="true" tabindex="-1"></a>La respuesta tiene una historia célebre. En 1973, Fischer Black, Myron Scholes y Robert Merton demostraron que —bajo ciertos supuestos— el precio de una opción **no depende de la expectativa de nadie** sobre si el activo va a subir o bajar. Depende de algo más sutil: de que la opción se puede *replicar* comprando y vendiendo dinámicamente el activo subyacente. Y si dos cosas tienen los mismos flujos, deben valer lo mismo (no-arbitraje). De esa lógica sale una fórmula cerrada, la más famosa de las finanzas.</span>
+<span id="cb11-20"><a href="#cb11-20" aria-hidden="true" tabindex="-1"></a>Antes de valuar, conviene tener a la vista qué paga cada contrato al vencimiento. La @fig-payoffs muestra las cuatro posiciones básicas: el comprador paga una prima hoy a cambio de un pago asimétrico; el vendedor cobra la prima y asume ese pago.</span>
 <span id="cb11-21"><a href="#cb11-21" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-22"><a href="#cb11-22" aria-hidden="true" tabindex="-1"></a>En este capítulo la implementamos, y enseguida la damos vuelta: en el mercado real, la fórmula no se usa para calcular precios (los precios se *observan* en pantalla) sino para traducirlos a un lenguaje común: la **volatilidad implícita**.</span>
-<span id="cb11-23"><a href="#cb11-23" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-26"><a href="#cb11-26" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
-<span id="cb11-27"><a href="#cb11-27" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: setup</span></span>
-<span id="cb11-28"><a href="#cb11-28" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
-<span id="cb11-29"><a href="#cb11-29" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
-<span id="cb11-30"><a href="#cb11-30" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> scipy.stats <span class="im">import</span> norm</span>
-<span id="cb11-31"><a href="#cb11-31" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb11-24"><a href="#cb11-24" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb11-25"><a href="#cb11-25" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: fig-payoffs</span></span>
+<span id="cb11-26"><a href="#cb11-26" aria-hidden="true" tabindex="-1"></a><span class="co">#| echo: false</span></span>
+<span id="cb11-27"><a href="#cb11-27" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-cap: "Resultado al vencimiento de las cuatro posiciones básicas (strike K = 100, prima de Black-Scholes con 6 meses y vol 25%). La línea punteada es el pago bruto; la llena, el resultado neto de la prima. El comprador de una opción pierde como mucho la prima; el vendedor gana como mucho la prima."</span></span>
+<span id="cb11-28"><a href="#cb11-28" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> sys<span class="op">;</span> sys.path.insert(<span class="dv">0</span>, <span class="st">".."</span>)</span>
+<span id="cb11-29"><a href="#cb11-29" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> _esquemas <span class="im">import</span> <span class="op">*</span></span>
+<span id="cb11-30"><a href="#cb11-30" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb11-31"><a href="#cb11-31" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> scipy.stats <span class="im">import</span> norm</span>
 <span id="cb11-32"><a href="#cb11-32" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-33"><a href="#cb11-33" aria-hidden="true" tabindex="-1"></a>---</span>
-<span id="cb11-34"><a href="#cb11-34" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-35"><a href="#cb11-35" aria-hidden="true" tabindex="-1"></a><span class="fu"># La fórmula de Black-Scholes</span></span>
-<span id="cb11-36"><a href="#cb11-36" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-37"><a href="#cb11-37" aria-hidden="true" tabindex="-1"></a>Para una call europea sobre un activo que sigue un GBM (Capítulo 13) con volatilidad $\sigma$, con tasa libre de riesgo $r$:</span>
-<span id="cb11-38"><a href="#cb11-38" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-39"><a href="#cb11-39" aria-hidden="true" tabindex="-1"></a>$$C = S_0\, N(d_1) - K e^{-rT} N(d_2)$$</span>
-<span id="cb11-40"><a href="#cb11-40" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-41"><a href="#cb11-41" aria-hidden="true" tabindex="-1"></a>$$d_1 = \frac{\ln(S_0/K) + (r + \sigma^2/2)\,T}{\sigma\sqrt{T}}, \qquad d_2 = d_1 - \sigma\sqrt{T}$$</span>
-<span id="cb11-42"><a href="#cb11-42" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-43"><a href="#cb11-43" aria-hidden="true" tabindex="-1"></a>donde $N(\cdot)$ es la función de distribución normal estándar. La fórmula tiene una lectura económica directa que ayuda a memorizarla: es **lo que recibís menos lo que pagás, ponderado por probabilidades** (en el mundo neutral al riesgo): $N(d_2)$ es la probabilidad de ejercer, $K e^{-rT} N(d_2)$ el valor presente esperado de lo que pagás si ejercés, y $S_0 N(d_1)$ el valor esperado de lo que recibís.</span>
-<span id="cb11-44"><a href="#cb11-44" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-47"><a href="#cb11-47" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
-<span id="cb11-48"><a href="#cb11-48" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: bsm</span></span>
-<span id="cb11-49"><a href="#cb11-49" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> bs_call(S, K, T, r, sigma):</span>
-<span id="cb11-50"><a href="#cb11-50" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""Precio Black-Scholes de una call europea."""</span></span>
-<span id="cb11-51"><a href="#cb11-51" aria-hidden="true" tabindex="-1"></a>    d1 <span class="op">=</span> (np.log(S <span class="op">/</span> K) <span class="op">+</span> (r <span class="op">+</span> <span class="fl">0.5</span> <span class="op">*</span> sigma<span class="op">**</span><span class="dv">2</span>) <span class="op">*</span> T) <span class="op">/</span> (sigma <span class="op">*</span> np.sqrt(T))</span>
-<span id="cb11-52"><a href="#cb11-52" aria-hidden="true" tabindex="-1"></a>    d2 <span class="op">=</span> d1 <span class="op">-</span> sigma <span class="op">*</span> np.sqrt(T)</span>
-<span id="cb11-53"><a href="#cb11-53" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> S <span class="op">*</span> norm.cdf(d1) <span class="op">-</span> K <span class="op">*</span> np.exp(<span class="op">-</span>r <span class="op">*</span> T) <span class="op">*</span> norm.cdf(d2)</span>
-<span id="cb11-54"><a href="#cb11-54" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-55"><a href="#cb11-55" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> bs_put(S, K, T, r, sigma):</span>
-<span id="cb11-56"><a href="#cb11-56" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""Precio Black-Scholes de una put europea."""</span></span>
-<span id="cb11-57"><a href="#cb11-57" aria-hidden="true" tabindex="-1"></a>    d1 <span class="op">=</span> (np.log(S <span class="op">/</span> K) <span class="op">+</span> (r <span class="op">+</span> <span class="fl">0.5</span> <span class="op">*</span> sigma<span class="op">**</span><span class="dv">2</span>) <span class="op">*</span> T) <span class="op">/</span> (sigma <span class="op">*</span> np.sqrt(T))</span>
-<span id="cb11-58"><a href="#cb11-58" aria-hidden="true" tabindex="-1"></a>    d2 <span class="op">=</span> d1 <span class="op">-</span> sigma <span class="op">*</span> np.sqrt(T)</span>
-<span id="cb11-59"><a href="#cb11-59" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> K <span class="op">*</span> np.exp(<span class="op">-</span>r <span class="op">*</span> T) <span class="op">*</span> norm.cdf(<span class="op">-</span>d2) <span class="op">-</span> S <span class="op">*</span> norm.cdf(<span class="op">-</span>d1)</span>
-<span id="cb11-60"><a href="#cb11-60" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-61"><a href="#cb11-61" aria-hidden="true" tabindex="-1"></a><span class="co"># Un contrato concreto: call al dinero, 6 meses, vol 25%</span></span>
-<span id="cb11-62"><a href="#cb11-62" aria-hidden="true" tabindex="-1"></a>S, K, T, r, sigma <span class="op">=</span> <span class="dv">100</span>, <span class="dv">100</span>, <span class="fl">0.5</span>, <span class="fl">0.05</span>, <span class="fl">0.25</span></span>
-<span id="cb11-63"><a href="#cb11-63" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-64"><a href="#cb11-64" aria-hidden="true" tabindex="-1"></a>precio_call <span class="op">=</span> bs_call(S, K, T, r, sigma)</span>
-<span id="cb11-65"><a href="#cb11-65" aria-hidden="true" tabindex="-1"></a>precio_put <span class="op">=</span> bs_put(S, K, T, r, sigma)</span>
-<span id="cb11-66"><a href="#cb11-66" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-67"><a href="#cb11-67" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Call: $</span><span class="sc">{</span>precio_call<span class="sc">:.4f}</span><span class="ss">"</span>)</span>
-<span id="cb11-68"><a href="#cb11-68" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Put:  $</span><span class="sc">{</span>precio_put<span class="sc">:.4f}</span><span class="ss">"</span>)</span>
-<span id="cb11-69"><a href="#cb11-69" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"</span><span class="ch">\n</span><span class="ss">Verificación de paridad put-call:"</span>)</span>
-<span id="cb11-70"><a href="#cb11-70" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"  C - P           = </span><span class="sc">{</span>precio_call <span class="op">-</span> precio_put<span class="sc">:.4f}</span><span class="ss">"</span>)</span>
-<span id="cb11-71"><a href="#cb11-71" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"  S - K·e^(-rT)   = </span><span class="sc">{</span>S <span class="op">-</span> K <span class="op">*</span> np<span class="sc">.</span>exp(<span class="op">-</span>r <span class="op">*</span> T)<span class="sc">:.4f}</span><span class="ss">"</span>)</span>
-<span id="cb11-72"><a href="#cb11-72" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb11-73"><a href="#cb11-73" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-74"><a href="#cb11-74" aria-hidden="true" tabindex="-1"></a>La **paridad put-call** ($C - P = S - Ke^{-rT}$) que verificamos al final no depende de Black-Scholes ni de ningún modelo: sale de puro no-arbitraje. Por eso es el primer chequeo de cordura de cualquier implementación — si tu código la viola, está mal.</span>
-<span id="cb11-75"><a href="#cb11-75" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-76"><a href="#cb11-76" aria-hidden="true" tabindex="-1"></a>::: {.callout-note title="Los supuestos que después importarán"}</span>
-<span id="cb11-77"><a href="#cb11-77" aria-hidden="true" tabindex="-1"></a>Black-Scholes supone: volatilidad $\sigma$ **constante y conocida**, trayectorias continuas (sin saltos — ya sabemos por el Capítulo 14 que es falso), tasa constante, sin costos de transacción y posibilidad de operar continuamente. Cada supuesto se viola en la realidad, y la genialidad práctica del mercado fue inventar una forma de *medir* esas violaciones: la sonrisa de volatilidad que veremos enseguida.</span>
-<span id="cb11-78"><a href="#cb11-78" aria-hidden="true" tabindex="-1"></a>:::</span>
-<span id="cb11-79"><a href="#cb11-79" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-80"><a href="#cb11-80" aria-hidden="true" tabindex="-1"></a><span class="fu">## ¿Qué mueve el precio de una opción?</span></span>
+<span id="cb11-33"><a href="#cb11-33" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> _esquema():</span>
+<span id="cb11-34"><a href="#cb11-34" aria-hidden="true" tabindex="-1"></a>    K, T, r, sig, S0 <span class="op">=</span> <span class="dv">100</span>, <span class="fl">0.5</span>, <span class="fl">0.05</span>, <span class="fl">0.25</span>, <span class="dv">100</span></span>
+<span id="cb11-35"><a href="#cb11-35" aria-hidden="true" tabindex="-1"></a>    d1 <span class="op">=</span> (np.log(S0 <span class="op">/</span> K) <span class="op">+</span> (r <span class="op">+</span> <span class="fl">0.5</span> <span class="op">*</span> sig<span class="op">**</span><span class="dv">2</span>) <span class="op">*</span> T) <span class="op">/</span> (sig <span class="op">*</span> np.sqrt(T))</span>
+<span id="cb11-36"><a href="#cb11-36" aria-hidden="true" tabindex="-1"></a>    d2 <span class="op">=</span> d1 <span class="op">-</span> sig <span class="op">*</span> np.sqrt(T)</span>
+<span id="cb11-37"><a href="#cb11-37" aria-hidden="true" tabindex="-1"></a>    prima_c <span class="op">=</span> S0 <span class="op">*</span> norm.cdf(d1) <span class="op">-</span> K <span class="op">*</span> np.exp(<span class="op">-</span>r <span class="op">*</span> T) <span class="op">*</span> norm.cdf(d2)</span>
+<span id="cb11-38"><a href="#cb11-38" aria-hidden="true" tabindex="-1"></a>    prima_p <span class="op">=</span> K <span class="op">*</span> np.exp(<span class="op">-</span>r <span class="op">*</span> T) <span class="op">*</span> norm.cdf(<span class="op">-</span>d2) <span class="op">-</span> S0 <span class="op">*</span> norm.cdf(<span class="op">-</span>d1)</span>
+<span id="cb11-39"><a href="#cb11-39" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-40"><a href="#cb11-40" aria-hidden="true" tabindex="-1"></a>    s <span class="op">=</span> np.linspace(<span class="dv">60</span>, <span class="dv">140</span>, <span class="dv">300</span>)</span>
+<span id="cb11-41"><a href="#cb11-41" aria-hidden="true" tabindex="-1"></a>    casos <span class="op">=</span> [(<span class="st">"Compra de call"</span>, np.maximum(s <span class="op">-</span> K, <span class="dv">0</span>), <span class="op">-</span>prima_c, SECUNDARIO),</span>
+<span id="cb11-42"><a href="#cb11-42" aria-hidden="true" tabindex="-1"></a>             (<span class="st">"Compra de put"</span>, np.maximum(K <span class="op">-</span> s, <span class="dv">0</span>), <span class="op">-</span>prima_p, SECUNDARIO),</span>
+<span id="cb11-43"><a href="#cb11-43" aria-hidden="true" tabindex="-1"></a>             (<span class="st">"Venta de call"</span>, <span class="op">-</span>np.maximum(s <span class="op">-</span> K, <span class="dv">0</span>), prima_c, ACENTO),</span>
+<span id="cb11-44"><a href="#cb11-44" aria-hidden="true" tabindex="-1"></a>             (<span class="st">"Venta de put"</span>, <span class="op">-</span>np.maximum(K <span class="op">-</span> s, <span class="dv">0</span>), prima_p, ACENTO)]</span>
+<span id="cb11-45"><a href="#cb11-45" aria-hidden="true" tabindex="-1"></a>    fig, axes <span class="op">=</span> plt.subplots(<span class="dv">2</span>, <span class="dv">2</span>, figsize<span class="op">=</span>(<span class="dv">10</span>, <span class="fl">6.4</span>), sharex<span class="op">=</span><span class="va">True</span>, sharey<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb11-46"><a href="#cb11-46" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> ax, (titulo, bruto, prima, color) <span class="kw">in</span> <span class="bu">zip</span>(axes.ravel(), casos):</span>
+<span id="cb11-47"><a href="#cb11-47" aria-hidden="true" tabindex="-1"></a>        neto <span class="op">=</span> bruto <span class="op">+</span> prima</span>
+<span id="cb11-48"><a href="#cb11-48" aria-hidden="true" tabindex="-1"></a>        ax.plot(s, bruto, color<span class="op">=</span>GRIS, lw<span class="op">=</span><span class="fl">1.5</span>, ls<span class="op">=</span><span class="st">"--"</span>)</span>
+<span id="cb11-49"><a href="#cb11-49" aria-hidden="true" tabindex="-1"></a>        ax.plot(s, neto, color<span class="op">=</span>color, lw<span class="op">=</span><span class="fl">2.4</span>)</span>
+<span id="cb11-50"><a href="#cb11-50" aria-hidden="true" tabindex="-1"></a>        ax.fill_between(s, neto, <span class="dv">0</span>, where<span class="op">=</span>neto <span class="op">&gt;</span> <span class="dv">0</span>, color<span class="op">=</span>SECUNDARIO, alpha<span class="op">=</span><span class="fl">0.12</span>, lw<span class="op">=</span><span class="dv">0</span>)</span>
+<span id="cb11-51"><a href="#cb11-51" aria-hidden="true" tabindex="-1"></a>        ax.fill_between(s, neto, <span class="dv">0</span>, where<span class="op">=</span>neto <span class="op">&lt;</span> <span class="dv">0</span>, color<span class="op">=</span>ACENTO, alpha<span class="op">=</span><span class="fl">0.12</span>, lw<span class="op">=</span><span class="dv">0</span>)</span>
+<span id="cb11-52"><a href="#cb11-52" aria-hidden="true" tabindex="-1"></a>        ax.axhline(<span class="dv">0</span>, color<span class="op">=</span>TEXTO, lw<span class="op">=</span><span class="fl">0.8</span>)</span>
+<span id="cb11-53"><a href="#cb11-53" aria-hidden="true" tabindex="-1"></a>        ax.axvline(K, color<span class="op">=</span>TEXTO, lw<span class="op">=</span><span class="fl">0.8</span>, ls<span class="op">=</span><span class="st">":"</span>)</span>
+<span id="cb11-54"><a href="#cb11-54" aria-hidden="true" tabindex="-1"></a>        signo <span class="op">=</span> <span class="st">"paga"</span> <span class="cf">if</span> prima <span class="op">&lt;</span> <span class="dv">0</span> <span class="cf">else</span> <span class="st">"cobra"</span></span>
+<span id="cb11-55"><a href="#cb11-55" aria-hidden="true" tabindex="-1"></a>        ax.set_title(<span class="ss">f"</span><span class="sc">{</span>titulo<span class="sc">}</span><span class="ss">  (</span><span class="sc">{</span>signo<span class="sc">}</span><span class="ss"> prima </span><span class="sc">{</span><span class="bu">abs</span>(prima)<span class="sc">:.2f}</span><span class="ss">)"</span>, fontsize<span class="op">=</span><span class="fl">10.5</span>,</span>
+<span id="cb11-56"><a href="#cb11-56" aria-hidden="true" tabindex="-1"></a>                     color<span class="op">=</span>PRIMARIO, fontweight<span class="op">=</span><span class="st">"bold"</span>)</span>
+<span id="cb11-57"><a href="#cb11-57" aria-hidden="true" tabindex="-1"></a>        ax.grid(alpha<span class="op">=</span><span class="fl">0.3</span>)</span>
+<span id="cb11-58"><a href="#cb11-58" aria-hidden="true" tabindex="-1"></a>        ax.spines[[<span class="st">"top"</span>, <span class="st">"right"</span>]].set_visible(<span class="va">False</span>)</span>
+<span id="cb11-59"><a href="#cb11-59" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> ax <span class="kw">in</span> axes[<span class="dv">1</span>]:</span>
+<span id="cb11-60"><a href="#cb11-60" aria-hidden="true" tabindex="-1"></a>        ax.set_xlabel(<span class="st">"Precio del subyacente al vencimiento, S_T"</span>)</span>
+<span id="cb11-61"><a href="#cb11-61" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> ax <span class="kw">in</span> axes[:, <span class="dv">0</span>]:</span>
+<span id="cb11-62"><a href="#cb11-62" aria-hidden="true" tabindex="-1"></a>        ax.set_ylabel(<span class="st">"Resultado ($)"</span>)</span>
+<span id="cb11-63"><a href="#cb11-63" aria-hidden="true" tabindex="-1"></a>    plt.tight_layout()</span>
+<span id="cb11-64"><a href="#cb11-64" aria-hidden="true" tabindex="-1"></a>    plt.show()</span>
+<span id="cb11-65"><a href="#cb11-65" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-66"><a href="#cb11-66" aria-hidden="true" tabindex="-1"></a>_esquema()</span>
+<span id="cb11-67"><a href="#cb11-67" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb11-68"><a href="#cb11-68" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-69"><a href="#cb11-69" aria-hidden="true" tabindex="-1"></a>La respuesta tiene una historia célebre. En 1973, Fischer Black, Myron Scholes y Robert Merton demostraron que —bajo ciertos supuestos— el precio de una opción **no depende de la expectativa de nadie** sobre si el activo va a subir o bajar. Depende de algo más sutil: de que la opción se puede *replicar* comprando y vendiendo dinámicamente el activo subyacente. Y si dos cosas tienen los mismos flujos, deben valer lo mismo (no-arbitraje). De esa lógica sale una fórmula cerrada, la más famosa de las finanzas.</span>
+<span id="cb11-70"><a href="#cb11-70" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-71"><a href="#cb11-71" aria-hidden="true" tabindex="-1"></a>En este capítulo la implementamos, y enseguida la damos vuelta: en el mercado real, la fórmula no se usa para calcular precios (los precios se *observan* en pantalla) sino para traducirlos a un lenguaje común: la **volatilidad implícita**.</span>
+<span id="cb11-72"><a href="#cb11-72" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-75"><a href="#cb11-75" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb11-76"><a href="#cb11-76" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: setup</span></span>
+<span id="cb11-77"><a href="#cb11-77" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb11-78"><a href="#cb11-78" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb11-79"><a href="#cb11-79" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> scipy.stats <span class="im">import</span> norm</span>
+<span id="cb11-80"><a href="#cb11-80" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb11-81"><a href="#cb11-81" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-82"><a href="#cb11-82" aria-hidden="true" tabindex="-1"></a>Antes de invertir la fórmula, desarrollemos intuición sobre cómo responde el precio a sus inputs:</span>
-<span id="cb11-83"><a href="#cb11-83" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-86"><a href="#cb11-86" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
-<span id="cb11-87"><a href="#cb11-87" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: sensibilidad-visual</span></span>
-<span id="cb11-88"><a href="#cb11-88" aria-hidden="true" tabindex="-1"></a>S_grid <span class="op">=</span> np.linspace(<span class="dv">60</span>, <span class="dv">140</span>, <span class="dv">100</span>)</span>
-<span id="cb11-89"><a href="#cb11-89" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-90"><a href="#cb11-90" aria-hidden="true" tabindex="-1"></a>fig, axes <span class="op">=</span> plt.subplots(<span class="dv">1</span>, <span class="dv">2</span>, figsize<span class="op">=</span>(<span class="dv">11</span>, <span class="dv">4</span>))</span>
-<span id="cb11-91"><a href="#cb11-91" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-92"><a href="#cb11-92" aria-hidden="true" tabindex="-1"></a><span class="co"># Panel 1: valor de la call vs precio del subyacente, a distintos plazos</span></span>
-<span id="cb11-93"><a href="#cb11-93" aria-hidden="true" tabindex="-1"></a>ax <span class="op">=</span> axes[<span class="dv">0</span>]</span>
-<span id="cb11-94"><a href="#cb11-94" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> T_i, estilo <span class="kw">in</span> [(<span class="fl">0.05</span>, <span class="st">":"</span>), (<span class="fl">0.25</span>, <span class="st">"--"</span>), (<span class="fl">1.0</span>, <span class="st">"-"</span>)]:</span>
-<span id="cb11-95"><a href="#cb11-95" aria-hidden="true" tabindex="-1"></a>    ax.plot(S_grid, bs_call(S_grid, K, T_i, r, sigma), estilo,</span>
-<span id="cb11-96"><a href="#cb11-96" aria-hidden="true" tabindex="-1"></a>            label<span class="op">=</span><span class="ss">f"T = </span><span class="sc">{</span>T_i<span class="sc">}</span><span class="ss"> años"</span>)</span>
-<span id="cb11-97"><a href="#cb11-97" aria-hidden="true" tabindex="-1"></a>ax.plot(S_grid, np.maximum(S_grid <span class="op">-</span> K, <span class="dv">0</span>), <span class="st">"k-"</span>, alpha<span class="op">=</span><span class="fl">0.3</span>, linewidth<span class="op">=</span><span class="dv">3</span>,</span>
-<span id="cb11-98"><a href="#cb11-98" aria-hidden="true" tabindex="-1"></a>        label<span class="op">=</span><span class="st">"Payoff al vencimiento"</span>)</span>
-<span id="cb11-99"><a href="#cb11-99" aria-hidden="true" tabindex="-1"></a>ax.set_xlabel(<span class="st">"Precio del subyacente S"</span>)</span>
-<span id="cb11-100"><a href="#cb11-100" aria-hidden="true" tabindex="-1"></a>ax.set_ylabel(<span class="st">"Valor de la call"</span>)</span>
-<span id="cb11-101"><a href="#cb11-101" aria-hidden="true" tabindex="-1"></a>ax.set_title(<span class="st">"El tiempo 'redondea' el payoff"</span>)</span>
-<span id="cb11-102"><a href="#cb11-102" aria-hidden="true" tabindex="-1"></a>ax.legend()</span>
-<span id="cb11-103"><a href="#cb11-103" aria-hidden="true" tabindex="-1"></a>ax.grid(<span class="va">True</span>, alpha<span class="op">=</span><span class="fl">0.3</span>)</span>
-<span id="cb11-104"><a href="#cb11-104" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-105"><a href="#cb11-105" aria-hidden="true" tabindex="-1"></a><span class="co"># Panel 2: valor vs volatilidad</span></span>
-<span id="cb11-106"><a href="#cb11-106" aria-hidden="true" tabindex="-1"></a>ax <span class="op">=</span> axes[<span class="dv">1</span>]</span>
-<span id="cb11-107"><a href="#cb11-107" aria-hidden="true" tabindex="-1"></a>vol_grid <span class="op">=</span> np.linspace(<span class="fl">0.05</span>, <span class="fl">0.60</span>, <span class="dv">100</span>)</span>
-<span id="cb11-108"><a href="#cb11-108" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> K_i <span class="kw">in</span> [<span class="dv">90</span>, <span class="dv">100</span>, <span class="dv">110</span>]:</span>
-<span id="cb11-109"><a href="#cb11-109" aria-hidden="true" tabindex="-1"></a>    ax.plot(vol_grid <span class="op">*</span> <span class="dv">100</span>, bs_call(S, K_i, T, r, vol_grid), label<span class="op">=</span><span class="ss">f"K = </span><span class="sc">{</span>K_i<span class="sc">}</span><span class="ss">"</span>)</span>
-<span id="cb11-110"><a href="#cb11-110" aria-hidden="true" tabindex="-1"></a>ax.set_xlabel(<span class="st">"Volatilidad σ (%)"</span>)</span>
-<span id="cb11-111"><a href="#cb11-111" aria-hidden="true" tabindex="-1"></a>ax.set_ylabel(<span class="st">"Valor de la call"</span>)</span>
-<span id="cb11-112"><a href="#cb11-112" aria-hidden="true" tabindex="-1"></a>ax.set_title(<span class="st">"Más volatilidad, más valor — siempre"</span>)</span>
-<span id="cb11-113"><a href="#cb11-113" aria-hidden="true" tabindex="-1"></a>ax.legend()</span>
-<span id="cb11-114"><a href="#cb11-114" aria-hidden="true" tabindex="-1"></a>ax.grid(<span class="va">True</span>, alpha<span class="op">=</span><span class="fl">0.3</span>)</span>
-<span id="cb11-115"><a href="#cb11-115" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-116"><a href="#cb11-116" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
-<span id="cb11-117"><a href="#cb11-117" aria-hidden="true" tabindex="-1"></a>plt.show()</span>
-<span id="cb11-118"><a href="#cb11-118" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb11-119"><a href="#cb11-119" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-120"><a href="#cb11-120" aria-hidden="true" tabindex="-1"></a>El panel derecho contiene la clave de todo el capítulo: **el precio de una opción crece monótonamente con la volatilidad**. Tiene sentido económico: la opción te protege de la baja (perdés como mucho la prima) y te deja toda la suba — más dispersión solo puede favorecerte. Esa monotonía significa que la relación precio ↔ volatilidad es **uno a uno**: dado un precio, existe una única $\sigma$ que lo genera. Podemos invertir la fórmula.</span>
+<span id="cb11-84"><a href="#cb11-84" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb11-85"><a href="#cb11-85" aria-hidden="true" tabindex="-1"></a><span class="co">#| include: false</span></span>
+<span id="cb11-86"><a href="#cb11-86" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> sys<span class="op">;</span> sys.path.insert(<span class="dv">0</span>, <span class="st">".."</span>)</span>
+<span id="cb11-87"><a href="#cb11-87" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> _esquemas <span class="im">import</span> aplicar_estilo</span>
+<span id="cb11-88"><a href="#cb11-88" aria-hidden="true" tabindex="-1"></a>aplicar_estilo()</span>
+<span id="cb11-89"><a href="#cb11-89" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb11-90"><a href="#cb11-90" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-91"><a href="#cb11-91" aria-hidden="true" tabindex="-1"></a>---</span>
+<span id="cb11-92"><a href="#cb11-92" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-93"><a href="#cb11-93" aria-hidden="true" tabindex="-1"></a><span class="fu">## La fórmula de Black-Scholes</span></span>
+<span id="cb11-94"><a href="#cb11-94" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-95"><a href="#cb11-95" aria-hidden="true" tabindex="-1"></a>Para una call europea sobre un activo que sigue un GBM (Capítulo 13) con volatilidad $\sigma$, con tasa libre de riesgo $r$:</span>
+<span id="cb11-96"><a href="#cb11-96" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-97"><a href="#cb11-97" aria-hidden="true" tabindex="-1"></a>$$C = S_0\, N(d_1) - K e^{-rT} N(d_2)$$</span>
+<span id="cb11-98"><a href="#cb11-98" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-99"><a href="#cb11-99" aria-hidden="true" tabindex="-1"></a>$$d_1 = \frac{\ln(S_0/K) + (r + \sigma^2/2)\,T}{\sigma\sqrt{T}}, \qquad d_2 = d_1 - \sigma\sqrt{T}$$</span>
+<span id="cb11-100"><a href="#cb11-100" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-101"><a href="#cb11-101" aria-hidden="true" tabindex="-1"></a>donde $N(\cdot)$ es la función de distribución normal estándar. La fórmula tiene una lectura económica directa que ayuda a memorizarla: es **lo que recibís menos lo que pagás, ponderado por probabilidades** (en el mundo neutral al riesgo): $N(d_2)$ es la probabilidad de ejercer, $K e^{-rT} N(d_2)$ el valor presente esperado de lo que pagás si ejercés, y $S_0 N(d_1)$ el valor esperado de lo que recibís.</span>
+<span id="cb11-102"><a href="#cb11-102" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-105"><a href="#cb11-105" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb11-106"><a href="#cb11-106" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: bsm</span></span>
+<span id="cb11-107"><a href="#cb11-107" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> bs_call(S, K, T, r, sigma):</span>
+<span id="cb11-108"><a href="#cb11-108" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""Precio Black-Scholes de una call europea."""</span></span>
+<span id="cb11-109"><a href="#cb11-109" aria-hidden="true" tabindex="-1"></a>    d1 <span class="op">=</span> (np.log(S <span class="op">/</span> K) <span class="op">+</span> (r <span class="op">+</span> <span class="fl">0.5</span> <span class="op">*</span> sigma<span class="op">**</span><span class="dv">2</span>) <span class="op">*</span> T) <span class="op">/</span> (sigma <span class="op">*</span> np.sqrt(T))</span>
+<span id="cb11-110"><a href="#cb11-110" aria-hidden="true" tabindex="-1"></a>    d2 <span class="op">=</span> d1 <span class="op">-</span> sigma <span class="op">*</span> np.sqrt(T)</span>
+<span id="cb11-111"><a href="#cb11-111" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> S <span class="op">*</span> norm.cdf(d1) <span class="op">-</span> K <span class="op">*</span> np.exp(<span class="op">-</span>r <span class="op">*</span> T) <span class="op">*</span> norm.cdf(d2)</span>
+<span id="cb11-112"><a href="#cb11-112" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-113"><a href="#cb11-113" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> bs_put(S, K, T, r, sigma):</span>
+<span id="cb11-114"><a href="#cb11-114" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""Precio Black-Scholes de una put europea."""</span></span>
+<span id="cb11-115"><a href="#cb11-115" aria-hidden="true" tabindex="-1"></a>    d1 <span class="op">=</span> (np.log(S <span class="op">/</span> K) <span class="op">+</span> (r <span class="op">+</span> <span class="fl">0.5</span> <span class="op">*</span> sigma<span class="op">**</span><span class="dv">2</span>) <span class="op">*</span> T) <span class="op">/</span> (sigma <span class="op">*</span> np.sqrt(T))</span>
+<span id="cb11-116"><a href="#cb11-116" aria-hidden="true" tabindex="-1"></a>    d2 <span class="op">=</span> d1 <span class="op">-</span> sigma <span class="op">*</span> np.sqrt(T)</span>
+<span id="cb11-117"><a href="#cb11-117" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> K <span class="op">*</span> np.exp(<span class="op">-</span>r <span class="op">*</span> T) <span class="op">*</span> norm.cdf(<span class="op">-</span>d2) <span class="op">-</span> S <span class="op">*</span> norm.cdf(<span class="op">-</span>d1)</span>
+<span id="cb11-118"><a href="#cb11-118" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-119"><a href="#cb11-119" aria-hidden="true" tabindex="-1"></a><span class="co"># Un contrato concreto: call al dinero, 6 meses, vol 25%</span></span>
+<span id="cb11-120"><a href="#cb11-120" aria-hidden="true" tabindex="-1"></a>S, K, T, r, sigma <span class="op">=</span> <span class="dv">100</span>, <span class="dv">100</span>, <span class="fl">0.5</span>, <span class="fl">0.05</span>, <span class="fl">0.25</span></span>
 <span id="cb11-121"><a href="#cb11-121" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-122"><a href="#cb11-122" aria-hidden="true" tabindex="-1"></a>---</span>
-<span id="cb11-123"><a href="#cb11-123" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-124"><a href="#cb11-124" aria-hidden="true" tabindex="-1"></a><span class="fu"># Volatilidad implícita: leer la fórmula al revés</span></span>
-<span id="cb11-125"><a href="#cb11-125" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-126"><a href="#cb11-126" aria-hidden="true" tabindex="-1"></a>En el mercado, el precio de la opción se **observa** — lo pone la oferta y la demanda. De los cinco inputs de Black-Scholes, cuatro son observables ($S$, $K$, $T$, $r$). El único invisible es $\sigma$. Entonces el uso real de la fórmula es el inverso: *¿qué volatilidad está "implicando" este precio de mercado?*</span>
-<span id="cb11-127"><a href="#cb11-127" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-128"><a href="#cb11-128" aria-hidden="true" tabindex="-1"></a>$$\sigma_{impl} : \quad C_{BS}(S, K, T, r, \sigma_{impl}) = C_{mercado}$$</span>
-<span id="cb11-129"><a href="#cb11-129" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-130"><a href="#cb11-130" aria-hidden="true" tabindex="-1"></a>No hay fórmula cerrada para despejar $\sigma$; hay que resolver numéricamente. El método clásico es **Newton-Raphson**: arrancar de un $\sigma$ tentativo y corregirlo usando la pendiente de la función,</span>
+<span id="cb11-122"><a href="#cb11-122" aria-hidden="true" tabindex="-1"></a>precio_call <span class="op">=</span> bs_call(S, K, T, r, sigma)</span>
+<span id="cb11-123"><a href="#cb11-123" aria-hidden="true" tabindex="-1"></a>precio_put <span class="op">=</span> bs_put(S, K, T, r, sigma)</span>
+<span id="cb11-124"><a href="#cb11-124" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-125"><a href="#cb11-125" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Call: $</span><span class="sc">{</span>precio_call<span class="sc">:.4f}</span><span class="ss">"</span>)</span>
+<span id="cb11-126"><a href="#cb11-126" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Put:  $</span><span class="sc">{</span>precio_put<span class="sc">:.4f}</span><span class="ss">"</span>)</span>
+<span id="cb11-127"><a href="#cb11-127" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"</span><span class="ch">\n</span><span class="ss">Verificación de paridad put-call:"</span>)</span>
+<span id="cb11-128"><a href="#cb11-128" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"  C - P           = </span><span class="sc">{</span>precio_call <span class="op">-</span> precio_put<span class="sc">:.4f}</span><span class="ss">"</span>)</span>
+<span id="cb11-129"><a href="#cb11-129" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"  S - K·e^(-rT)   = </span><span class="sc">{</span>S <span class="op">-</span> K <span class="op">*</span> np<span class="sc">.</span>exp(<span class="op">-</span>r <span class="op">*</span> T)<span class="sc">:.4f}</span><span class="ss">"</span>)</span>
+<span id="cb11-130"><a href="#cb11-130" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb11-131"><a href="#cb11-131" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-132"><a href="#cb11-132" aria-hidden="true" tabindex="-1"></a>$$\sigma_{n+1} = \sigma_n - \frac{C_{BS}(\sigma_n) - C_{mercado}}{\partial C / \partial \sigma}$$</span>
+<span id="cb11-132"><a href="#cb11-132" aria-hidden="true" tabindex="-1"></a>La **paridad put-call** ($C - P = S - Ke^{-rT}$) que verificamos al final no depende de Black-Scholes ni de ningún modelo: sale de puro no-arbitraje. Por eso es el primer chequeo de cordura de cualquier implementación — si tu código la viola, está mal.</span>
 <span id="cb11-133"><a href="#cb11-133" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-134"><a href="#cb11-134" aria-hidden="true" tabindex="-1"></a>donde la derivada del denominador tiene nombre propio —**vega**— y fórmula cerrada. Cada iteración pregunta: "¿me pasé o me quedé corto? ¿y cuán sensible es el precio acá?" y da un paso proporcional al error.</span>
-<span id="cb11-135"><a href="#cb11-135" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-138"><a href="#cb11-138" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
-<span id="cb11-139"><a href="#cb11-139" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: vol-implicita</span></span>
-<span id="cb11-140"><a href="#cb11-140" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> vega(S, K, T, r, sigma):</span>
-<span id="cb11-141"><a href="#cb11-141" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""Vega: derivada del precio respecto de la volatilidad."""</span></span>
-<span id="cb11-142"><a href="#cb11-142" aria-hidden="true" tabindex="-1"></a>    d1 <span class="op">=</span> (np.log(S <span class="op">/</span> K) <span class="op">+</span> (r <span class="op">+</span> <span class="fl">0.5</span> <span class="op">*</span> sigma<span class="op">**</span><span class="dv">2</span>) <span class="op">*</span> T) <span class="op">/</span> (sigma <span class="op">*</span> np.sqrt(T))</span>
-<span id="cb11-143"><a href="#cb11-143" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> S <span class="op">*</span> np.sqrt(T) <span class="op">*</span> norm.pdf(d1)</span>
-<span id="cb11-144"><a href="#cb11-144" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-145"><a href="#cb11-145" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> implied_vol(precio_mercado, S, K, T, r, sigma0<span class="op">=</span><span class="fl">0.3</span>, tol<span class="op">=</span><span class="fl">1e-8</span>, max_iter<span class="op">=</span><span class="dv">100</span>):</span>
-<span id="cb11-146"><a href="#cb11-146" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""Volatilidad implícita de una call por Newton-Raphson."""</span></span>
-<span id="cb11-147"><a href="#cb11-147" aria-hidden="true" tabindex="-1"></a>    sigma <span class="op">=</span> sigma0</span>
-<span id="cb11-148"><a href="#cb11-148" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> _ <span class="kw">in</span> <span class="bu">range</span>(max_iter):</span>
-<span id="cb11-149"><a href="#cb11-149" aria-hidden="true" tabindex="-1"></a>        diff <span class="op">=</span> bs_call(S, K, T, r, sigma) <span class="op">-</span> precio_mercado</span>
-<span id="cb11-150"><a href="#cb11-150" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> <span class="bu">abs</span>(diff) <span class="op">&lt;</span> tol:</span>
-<span id="cb11-151"><a href="#cb11-151" aria-hidden="true" tabindex="-1"></a>            <span class="cf">return</span> sigma</span>
-<span id="cb11-152"><a href="#cb11-152" aria-hidden="true" tabindex="-1"></a>        v <span class="op">=</span> vega(S, K, T, r, sigma)</span>
-<span id="cb11-153"><a href="#cb11-153" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> v <span class="op">&lt;</span> <span class="fl">1e-12</span>:                      <span class="co"># vega ~0: Newton se queda sin pendiente</span></span>
-<span id="cb11-154"><a href="#cb11-154" aria-hidden="true" tabindex="-1"></a>            <span class="cf">raise</span> <span class="pp">RuntimeError</span>(<span class="st">"Vega demasiado chica; usar bisección/brentq"</span>)</span>
-<span id="cb11-155"><a href="#cb11-155" aria-hidden="true" tabindex="-1"></a>        sigma <span class="op">-=</span> diff <span class="op">/</span> v</span>
-<span id="cb11-156"><a href="#cb11-156" aria-hidden="true" tabindex="-1"></a>    <span class="cf">raise</span> <span class="pp">RuntimeError</span>(<span class="st">"No convergió"</span>)</span>
-<span id="cb11-157"><a href="#cb11-157" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-158"><a href="#cb11-158" aria-hidden="true" tabindex="-1"></a><span class="co"># Test de ida y vuelta: precio generado con σ=30% → ¿recuperamos 30%?</span></span>
-<span id="cb11-159"><a href="#cb11-159" aria-hidden="true" tabindex="-1"></a>precio_test <span class="op">=</span> bs_call(<span class="dv">100</span>, <span class="dv">100</span>, <span class="fl">0.5</span>, <span class="fl">0.05</span>, <span class="fl">0.30</span>)</span>
-<span id="cb11-160"><a href="#cb11-160" aria-hidden="true" tabindex="-1"></a>vol_recuperada <span class="op">=</span> implied_vol(precio_test, <span class="dv">100</span>, <span class="dv">100</span>, <span class="fl">0.5</span>, <span class="fl">0.05</span>)</span>
-<span id="cb11-161"><a href="#cb11-161" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"σ original: 30.00%  →  σ recuperada: </span><span class="sc">{</span>vol_recuperada<span class="sc">:.4%}</span><span class="ss">"</span>)</span>
-<span id="cb11-162"><a href="#cb11-162" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb11-134"><a href="#cb11-134" aria-hidden="true" tabindex="-1"></a>::: {.callout-note title="Los supuestos que después importarán"}</span>
+<span id="cb11-135"><a href="#cb11-135" aria-hidden="true" tabindex="-1"></a>Black-Scholes supone: volatilidad $\sigma$ **constante y conocida**, trayectorias continuas (sin saltos — ya sabemos por el Capítulo 14 que es falso), tasa constante, sin costos de transacción y posibilidad de operar continuamente. Cada supuesto se viola en la realidad, y la genialidad práctica del mercado fue inventar una forma de *medir* esas violaciones: la sonrisa de volatilidad que veremos enseguida.</span>
+<span id="cb11-136"><a href="#cb11-136" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb11-137"><a href="#cb11-137" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-138"><a href="#cb11-138" aria-hidden="true" tabindex="-1"></a><span class="fu">### ¿Qué mueve el precio de una opción?</span></span>
+<span id="cb11-139"><a href="#cb11-139" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-140"><a href="#cb11-140" aria-hidden="true" tabindex="-1"></a>Antes de invertir la fórmula, desarrollemos intuición sobre cómo responde el precio a sus inputs:</span>
+<span id="cb11-141"><a href="#cb11-141" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-144"><a href="#cb11-144" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb11-145"><a href="#cb11-145" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: fig-sensibilidad-call</span></span>
+<span id="cb11-146"><a href="#cb11-146" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-cap: "Izquierda: valor de la call contra el precio del subyacente para tres plazos; cuanto más cerca del vencimiento, más se parece al payoff. Derecha: valor de la call contra la volatilidad para tres strikes; siempre creciente."</span></span>
+<span id="cb11-147"><a href="#cb11-147" aria-hidden="true" tabindex="-1"></a>S_grid <span class="op">=</span> np.linspace(<span class="dv">60</span>, <span class="dv">140</span>, <span class="dv">100</span>)</span>
+<span id="cb11-148"><a href="#cb11-148" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-149"><a href="#cb11-149" aria-hidden="true" tabindex="-1"></a>fig, axes <span class="op">=</span> plt.subplots(<span class="dv">1</span>, <span class="dv">2</span>, figsize<span class="op">=</span>(<span class="dv">11</span>, <span class="dv">4</span>))</span>
+<span id="cb11-150"><a href="#cb11-150" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-151"><a href="#cb11-151" aria-hidden="true" tabindex="-1"></a><span class="co"># Panel 1: valor de la call vs precio del subyacente, a distintos plazos</span></span>
+<span id="cb11-152"><a href="#cb11-152" aria-hidden="true" tabindex="-1"></a>ax <span class="op">=</span> axes[<span class="dv">0</span>]</span>
+<span id="cb11-153"><a href="#cb11-153" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> T_i, estilo <span class="kw">in</span> [(<span class="fl">0.05</span>, <span class="st">":"</span>), (<span class="fl">0.25</span>, <span class="st">"--"</span>), (<span class="fl">1.0</span>, <span class="st">"-"</span>)]:</span>
+<span id="cb11-154"><a href="#cb11-154" aria-hidden="true" tabindex="-1"></a>    ax.plot(S_grid, bs_call(S_grid, K, T_i, r, sigma), estilo,</span>
+<span id="cb11-155"><a href="#cb11-155" aria-hidden="true" tabindex="-1"></a>            label<span class="op">=</span><span class="ss">f"T = </span><span class="sc">{</span>T_i<span class="sc">}</span><span class="ss"> años"</span>)</span>
+<span id="cb11-156"><a href="#cb11-156" aria-hidden="true" tabindex="-1"></a>ax.plot(S_grid, np.maximum(S_grid <span class="op">-</span> K, <span class="dv">0</span>), <span class="st">"k-"</span>, alpha<span class="op">=</span><span class="fl">0.3</span>, linewidth<span class="op">=</span><span class="dv">3</span>,</span>
+<span id="cb11-157"><a href="#cb11-157" aria-hidden="true" tabindex="-1"></a>        label<span class="op">=</span><span class="st">"Payoff al vencimiento"</span>)</span>
+<span id="cb11-158"><a href="#cb11-158" aria-hidden="true" tabindex="-1"></a>ax.set_xlabel(<span class="st">"Precio del subyacente S"</span>)</span>
+<span id="cb11-159"><a href="#cb11-159" aria-hidden="true" tabindex="-1"></a>ax.set_ylabel(<span class="st">"Valor de la call"</span>)</span>
+<span id="cb11-160"><a href="#cb11-160" aria-hidden="true" tabindex="-1"></a>ax.set_title(<span class="st">"El tiempo 'redondea' el payoff"</span>)</span>
+<span id="cb11-161"><a href="#cb11-161" aria-hidden="true" tabindex="-1"></a>ax.legend()</span>
+<span id="cb11-162"><a href="#cb11-162" aria-hidden="true" tabindex="-1"></a>ax.grid(<span class="va">True</span>, alpha<span class="op">=</span><span class="fl">0.3</span>)</span>
 <span id="cb11-163"><a href="#cb11-163" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-164"><a href="#cb11-164" aria-hidden="true" tabindex="-1"></a>Newton converge en un puñado de iteraciones porque el precio es suave y monótono en $\sigma$. La volatilidad implícita es **el idioma en que se cotizan las opciones**: los operadores no dicen "la call vale \$8.26", dicen "está en 30 de vol" — un número comparable entre strikes, plazos y subyacentes.</span>
-<span id="cb11-165"><a href="#cb11-165" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-166"><a href="#cb11-166" aria-hidden="true" tabindex="-1"></a>---</span>
-<span id="cb11-167"><a href="#cb11-167" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-168"><a href="#cb11-168" aria-hidden="true" tabindex="-1"></a><span class="fu"># La sonrisa de volatilidad</span></span>
-<span id="cb11-169"><a href="#cb11-169" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-170"><a href="#cb11-170" aria-hidden="true" tabindex="-1"></a>Y acá viene el descubrimiento que cambió la industria. Si Black-Scholes fuera literalmente cierto, la volatilidad implícita sería **la misma para todos los strikes** — es un parámetro del activo, no del contrato. Grafiquemos qué se observa en el mercado real:</span>
-<span id="cb11-171"><a href="#cb11-171" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-174"><a href="#cb11-174" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
-<span id="cb11-175"><a href="#cb11-175" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: smile</span></span>
-<span id="cb11-176"><a href="#cb11-176" aria-hidden="true" tabindex="-1"></a>strikes <span class="op">=</span> np.arange(<span class="dv">80</span>, <span class="dv">121</span>, <span class="dv">2</span>)</span>
-<span id="cb11-177"><a href="#cb11-177" aria-hidden="true" tabindex="-1"></a>S, T, r <span class="op">=</span> <span class="dv">100</span>, <span class="fl">0.5</span>, <span class="fl">0.05</span></span>
+<span id="cb11-164"><a href="#cb11-164" aria-hidden="true" tabindex="-1"></a><span class="co"># Panel 2: valor vs volatilidad</span></span>
+<span id="cb11-165"><a href="#cb11-165" aria-hidden="true" tabindex="-1"></a>ax <span class="op">=</span> axes[<span class="dv">1</span>]</span>
+<span id="cb11-166"><a href="#cb11-166" aria-hidden="true" tabindex="-1"></a>vol_grid <span class="op">=</span> np.linspace(<span class="fl">0.05</span>, <span class="fl">0.60</span>, <span class="dv">100</span>)</span>
+<span id="cb11-167"><a href="#cb11-167" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> K_i <span class="kw">in</span> [<span class="dv">90</span>, <span class="dv">100</span>, <span class="dv">110</span>]:</span>
+<span id="cb11-168"><a href="#cb11-168" aria-hidden="true" tabindex="-1"></a>    ax.plot(vol_grid <span class="op">*</span> <span class="dv">100</span>, bs_call(S, K_i, T, r, vol_grid), label<span class="op">=</span><span class="ss">f"K = </span><span class="sc">{</span>K_i<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb11-169"><a href="#cb11-169" aria-hidden="true" tabindex="-1"></a>ax.set_xlabel(<span class="st">"Volatilidad σ (%)"</span>)</span>
+<span id="cb11-170"><a href="#cb11-170" aria-hidden="true" tabindex="-1"></a>ax.set_ylabel(<span class="st">"Valor de la call"</span>)</span>
+<span id="cb11-171"><a href="#cb11-171" aria-hidden="true" tabindex="-1"></a>ax.set_title(<span class="st">"Más volatilidad, más valor — siempre"</span>)</span>
+<span id="cb11-172"><a href="#cb11-172" aria-hidden="true" tabindex="-1"></a>ax.legend()</span>
+<span id="cb11-173"><a href="#cb11-173" aria-hidden="true" tabindex="-1"></a>ax.grid(<span class="va">True</span>, alpha<span class="op">=</span><span class="fl">0.3</span>)</span>
+<span id="cb11-174"><a href="#cb11-174" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-175"><a href="#cb11-175" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
+<span id="cb11-176"><a href="#cb11-176" aria-hidden="true" tabindex="-1"></a>plt.show()</span>
+<span id="cb11-177"><a href="#cb11-177" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb11-178"><a href="#cb11-178" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-179"><a href="#cb11-179" aria-hidden="true" tabindex="-1"></a><span class="co"># El mercado cotiza opciones fuera del dinero más "caras" (en vol):</span></span>
-<span id="cb11-180"><a href="#cb11-180" aria-hidden="true" tabindex="-1"></a><span class="co"># reproducimos precios de mercado con una vol que depende del strike</span></span>
-<span id="cb11-181"><a href="#cb11-181" aria-hidden="true" tabindex="-1"></a>vols_mercado <span class="op">=</span> <span class="fl">0.20</span> <span class="op">+</span> <span class="fl">0.001</span> <span class="op">*</span> (strikes <span class="op">-</span> <span class="dv">100</span>) <span class="op">**</span> <span class="dv">2</span> <span class="op">+</span> <span class="fl">0.0015</span> <span class="op">*</span> np.maximum(<span class="dv">100</span> <span class="op">-</span> strikes, <span class="dv">0</span>)</span>
-<span id="cb11-182"><a href="#cb11-182" aria-hidden="true" tabindex="-1"></a>precios_mkt <span class="op">=</span> [bs_call(S, K_i, T, r, v) <span class="cf">for</span> K_i, v <span class="kw">in</span> <span class="bu">zip</span>(strikes, vols_mercado)]</span>
-<span id="cb11-183"><a href="#cb11-183" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-184"><a href="#cb11-184" aria-hidden="true" tabindex="-1"></a><span class="co"># Recuperamos la vol implícita de cada precio (así se construye el gráfico real)</span></span>
-<span id="cb11-185"><a href="#cb11-185" aria-hidden="true" tabindex="-1"></a>vols_impl <span class="op">=</span> [implied_vol(p, S, K_i, T, r) <span class="cf">for</span> p, K_i <span class="kw">in</span> <span class="bu">zip</span>(precios_mkt, strikes)]</span>
+<span id="cb11-179"><a href="#cb11-179" aria-hidden="true" tabindex="-1"></a>El panel derecho de la @fig-sensibilidad-call contiene la clave de todo el capítulo: **el precio de una opción crece monótonamente con la volatilidad**. Tiene sentido económico: la opción te protege de la baja (perdés como mucho la prima) y te deja toda la suba — más dispersión solo puede favorecerte. Esa monotonía significa que la relación precio ↔ volatilidad es **uno a uno**: dado un precio, existe una única $\sigma$ que lo genera. Podemos invertir la fórmula.</span>
+<span id="cb11-180"><a href="#cb11-180" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-181"><a href="#cb11-181" aria-hidden="true" tabindex="-1"></a>---</span>
+<span id="cb11-182"><a href="#cb11-182" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-183"><a href="#cb11-183" aria-hidden="true" tabindex="-1"></a><span class="fu">## Volatilidad implícita: leer la fórmula al revés</span></span>
+<span id="cb11-184"><a href="#cb11-184" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-185"><a href="#cb11-185" aria-hidden="true" tabindex="-1"></a>En el mercado, el precio de la opción se **observa** — lo pone la oferta y la demanda. De los cinco inputs de Black-Scholes, cuatro son observables ($S$, $K$, $T$, $r$). El único invisible es $\sigma$. Entonces el uso real de la fórmula es el inverso: *¿qué volatilidad está "implicando" este precio de mercado?*</span>
 <span id="cb11-186"><a href="#cb11-186" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-187"><a href="#cb11-187" aria-hidden="true" tabindex="-1"></a>fig, ax <span class="op">=</span> plt.subplots(figsize<span class="op">=</span>(<span class="dv">9</span>, <span class="dv">5</span>))</span>
-<span id="cb11-188"><a href="#cb11-188" aria-hidden="true" tabindex="-1"></a>ax.plot(strikes, np.array(vols_impl) <span class="op">*</span> <span class="dv">100</span>, <span class="st">"o-"</span>, color<span class="op">=</span><span class="st">"steelblue"</span>,</span>
-<span id="cb11-189"><a href="#cb11-189" aria-hidden="true" tabindex="-1"></a>        label<span class="op">=</span><span class="st">"Vol implícita observada"</span>)</span>
-<span id="cb11-190"><a href="#cb11-190" aria-hidden="true" tabindex="-1"></a>ax.axhline(<span class="dv">20</span>, color<span class="op">=</span><span class="st">"red"</span>, linestyle<span class="op">=</span><span class="st">"--"</span>, alpha<span class="op">=</span><span class="fl">0.6</span>,</span>
-<span id="cb11-191"><a href="#cb11-191" aria-hidden="true" tabindex="-1"></a>           label<span class="op">=</span><span class="st">"Lo que Black-Scholes predice (σ constante)"</span>)</span>
-<span id="cb11-192"><a href="#cb11-192" aria-hidden="true" tabindex="-1"></a>ax.axvline(<span class="dv">100</span>, color<span class="op">=</span><span class="st">"gray"</span>, linestyle<span class="op">=</span><span class="st">":"</span>, alpha<span class="op">=</span><span class="fl">0.5</span>)</span>
-<span id="cb11-193"><a href="#cb11-193" aria-hidden="true" tabindex="-1"></a>ax.annotate(<span class="st">"puts protectivas</span><span class="ch">\n</span><span class="st">(caras)"</span>, xy<span class="op">=</span>(<span class="dv">84</span>, <span class="fl">24.5</span>), fontsize<span class="op">=</span><span class="dv">9</span>, ha<span class="op">=</span><span class="st">"center"</span>)</span>
-<span id="cb11-194"><a href="#cb11-194" aria-hidden="true" tabindex="-1"></a>ax.set_xlabel(<span class="st">"Strike K"</span>)</span>
-<span id="cb11-195"><a href="#cb11-195" aria-hidden="true" tabindex="-1"></a>ax.set_ylabel(<span class="st">"Volatilidad implícita (%)"</span>)</span>
-<span id="cb11-196"><a href="#cb11-196" aria-hidden="true" tabindex="-1"></a>ax.set_title(<span class="st">"La sonrisa (smirk) de volatilidad"</span>)</span>
-<span id="cb11-197"><a href="#cb11-197" aria-hidden="true" tabindex="-1"></a>ax.legend()</span>
-<span id="cb11-198"><a href="#cb11-198" aria-hidden="true" tabindex="-1"></a>ax.grid(<span class="va">True</span>, alpha<span class="op">=</span><span class="fl">0.3</span>)</span>
-<span id="cb11-199"><a href="#cb11-199" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
-<span id="cb11-200"><a href="#cb11-200" aria-hidden="true" tabindex="-1"></a>plt.show()</span>
-<span id="cb11-201"><a href="#cb11-201" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb11-202"><a href="#cb11-202" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-203"><a href="#cb11-203" aria-hidden="true" tabindex="-1"></a>La curva no es plana: las opciones **fuera del dinero se cotizan a volatilidades más altas**, con la rama izquierda (puts de strikes bajos) típicamente más empinada — por su forma, *sonrisa* o *mueca* (smirk). ¿Qué está diciendo el mercado?</span>
-<span id="cb11-204"><a href="#cb11-204" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-205"><a href="#cb11-205" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Las colas existen**: los compradores pagan más (en vol) por las opciones que pagan en escenarios extremos, porque saben —desde el crash de 1987, cuando nació la sonrisa— que esos escenarios son más probables de lo que la normal admite. Es la curtosis del Capítulo 14 cotizada en pantalla.</span>
-<span id="cb11-206"><a href="#cb11-206" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**La asimetría también**: la rama izquierda más cara refleja que los derrumbes son más violentos que los rallies, y que hay demanda estructural de protección (puts como seguro).</span>
-<span id="cb11-207"><a href="#cb11-207" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-208"><a href="#cb11-208" aria-hidden="true" tabindex="-1"></a>::: {.callout-important title="La sonrisa es el puente del libro"}</span>
-<span id="cb11-209"><a href="#cb11-209" aria-hidden="true" tabindex="-1"></a>Todo converge acá: los retornos tienen colas pesadas y asimetría (Cap. 7), los modelos con saltos las generan (Cap. 14), y la sonrisa es el mercado **poniéndoles precio**. Black-Scholes no está "mal" — es la vara con la que el mercado mide sus propias desviaciones de la normalidad. Los modelos que *reproducen* la sonrisa (Heston, SABR) son el tema del Capítulo 20.</span>
-<span id="cb11-210"><a href="#cb11-210" aria-hidden="true" tabindex="-1"></a>:::</span>
-<span id="cb11-211"><a href="#cb11-211" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-212"><a href="#cb11-212" aria-hidden="true" tabindex="-1"></a>---</span>
-<span id="cb11-213"><a href="#cb11-213" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-214"><a href="#cb11-214" aria-hidden="true" tabindex="-1"></a><span class="fu"># Las griegas: el tablero de control</span></span>
-<span id="cb11-215"><a href="#cb11-215" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-216"><a href="#cb11-216" aria-hidden="true" tabindex="-1"></a>Quien tiene una posición en opciones necesita saber cómo cambia su valor cuando se mueve el mundo. Las **griegas** son esas derivadas parciales:</span>
-<span id="cb11-217"><a href="#cb11-217" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-218"><a href="#cb11-218" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Griega <span class="pp">|</span> Derivada <span class="pp">|</span> Pregunta que responde <span class="pp">|</span></span>
-<span id="cb11-219"><a href="#cb11-219" aria-hidden="true" tabindex="-1"></a><span class="pp">|:---:|:---:|---|</span></span>
-<span id="cb11-220"><a href="#cb11-220" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> **Delta** ($\Delta$) <span class="pp">|</span> $\partial C/\partial S$ <span class="pp">|</span> ¿Cuánto gano si el subyacente sube \$1? <span class="pp">|</span></span>
-<span id="cb11-221"><a href="#cb11-221" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> **Gamma** ($\Gamma$) <span class="pp">|</span> $\partial^2 C/\partial S^2$ <span class="pp">|</span> ¿Cuán rápido cambia mi delta? (curvatura) <span class="pp">|</span></span>
-<span id="cb11-222"><a href="#cb11-222" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> **Vega** <span class="pp">|</span> $\partial C/\partial \sigma$ <span class="pp">|</span> ¿Cuánto gano si la vol sube 1 punto? <span class="pp">|</span></span>
-<span id="cb11-223"><a href="#cb11-223" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> **Theta** ($\Theta$) <span class="pp">|</span> $\partial C/\partial t$ <span class="pp">|</span> ¿Cuánto pierdo por el paso de un día? <span class="pp">|</span></span>
-<span id="cb11-224"><a href="#cb11-224" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-225"><a href="#cb11-225" aria-hidden="true" tabindex="-1"></a>Para Black-Scholes existen fórmulas cerradas (delta de una call = $N(d_1)$), pero conviene dominar el método general de **diferencias finitas** —perturbar el input, repreciar, dividir— porque funciona con *cualquier* modelo de pricing, tenga fórmula o sea un Monte Carlo:</span>
-<span id="cb11-226"><a href="#cb11-226" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-227"><a href="#cb11-227" aria-hidden="true" tabindex="-1"></a>$$\Delta \approx \frac{C(S + h) - C(S - h)}{2h}$$</span>
-<span id="cb11-228"><a href="#cb11-228" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-231"><a href="#cb11-231" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
-<span id="cb11-232"><a href="#cb11-232" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: griegas</span></span>
-<span id="cb11-233"><a href="#cb11-233" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> griegas_call(S, K, T, r, sigma, dS<span class="op">=</span><span class="fl">0.01</span>, dsig<span class="op">=</span><span class="fl">0.0001</span>, dT<span class="op">=</span><span class="dv">1</span><span class="op">/</span><span class="dv">365</span>):</span>
-<span id="cb11-234"><a href="#cb11-234" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""Griegas de una call por diferencias finitas centradas."""</span></span>
-<span id="cb11-235"><a href="#cb11-235" aria-hidden="true" tabindex="-1"></a>    delta <span class="op">=</span> (bs_call(S <span class="op">+</span> dS, K, T, r, sigma) <span class="op">-</span> bs_call(S <span class="op">-</span> dS, K, T, r, sigma)) <span class="op">/</span> (<span class="dv">2</span> <span class="op">*</span> dS)</span>
-<span id="cb11-236"><a href="#cb11-236" aria-hidden="true" tabindex="-1"></a>    gamma <span class="op">=</span> (bs_call(S <span class="op">+</span> dS, K, T, r, sigma) <span class="op">-</span> <span class="dv">2</span> <span class="op">*</span> bs_call(S, K, T, r, sigma)</span>
-<span id="cb11-237"><a href="#cb11-237" aria-hidden="true" tabindex="-1"></a>             <span class="op">+</span> bs_call(S <span class="op">-</span> dS, K, T, r, sigma)) <span class="op">/</span> dS<span class="op">**</span><span class="dv">2</span></span>
-<span id="cb11-238"><a href="#cb11-238" aria-hidden="true" tabindex="-1"></a>    vega_ <span class="op">=</span> (bs_call(S, K, T, r, sigma <span class="op">+</span> dsig) <span class="op">-</span> bs_call(S, K, T, r, sigma <span class="op">-</span> dsig)) <span class="op">/</span> (<span class="dv">2</span> <span class="op">*</span> dsig)</span>
-<span id="cb11-239"><a href="#cb11-239" aria-hidden="true" tabindex="-1"></a>    theta <span class="op">=</span> (bs_call(S, K, T <span class="op">-</span> dT, r, sigma) <span class="op">-</span> bs_call(S, K, T, r, sigma)) <span class="op">/</span> dT</span>
-<span id="cb11-240"><a href="#cb11-240" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> {<span class="st">"Delta"</span>: delta, <span class="st">"Gamma"</span>: gamma, <span class="st">"Vega"</span>: vega_, <span class="st">"Theta (anual)"</span>: theta}</span>
-<span id="cb11-241"><a href="#cb11-241" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-242"><a href="#cb11-242" aria-hidden="true" tabindex="-1"></a>g <span class="op">=</span> griegas_call(<span class="dv">100</span>, <span class="dv">100</span>, <span class="fl">0.5</span>, <span class="fl">0.05</span>, <span class="fl">0.25</span>)</span>
-<span id="cb11-243"><a href="#cb11-243" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> nombre, valor <span class="kw">in</span> g.items():</span>
-<span id="cb11-244"><a href="#cb11-244" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"  </span><span class="sc">{</span>nombre<span class="sc">:&gt;14}</span><span class="ss">: </span><span class="sc">{</span>valor<span class="sc">:&gt;+10.4f}</span><span class="ss">"</span>)</span>
-<span id="cb11-245"><a href="#cb11-245" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-246"><a href="#cb11-246" aria-hidden="true" tabindex="-1"></a><span class="co"># Verificación contra la fórmula cerrada del delta</span></span>
-<span id="cb11-247"><a href="#cb11-247" aria-hidden="true" tabindex="-1"></a>d1 <span class="op">=</span> (np.log(<span class="dv">100</span><span class="op">/</span><span class="dv">100</span>) <span class="op">+</span> (<span class="fl">0.05</span> <span class="op">+</span> <span class="fl">0.5</span> <span class="op">*</span> <span class="fl">0.25</span><span class="op">**</span><span class="dv">2</span>) <span class="op">*</span> <span class="fl">0.5</span>) <span class="op">/</span> (<span class="fl">0.25</span> <span class="op">*</span> np.sqrt(<span class="fl">0.5</span>))</span>
-<span id="cb11-248"><a href="#cb11-248" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"</span><span class="ch">\n</span><span class="ss">  Delta analítico N(d1) = </span><span class="sc">{</span>norm<span class="sc">.</span>cdf(d1)<span class="sc">:+.4f}</span><span class="ss">  (coincide ✓)"</span>)</span>
+<span id="cb11-187"><a href="#cb11-187" aria-hidden="true" tabindex="-1"></a>$$\sigma_{impl} : \quad C_{BS}(S, K, T, r, \sigma_{impl}) = C_{mercado}$$</span>
+<span id="cb11-188"><a href="#cb11-188" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-189"><a href="#cb11-189" aria-hidden="true" tabindex="-1"></a>La @fig-bs-ida-vuelta muestra los dos usos de la misma fórmula: de ida, para valuar; de vuelta, para traducir precios observados a volatilidad.</span>
+<span id="cb11-190"><a href="#cb11-190" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-193"><a href="#cb11-193" aria-hidden="true" tabindex="-1"></a><span class="in">```{mermaid}</span></span>
+<span id="cb11-194"><a href="#cb11-194" aria-hidden="true" tabindex="-1"></a>%%| label: fig-bs-ida-vuelta</span>
+<span id="cb11-195"><a href="#cb11-195" aria-hidden="true" tabindex="-1"></a>%%| fig-cap: <span class="ot">"</span><span class="st">La misma fórmula en dos direcciones. De ida, la volatilidad es un input y el precio es el resultado. De vuelta, el precio lo pone el mercado y lo que se despeja es la volatilidad implícita; como no hay fórmula cerrada, se resuelve con Newton-Raphson.</span><span class="ot">"</span></span>
+<span id="cb11-196"><a href="#cb11-196" aria-hidden="true" tabindex="-1"></a>flowchart LR</span>
+<span id="cb11-197"><a href="#cb11-197" aria-hidden="true" tabindex="-1"></a>    subgraph IDA[<span class="ot">"</span><span class="st">Ida: valuar</span><span class="ot">"</span>]</span>
+<span id="cb11-198"><a href="#cb11-198" aria-hidden="true" tabindex="-1"></a>        direction LR</span>
+<span id="cb11-199"><a href="#cb11-199" aria-hidden="true" tabindex="-1"></a>        A1[<span class="ot">"</span><span class="st">S, K, T, r</span><span class="ot">"</span>] --&gt; B1[[<span class="ot">"</span><span class="st">Black-Scholes</span><span class="ot">"</span>]]</span>
+<span id="cb11-200"><a href="#cb11-200" aria-hidden="true" tabindex="-1"></a>        V1[<span class="ot">"</span><span class="st">σ&lt;br/&gt;&lt;i&gt;supuesta&lt;/i&gt;</span><span class="ot">"</span>] --&gt; B1</span>
+<span id="cb11-201"><a href="#cb11-201" aria-hidden="true" tabindex="-1"></a>        B1 --&gt; P1([<span class="ot">"</span><span class="st">precio teórico</span><span class="ot">"</span>])</span>
+<span id="cb11-202"><a href="#cb11-202" aria-hidden="true" tabindex="-1"></a>    end</span>
+<span id="cb11-203"><a href="#cb11-203" aria-hidden="true" tabindex="-1"></a>    subgraph VUELTA[<span class="ot">"</span><span class="st">Vuelta: leer el mercado</span><span class="ot">"</span>]</span>
+<span id="cb11-204"><a href="#cb11-204" aria-hidden="true" tabindex="-1"></a>        direction LR</span>
+<span id="cb11-205"><a href="#cb11-205" aria-hidden="true" tabindex="-1"></a>        A2[<span class="ot">"</span><span class="st">S, K, T, r</span><span class="ot">"</span>] --&gt; N2[[<span class="ot">"</span><span class="st">Newton-Raphson&lt;br/&gt;&lt;i&gt;invierte Black-Scholes&lt;/i&gt;</span><span class="ot">"</span>]]</span>
+<span id="cb11-206"><a href="#cb11-206" aria-hidden="true" tabindex="-1"></a>        P2[<span class="ot">"</span><span class="st">precio&lt;br/&gt;&lt;i&gt;observado&lt;/i&gt;</span><span class="ot">"</span>] --&gt; N2</span>
+<span id="cb11-207"><a href="#cb11-207" aria-hidden="true" tabindex="-1"></a>        N2 --&gt; V2([<span class="ot">"</span><span class="st">σ implícita</span><span class="ot">"</span>])</span>
+<span id="cb11-208"><a href="#cb11-208" aria-hidden="true" tabindex="-1"></a>    end</span>
+<span id="cb11-209"><a href="#cb11-209" aria-hidden="true" tabindex="-1"></a>    classDef dato fill:<span class="co">#e0e9f4,stroke:#1e3a5f,color:#1f2937</span></span>
+<span id="cb11-210"><a href="#cb11-210" aria-hidden="true" tabindex="-1"></a>    classDef clave fill:<span class="co">#fde8dc,stroke:#c2410c,color:#1f2937</span></span>
+<span id="cb11-211"><a href="#cb11-211" aria-hidden="true" tabindex="-1"></a>    classDef fin fill:<span class="co">#eef2e3,stroke:#637238,color:#1f2937</span></span>
+<span id="cb11-212"><a href="#cb11-212" aria-hidden="true" tabindex="-1"></a>    class A1,A2 dato</span>
+<span id="cb11-213"><a href="#cb11-213" aria-hidden="true" tabindex="-1"></a>    class V1,P2 clave</span>
+<span id="cb11-214"><a href="#cb11-214" aria-hidden="true" tabindex="-1"></a>    class P1,V2 fin</span>
+<span id="cb11-215"><a href="#cb11-215" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb11-216"><a href="#cb11-216" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-217"><a href="#cb11-217" aria-hidden="true" tabindex="-1"></a>No hay fórmula cerrada para despejar $\sigma$; hay que resolver numéricamente. El método clásico es **Newton-Raphson**: arrancar de un $\sigma$ tentativo y corregirlo usando la pendiente de la función,</span>
+<span id="cb11-218"><a href="#cb11-218" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-219"><a href="#cb11-219" aria-hidden="true" tabindex="-1"></a>$$\sigma_{n+1} = \sigma_n - \frac{C_{BS}(\sigma_n) - C_{mercado}}{\partial C / \partial \sigma}$$</span>
+<span id="cb11-220"><a href="#cb11-220" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-221"><a href="#cb11-221" aria-hidden="true" tabindex="-1"></a>donde la derivada del denominador tiene nombre propio —**vega**— y fórmula cerrada. Cada iteración pregunta: "¿me pasé o me quedé corto? ¿y cuán sensible es el precio acá?" y da un paso proporcional al error.</span>
+<span id="cb11-222"><a href="#cb11-222" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-225"><a href="#cb11-225" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb11-226"><a href="#cb11-226" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: vol-implicita</span></span>
+<span id="cb11-227"><a href="#cb11-227" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> vega(S, K, T, r, sigma):</span>
+<span id="cb11-228"><a href="#cb11-228" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""Vega: derivada del precio respecto de la volatilidad."""</span></span>
+<span id="cb11-229"><a href="#cb11-229" aria-hidden="true" tabindex="-1"></a>    d1 <span class="op">=</span> (np.log(S <span class="op">/</span> K) <span class="op">+</span> (r <span class="op">+</span> <span class="fl">0.5</span> <span class="op">*</span> sigma<span class="op">**</span><span class="dv">2</span>) <span class="op">*</span> T) <span class="op">/</span> (sigma <span class="op">*</span> np.sqrt(T))</span>
+<span id="cb11-230"><a href="#cb11-230" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> S <span class="op">*</span> np.sqrt(T) <span class="op">*</span> norm.pdf(d1)</span>
+<span id="cb11-231"><a href="#cb11-231" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-232"><a href="#cb11-232" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> implied_vol(precio_mercado, S, K, T, r, sigma0<span class="op">=</span><span class="fl">0.3</span>, tol<span class="op">=</span><span class="fl">1e-8</span>, max_iter<span class="op">=</span><span class="dv">100</span>):</span>
+<span id="cb11-233"><a href="#cb11-233" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""Volatilidad implícita de una call por Newton-Raphson."""</span></span>
+<span id="cb11-234"><a href="#cb11-234" aria-hidden="true" tabindex="-1"></a>    sigma <span class="op">=</span> sigma0</span>
+<span id="cb11-235"><a href="#cb11-235" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> _ <span class="kw">in</span> <span class="bu">range</span>(max_iter):</span>
+<span id="cb11-236"><a href="#cb11-236" aria-hidden="true" tabindex="-1"></a>        diff <span class="op">=</span> bs_call(S, K, T, r, sigma) <span class="op">-</span> precio_mercado</span>
+<span id="cb11-237"><a href="#cb11-237" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> <span class="bu">abs</span>(diff) <span class="op">&lt;</span> tol:</span>
+<span id="cb11-238"><a href="#cb11-238" aria-hidden="true" tabindex="-1"></a>            <span class="cf">return</span> sigma</span>
+<span id="cb11-239"><a href="#cb11-239" aria-hidden="true" tabindex="-1"></a>        v <span class="op">=</span> vega(S, K, T, r, sigma)</span>
+<span id="cb11-240"><a href="#cb11-240" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> v <span class="op">&lt;</span> <span class="fl">1e-12</span>:                      <span class="co"># vega ~0: Newton se queda sin pendiente</span></span>
+<span id="cb11-241"><a href="#cb11-241" aria-hidden="true" tabindex="-1"></a>            <span class="cf">raise</span> <span class="pp">RuntimeError</span>(<span class="st">"Vega demasiado chica; usar bisección/brentq"</span>)</span>
+<span id="cb11-242"><a href="#cb11-242" aria-hidden="true" tabindex="-1"></a>        sigma <span class="op">-=</span> diff <span class="op">/</span> v</span>
+<span id="cb11-243"><a href="#cb11-243" aria-hidden="true" tabindex="-1"></a>    <span class="cf">raise</span> <span class="pp">RuntimeError</span>(<span class="st">"No convergió"</span>)</span>
+<span id="cb11-244"><a href="#cb11-244" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-245"><a href="#cb11-245" aria-hidden="true" tabindex="-1"></a><span class="co"># Test de ida y vuelta: precio generado con σ=30% → ¿recuperamos 30%?</span></span>
+<span id="cb11-246"><a href="#cb11-246" aria-hidden="true" tabindex="-1"></a>precio_test <span class="op">=</span> bs_call(<span class="dv">100</span>, <span class="dv">100</span>, <span class="fl">0.5</span>, <span class="fl">0.05</span>, <span class="fl">0.30</span>)</span>
+<span id="cb11-247"><a href="#cb11-247" aria-hidden="true" tabindex="-1"></a>vol_recuperada <span class="op">=</span> implied_vol(precio_test, <span class="dv">100</span>, <span class="dv">100</span>, <span class="fl">0.5</span>, <span class="fl">0.05</span>)</span>
+<span id="cb11-248"><a href="#cb11-248" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"σ original: 30.00%  →  σ recuperada: </span><span class="sc">{</span>vol_recuperada<span class="sc">:.4%}</span><span class="ss">"</span>)</span>
 <span id="cb11-249"><a href="#cb11-249" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb11-250"><a href="#cb11-250" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-251"><a href="#cb11-251" aria-hidden="true" tabindex="-1"></a>Interpretá los números: delta ≈ 0.57 (la call al dinero se mueve ~57 centavos por cada dólar del subyacente), gamma positivo (ese delta *crece* si el activo sube — la convexidad que hace valiosas a las opciones), vega positivo (la opción es una posición comprada en volatilidad) y theta negativo (cada día que pasa, el derecho vale menos: el tiempo es el alquiler que paga el comprador).</span>
+<span id="cb11-251"><a href="#cb11-251" aria-hidden="true" tabindex="-1"></a>La @fig-newton-iteraciones muestra por qué Newton converge tan rápido. Cada paso reemplaza la curva por su recta tangente (cuya pendiente es el vega) y salta al punto donde esa recta alcanza el precio de mercado.</span>
 <span id="cb11-252"><a href="#cb11-252" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb11-255"><a href="#cb11-255" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
-<span id="cb11-256"><a href="#cb11-256" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: griegas-perfil</span></span>
-<span id="cb11-257"><a href="#cb11-257" aria-hidden="true" tabindex="-1"></a>S_grid <span class="op">=</span> np.linspace(<span class="dv">60</span>, <span class="dv">140</span>, <span class="dv">120</span>)</span>
-<span id="cb11-258"><a href="#cb11-258" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-259"><a href="#cb11-259" aria-hidden="true" tabindex="-1"></a>fig, axes <span class="op">=</span> plt.subplots(<span class="dv">1</span>, <span class="dv">2</span>, figsize<span class="op">=</span>(<span class="dv">11</span>, <span class="dv">4</span>))</span>
-<span id="cb11-260"><a href="#cb11-260" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-261"><a href="#cb11-261" aria-hidden="true" tabindex="-1"></a>ax <span class="op">=</span> axes[<span class="dv">0</span>]</span>
-<span id="cb11-262"><a href="#cb11-262" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> T_i, estilo <span class="kw">in</span> [(<span class="fl">0.05</span>, <span class="st">":"</span>), (<span class="fl">0.5</span>, <span class="st">"-"</span>)]:</span>
-<span id="cb11-263"><a href="#cb11-263" aria-hidden="true" tabindex="-1"></a>    deltas <span class="op">=</span> [griegas_call(s, <span class="dv">100</span>, T_i, <span class="fl">0.05</span>, <span class="fl">0.25</span>)[<span class="st">"Delta"</span>] <span class="cf">for</span> s <span class="kw">in</span> S_grid]</span>
-<span id="cb11-264"><a href="#cb11-264" aria-hidden="true" tabindex="-1"></a>    ax.plot(S_grid, deltas, estilo, label<span class="op">=</span><span class="ss">f"T = </span><span class="sc">{</span>T_i<span class="sc">}</span><span class="ss">"</span>)</span>
-<span id="cb11-265"><a href="#cb11-265" aria-hidden="true" tabindex="-1"></a>ax.set_xlabel(<span class="st">"S"</span>)</span>
-<span id="cb11-266"><a href="#cb11-266" aria-hidden="true" tabindex="-1"></a>ax.set_ylabel(<span class="st">"Delta"</span>)</span>
-<span id="cb11-267"><a href="#cb11-267" aria-hidden="true" tabindex="-1"></a>ax.set_title(<span class="st">"Delta: de 0 a 1, brusco cerca del vencimiento"</span>)</span>
-<span id="cb11-268"><a href="#cb11-268" aria-hidden="true" tabindex="-1"></a>ax.legend()</span>
-<span id="cb11-269"><a href="#cb11-269" aria-hidden="true" tabindex="-1"></a>ax.grid(<span class="va">True</span>, alpha<span class="op">=</span><span class="fl">0.3</span>)</span>
-<span id="cb11-270"><a href="#cb11-270" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-271"><a href="#cb11-271" aria-hidden="true" tabindex="-1"></a>ax <span class="op">=</span> axes[<span class="dv">1</span>]</span>
-<span id="cb11-272"><a href="#cb11-272" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> T_i, estilo <span class="kw">in</span> [(<span class="fl">0.05</span>, <span class="st">":"</span>), (<span class="fl">0.5</span>, <span class="st">"-"</span>)]:</span>
-<span id="cb11-273"><a href="#cb11-273" aria-hidden="true" tabindex="-1"></a>    gammas <span class="op">=</span> [griegas_call(s, <span class="dv">100</span>, T_i, <span class="fl">0.05</span>, <span class="fl">0.25</span>)[<span class="st">"Gamma"</span>] <span class="cf">for</span> s <span class="kw">in</span> S_grid]</span>
-<span id="cb11-274"><a href="#cb11-274" aria-hidden="true" tabindex="-1"></a>    ax.plot(S_grid, gammas, estilo, label<span class="op">=</span><span class="ss">f"T = </span><span class="sc">{</span>T_i<span class="sc">}</span><span class="ss">"</span>)</span>
-<span id="cb11-275"><a href="#cb11-275" aria-hidden="true" tabindex="-1"></a>ax.set_xlabel(<span class="st">"S"</span>)</span>
-<span id="cb11-276"><a href="#cb11-276" aria-hidden="true" tabindex="-1"></a>ax.set_ylabel(<span class="st">"Gamma"</span>)</span>
-<span id="cb11-277"><a href="#cb11-277" aria-hidden="true" tabindex="-1"></a>ax.set_title(<span class="st">"Gamma: se concentra en el strike"</span>)</span>
-<span id="cb11-278"><a href="#cb11-278" aria-hidden="true" tabindex="-1"></a>ax.legend()</span>
-<span id="cb11-279"><a href="#cb11-279" aria-hidden="true" tabindex="-1"></a>ax.grid(<span class="va">True</span>, alpha<span class="op">=</span><span class="fl">0.3</span>)</span>
-<span id="cb11-280"><a href="#cb11-280" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-281"><a href="#cb11-281" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
-<span id="cb11-282"><a href="#cb11-282" aria-hidden="true" tabindex="-1"></a>plt.show()</span>
-<span id="cb11-283"><a href="#cb11-283" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb11-284"><a href="#cb11-284" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-285"><a href="#cb11-285" aria-hidden="true" tabindex="-1"></a>El gamma concentrado alrededor del strike, y cada vez más puntiagudo al acercarse el vencimiento, es el protagonista del próximo capítulo: es lo que hace que cubrir una opción **cerca del vencimiento y cerca del strike** sea un deporte de riesgo.</span>
-<span id="cb11-286"><a href="#cb11-286" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-287"><a href="#cb11-287" aria-hidden="true" tabindex="-1"></a>---</span>
-<span id="cb11-288"><a href="#cb11-288" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-289"><a href="#cb11-289" aria-hidden="true" tabindex="-1"></a><span class="fu"># Errores comunes</span></span>
-<span id="cb11-290"><a href="#cb11-290" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-291"><a href="#cb11-291" aria-hidden="true" tabindex="-1"></a>::: {.callout-warning title="Trampas frecuentes"}</span>
-<span id="cb11-292"><a href="#cb11-292" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Unidades del theta**: la derivada es "por año"; dividí por 365 para el decaimiento diario que se reporta en las pantallas.</span>
-<span id="cb11-293"><a href="#cb11-293" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Newton sin red**: lejos del dinero, el vega es casi cero y Newton-Raphson diverge. Para uso robusto, combiná con bisección (<span class="in">`scipy.optimize.brentq`</span>) que garantiza convergencia.</span>
-<span id="cb11-294"><a href="#cb11-294" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Volatilidad en las unidades equivocadas**: $\sigma$ = 0.25, no 25. Un factor 100 en la vol produce precios absurdos silenciosamente.</span>
-<span id="cb11-295"><a href="#cb11-295" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Aplicar Black-Scholes a opciones americanas**: la fórmula es para ejercicio *europeo* (solo al vencimiento). Para americanas con dividendos, el ejercicio temprano vale y se necesitan árboles o métodos numéricos.</span>
-<span id="cb11-296"><a href="#cb11-296" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Paso de diferencias finitas mal elegido**: $h$ demasiado grande sesga; demasiado chico amplifica el error de redondeo. Los valores del código (dS=0.01) son un buen punto medio para este problema.</span>
-<span id="cb11-297"><a href="#cb11-297" aria-hidden="true" tabindex="-1"></a>:::</span>
-<span id="cb11-298"><a href="#cb11-298" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-299"><a href="#cb11-299" aria-hidden="true" tabindex="-1"></a>---</span>
-<span id="cb11-300"><a href="#cb11-300" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-301"><a href="#cb11-301" aria-hidden="true" tabindex="-1"></a><span class="fu"># Ejercicios Propuestos</span></span>
-<span id="cb11-302"><a href="#cb11-302" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-303"><a href="#cb11-303" aria-hidden="true" tabindex="-1"></a>::: {.callout-important title="Ejercicios"}</span>
-<span id="cb11-304"><a href="#cb11-304" aria-hidden="true" tabindex="-1"></a><span class="ss">1. </span>**Griegas analíticas**: implementá el delta ($N(d_1)$), el gamma y el vega con sus fórmulas cerradas y verificá contra diferencias finitas con 6 decimales.</span>
-<span id="cb11-305"><a href="#cb11-305" aria-hidden="true" tabindex="-1"></a><span class="ss">2. </span>**Newton vs. brentq**: compará <span class="in">`implied_vol`</span> con <span class="in">`scipy.optimize.brentq`</span> en precisión y número de iteraciones, para strikes de 80 a 120. ¿Dónde falla Newton?</span>
-<span id="cb11-306"><a href="#cb11-306" aria-hidden="true" tabindex="-1"></a><span class="ss">3. </span>**Vol implícita de puts**: adaptá <span class="in">`implied_vol`</span> para puts y verificá que, por paridad, la vol implícita de una call y una put del mismo strike coinciden.</span>
-<span id="cb11-307"><a href="#cb11-307" aria-hidden="true" tabindex="-1"></a><span class="ss">4. </span>**Superficie de volatilidad**: extendé la sonrisa a varios vencimientos (1, 3, 6, 12 meses) y graficá la superficie 3D con <span class="in">`plot_surface`</span>.</span>
-<span id="cb11-308"><a href="#cb11-308" aria-hidden="true" tabindex="-1"></a><span class="ss">5. </span>**P&amp;L de un día**: para la call del capítulo, calculá la ganancia/pérdida aproximada si mañana $S$ sube 2% y la vol cae 1 punto, usando $\Delta \cdot dS + \frac{1}{2}\Gamma \cdot dS^2 + \text{Vega} \cdot d\sigma + \Theta \cdot dt$. Verificá repreciando con la fórmula exacta.</span>
-<span id="cb11-309"><a href="#cb11-309" aria-hidden="true" tabindex="-1"></a>:::</span>
-<span id="cb11-310"><a href="#cb11-310" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-256"><a href="#cb11-256" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: fig-newton-iteraciones</span></span>
+<span id="cb11-257"><a href="#cb11-257" aria-hidden="true" tabindex="-1"></a><span class="co">#| echo: false</span></span>
+<span id="cb11-258"><a href="#cb11-258" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-cap: "Newton-Raphson buscando la volatilidad implícita de una call fuera del dinero (K = 125, 6 meses) cotizada a 30% de vol, arrancando lejos, en σ₀ = 60%. Cada tangente (pendiente = vega) cae sobre el precio de mercado en el siguiente intento; al tercer paso el error ya es invisible a esta escala."</span></span>
+<span id="cb11-259"><a href="#cb11-259" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> sys<span class="op">;</span> sys.path.insert(<span class="dv">0</span>, <span class="st">".."</span>)</span>
+<span id="cb11-260"><a href="#cb11-260" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> _esquemas <span class="im">import</span> <span class="op">*</span></span>
+<span id="cb11-261"><a href="#cb11-261" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb11-262"><a href="#cb11-262" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-263"><a href="#cb11-263" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> _esquema():</span>
+<span id="cb11-264"><a href="#cb11-264" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Usa bs_call y vega del capítulo</span></span>
+<span id="cb11-265"><a href="#cb11-265" aria-hidden="true" tabindex="-1"></a>    S, K, T, r <span class="op">=</span> <span class="dv">100</span>, <span class="dv">125</span>, <span class="fl">0.5</span>, <span class="fl">0.05</span></span>
+<span id="cb11-266"><a href="#cb11-266" aria-hidden="true" tabindex="-1"></a>    objetivo <span class="op">=</span> bs_call(S, K, T, r, <span class="fl">0.30</span>)</span>
+<span id="cb11-267"><a href="#cb11-267" aria-hidden="true" tabindex="-1"></a>    sig <span class="op">=</span> np.linspace(<span class="fl">0.05</span>, <span class="fl">0.65</span>, <span class="dv">300</span>)</span>
+<span id="cb11-268"><a href="#cb11-268" aria-hidden="true" tabindex="-1"></a>    fig, ax <span class="op">=</span> plt.subplots(figsize<span class="op">=</span>(<span class="fl">9.5</span>, <span class="fl">4.6</span>))</span>
+<span id="cb11-269"><a href="#cb11-269" aria-hidden="true" tabindex="-1"></a>    ax.plot(sig <span class="op">*</span> <span class="dv">100</span>, bs_call(S, K, T, r, sig), color<span class="op">=</span>PRIMARIO, lw<span class="op">=</span><span class="fl">2.2</span>, label<span class="op">=</span><span class="st">"C(σ)"</span>)</span>
+<span id="cb11-270"><a href="#cb11-270" aria-hidden="true" tabindex="-1"></a>    ax.axhline(objetivo, color<span class="op">=</span>ACENTO, lw<span class="op">=</span><span class="fl">1.3</span>, ls<span class="op">=</span><span class="st">"--"</span>,</span>
+<span id="cb11-271"><a href="#cb11-271" aria-hidden="true" tabindex="-1"></a>               label<span class="op">=</span><span class="ss">f"precio de mercado = </span><span class="sc">{</span>objetivo<span class="sc">:.2f}</span><span class="ss">"</span>)</span>
+<span id="cb11-272"><a href="#cb11-272" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-273"><a href="#cb11-273" aria-hidden="true" tabindex="-1"></a>    s_n <span class="op">=</span> <span class="fl">0.60</span></span>
+<span id="cb11-274"><a href="#cb11-274" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> n <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">3</span>):</span>
+<span id="cb11-275"><a href="#cb11-275" aria-hidden="true" tabindex="-1"></a>        c_n, v_n <span class="op">=</span> bs_call(S, K, T, r, s_n), vega(S, K, T, r, s_n)</span>
+<span id="cb11-276"><a href="#cb11-276" aria-hidden="true" tabindex="-1"></a>        s_sig <span class="op">=</span> s_n <span class="op">-</span> (c_n <span class="op">-</span> objetivo) <span class="op">/</span> v_n</span>
+<span id="cb11-277"><a href="#cb11-277" aria-hidden="true" tabindex="-1"></a>        ax.plot([s_n <span class="op">*</span> <span class="dv">100</span>, s_sig <span class="op">*</span> <span class="dv">100</span>], [c_n, objetivo], color<span class="op">=</span>SECUNDARIO, lw<span class="op">=</span><span class="fl">1.4</span>)</span>
+<span id="cb11-278"><a href="#cb11-278" aria-hidden="true" tabindex="-1"></a>        ax.plot([s_sig <span class="op">*</span> <span class="dv">100</span>] <span class="op">*</span> <span class="dv">2</span>, [objetivo, bs_call(S, K, T, r, s_sig)], color<span class="op">=</span>GRIS,</span>
+<span id="cb11-279"><a href="#cb11-279" aria-hidden="true" tabindex="-1"></a>                lw<span class="op">=</span><span class="dv">1</span>, ls<span class="op">=</span><span class="st">":"</span>)</span>
+<span id="cb11-280"><a href="#cb11-280" aria-hidden="true" tabindex="-1"></a>        ax.scatter([s_n <span class="op">*</span> <span class="dv">100</span>], [c_n], color<span class="op">=</span>SECUNDARIO, zorder<span class="op">=</span><span class="dv">5</span>)</span>
+<span id="cb11-281"><a href="#cb11-281" aria-hidden="true" tabindex="-1"></a>        ax.annotate(<span class="ss">f"σ</span><span class="sc">{</span><span class="st">'₀₁₂'</span>[n]<span class="sc">}</span><span class="ss"> = </span><span class="sc">{</span>s_n<span class="sc">:.1%}</span><span class="ss">"</span>, (s_n <span class="op">*</span> <span class="dv">100</span>, c_n),</span>
+<span id="cb11-282"><a href="#cb11-282" aria-hidden="true" tabindex="-1"></a>                    xytext<span class="op">=</span>[(<span class="dv">8</span>, <span class="op">-</span><span class="dv">16</span>), (<span class="dv">10</span>, <span class="op">-</span><span class="dv">4</span>), (<span class="op">-</span><span class="dv">80</span>, <span class="dv">8</span>)][n],</span>
+<span id="cb11-283"><a href="#cb11-283" aria-hidden="true" tabindex="-1"></a>                    textcoords<span class="op">=</span><span class="st">"offset points"</span>, fontsize<span class="op">=</span><span class="dv">9</span>, color<span class="op">=</span>SECUNDARIO)</span>
+<span id="cb11-284"><a href="#cb11-284" aria-hidden="true" tabindex="-1"></a>        s_n <span class="op">=</span> s_sig</span>
+<span id="cb11-285"><a href="#cb11-285" aria-hidden="true" tabindex="-1"></a>    ax.set_xlabel(<span class="st">"Volatilidad σ (%)"</span>)</span>
+<span id="cb11-286"><a href="#cb11-286" aria-hidden="true" tabindex="-1"></a>    ax.set_ylabel(<span class="st">"Precio de la call ($)"</span>)</span>
+<span id="cb11-287"><a href="#cb11-287" aria-hidden="true" tabindex="-1"></a>    ax.legend(frameon<span class="op">=</span><span class="va">False</span>, fontsize<span class="op">=</span><span class="dv">9</span>, loc<span class="op">=</span><span class="st">"upper left"</span>)</span>
+<span id="cb11-288"><a href="#cb11-288" aria-hidden="true" tabindex="-1"></a>    ax.grid(alpha<span class="op">=</span><span class="fl">0.3</span>)</span>
+<span id="cb11-289"><a href="#cb11-289" aria-hidden="true" tabindex="-1"></a>    ax.spines[[<span class="st">"top"</span>, <span class="st">"right"</span>]].set_visible(<span class="va">False</span>)</span>
+<span id="cb11-290"><a href="#cb11-290" aria-hidden="true" tabindex="-1"></a>    plt.tight_layout()</span>
+<span id="cb11-291"><a href="#cb11-291" aria-hidden="true" tabindex="-1"></a>    plt.show()</span>
+<span id="cb11-292"><a href="#cb11-292" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-293"><a href="#cb11-293" aria-hidden="true" tabindex="-1"></a>_esquema()</span>
+<span id="cb11-294"><a href="#cb11-294" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb11-295"><a href="#cb11-295" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-296"><a href="#cb11-296" aria-hidden="true" tabindex="-1"></a>Newton converge en un puñado de iteraciones porque el precio es suave y monótono en $\sigma$. La volatilidad implícita es **el idioma en que se cotizan las opciones**: los operadores no dicen "la call vale \$8.26", dicen "está en 30 de vol" — un número comparable entre strikes, plazos y subyacentes.</span>
+<span id="cb11-297"><a href="#cb11-297" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-298"><a href="#cb11-298" aria-hidden="true" tabindex="-1"></a>---</span>
+<span id="cb11-299"><a href="#cb11-299" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-300"><a href="#cb11-300" aria-hidden="true" tabindex="-1"></a><span class="fu">## La sonrisa de volatilidad</span></span>
+<span id="cb11-301"><a href="#cb11-301" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-302"><a href="#cb11-302" aria-hidden="true" tabindex="-1"></a>Y acá viene el descubrimiento que cambió la industria. Si Black-Scholes fuera literalmente cierto, la volatilidad implícita sería **la misma para todos los strikes** — es un parámetro del activo, no del contrato. Grafiquemos qué se observa en el mercado real:</span>
+<span id="cb11-303"><a href="#cb11-303" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-306"><a href="#cb11-306" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb11-307"><a href="#cb11-307" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: fig-smile</span></span>
+<span id="cb11-308"><a href="#cb11-308" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-cap: "Volatilidad implícita por strike, recuperada de precios de mercado. Si Black-Scholes fuera literalmente cierto, todos los puntos caerían sobre la línea horizontal."</span></span>
+<span id="cb11-309"><a href="#cb11-309" aria-hidden="true" tabindex="-1"></a>strikes <span class="op">=</span> np.arange(<span class="dv">80</span>, <span class="dv">121</span>, <span class="dv">2</span>)</span>
+<span id="cb11-310"><a href="#cb11-310" aria-hidden="true" tabindex="-1"></a>S, T, r <span class="op">=</span> <span class="dv">100</span>, <span class="fl">0.5</span>, <span class="fl">0.05</span></span>
 <span id="cb11-311"><a href="#cb11-311" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-312"><a href="#cb11-312" aria-hidden="true" tabindex="-1"></a>Podés resolver estos ejercicios acá mismo: la celda ejecuta Python **en tu navegador**, sin instalar nada (la primera ejecución tarda unos segundos mientras carga el entorno; los paquetes que importes se instalan solos).</span>
-<span id="cb11-313"><a href="#cb11-313" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-314"><a href="#cb11-314" aria-hidden="true" tabindex="-1"></a><span class="in">```{pyodide-python}</span></span>
-<span id="cb11-315"><a href="#cb11-315" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: practica-navegador</span></span>
-<span id="cb11-316"><a href="#cb11-316" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
-<span id="cb11-317"><a href="#cb11-317" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> scipy.stats <span class="im">import</span> norm</span>
-<span id="cb11-318"><a href="#cb11-318" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-319"><a href="#cb11-319" aria-hidden="true" tabindex="-1"></a><span class="co"># Tu solución acá...</span></span>
-<span id="cb11-320"><a href="#cb11-320" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb11-321"><a href="#cb11-321" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-322"><a href="#cb11-322" aria-hidden="true" tabindex="-1"></a>---</span>
-<span id="cb11-323"><a href="#cb11-323" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-324"><a href="#cb11-324" aria-hidden="true" tabindex="-1"></a><span class="fu"># Referencias</span></span>
-<span id="cb11-325"><a href="#cb11-325" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-326"><a href="#cb11-326" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-327"><a href="#cb11-327" aria-hidden="true" tabindex="-1"></a>::: {#refs}</span>
-<span id="cb11-328"><a href="#cb11-328" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb11-312"><a href="#cb11-312" aria-hidden="true" tabindex="-1"></a><span class="co"># El mercado cotiza opciones fuera del dinero más "caras" (en vol):</span></span>
+<span id="cb11-313"><a href="#cb11-313" aria-hidden="true" tabindex="-1"></a><span class="co"># reproducimos precios de mercado con una vol que depende del strike</span></span>
+<span id="cb11-314"><a href="#cb11-314" aria-hidden="true" tabindex="-1"></a>vols_mercado <span class="op">=</span> <span class="fl">0.20</span> <span class="op">+</span> <span class="fl">0.001</span> <span class="op">*</span> (strikes <span class="op">-</span> <span class="dv">100</span>) <span class="op">**</span> <span class="dv">2</span> <span class="op">+</span> <span class="fl">0.0015</span> <span class="op">*</span> np.maximum(<span class="dv">100</span> <span class="op">-</span> strikes, <span class="dv">0</span>)</span>
+<span id="cb11-315"><a href="#cb11-315" aria-hidden="true" tabindex="-1"></a>precios_mkt <span class="op">=</span> [bs_call(S, K_i, T, r, v) <span class="cf">for</span> K_i, v <span class="kw">in</span> <span class="bu">zip</span>(strikes, vols_mercado)]</span>
+<span id="cb11-316"><a href="#cb11-316" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-317"><a href="#cb11-317" aria-hidden="true" tabindex="-1"></a><span class="co"># Recuperamos la vol implícita de cada precio (así se construye el gráfico real)</span></span>
+<span id="cb11-318"><a href="#cb11-318" aria-hidden="true" tabindex="-1"></a>vols_impl <span class="op">=</span> [implied_vol(p, S, K_i, T, r) <span class="cf">for</span> p, K_i <span class="kw">in</span> <span class="bu">zip</span>(precios_mkt, strikes)]</span>
+<span id="cb11-319"><a href="#cb11-319" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-320"><a href="#cb11-320" aria-hidden="true" tabindex="-1"></a>fig, ax <span class="op">=</span> plt.subplots(figsize<span class="op">=</span>(<span class="dv">9</span>, <span class="dv">5</span>))</span>
+<span id="cb11-321"><a href="#cb11-321" aria-hidden="true" tabindex="-1"></a>ax.plot(strikes, np.array(vols_impl) <span class="op">*</span> <span class="dv">100</span>, <span class="st">"o-"</span>, color<span class="op">=</span><span class="st">"#1e3a5f"</span>,</span>
+<span id="cb11-322"><a href="#cb11-322" aria-hidden="true" tabindex="-1"></a>        label<span class="op">=</span><span class="st">"Vol implícita observada"</span>)</span>
+<span id="cb11-323"><a href="#cb11-323" aria-hidden="true" tabindex="-1"></a>ax.axhline(<span class="dv">20</span>, color<span class="op">=</span><span class="st">"#c2410c"</span>, linestyle<span class="op">=</span><span class="st">"--"</span>, alpha<span class="op">=</span><span class="fl">0.6</span>,</span>
+<span id="cb11-324"><a href="#cb11-324" aria-hidden="true" tabindex="-1"></a>           label<span class="op">=</span><span class="st">"Lo que Black-Scholes predice (σ constante)"</span>)</span>
+<span id="cb11-325"><a href="#cb11-325" aria-hidden="true" tabindex="-1"></a>ax.axvline(<span class="dv">100</span>, color<span class="op">=</span><span class="st">"#94a3b8"</span>, linestyle<span class="op">=</span><span class="st">":"</span>, alpha<span class="op">=</span><span class="fl">0.5</span>)</span>
+<span id="cb11-326"><a href="#cb11-326" aria-hidden="true" tabindex="-1"></a>ax.annotate(<span class="st">"puts protectivas</span><span class="ch">\n</span><span class="st">(caras)"</span>, xy<span class="op">=</span>(<span class="dv">84</span>, <span class="fl">24.5</span>), fontsize<span class="op">=</span><span class="dv">9</span>, ha<span class="op">=</span><span class="st">"center"</span>)</span>
+<span id="cb11-327"><a href="#cb11-327" aria-hidden="true" tabindex="-1"></a>ax.set_xlabel(<span class="st">"Strike K"</span>)</span>
+<span id="cb11-328"><a href="#cb11-328" aria-hidden="true" tabindex="-1"></a>ax.set_ylabel(<span class="st">"Volatilidad implícita (%)"</span>)</span>
+<span id="cb11-329"><a href="#cb11-329" aria-hidden="true" tabindex="-1"></a>ax.set_title(<span class="st">"La sonrisa (smirk) de volatilidad"</span>)</span>
+<span id="cb11-330"><a href="#cb11-330" aria-hidden="true" tabindex="-1"></a>ax.legend()</span>
+<span id="cb11-331"><a href="#cb11-331" aria-hidden="true" tabindex="-1"></a>ax.grid(<span class="va">True</span>, alpha<span class="op">=</span><span class="fl">0.3</span>)</span>
+<span id="cb11-332"><a href="#cb11-332" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
+<span id="cb11-333"><a href="#cb11-333" aria-hidden="true" tabindex="-1"></a>plt.show()</span>
+<span id="cb11-334"><a href="#cb11-334" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb11-335"><a href="#cb11-335" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-336"><a href="#cb11-336" aria-hidden="true" tabindex="-1"></a>La curva de la @fig-smile no es plana: las opciones **fuera del dinero se cotizan a volatilidades más altas**, con la rama izquierda (puts de strikes bajos) típicamente más empinada — por su forma, *sonrisa* o *mueca* (smirk). ¿Qué está diciendo el mercado?</span>
+<span id="cb11-337"><a href="#cb11-337" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-338"><a href="#cb11-338" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Las colas existen**: los compradores pagan más (en vol) por las opciones que pagan en escenarios extremos, porque saben —desde el crash de 1987, cuando nació la sonrisa— que esos escenarios son más probables de lo que la normal admite. Es la curtosis del Capítulo 14 cotizada en pantalla.</span>
+<span id="cb11-339"><a href="#cb11-339" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**La asimetría también**: la rama izquierda más cara refleja que los derrumbes son más violentos que los rallies, y que hay demanda estructural de protección (puts como seguro).</span>
+<span id="cb11-340"><a href="#cb11-340" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-341"><a href="#cb11-341" aria-hidden="true" tabindex="-1"></a>La @fig-colas-sonrisa muestra la cadena completa con una put fuera del dinero. Si el mercado cree en una distribución con la cola izquierda más pesada que la lognormal de Black-Scholes, esa put vale más; y la única forma de que Black-Scholes reproduzca ese precio más alto es con una volatilidad más alta.</span>
+<span id="cb11-342"><a href="#cb11-342" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-345"><a href="#cb11-345" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb11-346"><a href="#cb11-346" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: fig-colas-sonrisa</span></span>
+<span id="cb11-347"><a href="#cb11-347" aria-hidden="true" tabindex="-1"></a><span class="co">#| echo: false</span></span>
+<span id="cb11-348"><a href="#cb11-348" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-cap: "Por qué existe la sonrisa. Dos distribuciones del precio a 6 meses con la misma media y la misma volatilidad (20%): la lognormal de Black-Scholes y otra con la cola izquierda pesada. La put de strike 80 solo paga en la zona sombreada; con la cola pesada vale bastante más, y para reproducir ese precio Black-Scholes necesita una volatilidad implícita más alta."</span></span>
+<span id="cb11-349"><a href="#cb11-349" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> sys<span class="op">;</span> sys.path.insert(<span class="dv">0</span>, <span class="st">".."</span>)</span>
+<span id="cb11-350"><a href="#cb11-350" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> _esquemas <span class="im">import</span> <span class="op">*</span></span>
+<span id="cb11-351"><a href="#cb11-351" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb11-352"><a href="#cb11-352" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> scipy <span class="im">import</span> stats</span>
+<span id="cb11-353"><a href="#cb11-353" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-354"><a href="#cb11-354" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> _esquema():</span>
+<span id="cb11-355"><a href="#cb11-355" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Usa bs_put del capítulo</span></span>
+<span id="cb11-356"><a href="#cb11-356" aria-hidden="true" tabindex="-1"></a>    S0, T, r, sig, K_put <span class="op">=</span> <span class="dv">100</span>, <span class="fl">0.5</span>, <span class="fl">0.05</span>, <span class="fl">0.20</span>, <span class="dv">80</span></span>
+<span id="cb11-357"><a href="#cb11-357" aria-hidden="true" tabindex="-1"></a>    s_log <span class="op">=</span> sig <span class="op">*</span> np.sqrt(T)</span>
+<span id="cb11-358"><a href="#cb11-358" aria-hidden="true" tabindex="-1"></a>    m <span class="op">=</span> (r <span class="op">-</span> <span class="fl">0.5</span> <span class="op">*</span> sig<span class="op">**</span><span class="dv">2</span>) <span class="op">*</span> T</span>
+<span id="cb11-359"><a href="#cb11-359" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Log-retorno estandarizado con cola izquierda pesada: mezcla de una t (ν=3) y una</span></span>
+<span id="cb11-360"><a href="#cb11-360" aria-hidden="true" tabindex="-1"></a>    <span class="co"># normal asimétrica, cada una con media 0 y varianza 1 -&gt; la mezcla también</span></span>
+<span id="cb11-361"><a href="#cb11-361" aria-hidden="true" tabindex="-1"></a>    t3 <span class="op">=</span> stats.t(<span class="dv">3</span>, scale<span class="op">=</span><span class="dv">1</span> <span class="op">/</span> np.sqrt(<span class="dv">3</span>))</span>
+<span id="cb11-362"><a href="#cb11-362" aria-hidden="true" tabindex="-1"></a>    sesgo <span class="op">=</span> stats.skewnorm(<span class="op">-</span><span class="dv">8</span>)</span>
+<span id="cb11-363"><a href="#cb11-363" aria-hidden="true" tabindex="-1"></a>    mu_s, sd_s <span class="op">=</span> sesgo.mean(), sesgo.std()</span>
+<span id="cb11-364"><a href="#cb11-364" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-365"><a href="#cb11-365" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> g(z):</span>
+<span id="cb11-366"><a href="#cb11-366" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="fl">0.3</span> <span class="op">*</span> t3.pdf(z) <span class="op">+</span> <span class="fl">0.7</span> <span class="op">*</span> sesgo.pdf(z <span class="op">*</span> sd_s <span class="op">+</span> mu_s) <span class="op">*</span> sd_s</span>
+<span id="cb11-367"><a href="#cb11-367" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-368"><a href="#cb11-368" aria-hidden="true" tabindex="-1"></a>    x <span class="op">=</span> np.linspace(<span class="dv">40</span>, <span class="dv">160</span>, <span class="dv">1500</span>)</span>
+<span id="cb11-369"><a href="#cb11-369" aria-hidden="true" tabindex="-1"></a>    lx <span class="op">=</span> np.log(x <span class="op">/</span> S0)</span>
+<span id="cb11-370"><a href="#cb11-370" aria-hidden="true" tabindex="-1"></a>    dens_ln <span class="op">=</span> stats.norm.pdf(lx, m, s_log) <span class="op">/</span> x</span>
+<span id="cb11-371"><a href="#cb11-371" aria-hidden="true" tabindex="-1"></a>    dens_ct <span class="op">=</span> g((lx <span class="op">-</span> m) <span class="op">/</span> s_log) <span class="op">/</span> (s_log <span class="op">*</span> x)</span>
+<span id="cb11-372"><a href="#cb11-372" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-373"><a href="#cb11-373" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> put_esperada(d):</span>
+<span id="cb11-374"><a href="#cb11-374" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> np.exp(<span class="op">-</span>r <span class="op">*</span> T) <span class="op">*</span> np.trapezoid(np.maximum(K_put <span class="op">-</span> x, <span class="dv">0</span>) <span class="op">*</span> d, x)</span>
+<span id="cb11-375"><a href="#cb11-375" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-376"><a href="#cb11-376" aria-hidden="true" tabindex="-1"></a>    p_ln, p_ct <span class="op">=</span> put_esperada(dens_ln), put_esperada(dens_ct)</span>
+<span id="cb11-377"><a href="#cb11-377" aria-hidden="true" tabindex="-1"></a>    <span class="co"># vol implícita de la put con cola pesada (bisección sobre bs_put)</span></span>
+<span id="cb11-378"><a href="#cb11-378" aria-hidden="true" tabindex="-1"></a>    lo, hi <span class="op">=</span> <span class="fl">0.01</span>, <span class="fl">1.0</span></span>
+<span id="cb11-379"><a href="#cb11-379" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> _ <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">60</span>):</span>
+<span id="cb11-380"><a href="#cb11-380" aria-hidden="true" tabindex="-1"></a>        mid <span class="op">=</span> <span class="fl">0.5</span> <span class="op">*</span> (lo <span class="op">+</span> hi)</span>
+<span id="cb11-381"><a href="#cb11-381" aria-hidden="true" tabindex="-1"></a>        lo, hi <span class="op">=</span> (mid, hi) <span class="cf">if</span> bs_put(S0, K_put, T, r, mid) <span class="op">&lt;</span> p_ct <span class="cf">else</span> (lo, mid)</span>
+<span id="cb11-382"><a href="#cb11-382" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-383"><a href="#cb11-383" aria-hidden="true" tabindex="-1"></a>    fig, ax <span class="op">=</span> plt.subplots(figsize<span class="op">=</span>(<span class="fl">9.5</span>, <span class="fl">4.4</span>))</span>
+<span id="cb11-384"><a href="#cb11-384" aria-hidden="true" tabindex="-1"></a>    sombrear_cola(ax, x, dens_ln, K_put, color<span class="op">=</span>PRIMARIO, alpha<span class="op">=</span><span class="fl">0.25</span>,</span>
+<span id="cb11-385"><a href="#cb11-385" aria-hidden="true" tabindex="-1"></a>                  etiqueta<span class="op">=</span><span class="ss">f"Lognormal (Black-Scholes): put </span><span class="sc">{</span>K_put<span class="sc">}</span><span class="ss"> vale </span><span class="sc">{</span>p_ln<span class="sc">:.2f}</span><span class="ss">"</span>)</span>
+<span id="cb11-386"><a href="#cb11-386" aria-hidden="true" tabindex="-1"></a>    sombrear_cola(ax, x, dens_ct, K_put, color<span class="op">=</span>ACENTO, alpha<span class="op">=</span><span class="fl">0.25</span>,</span>
+<span id="cb11-387"><a href="#cb11-387" aria-hidden="true" tabindex="-1"></a>                  etiqueta<span class="op">=</span><span class="ss">f"Cola izquierda pesada: put </span><span class="sc">{</span>K_put<span class="sc">}</span><span class="ss"> vale </span><span class="sc">{</span>p_ct<span class="sc">:.2f}</span><span class="ss">"</span>)</span>
+<span id="cb11-388"><a href="#cb11-388" aria-hidden="true" tabindex="-1"></a>    ax.axvline(K_put, color<span class="op">=</span>TEXTO, lw<span class="op">=</span><span class="dv">1</span>, ls<span class="op">=</span><span class="st">":"</span>)</span>
+<span id="cb11-389"><a href="#cb11-389" aria-hidden="true" tabindex="-1"></a>    ax.text(K_put <span class="op">-</span> <span class="dv">1</span>, ax.get_ylim()[<span class="dv">1</span>] <span class="op">*</span> <span class="fl">0.55</span>, <span class="st">"zona donde</span><span class="ch">\n</span><span class="st">paga la put"</span>, ha<span class="op">=</span><span class="st">"right"</span>,</span>
+<span id="cb11-390"><a href="#cb11-390" aria-hidden="true" tabindex="-1"></a>            fontsize<span class="op">=</span><span class="dv">9</span>, color<span class="op">=</span>TEXTO)</span>
+<span id="cb11-391"><a href="#cb11-391" aria-hidden="true" tabindex="-1"></a>    ax.text(<span class="dv">122</span>, ax.get_ylim()[<span class="dv">1</span>] <span class="op">*</span> <span class="fl">0.45</span>,</span>
+<span id="cb11-392"><a href="#cb11-392" aria-hidden="true" tabindex="-1"></a>            <span class="ss">f"vol implícita de la put </span><span class="sc">{</span>K_put<span class="sc">}</span><span class="ss">:</span><span class="ch">\n</span><span class="ss">  lognormal:   </span><span class="sc">{</span>sig<span class="sc">:.0%}</span><span class="ch">\n</span><span class="ss">  cola pesada: </span><span class="sc">{</span>mid<span class="sc">:.1%}</span><span class="ss">"</span>,</span>
+<span id="cb11-393"><a href="#cb11-393" aria-hidden="true" tabindex="-1"></a>            fontsize<span class="op">=</span><span class="dv">9</span>, family<span class="op">=</span>MONO, color<span class="op">=</span>TEXTO)</span>
+<span id="cb11-394"><a href="#cb11-394" aria-hidden="true" tabindex="-1"></a>    ax.set_xlabel(<span class="st">"Precio del subyacente en 6 meses"</span>)</span>
+<span id="cb11-395"><a href="#cb11-395" aria-hidden="true" tabindex="-1"></a>    ax.set_yticks([])</span>
+<span id="cb11-396"><a href="#cb11-396" aria-hidden="true" tabindex="-1"></a>    ax.set_ylim(bottom<span class="op">=</span><span class="dv">0</span>)</span>
+<span id="cb11-397"><a href="#cb11-397" aria-hidden="true" tabindex="-1"></a>    ax.legend(frameon<span class="op">=</span><span class="va">False</span>, fontsize<span class="op">=</span><span class="dv">9</span>, loc<span class="op">=</span><span class="st">"upper right"</span>)</span>
+<span id="cb11-398"><a href="#cb11-398" aria-hidden="true" tabindex="-1"></a>    ax.spines[[<span class="st">"top"</span>, <span class="st">"right"</span>, <span class="st">"left"</span>]].set_visible(<span class="va">False</span>)</span>
+<span id="cb11-399"><a href="#cb11-399" aria-hidden="true" tabindex="-1"></a>    plt.tight_layout()</span>
+<span id="cb11-400"><a href="#cb11-400" aria-hidden="true" tabindex="-1"></a>    plt.show()</span>
+<span id="cb11-401"><a href="#cb11-401" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-402"><a href="#cb11-402" aria-hidden="true" tabindex="-1"></a>_esquema()</span>
+<span id="cb11-403"><a href="#cb11-403" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb11-404"><a href="#cb11-404" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-405"><a href="#cb11-405" aria-hidden="true" tabindex="-1"></a>::: {.callout-important title="La sonrisa es el puente del libro"}</span>
+<span id="cb11-406"><a href="#cb11-406" aria-hidden="true" tabindex="-1"></a>Todo converge acá: los retornos tienen colas pesadas y asimetría (Cap. 7), los modelos con saltos las generan (Cap. 14), y la sonrisa es el mercado **poniéndoles precio**. Black-Scholes no está "mal" — es la vara con la que el mercado mide sus propias desviaciones de la normalidad. Los modelos que *reproducen* la sonrisa (Heston, SABR) son el tema del Capítulo 20.</span>
+<span id="cb11-407"><a href="#cb11-407" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb11-408"><a href="#cb11-408" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-409"><a href="#cb11-409" aria-hidden="true" tabindex="-1"></a>---</span>
+<span id="cb11-410"><a href="#cb11-410" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-411"><a href="#cb11-411" aria-hidden="true" tabindex="-1"></a><span class="fu">## Las griegas: el tablero de control</span></span>
+<span id="cb11-412"><a href="#cb11-412" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-413"><a href="#cb11-413" aria-hidden="true" tabindex="-1"></a>Quien tiene una posición en opciones necesita saber cómo cambia su valor cuando se mueve el mundo. Las **griegas** son esas derivadas parciales:</span>
+<span id="cb11-414"><a href="#cb11-414" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-415"><a href="#cb11-415" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Griega <span class="pp">|</span> Derivada <span class="pp">|</span> Pregunta que responde <span class="pp">|</span></span>
+<span id="cb11-416"><a href="#cb11-416" aria-hidden="true" tabindex="-1"></a><span class="pp">|:---:|:---:|---|</span></span>
+<span id="cb11-417"><a href="#cb11-417" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> **Delta** ($\Delta$) <span class="pp">|</span> $\partial C/\partial S$ <span class="pp">|</span> ¿Cuánto gano si el subyacente sube \$1? <span class="pp">|</span></span>
+<span id="cb11-418"><a href="#cb11-418" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> **Gamma** ($\Gamma$) <span class="pp">|</span> $\partial^2 C/\partial S^2$ <span class="pp">|</span> ¿Cuán rápido cambia mi delta? (curvatura) <span class="pp">|</span></span>
+<span id="cb11-419"><a href="#cb11-419" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> **Vega** <span class="pp">|</span> $\partial C/\partial \sigma$ <span class="pp">|</span> ¿Cuánto gano si la vol sube 1 punto? <span class="pp">|</span></span>
+<span id="cb11-420"><a href="#cb11-420" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> **Theta** ($\Theta$) <span class="pp">|</span> $\partial C/\partial t$ <span class="pp">|</span> ¿Cuánto pierdo por el paso de un día? <span class="pp">|</span></span>
+<span id="cb11-421"><a href="#cb11-421" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-422"><a href="#cb11-422" aria-hidden="true" tabindex="-1"></a>Para Black-Scholes existen fórmulas cerradas (delta de una call = $N(d_1)$), pero conviene dominar el método general de **diferencias finitas** —perturbar el input, repreciar, dividir— porque funciona con *cualquier* modelo de pricing, tenga fórmula o sea un Monte Carlo:</span>
+<span id="cb11-423"><a href="#cb11-423" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-424"><a href="#cb11-424" aria-hidden="true" tabindex="-1"></a>$$\Delta \approx \frac{C(S + h) - C(S - h)}{2h}$$</span>
+<span id="cb11-425"><a href="#cb11-425" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-428"><a href="#cb11-428" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb11-429"><a href="#cb11-429" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: griegas</span></span>
+<span id="cb11-430"><a href="#cb11-430" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> griegas_call(S, K, T, r, sigma, dS<span class="op">=</span><span class="fl">0.01</span>, dsig<span class="op">=</span><span class="fl">0.0001</span>, dT<span class="op">=</span><span class="dv">1</span><span class="op">/</span><span class="dv">365</span>):</span>
+<span id="cb11-431"><a href="#cb11-431" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""Griegas de una call por diferencias finitas centradas."""</span></span>
+<span id="cb11-432"><a href="#cb11-432" aria-hidden="true" tabindex="-1"></a>    delta <span class="op">=</span> (bs_call(S <span class="op">+</span> dS, K, T, r, sigma) <span class="op">-</span> bs_call(S <span class="op">-</span> dS, K, T, r, sigma)) <span class="op">/</span> (<span class="dv">2</span> <span class="op">*</span> dS)</span>
+<span id="cb11-433"><a href="#cb11-433" aria-hidden="true" tabindex="-1"></a>    gamma <span class="op">=</span> (bs_call(S <span class="op">+</span> dS, K, T, r, sigma) <span class="op">-</span> <span class="dv">2</span> <span class="op">*</span> bs_call(S, K, T, r, sigma)</span>
+<span id="cb11-434"><a href="#cb11-434" aria-hidden="true" tabindex="-1"></a>             <span class="op">+</span> bs_call(S <span class="op">-</span> dS, K, T, r, sigma)) <span class="op">/</span> dS<span class="op">**</span><span class="dv">2</span></span>
+<span id="cb11-435"><a href="#cb11-435" aria-hidden="true" tabindex="-1"></a>    vega_ <span class="op">=</span> (bs_call(S, K, T, r, sigma <span class="op">+</span> dsig) <span class="op">-</span> bs_call(S, K, T, r, sigma <span class="op">-</span> dsig)) <span class="op">/</span> (<span class="dv">2</span> <span class="op">*</span> dsig)</span>
+<span id="cb11-436"><a href="#cb11-436" aria-hidden="true" tabindex="-1"></a>    theta <span class="op">=</span> (bs_call(S, K, T <span class="op">-</span> dT, r, sigma) <span class="op">-</span> bs_call(S, K, T, r, sigma)) <span class="op">/</span> dT</span>
+<span id="cb11-437"><a href="#cb11-437" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> {<span class="st">"Delta"</span>: delta, <span class="st">"Gamma"</span>: gamma, <span class="st">"Vega"</span>: vega_, <span class="st">"Theta (anual)"</span>: theta}</span>
+<span id="cb11-438"><a href="#cb11-438" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-439"><a href="#cb11-439" aria-hidden="true" tabindex="-1"></a>g <span class="op">=</span> griegas_call(<span class="dv">100</span>, <span class="dv">100</span>, <span class="fl">0.5</span>, <span class="fl">0.05</span>, <span class="fl">0.25</span>)</span>
+<span id="cb11-440"><a href="#cb11-440" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> nombre, valor <span class="kw">in</span> g.items():</span>
+<span id="cb11-441"><a href="#cb11-441" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"  </span><span class="sc">{</span>nombre<span class="sc">:&gt;14}</span><span class="ss">: </span><span class="sc">{</span>valor<span class="sc">:&gt;+10.4f}</span><span class="ss">"</span>)</span>
+<span id="cb11-442"><a href="#cb11-442" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-443"><a href="#cb11-443" aria-hidden="true" tabindex="-1"></a><span class="co"># Verificación contra la fórmula cerrada del delta</span></span>
+<span id="cb11-444"><a href="#cb11-444" aria-hidden="true" tabindex="-1"></a>d1 <span class="op">=</span> (np.log(<span class="dv">100</span><span class="op">/</span><span class="dv">100</span>) <span class="op">+</span> (<span class="fl">0.05</span> <span class="op">+</span> <span class="fl">0.5</span> <span class="op">*</span> <span class="fl">0.25</span><span class="op">**</span><span class="dv">2</span>) <span class="op">*</span> <span class="fl">0.5</span>) <span class="op">/</span> (<span class="fl">0.25</span> <span class="op">*</span> np.sqrt(<span class="fl">0.5</span>))</span>
+<span id="cb11-445"><a href="#cb11-445" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"</span><span class="ch">\n</span><span class="ss">  Delta analítico N(d1) = </span><span class="sc">{</span>norm<span class="sc">.</span>cdf(d1)<span class="sc">:+.4f}</span><span class="ss">  (coincide ✓)"</span>)</span>
+<span id="cb11-446"><a href="#cb11-446" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb11-447"><a href="#cb11-447" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-448"><a href="#cb11-448" aria-hidden="true" tabindex="-1"></a>Interpretá los números: delta ≈ 0.57 (la call al dinero se mueve ~57 centavos por cada dólar del subyacente), gamma positivo (ese delta *crece* si el activo sube — la convexidad que hace valiosas a las opciones), vega positivo (la opción es una posición comprada en volatilidad) y theta negativo (cada día que pasa, el derecho vale menos: el tiempo es el alquiler que paga el comprador).</span>
+<span id="cb11-449"><a href="#cb11-449" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-450"><a href="#cb11-450" aria-hidden="true" tabindex="-1"></a>Delta y gamma tienen una lectura geométrica directa, y la @fig-taylor-griegas la muestra: el delta es la pendiente de la curva de precio en el punto actual; el gamma, su curvatura. La recta del delta alcanza para movimientos chicos; para movimientos grandes, hace falta la parábola que agrega el gamma.</span>
+<span id="cb11-451"><a href="#cb11-451" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-454"><a href="#cb11-454" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb11-455"><a href="#cb11-455" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: fig-taylor-griegas</span></span>
+<span id="cb11-456"><a href="#cb11-456" aria-hidden="true" tabindex="-1"></a><span class="co">#| echo: false</span></span>
+<span id="cb11-457"><a href="#cb11-457" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-cap: "Delta y gamma como geometría. La recta es la aproximación de primer orden (delta); la parábola agrega la curvatura (gamma). La distancia entre la recta y la curva, ½Γ(ΔS)², crece con el cuadrado del movimiento: es el término que el próximo capítulo convierte en error de cobertura."</span></span>
+<span id="cb11-458"><a href="#cb11-458" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> sys<span class="op">;</span> sys.path.insert(<span class="dv">0</span>, <span class="st">".."</span>)</span>
+<span id="cb11-459"><a href="#cb11-459" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> _esquemas <span class="im">import</span> <span class="op">*</span></span>
+<span id="cb11-460"><a href="#cb11-460" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb11-461"><a href="#cb11-461" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-462"><a href="#cb11-462" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> _esquema():</span>
+<span id="cb11-463"><a href="#cb11-463" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Usa bs_call y g (griegas en S = 100) del capítulo</span></span>
+<span id="cb11-464"><a href="#cb11-464" aria-hidden="true" tabindex="-1"></a>    S0, K, T, r, sig <span class="op">=</span> <span class="dv">100</span>, <span class="dv">100</span>, <span class="fl">0.5</span>, <span class="fl">0.05</span>, <span class="fl">0.25</span></span>
+<span id="cb11-465"><a href="#cb11-465" aria-hidden="true" tabindex="-1"></a>    c0, d, gam <span class="op">=</span> bs_call(S0, K, T, r, sig), g[<span class="st">"Delta"</span>], g[<span class="st">"Gamma"</span>]</span>
+<span id="cb11-466"><a href="#cb11-466" aria-hidden="true" tabindex="-1"></a>    s <span class="op">=</span> np.linspace(<span class="dv">75</span>, <span class="dv">125</span>, <span class="dv">300</span>)</span>
+<span id="cb11-467"><a href="#cb11-467" aria-hidden="true" tabindex="-1"></a>    fig, ax <span class="op">=</span> plt.subplots(figsize<span class="op">=</span>(<span class="fl">9.5</span>, <span class="fl">4.6</span>))</span>
+<span id="cb11-468"><a href="#cb11-468" aria-hidden="true" tabindex="-1"></a>    ax.plot(s, bs_call(s, K, T, r, sig), color<span class="op">=</span>PRIMARIO, lw<span class="op">=</span><span class="fl">2.4</span>, label<span class="op">=</span><span class="st">"Precio de la call C(S)"</span>)</span>
+<span id="cb11-469"><a href="#cb11-469" aria-hidden="true" tabindex="-1"></a>    ax.plot(s, c0 <span class="op">+</span> d <span class="op">*</span> (s <span class="op">-</span> S0), color<span class="op">=</span>ACENTO, lw<span class="op">=</span><span class="fl">1.6</span>, ls<span class="op">=</span><span class="st">"--"</span>,</span>
+<span id="cb11-470"><a href="#cb11-470" aria-hidden="true" tabindex="-1"></a>            label<span class="op">=</span><span class="ss">f"Delta: recta de pendiente </span><span class="sc">{</span>d<span class="sc">:.2f}</span><span class="ss">"</span>)</span>
+<span id="cb11-471"><a href="#cb11-471" aria-hidden="true" tabindex="-1"></a>    ax.plot(s, c0 <span class="op">+</span> d <span class="op">*</span> (s <span class="op">-</span> S0) <span class="op">+</span> <span class="fl">0.5</span> <span class="op">*</span> gam <span class="op">*</span> (s <span class="op">-</span> S0) <span class="op">**</span> <span class="dv">2</span>, color<span class="op">=</span>SECUNDARIO, lw<span class="op">=</span><span class="fl">1.6</span>, ls<span class="op">=</span><span class="st">":"</span>,</span>
+<span id="cb11-472"><a href="#cb11-472" aria-hidden="true" tabindex="-1"></a>            label<span class="op">=</span><span class="st">"Delta + Gamma: parábola"</span>)</span>
+<span id="cb11-473"><a href="#cb11-473" aria-hidden="true" tabindex="-1"></a>    s1 <span class="op">=</span> <span class="dv">120</span></span>
+<span id="cb11-474"><a href="#cb11-474" aria-hidden="true" tabindex="-1"></a>    ax.annotate(<span class="st">""</span>, xy<span class="op">=</span>(s1, bs_call(s1, K, T, r, sig)), xytext<span class="op">=</span>(s1, c0 <span class="op">+</span> d <span class="op">*</span> (s1 <span class="op">-</span> S0)),</span>
+<span id="cb11-475"><a href="#cb11-475" aria-hidden="true" tabindex="-1"></a>                arrowprops<span class="op">=</span><span class="bu">dict</span>(arrowstyle<span class="op">=</span><span class="st">"&lt;-&gt;"</span>, color<span class="op">=</span>TEXTO, lw<span class="op">=</span><span class="fl">1.2</span>))</span>
+<span id="cb11-476"><a href="#cb11-476" aria-hidden="true" tabindex="-1"></a>    ax.text(s1 <span class="op">+</span> <span class="fl">0.8</span>, c0 <span class="op">+</span> d <span class="op">*</span> (s1 <span class="op">-</span> S0) <span class="op">-</span> <span class="dv">3</span>, <span class="st">"½Γ(ΔS)²:</span><span class="ch">\n</span><span class="st">lo que la recta</span><span class="ch">\n</span><span class="st">no ve"</span>,</span>
+<span id="cb11-477"><a href="#cb11-477" aria-hidden="true" tabindex="-1"></a>            fontsize<span class="op">=</span><span class="dv">9</span>, va<span class="op">=</span><span class="st">"top"</span>, color<span class="op">=</span>TEXTO)</span>
+<span id="cb11-478"><a href="#cb11-478" aria-hidden="true" tabindex="-1"></a>    ax.scatter([S0], [c0], color<span class="op">=</span>TEXTO, zorder<span class="op">=</span><span class="dv">5</span>)</span>
+<span id="cb11-479"><a href="#cb11-479" aria-hidden="true" tabindex="-1"></a>    ax.set_xlabel(<span class="st">"Precio del subyacente S"</span>)</span>
+<span id="cb11-480"><a href="#cb11-480" aria-hidden="true" tabindex="-1"></a>    ax.set_ylabel(<span class="st">"Valor de la call ($)"</span>)</span>
+<span id="cb11-481"><a href="#cb11-481" aria-hidden="true" tabindex="-1"></a>    ax.legend(frameon<span class="op">=</span><span class="va">False</span>, fontsize<span class="op">=</span><span class="dv">9</span>, loc<span class="op">=</span><span class="st">"upper left"</span>)</span>
+<span id="cb11-482"><a href="#cb11-482" aria-hidden="true" tabindex="-1"></a>    ax.grid(alpha<span class="op">=</span><span class="fl">0.3</span>)</span>
+<span id="cb11-483"><a href="#cb11-483" aria-hidden="true" tabindex="-1"></a>    ax.spines[[<span class="st">"top"</span>, <span class="st">"right"</span>]].set_visible(<span class="va">False</span>)</span>
+<span id="cb11-484"><a href="#cb11-484" aria-hidden="true" tabindex="-1"></a>    plt.tight_layout()</span>
+<span id="cb11-485"><a href="#cb11-485" aria-hidden="true" tabindex="-1"></a>    plt.show()</span>
+<span id="cb11-486"><a href="#cb11-486" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-487"><a href="#cb11-487" aria-hidden="true" tabindex="-1"></a>_esquema()</span>
+<span id="cb11-488"><a href="#cb11-488" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb11-489"><a href="#cb11-489" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-492"><a href="#cb11-492" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb11-493"><a href="#cb11-493" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: fig-perfil-griegas</span></span>
+<span id="cb11-494"><a href="#cb11-494" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-cap: "Delta (izquierda) y gamma (derecha) de la call en función del precio del subyacente, a 6 meses y a 18 días del vencimiento. Cerca del vencimiento, el delta salta de 0 a 1 en un rango estrecho y el gamma se vuelve un pico alrededor del strike."</span></span>
+<span id="cb11-495"><a href="#cb11-495" aria-hidden="true" tabindex="-1"></a>S_grid <span class="op">=</span> np.linspace(<span class="dv">60</span>, <span class="dv">140</span>, <span class="dv">120</span>)</span>
+<span id="cb11-496"><a href="#cb11-496" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-497"><a href="#cb11-497" aria-hidden="true" tabindex="-1"></a>fig, axes <span class="op">=</span> plt.subplots(<span class="dv">1</span>, <span class="dv">2</span>, figsize<span class="op">=</span>(<span class="dv">11</span>, <span class="dv">4</span>))</span>
+<span id="cb11-498"><a href="#cb11-498" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-499"><a href="#cb11-499" aria-hidden="true" tabindex="-1"></a>ax <span class="op">=</span> axes[<span class="dv">0</span>]</span>
+<span id="cb11-500"><a href="#cb11-500" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> T_i, estilo <span class="kw">in</span> [(<span class="fl">0.05</span>, <span class="st">":"</span>), (<span class="fl">0.5</span>, <span class="st">"-"</span>)]:</span>
+<span id="cb11-501"><a href="#cb11-501" aria-hidden="true" tabindex="-1"></a>    deltas <span class="op">=</span> [griegas_call(s, <span class="dv">100</span>, T_i, <span class="fl">0.05</span>, <span class="fl">0.25</span>)[<span class="st">"Delta"</span>] <span class="cf">for</span> s <span class="kw">in</span> S_grid]</span>
+<span id="cb11-502"><a href="#cb11-502" aria-hidden="true" tabindex="-1"></a>    ax.plot(S_grid, deltas, estilo, label<span class="op">=</span><span class="ss">f"T = </span><span class="sc">{</span>T_i<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb11-503"><a href="#cb11-503" aria-hidden="true" tabindex="-1"></a>ax.set_xlabel(<span class="st">"S"</span>)</span>
+<span id="cb11-504"><a href="#cb11-504" aria-hidden="true" tabindex="-1"></a>ax.set_ylabel(<span class="st">"Delta"</span>)</span>
+<span id="cb11-505"><a href="#cb11-505" aria-hidden="true" tabindex="-1"></a>ax.set_title(<span class="st">"Delta: de 0 a 1, brusco cerca del vencimiento"</span>)</span>
+<span id="cb11-506"><a href="#cb11-506" aria-hidden="true" tabindex="-1"></a>ax.legend()</span>
+<span id="cb11-507"><a href="#cb11-507" aria-hidden="true" tabindex="-1"></a>ax.grid(<span class="va">True</span>, alpha<span class="op">=</span><span class="fl">0.3</span>)</span>
+<span id="cb11-508"><a href="#cb11-508" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-509"><a href="#cb11-509" aria-hidden="true" tabindex="-1"></a>ax <span class="op">=</span> axes[<span class="dv">1</span>]</span>
+<span id="cb11-510"><a href="#cb11-510" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> T_i, estilo <span class="kw">in</span> [(<span class="fl">0.05</span>, <span class="st">":"</span>), (<span class="fl">0.5</span>, <span class="st">"-"</span>)]:</span>
+<span id="cb11-511"><a href="#cb11-511" aria-hidden="true" tabindex="-1"></a>    gammas <span class="op">=</span> [griegas_call(s, <span class="dv">100</span>, T_i, <span class="fl">0.05</span>, <span class="fl">0.25</span>)[<span class="st">"Gamma"</span>] <span class="cf">for</span> s <span class="kw">in</span> S_grid]</span>
+<span id="cb11-512"><a href="#cb11-512" aria-hidden="true" tabindex="-1"></a>    ax.plot(S_grid, gammas, estilo, label<span class="op">=</span><span class="ss">f"T = </span><span class="sc">{</span>T_i<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb11-513"><a href="#cb11-513" aria-hidden="true" tabindex="-1"></a>ax.set_xlabel(<span class="st">"S"</span>)</span>
+<span id="cb11-514"><a href="#cb11-514" aria-hidden="true" tabindex="-1"></a>ax.set_ylabel(<span class="st">"Gamma"</span>)</span>
+<span id="cb11-515"><a href="#cb11-515" aria-hidden="true" tabindex="-1"></a>ax.set_title(<span class="st">"Gamma: se concentra en el strike"</span>)</span>
+<span id="cb11-516"><a href="#cb11-516" aria-hidden="true" tabindex="-1"></a>ax.legend()</span>
+<span id="cb11-517"><a href="#cb11-517" aria-hidden="true" tabindex="-1"></a>ax.grid(<span class="va">True</span>, alpha<span class="op">=</span><span class="fl">0.3</span>)</span>
+<span id="cb11-518"><a href="#cb11-518" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-519"><a href="#cb11-519" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
+<span id="cb11-520"><a href="#cb11-520" aria-hidden="true" tabindex="-1"></a>plt.show()</span>
+<span id="cb11-521"><a href="#cb11-521" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb11-522"><a href="#cb11-522" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-523"><a href="#cb11-523" aria-hidden="true" tabindex="-1"></a>El gamma de la @fig-perfil-griegas, concentrado alrededor del strike y cada vez más puntiagudo al acercarse el vencimiento, es el protagonista del próximo capítulo: es lo que hace que cubrir una opción **cerca del vencimiento y cerca del strike** sea un deporte de riesgo.</span>
+<span id="cb11-524"><a href="#cb11-524" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-525"><a href="#cb11-525" aria-hidden="true" tabindex="-1"></a>---</span>
+<span id="cb11-526"><a href="#cb11-526" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-527"><a href="#cb11-527" aria-hidden="true" tabindex="-1"></a><span class="fu">## Errores comunes</span></span>
+<span id="cb11-528"><a href="#cb11-528" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-529"><a href="#cb11-529" aria-hidden="true" tabindex="-1"></a>::: {.callout-warning title="Trampas frecuentes"}</span>
+<span id="cb11-530"><a href="#cb11-530" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Unidades del theta**: la derivada es "por año"; dividí por 365 para el decaimiento diario que se reporta en las pantallas.</span>
+<span id="cb11-531"><a href="#cb11-531" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Newton sin red**: lejos del dinero, el vega es casi cero y Newton-Raphson diverge. Para uso robusto, combiná con bisección (<span class="in">`scipy.optimize.brentq`</span>) que garantiza convergencia.</span>
+<span id="cb11-532"><a href="#cb11-532" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Volatilidad en las unidades equivocadas**: $\sigma$ = 0.25, no 25. Un factor 100 en la vol produce precios absurdos silenciosamente.</span>
+<span id="cb11-533"><a href="#cb11-533" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Aplicar Black-Scholes a opciones americanas**: la fórmula es para ejercicio *europeo* (solo al vencimiento). Para americanas con dividendos, el ejercicio temprano vale y se necesitan árboles o métodos numéricos.</span>
+<span id="cb11-534"><a href="#cb11-534" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Paso de diferencias finitas mal elegido**: $h$ demasiado grande sesga; demasiado chico amplifica el error de redondeo. Los valores del código (dS=0.01) son un buen punto medio para este problema.</span>
+<span id="cb11-535"><a href="#cb11-535" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb11-536"><a href="#cb11-536" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-537"><a href="#cb11-537" aria-hidden="true" tabindex="-1"></a>---</span>
+<span id="cb11-538"><a href="#cb11-538" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-539"><a href="#cb11-539" aria-hidden="true" tabindex="-1"></a><span class="fu">## Ejercicios Propuestos</span></span>
+<span id="cb11-540"><a href="#cb11-540" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-541"><a href="#cb11-541" aria-hidden="true" tabindex="-1"></a>::: {.callout-important title="Ejercicios"}</span>
+<span id="cb11-542"><a href="#cb11-542" aria-hidden="true" tabindex="-1"></a><span class="ss">1. </span>**Griegas analíticas**: implementá el delta ($N(d_1)$), el gamma y el vega con sus fórmulas cerradas y verificá contra diferencias finitas con 6 decimales.</span>
+<span id="cb11-543"><a href="#cb11-543" aria-hidden="true" tabindex="-1"></a><span class="ss">2. </span>**Newton vs. brentq**: compará <span class="in">`implied_vol`</span> con <span class="in">`scipy.optimize.brentq`</span> en precisión y número de iteraciones, para strikes de 80 a 120. ¿Dónde falla Newton?</span>
+<span id="cb11-544"><a href="#cb11-544" aria-hidden="true" tabindex="-1"></a><span class="ss">3. </span>**Vol implícita de puts**: adaptá <span class="in">`implied_vol`</span> para puts y verificá que, por paridad, la vol implícita de una call y una put del mismo strike coinciden.</span>
+<span id="cb11-545"><a href="#cb11-545" aria-hidden="true" tabindex="-1"></a><span class="ss">4. </span>**Superficie de volatilidad**: extendé la sonrisa a varios vencimientos (1, 3, 6, 12 meses) y graficá la superficie 3D con <span class="in">`plot_surface`</span>.</span>
+<span id="cb11-546"><a href="#cb11-546" aria-hidden="true" tabindex="-1"></a><span class="ss">5. </span>**P&amp;L de un día**: para la call del capítulo, calculá la ganancia/pérdida aproximada si mañana $S$ sube 2% y la vol cae 1 punto, usando $\Delta \cdot dS + \frac{1}{2}\Gamma \cdot dS^2 + \text{Vega} \cdot d\sigma + \Theta \cdot dt$. Verificá repreciando con la fórmula exacta.</span>
+<span id="cb11-547"><a href="#cb11-547" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb11-548"><a href="#cb11-548" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-549"><a href="#cb11-549" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-550"><a href="#cb11-550" aria-hidden="true" tabindex="-1"></a>Podés resolver estos ejercicios acá mismo: la celda ejecuta Python **en tu navegador**, sin instalar nada (la primera ejecución tarda unos segundos mientras carga el entorno; los paquetes que importes se instalan solos).</span>
+<span id="cb11-551"><a href="#cb11-551" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-552"><a href="#cb11-552" aria-hidden="true" tabindex="-1"></a><span class="in">```{pyodide-python}</span></span>
+<span id="cb11-553"><a href="#cb11-553" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: practica-navegador</span></span>
+<span id="cb11-554"><a href="#cb11-554" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb11-555"><a href="#cb11-555" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> scipy.stats <span class="im">import</span> norm</span>
+<span id="cb11-556"><a href="#cb11-556" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-557"><a href="#cb11-557" aria-hidden="true" tabindex="-1"></a><span class="co"># Tu solución acá...</span></span>
+<span id="cb11-558"><a href="#cb11-558" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb11-559"><a href="#cb11-559" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-560"><a href="#cb11-560" aria-hidden="true" tabindex="-1"></a>---</span>
+<span id="cb11-561"><a href="#cb11-561" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-562"><a href="#cb11-562" aria-hidden="true" tabindex="-1"></a><span class="fu">## Referencias</span></span>
+<span id="cb11-563"><a href="#cb11-563" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-564"><a href="#cb11-564" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-565"><a href="#cb11-565" aria-hidden="true" tabindex="-1"></a>::: {#refs}</span>
+<span id="cb11-566"><a href="#cb11-566" aria-hidden="true" tabindex="-1"></a>:::</span>
 </code></pre></div><button title="Copiar al portapapeles" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></div>
 </div></div></div></div></div>
 </div> <!-- /content -->

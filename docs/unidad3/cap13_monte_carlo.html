@@ -127,6 +127,10 @@ div.csl-indent {
   }
 }</script>
 <style>html{ scroll-behavior: smooth; }</style>
+<meta name="mermaid-theme" content="neutral">
+<script src="../site_libs/quarto-diagram/mermaid.min.js"></script>
+<script src="../site_libs/quarto-diagram/mermaid-init.js"></script>
+<link href="../site_libs/quarto-diagram/mermaid.css" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/monaco-editor@0.46.0/min/vs/editor/editor.main.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer">
   
@@ -782,21 +786,23 @@ window.Quarto = {
     <h2 id="toc-title">En esta página</h2>
    
   <ul>
-  <li><a href="#introducción" id="toc-introducción" class="nav-link active" data-scroll-target="#introducción"><span class="header-section-number">14</span> Introducción</a></li>
-  <li><a href="#el-movimiento-browniano-geométrico-gbm" id="toc-el-movimiento-browniano-geométrico-gbm" class="nav-link" data-scroll-target="#el-movimiento-browniano-geométrico-gbm"><span class="header-section-number">15</span> El Movimiento Browniano Geométrico (GBM)</a>
+  <li><a href="#introducción" id="toc-introducción" class="nav-link active" data-scroll-target="#introducción">Introducción</a>
   <ul class="collapse">
-  <li><a href="#la-idea" id="toc-la-idea" class="nav-link" data-scroll-target="#la-idea"><span class="header-section-number">15.1</span> La idea</a></li>
-  <li><a href="#simulación-vectorizada" id="toc-simulación-vectorizada" class="nav-link" data-scroll-target="#simulación-vectorizada"><span class="header-section-number">15.2</span> Simulación vectorizada</a></li>
-  </ul></li>
-  <li><a href="#var-y-expected-shortfall-por-monte-carlo" id="toc-var-y-expected-shortfall-por-monte-carlo" class="nav-link" data-scroll-target="#var-y-expected-shortfall-por-monte-carlo"><span class="header-section-number">16</span> VaR y Expected Shortfall por Monte Carlo</a></li>
-  <li><a href="#cuántas-simulaciones-son-suficientes-convergencia" id="toc-cuántas-simulaciones-son-suficientes-convergencia" class="nav-link" data-scroll-target="#cuántas-simulaciones-son-suficientes-convergencia"><span class="header-section-number">17</span> ¿Cuántas simulaciones son suficientes? Convergencia</a>
+  <li><a href="#el-movimiento-browniano-geométrico-gbm" id="toc-el-movimiento-browniano-geométrico-gbm" class="nav-link" data-scroll-target="#el-movimiento-browniano-geométrico-gbm"><span class="header-section-number">13.1</span> El Movimiento Browniano Geométrico (GBM)</a>
   <ul class="collapse">
-  <li><a href="#reducción-de-varianza-variables-antitéticas" id="toc-reducción-de-varianza-variables-antitéticas" class="nav-link" data-scroll-target="#reducción-de-varianza-variables-antitéticas"><span class="header-section-number">17.1</span> Reducción de varianza: variables antitéticas</a></li>
+  <li><a href="#la-idea" id="toc-la-idea" class="nav-link" data-scroll-target="#la-idea"><span class="header-section-number">13.1.1</span> La idea</a></li>
+  <li><a href="#simulación-vectorizada" id="toc-simulación-vectorizada" class="nav-link" data-scroll-target="#simulación-vectorizada"><span class="header-section-number">13.1.2</span> Simulación vectorizada</a></li>
   </ul></li>
-  <li><a href="#puente-al-módulo-4-valuar-una-opción-por-monte-carlo" id="toc-puente-al-módulo-4-valuar-una-opción-por-monte-carlo" class="nav-link" data-scroll-target="#puente-al-módulo-4-valuar-una-opción-por-monte-carlo"><span class="header-section-number">18</span> Puente al Módulo 4: valuar una opción por Monte Carlo</a></li>
-  <li><a href="#errores-comunes" id="toc-errores-comunes" class="nav-link" data-scroll-target="#errores-comunes"><span class="header-section-number">19</span> Errores comunes</a></li>
-  <li><a href="#ejercicios-propuestos" id="toc-ejercicios-propuestos" class="nav-link" data-scroll-target="#ejercicios-propuestos"><span class="header-section-number">20</span> Ejercicios Propuestos</a></li>
-  <li><a href="#referencias" id="toc-referencias" class="nav-link" data-scroll-target="#referencias"><span class="header-section-number">21</span> Referencias</a></li>
+  <li><a href="#var-y-expected-shortfall-por-monte-carlo" id="toc-var-y-expected-shortfall-por-monte-carlo" class="nav-link" data-scroll-target="#var-y-expected-shortfall-por-monte-carlo"><span class="header-section-number">13.2</span> VaR y Expected Shortfall por Monte Carlo</a></li>
+  <li><a href="#cuántas-simulaciones-son-suficientes-convergencia" id="toc-cuántas-simulaciones-son-suficientes-convergencia" class="nav-link" data-scroll-target="#cuántas-simulaciones-son-suficientes-convergencia"><span class="header-section-number">13.3</span> ¿Cuántas simulaciones son suficientes? Convergencia</a>
+  <ul class="collapse">
+  <li><a href="#reducción-de-varianza-variables-antitéticas" id="toc-reducción-de-varianza-variables-antitéticas" class="nav-link" data-scroll-target="#reducción-de-varianza-variables-antitéticas"><span class="header-section-number">13.3.1</span> Reducción de varianza: variables antitéticas</a></li>
+  </ul></li>
+  <li><a href="#puente-al-módulo-4-valuar-una-opción-por-monte-carlo" id="toc-puente-al-módulo-4-valuar-una-opción-por-monte-carlo" class="nav-link" data-scroll-target="#puente-al-módulo-4-valuar-una-opción-por-monte-carlo"><span class="header-section-number">13.4</span> Puente al Módulo 4: valuar una opción por Monte Carlo</a></li>
+  <li><a href="#errores-comunes" id="toc-errores-comunes" class="nav-link" data-scroll-target="#errores-comunes"><span class="header-section-number">13.5</span> Errores comunes</a></li>
+  <li><a href="#ejercicios-propuestos" id="toc-ejercicios-propuestos" class="nav-link" data-scroll-target="#ejercicios-propuestos"><span class="header-section-number">13.6</span> Ejercicios Propuestos</a></li>
+  <li><a href="#referencias" id="toc-referencias" class="nav-link" data-scroll-target="#referencias"><span class="header-section-number">13.7</span> Referencias</a></li>
+  </ul></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/diegoonna/libro_finanzas_computacionales/edit/main/unidad3/cap13_monte_carlo.qmd" class="toc-action"><i class="bi bi-github"></i>Editar esta página</a></li><li><a href="https://github.com/diegoonna/libro_finanzas_computacionales/issues/new" class="toc-action"><i class="bi empty"></i>Informar sobre problema</a></li></ul></div></nav>
     </div>
@@ -839,8 +845,8 @@ window.Quarto = {
 </header>
 
 
-<section id="introducción" class="level1" data-number="14">
-<h1 data-number="14"><span class="header-section-number">14</span> Introducción</h1>
+<section id="introducción" class="level1 unnumbered">
+<h1 class="unnumbered">Introducción</h1>
 <p>Hay preguntas financieras que no tienen fórmula: <em>¿cuál es la distribución del valor de mi cartera en 5 años si rebalanceo cada mes? ¿cuánto vale una opción cuyo pago depende de la trayectoria del precio y no solo del valor final?</em> Para ese tipo de problemas existe el método de <strong>Monte Carlo</strong>, llamado así por el casino: en lugar de resolver el problema analíticamente, <strong>tiramos los dados miles de veces</strong> —simulamos miles de futuros posibles— y estudiamos la distribución de resultados.</p>
 <p>La receta general tiene tres pasos:</p>
 <ol type="1">
@@ -848,6 +854,30 @@ window.Quarto = {
 <li><strong>Simular</strong> muchas trayectorias independientes de ese modelo.</li>
 <li><strong>Agregar</strong>: estimar lo que nos interese (media, percentiles, probabilidad de un evento) sobre las trayectorias.</li>
 </ol>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div id="fig-receta-mc" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-receta-mc-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div>
+<pre class="mermaid mermaid-js" data-label="fig-receta-mc">flowchart LR
+    M["&lt;b&gt;1 · Modelar&lt;/b&gt;&lt;br/&gt;dinámica del precio&lt;br/&gt;&lt;i&gt;GBM, saltos, Heston…&lt;/i&gt;"] --&gt; S["&lt;b&gt;2 · Simular&lt;/b&gt;&lt;br/&gt;N trayectorias&lt;br/&gt;independientes"]
+    S --&gt; A["&lt;b&gt;3 · Agregar&lt;/b&gt;&lt;br/&gt;media · percentil ·&lt;br/&gt;probabilidad · payoff"]
+    A --&gt; E(["estimación&lt;br/&gt;± error estándar s/√N"])
+    classDef paso fill:#e0e9f4,stroke:#1e3a5f,color:#1f2937
+    classDef fin fill:#eef2e3,stroke:#637238,color:#1f2937
+    class M,S,A paso
+    class E fin
+</pre>
+</div>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-receta-mc-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figura&nbsp;13.1: La receta de Monte Carlo. El modelo es la única parte que cambia de un problema a otro; simular y agregar son siempre iguales. El resultado es una estimación, y por eso viene con su error estándar.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
 <p>El paso 1 exige elegir un modelo del precio. Empezamos por el más importante de todos: el <strong>Movimiento Browniano Geométrico</strong>.</p>
 <div id="setup" class="cell" data-execution_count="1">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
@@ -857,11 +887,10 @@ window.Quarto = {
 <span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>rng <span class="op">=</span> np.random.default_rng(<span class="dv">42</span>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <hr>
-</section>
-<section id="el-movimiento-browniano-geométrico-gbm" class="level1" data-number="15">
-<h1 data-number="15"><span class="header-section-number">15</span> El Movimiento Browniano Geométrico (GBM)</h1>
-<section id="la-idea" class="level2" data-number="15.1">
-<h2 data-number="15.1" class="anchored" data-anchor-id="la-idea"><span class="header-section-number">15.1</span> La idea</h2>
+<section id="el-movimiento-browniano-geométrico-gbm" class="level2" data-number="13.1">
+<h2 data-number="13.1" class="anchored" data-anchor-id="el-movimiento-browniano-geométrico-gbm"><span class="header-section-number">13.1</span> El Movimiento Browniano Geométrico (GBM)</h2>
+<section id="la-idea" class="level3" data-number="13.1.1">
+<h3 data-number="13.1.1" class="anchored" data-anchor-id="la-idea"><span class="header-section-number">13.1.1</span> La idea</h3>
 <p>¿Cómo modelar el precio de una acción? Dos observaciones empíricas nos guían:</p>
 <ul>
 <li>Los precios tienen una <strong>tendencia</strong> de largo plazo (el mercado sube “en promedio”).</li>
@@ -885,16 +914,46 @@ window.Quarto = {
 <p>Ese término sorprende la primera vez. La intuición: la exponencial es convexa, así que el ruido simétrico en el exponente produce resultados <em>asimétricos</em> en el precio (una suba del 10% seguida de una baja del 10% no te devuelve al punto de partida: <span class="math inline">\(1.1 \times 0.9 = 0.99\)</span>). El término <span class="math inline">\(-\sigma^2/2\)</span> corrige exactamente ese efecto para que el retorno <em>esperado</em> del precio sea <span class="math inline">\(\mu\)</span>. Sin la corrección, la simulación tendría un sesgo alcista espurio.</p>
 </div>
 </div>
+<p>La <a href="#fig-arbol-convexidad" class="quarto-xref">Figura&nbsp;<span>13.2</span></a> muestra el efecto con el ejemplo más chico posible: dos días, cada uno con +10% o −10% con igual probabilidad. El precio <em>medio</em> no se mueve, pero el resultado <em>típico</em> (la mediana) pierde. Esa brecha entre media y mediana es exactamente lo que el término <span class="math inline">\(-\sigma^2/2\)</span> lleva en cuenta.</p>
+<div id="cell-fig-arbol-convexidad" class="cell" data-execution_count="3">
+<div class="cell-output cell-output-display">
+<div id="fig-arbol-convexidad" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-arbol-convexidad-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="cap13_monte_carlo_files/figure-html/fig-arbol-convexidad-output-1.png" width="749" height="355" class="figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-arbol-convexidad-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figura&nbsp;13.2: Dos días de ±10% con probabilidad 1/2 cada uno. La media de los cuatro caminos sigue en 100, pero tres de cuatro terminan en 99 o menos: ruido simétrico en los retornos produce un sesgo hacia abajo en el resultado típico.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
 <p>Dos propiedades del GBM que conviene tener presentes:</p>
 <ul>
 <li>El precio <strong>nunca se hace negativo</strong> (es una exponencial) — realista para acciones.</li>
 <li>Los retornos logarítmicos son normales, así que el precio final es <strong>lognormal</strong>: asimétrico, con una cola larga hacia arriba.</li>
 </ul>
 </section>
-<section id="simulación-vectorizada" class="level2" data-number="15.2">
-<h2 data-number="15.2" class="anchored" data-anchor-id="simulación-vectorizada"><span class="header-section-number">15.2</span> Simulación vectorizada</h2>
+<section id="simulación-vectorizada" class="level3" data-number="13.1.2">
+<h3 data-number="13.1.2" class="anchored" data-anchor-id="simulación-vectorizada"><span class="header-section-number">13.1.2</span> Simulación vectorizada</h3>
 <p>Simulamos <strong>todas las trayectorias a la vez</strong> con una matriz de shocks: filas = pasos de tiempo, columnas = simulaciones. El único bucle recorre el tiempo (cada precio depende del anterior); las 10.000 simulaciones avanzan en paralelo gracias a la vectorización del Capítulo 5.</p>
-<div id="gbm" class="cell" data-execution_count="2">
+<p>La <a href="#fig-matriz-shocks" class="quarto-xref">Figura&nbsp;<span>13.3</span></a> muestra la forma de los datos antes de escribir el código: una fila por día y una columna por futuro posible.</p>
+<div id="cell-fig-matriz-shocks" class="cell" data-execution_count="4">
+<div class="cell-output cell-output-display">
+<div id="fig-matriz-shocks" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-matriz-shocks-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="cap13_monte_carlo_files/figure-html/fig-matriz-shocks-output-1.png" width="887" height="333" class="figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-matriz-shocks-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figura&nbsp;13.3: Organización de la simulación. Z tiene un shock N(0,1) por día (fila) y por trayectoria (columna); S tiene una fila más, la del precio inicial. El bucle avanza fila por fila: cada fila de S se calcula con una sola operación vectorizada sobre la fila anterior y la fila de Z.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<div id="gbm" class="cell" data-execution_count="5">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Parámetros del activo y de la simulación</span></span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>S0 <span class="op">=</span> <span class="dv">100</span>          <span class="co"># precio inicial</span></span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>mu <span class="op">=</span> <span class="fl">0.10</span>         <span class="co"># drift anual (10%)</span></span>
@@ -926,7 +985,7 @@ Rango simulado:       $43.61 — $265.43</code></pre>
 </div>
 </div>
 <p>Verificación de cordura: la media simulada coincide con la teórica <span class="math inline">\(E[S_T] = S_0 e^{\mu T}\)</span>. Notá también que la <strong>mediana está por debajo de la media</strong>: es la asimetría lognormal en acción (unas pocas trayectorias excelentes tiran el promedio hacia arriba).</p>
-<div id="cell-plot-caminos" class="cell" data-execution_count="3">
+<div id="cell-fig-caminos-gbm" class="cell" data-execution_count="6">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>fig, axes <span class="op">=</span> plt.subplots(<span class="dv">1</span>, <span class="dv">2</span>, figsize<span class="op">=</span>(<span class="dv">12</span>, <span class="fl">4.5</span>))</span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Panel 1: una muestra de trayectorias</span></span>
@@ -942,10 +1001,10 @@ Rango simulado:       $43.61 — $265.43</code></pre>
 <span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a><span class="co"># Panel 2: distribución de precios finales</span></span>
 <span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>ax <span class="op">=</span> axes[<span class="dv">1</span>]</span>
-<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>ax.hist(S[<span class="op">-</span><span class="dv">1</span>], bins<span class="op">=</span><span class="dv">80</span>, density<span class="op">=</span><span class="va">True</span>, alpha<span class="op">=</span><span class="fl">0.7</span>, color<span class="op">=</span><span class="st">"steelblue"</span>, edgecolor<span class="op">=</span><span class="st">"white"</span>)</span>
-<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a>ax.axvline(S[<span class="op">-</span><span class="dv">1</span>].mean(), color<span class="op">=</span><span class="st">"green"</span>, linestyle<span class="op">=</span><span class="st">"--"</span>,</span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>ax.hist(S[<span class="op">-</span><span class="dv">1</span>], bins<span class="op">=</span><span class="dv">80</span>, density<span class="op">=</span><span class="va">True</span>, alpha<span class="op">=</span><span class="fl">0.7</span>, color<span class="op">=</span><span class="st">"#94a3b8"</span>, edgecolor<span class="op">=</span><span class="st">"white"</span>)</span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a>ax.axvline(S[<span class="op">-</span><span class="dv">1</span>].mean(), color<span class="op">=</span><span class="st">"#637238"</span>, linestyle<span class="op">=</span><span class="st">"--"</span>,</span>
 <span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a>           label<span class="op">=</span><span class="ss">f"Media: $</span><span class="sc">{</span>S[<span class="op">-</span><span class="dv">1</span>]<span class="sc">.</span>mean()<span class="sc">:.0f}</span><span class="ss">"</span>)</span>
-<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a>ax.axvline(np.median(S[<span class="op">-</span><span class="dv">1</span>]), color<span class="op">=</span><span class="st">"red"</span>, linestyle<span class="op">=</span><span class="st">":"</span>,</span>
+<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a>ax.axvline(np.median(S[<span class="op">-</span><span class="dv">1</span>]), color<span class="op">=</span><span class="st">"#c2410c"</span>, linestyle<span class="op">=</span><span class="st">":"</span>,</span>
 <span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a>           label<span class="op">=</span><span class="ss">f"Mediana: $</span><span class="sc">{</span>np<span class="sc">.</span>median(S[<span class="op">-</span><span class="dv">1</span>])<span class="sc">:.0f}</span><span class="ss">"</span>)</span>
 <span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a>ax.set_title(<span class="st">"Distribución de $S_T$ (lognormal)"</span>)</span>
 <span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a>ax.set_xlabel(<span class="st">"Precio final ($)"</span>)</span>
@@ -955,21 +1014,26 @@ Rango simulado:       $43.61 — $265.43</code></pre>
 <span id="cb4-26"><a href="#cb4-26" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
 <span id="cb4-27"><a href="#cb4-27" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="cap13_monte_carlo_files/figure-html/plot-caminos-output-1.png" id="plot-caminos" width="1143" height="422" class="figure-img"></p>
+<div id="fig-caminos-gbm" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-caminos-gbm-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="cap13_monte_carlo_files/figure-html/fig-caminos-gbm-output-1.png" width="1141" height="419" class="figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-caminos-gbm-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figura&nbsp;13.4: Izquierda: 100 de las 10.000 trayectorias simuladas y la tendencia teórica. Derecha: la distribución de los precios a un año, lognormal, con la media por encima de la mediana.
+</figcaption>
 </figure>
 </div>
 </div>
 </div>
-<p>El panel izquierdo es el “abanico de futuros”: todas las trayectorias arrancan del mismo punto y se dispersan con el tiempo. El derecho resume dónde terminan: la forma asimétrica con cola derecha larga es la distribución lognormal.</p>
+<p>El panel izquierdo de la <a href="#fig-caminos-gbm" class="quarto-xref">Figura&nbsp;<span>13.4</span></a> es el “abanico de futuros”: todas las trayectorias arrancan del mismo punto y se dispersan con el tiempo. El derecho resume dónde terminan: la forma asimétrica con cola derecha larga es la distribución lognormal.</p>
 <hr>
 </section>
 </section>
-<section id="var-y-expected-shortfall-por-monte-carlo" class="level1" data-number="16">
-<h1 data-number="16"><span class="header-section-number">16</span> VaR y Expected Shortfall por Monte Carlo</h1>
+<section id="var-y-expected-shortfall-por-monte-carlo" class="level2" data-number="13.2">
+<h2 data-number="13.2" class="anchored" data-anchor-id="var-y-expected-shortfall-por-monte-carlo"><span class="header-section-number">13.2</span> VaR y Expected Shortfall por Monte Carlo</h2>
 <p>En el Capítulo 11 calculamos VaR y ES con dos métodos: paramétrico (asume normal) e histórico (usa el pasado). Monte Carlo es el <strong>tercer método</strong>, y el más flexible: la distribución de pérdidas sale de las trayectorias simuladas, con el modelo que queramos. Hoy el modelo es GBM; en el próximo capítulo será uno con saltos — y el código de abajo no cambia.</p>
-<div id="var-montecarlo" class="cell" data-execution_count="4">
+<div id="var-montecarlo" class="cell" data-execution_count="7">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>valor_portafolio <span class="op">=</span> <span class="dv">10_000_000</span></span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>retornos_sim <span class="op">=</span> S[<span class="op">-</span><span class="dv">1</span>] <span class="op">/</span> S0 <span class="op">-</span> <span class="dv">1</span>     <span class="co"># retorno de cada trayectoria a 1 año</span></span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -988,11 +1052,11 @@ Rango simulado:       $43.61 — $265.43</code></pre>
 </div>
 <hr>
 </section>
-<section id="cuántas-simulaciones-son-suficientes-convergencia" class="level1" data-number="17">
-<h1 data-number="17"><span class="header-section-number">17</span> ¿Cuántas simulaciones son suficientes? Convergencia</h1>
+<section id="cuántas-simulaciones-son-suficientes-convergencia" class="level2" data-number="13.3">
+<h2 data-number="13.3" class="anchored" data-anchor-id="cuántas-simulaciones-son-suficientes-convergencia"><span class="header-section-number">13.3</span> ¿Cuántas simulaciones son suficientes? Convergencia</h2>
 <p>Monte Carlo da una <strong>estimación</strong>, no un valor exacto, y su error decrece con la raíz del número de simulaciones: <span class="math inline">\(\text{error} \propto 1/\sqrt{N}\)</span>. Esa raíz es una mala noticia práctica: para ganar <strong>un dígito</strong> de precisión hay que multiplicar las simulaciones <strong>por 100</strong>.</p>
-<div id="cell-convergencia" class="cell" data-execution_count="5">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>ns <span class="op">=</span> np.unique(np.logspace(<span class="dv">2</span>, <span class="dv">4</span>, <span class="dv">25</span>).astype(<span class="bu">int</span>))</span>
+<div id="cell-fig-convergencia-mc" class="cell" data-execution_count="8">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>ns <span class="op">=</span>np.unique(np.logspace(<span class="dv">2</span>, <span class="dv">4</span>, <span class="dv">25</span>).astype(<span class="bu">int</span>))</span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>medias <span class="op">=</span> [S[<span class="op">-</span><span class="dv">1</span>, :n].mean() <span class="cf">for</span> n <span class="kw">in</span> ns]</span>
 <span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>teorico <span class="op">=</span> S0 <span class="op">*</span> np.exp(mu <span class="op">*</span> T)</span>
 <span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a></span>
@@ -1001,9 +1065,9 @@ Rango simulado:       $43.61 — $265.43</code></pre>
 <span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>banda <span class="op">=</span> <span class="dv">2</span> <span class="op">*</span> sd_ST <span class="op">/</span> np.sqrt(ns)</span>
 <span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>fig, ax <span class="op">=</span> plt.subplots(figsize<span class="op">=</span>(<span class="dv">9</span>, <span class="fl">4.5</span>))</span>
-<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>ax.plot(ns, medias, <span class="st">"o-"</span>, color<span class="op">=</span><span class="st">"steelblue"</span>, markersize<span class="op">=</span><span class="dv">4</span>, label<span class="op">=</span><span class="st">"Media estimada"</span>)</span>
-<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>ax.axhline(teorico, color<span class="op">=</span><span class="st">"red"</span>, linestyle<span class="op">=</span><span class="st">"--"</span>, label<span class="op">=</span><span class="ss">f"Valor teórico ($</span><span class="sc">{</span>teorico<span class="sc">:.2f}</span><span class="ss">)"</span>)</span>
-<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>ax.fill_between(ns, teorico <span class="op">-</span> banda, teorico <span class="op">+</span> banda, alpha<span class="op">=</span><span class="fl">0.15</span>, color<span class="op">=</span><span class="st">"red"</span>,</span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>ax.plot(ns, medias, <span class="st">"o-"</span>, color<span class="op">=</span><span class="st">"#1e3a5f"</span>, markersize<span class="op">=</span><span class="dv">4</span>, label<span class="op">=</span><span class="st">"Media estimada"</span>)</span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>ax.axhline(teorico, color<span class="op">=</span><span class="st">"#c2410c"</span>, linestyle<span class="op">=</span><span class="st">"--"</span>, label<span class="op">=</span><span class="ss">f"Valor teórico ($</span><span class="sc">{</span>teorico<span class="sc">:.2f}</span><span class="ss">)"</span>)</span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>ax.fill_between(ns, teorico <span class="op">-</span> banda, teorico <span class="op">+</span> banda, alpha<span class="op">=</span><span class="fl">0.15</span>, color<span class="op">=</span><span class="st">"#c2410c"</span>,</span>
 <span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>                label<span class="op">=</span><span class="st">"Banda ±2 errores estándar"</span>)</span>
 <span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a>ax.set_xscale(<span class="st">"log"</span>)</span>
 <span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a>ax.set_xlabel(<span class="st">"Número de simulaciones (escala log)"</span>)</span>
@@ -1014,18 +1078,38 @@ Rango simulado:       $43.61 — $265.43</code></pre>
 <span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
 <span id="cb7-21"><a href="#cb7-21" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="cap13_monte_carlo_files/figure-html/convergencia-output-1.png" id="convergencia" width="855" height="422" class="figure-img"></p>
+<div id="fig-convergencia-mc" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-convergencia-mc-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="cap13_monte_carlo_files/figure-html/fig-convergencia-mc-output-1.png" width="853" height="420" class="figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-convergencia-mc-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figura&nbsp;13.5: Estimación de E[S_T] con cada vez más simulaciones. La estimación oscila dentro de la banda de ±2 errores estándar, que se angosta como 1/√N.
+</figcaption>
 </figure>
 </div>
 </div>
 </div>
-<p>La estimación “baila” dentro de la banda teórica y se aquieta a medida que <span class="math inline">\(N\)</span> crece. Regla práctica: reportá siempre el <strong>error estándar</strong> de tu estimación Monte Carlo (<span class="math inline">\(s/\sqrt{N}\)</span>), no solo el número.</p>
-<section id="reducción-de-varianza-variables-antitéticas" class="level2" data-number="17.1">
-<h2 data-number="17.1" class="anchored" data-anchor-id="reducción-de-varianza-variables-antitéticas"><span class="header-section-number">17.1</span> Reducción de varianza: variables antitéticas</h2>
+<p>En la <a href="#fig-convergencia-mc" class="quarto-xref">Figura&nbsp;<span>13.5</span></a>, la estimación “baila” dentro de la banda teórica y se aquieta a medida que <span class="math inline">\(N\)</span> crece. Regla práctica: reportá siempre el <strong>error estándar</strong> de tu estimación Monte Carlo (<span class="math inline">\(s/\sqrt{N}\)</span>), no solo el número.</p>
+<section id="reducción-de-varianza-variables-antitéticas" class="level3" data-number="13.3.1">
+<h3 data-number="13.3.1" class="anchored" data-anchor-id="reducción-de-varianza-variables-antitéticas"><span class="header-section-number">13.3.1</span> Reducción de varianza: variables antitéticas</h3>
 <p>¿Se puede lograr más precisión sin más simulaciones? Sí — hay toda una familia de técnicas de <strong>reducción de varianza</strong>. La más simple y elegante: las <strong>variables antitéticas</strong>. La idea: por cada shock <span class="math inline">\(Z\)</span> que uses, usá también <span class="math inline">\(-Z\)</span>. Cada trayectoria “optimista” queda emparejada con su gemela “pesimista”, los errores de ambas se compensan, y el promedio del par es mucho más estable que dos trayectorias independientes.</p>
-<div id="antiteticas" class="cell" data-execution_count="6">
+<p>La <a href="#fig-antiteticas" class="quarto-xref">Figura&nbsp;<span>13.6</span></a> muestra tres de esos pares: cada trayectoria tiene una gemela que recibe exactamente los shocks opuestos y queda reflejada del otro lado de la tendencia.</p>
+<div id="cell-fig-antiteticas" class="cell" data-execution_count="9">
+<div class="cell-output cell-output-display">
+<div id="fig-antiteticas" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-antiteticas-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="cap13_monte_carlo_files/figure-html/fig-antiteticas-output-1.png" width="901" height="401" class="figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-antiteticas-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figura&nbsp;13.6: Tres pares antitéticos: la línea llena usa los shocks Z y la punteada usa −Z. Cada par queda en espejo alrededor de la tendencia (en escala logarítmica), así que los desvíos de uno compensan los del otro.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<div id="antiteticas" class="cell" data-execution_count="10">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> precio_final_gbm(Z):</span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""Precio final S_T dado un vector de shocks acumulados por trayectoria."""</span></span>
 <span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>    log_ST <span class="op">=</span> (np.log(S0) <span class="op">+</span> (mu <span class="op">-</span> <span class="fl">0.5</span> <span class="op">*</span> sigma<span class="op">**</span><span class="dv">2</span>) <span class="op">*</span> T</span>
@@ -1059,11 +1143,11 @@ Valor teórico: 110.517</code></pre>
 <hr>
 </section>
 </section>
-<section id="puente-al-módulo-4-valuar-una-opción-por-monte-carlo" class="level1" data-number="18">
-<h1 data-number="18"><span class="header-section-number">18</span> Puente al Módulo 4: valuar una opción por Monte Carlo</h1>
+<section id="puente-al-módulo-4-valuar-una-opción-por-monte-carlo" class="level2" data-number="13.4">
+<h2 data-number="13.4" class="anchored" data-anchor-id="puente-al-módulo-4-valuar-una-opción-por-monte-carlo"><span class="header-section-number">13.4</span> Puente al Módulo 4: valuar una opción por Monte Carlo</h2>
 <p>Cerremos con el uso más famoso de Monte Carlo en finanzas. Una <strong>call europea</strong> da derecho a comprar el activo a precio <span class="math inline">\(K\)</span> en la fecha <span class="math inline">\(T\)</span>; su pago final es <span class="math inline">\(\max(S_T - K, 0)\)</span>. Bajo valuación neutral al riesgo (lo desarrollamos en el Capítulo 18), su precio es el pago esperado descontado, <strong>simulando con drift igual a la tasa libre de riesgo</strong> <span class="math inline">\(r\)</span>:</p>
 <p><span class="math display">\[C = e^{-rT} \cdot E\big[\max(S_T - K, 0)\big]\]</span></p>
-<div id="opcion-mc" class="cell" data-execution_count="7">
+<div id="opcion-mc" class="cell" data-execution_count="11">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>r <span class="op">=</span> <span class="fl">0.05</span>      <span class="co"># tasa libre de riesgo</span></span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>K <span class="op">=</span> <span class="dv">105</span>       <span class="co"># strike</span></span>
 <span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -1087,11 +1171,26 @@ Valor teórico: 110.517</code></pre>
 Precio call Black-Scholes:   $10.002</code></pre>
 </div>
 </div>
+<p>La <a href="#fig-payoff-mc" class="quarto-xref">Figura&nbsp;<span>13.7</span></a> muestra qué está promediando la simulación: la mayoría de las trayectorias terminan por debajo del strike y pagan cero; el precio sale de las que terminan arriba.</p>
+<div id="cell-fig-payoff-mc" class="cell" data-execution_count="12">
+<div class="cell-output cell-output-display">
+<div id="fig-payoff-mc" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-payoff-mc-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="cap13_monte_carlo_files/figure-html/fig-payoff-mc-output-1.png" width="901" height="401" class="figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-payoff-mc-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figura&nbsp;13.7: Valuación de la call por Monte Carlo. Histograma de los precios finales simulados con drift r; solo las trayectorias a la derecha del strike (zona sombreada) pagan algo. El precio es el promedio del payoff de todas las trayectorias (incluidos los ceros), descontado.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
 <p>La simulación reproduce la fórmula cerrada — y esa es justamente la gracia: para una call europea Black-Scholes ya existe, pero para opciones <strong>path-dependent</strong> (asiáticas, barrera) o con modelos más ricos que el GBM, la fórmula no existe y <strong>Monte Carlo es el camino</strong>. Volveremos sobre esto en el Módulo 4.</p>
 <hr>
 </section>
-<section id="errores-comunes" class="level1" data-number="19">
-<h1 data-number="19"><span class="header-section-number">19</span> Errores comunes</h1>
+<section id="errores-comunes" class="level2" data-number="13.5">
+<h2 data-number="13.5" class="anchored" data-anchor-id="errores-comunes"><span class="header-section-number">13.5</span> Errores comunes</h2>
 <div class="callout callout-style-simple callout-warning callout-titled" title="Trampas frecuentes">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -1113,8 +1212,8 @@ Precio call Black-Scholes:   $10.002</code></pre>
 </div>
 <hr>
 </section>
-<section id="ejercicios-propuestos" class="level1" data-number="20">
-<h1 data-number="20"><span class="header-section-number">20</span> Ejercicios Propuestos</h1>
+<section id="ejercicios-propuestos" class="level2" data-number="13.6">
+<h2 data-number="13.6" class="anchored" data-anchor-id="ejercicios-propuestos"><span class="header-section-number">13.6</span> Ejercicios Propuestos</h2>
 <div class="callout callout-style-simple callout-important callout-titled" title="Ejercicios">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -1139,9 +1238,9 @@ Precio call Black-Scholes:   $10.002</code></pre>
 <noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
 <hr>
 </section>
-<section id="referencias" class="level1" data-number="21">
-<h1 data-number="21"><span class="header-section-number">21</span> Referencias</h1>
-<div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list">
+<section id="referencias" class="level2" data-number="13.7">
+<h2 data-number="13.7" class="anchored" data-anchor-id="referencias"><span class="header-section-number">13.7</span> Referencias</h2>
+<div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list" style="display: none">
 <div id="ref-boyle1977" class="csl-entry" role="listitem">
 Boyle, Phelim. 1977. <span>«Options: A <span>Monte Carlo</span> Approach»</span>. <em>Journal of Financial Economics</em> 4 (3): 323-38.
 </div>
@@ -1156,6 +1255,7 @@ Hull, John. 2018. <em>Options, Futures, and Other Derivatives</em>. 10.ª ed. Pe
 
 <!-- -->
 
+</section>
 </section>
 
 </main> <!-- /main -->
@@ -1642,7 +1742,7 @@ Hull, John. 2018. <em>Options, Futures, and Other Derivatives</em>. 10.ª ed. Pe
 <span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a><span class="co">  @glasserman2003, @hull2018options, @boyle1977</span></span>
 <span id="cb12-14"><a href="#cb12-14" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
 <span id="cb12-15"><a href="#cb12-15" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-16"><a href="#cb12-16" aria-hidden="true" tabindex="-1"></a><span class="fu"># Introducción</span></span>
+<span id="cb12-16"><a href="#cb12-16" aria-hidden="true" tabindex="-1"></a><span class="fu"># Introducción {.unnumbered}</span></span>
 <span id="cb12-17"><a href="#cb12-17" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb12-18"><a href="#cb12-18" aria-hidden="true" tabindex="-1"></a>Hay preguntas financieras que no tienen fórmula: *¿cuál es la distribución del valor de mi cartera en 5 años si rebalanceo cada mes? ¿cuánto vale una opción cuyo pago depende de la trayectoria del precio y no solo del valor final?* Para ese tipo de problemas existe el método de **Monte Carlo**, llamado así por el casino: en lugar de resolver el problema analíticamente, **tiramos los dados miles de veces** —simulamos miles de futuros posibles— y estudiamos la distribución de resultados.</span>
 <span id="cb12-19"><a href="#cb12-19" aria-hidden="true" tabindex="-1"></a></span>
@@ -1652,272 +1752,470 @@ Hull, John. 2018. <em>Options, Futures, and Other Derivatives</em>. 10.ª ed. Pe
 <span id="cb12-23"><a href="#cb12-23" aria-hidden="true" tabindex="-1"></a><span class="ss">2. </span>**Simular** muchas trayectorias independientes de ese modelo.</span>
 <span id="cb12-24"><a href="#cb12-24" aria-hidden="true" tabindex="-1"></a><span class="ss">3. </span>**Agregar**: estimar lo que nos interese (media, percentiles, probabilidad de un evento) sobre las trayectorias.</span>
 <span id="cb12-25"><a href="#cb12-25" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-26"><a href="#cb12-26" aria-hidden="true" tabindex="-1"></a>El paso 1 exige elegir un modelo del precio. Empezamos por el más importante de todos: el **Movimiento Browniano Geométrico**.</span>
-<span id="cb12-27"><a href="#cb12-27" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-30"><a href="#cb12-30" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
-<span id="cb12-31"><a href="#cb12-31" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: setup</span></span>
-<span id="cb12-32"><a href="#cb12-32" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
-<span id="cb12-33"><a href="#cb12-33" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
-<span id="cb12-34"><a href="#cb12-34" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> scipy <span class="im">import</span> stats</span>
-<span id="cb12-35"><a href="#cb12-35" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-36"><a href="#cb12-36" aria-hidden="true" tabindex="-1"></a>rng <span class="op">=</span> np.random.default_rng(<span class="dv">42</span>)</span>
-<span id="cb12-37"><a href="#cb12-37" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb12-38"><a href="#cb12-38" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-39"><a href="#cb12-39" aria-hidden="true" tabindex="-1"></a>---</span>
+<span id="cb12-28"><a href="#cb12-28" aria-hidden="true" tabindex="-1"></a><span class="in">```{mermaid}</span></span>
+<span id="cb12-29"><a href="#cb12-29" aria-hidden="true" tabindex="-1"></a>%%| label: fig-receta-mc</span>
+<span id="cb12-30"><a href="#cb12-30" aria-hidden="true" tabindex="-1"></a>%%| fig-cap: <span class="ot">"</span><span class="st">La receta de Monte Carlo. El modelo es la única parte que cambia de un problema a otro; simular y agregar son siempre iguales. El resultado es una estimación, y por eso viene con su error estándar.</span><span class="ot">"</span></span>
+<span id="cb12-31"><a href="#cb12-31" aria-hidden="true" tabindex="-1"></a>flowchart LR</span>
+<span id="cb12-32"><a href="#cb12-32" aria-hidden="true" tabindex="-1"></a>    M[<span class="ot">"</span><span class="st">&lt;b&gt;1 · Modelar&lt;/b&gt;&lt;br/&gt;dinámica del precio&lt;br/&gt;&lt;i&gt;GBM, saltos, Heston…&lt;/i&gt;</span><span class="ot">"</span>] --&gt; S[<span class="ot">"</span><span class="st">&lt;b&gt;2 · Simular&lt;/b&gt;&lt;br/&gt;N trayectorias&lt;br/&gt;independientes</span><span class="ot">"</span>]</span>
+<span id="cb12-33"><a href="#cb12-33" aria-hidden="true" tabindex="-1"></a>    S --&gt; A[<span class="ot">"</span><span class="st">&lt;b&gt;3 · Agregar&lt;/b&gt;&lt;br/&gt;media · percentil ·&lt;br/&gt;probabilidad · payoff</span><span class="ot">"</span>]</span>
+<span id="cb12-34"><a href="#cb12-34" aria-hidden="true" tabindex="-1"></a>    A --&gt; E([<span class="ot">"</span><span class="st">estimación&lt;br/&gt;± error estándar s/√N</span><span class="ot">"</span>])</span>
+<span id="cb12-35"><a href="#cb12-35" aria-hidden="true" tabindex="-1"></a>    classDef paso fill:<span class="co">#e0e9f4,stroke:#1e3a5f,color:#1f2937</span></span>
+<span id="cb12-36"><a href="#cb12-36" aria-hidden="true" tabindex="-1"></a>    classDef fin fill:<span class="co">#eef2e3,stroke:#637238,color:#1f2937</span></span>
+<span id="cb12-37"><a href="#cb12-37" aria-hidden="true" tabindex="-1"></a>    class M,S,A paso</span>
+<span id="cb12-38"><a href="#cb12-38" aria-hidden="true" tabindex="-1"></a>    class E fin</span>
+<span id="cb12-39"><a href="#cb12-39" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb12-40"><a href="#cb12-40" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-41"><a href="#cb12-41" aria-hidden="true" tabindex="-1"></a><span class="fu"># El Movimiento Browniano Geométrico (GBM)</span></span>
+<span id="cb12-41"><a href="#cb12-41" aria-hidden="true" tabindex="-1"></a>El paso 1 exige elegir un modelo del precio. Empezamos por el más importante de todos: el **Movimiento Browniano Geométrico**.</span>
 <span id="cb12-42"><a href="#cb12-42" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-43"><a href="#cb12-43" aria-hidden="true" tabindex="-1"></a><span class="fu">## La idea</span></span>
-<span id="cb12-44"><a href="#cb12-44" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-45"><a href="#cb12-45" aria-hidden="true" tabindex="-1"></a>¿Cómo modelar el precio de una acción? Dos observaciones empíricas nos guían:</span>
-<span id="cb12-46"><a href="#cb12-46" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-47"><a href="#cb12-47" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Los precios tienen una **tendencia** de largo plazo (el mercado sube "en promedio").</span>
-<span id="cb12-48"><a href="#cb12-48" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Alrededor de esa tendencia hay **ruido** permanente e impredecible.</span>
-<span id="cb12-49"><a href="#cb12-49" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-50"><a href="#cb12-50" aria-hidden="true" tabindex="-1"></a>El GBM formaliza exactamente eso. En su forma de ecuación diferencial estocástica:</span>
-<span id="cb12-51"><a href="#cb12-51" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-52"><a href="#cb12-52" aria-hidden="true" tabindex="-1"></a>$$\frac{dS}{S} = \mu \, dt + \sigma \, dW$$</span>
+<span id="cb12-45"><a href="#cb12-45" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb12-46"><a href="#cb12-46" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: setup</span></span>
+<span id="cb12-47"><a href="#cb12-47" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb12-48"><a href="#cb12-48" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb12-49"><a href="#cb12-49" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> scipy <span class="im">import</span> stats</span>
+<span id="cb12-50"><a href="#cb12-50" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-51"><a href="#cb12-51" aria-hidden="true" tabindex="-1"></a>rng <span class="op">=</span> np.random.default_rng(<span class="dv">42</span>)</span>
+<span id="cb12-52"><a href="#cb12-52" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb12-53"><a href="#cb12-53" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-54"><a href="#cb12-54" aria-hidden="true" tabindex="-1"></a>Leela por partes: el retorno instantáneo del activo ($dS/S$) tiene un componente determinístico $\mu\,dt$ (el **drift**, la tendencia) y un componente aleatorio $\sigma\,dW$ (la **difusión**: ruido gaussiano escalado por la volatilidad). Es literalmente "tendencia + ruido".</span>
-<span id="cb12-55"><a href="#cb12-55" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-56"><a href="#cb12-56" aria-hidden="true" tabindex="-1"></a>Para simular necesitamos la versión discreta. Integrando la ecuación (los detalles requieren cálculo estocástico, pero el resultado es lo que importa):</span>
-<span id="cb12-57"><a href="#cb12-57" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-58"><a href="#cb12-58" aria-hidden="true" tabindex="-1"></a>$$S_{t+\Delta t} = S_t \cdot \exp<span class="sc">\!</span>\Big<span class="co">[</span><span class="ot">\big(\mu - \tfrac{\sigma^2}{2}\big)\Delta t + \sigma \sqrt{\Delta t} \, Z\Big</span><span class="co">]</span>, \qquad Z \sim N(0,1)$$</span>
-<span id="cb12-59"><a href="#cb12-59" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-60"><a href="#cb12-60" aria-hidden="true" tabindex="-1"></a>::: {.callout-note title="¿De dónde sale el −σ²/2?"}</span>
-<span id="cb12-61"><a href="#cb12-61" aria-hidden="true" tabindex="-1"></a>Ese término sorprende la primera vez. La intuición: la exponencial es convexa, así que el ruido simétrico en el exponente produce resultados *asimétricos* en el precio (una suba del 10% seguida de una baja del 10% no te devuelve al punto de partida: $1.1 \times 0.9 = 0.99$). El término $-\sigma^2/2$ corrige exactamente ese efecto para que el retorno *esperado* del precio sea $\mu$. Sin la corrección, la simulación tendría un sesgo alcista espurio.</span>
-<span id="cb12-62"><a href="#cb12-62" aria-hidden="true" tabindex="-1"></a>:::</span>
-<span id="cb12-63"><a href="#cb12-63" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-64"><a href="#cb12-64" aria-hidden="true" tabindex="-1"></a>Dos propiedades del GBM que conviene tener presentes:</span>
-<span id="cb12-65"><a href="#cb12-65" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-66"><a href="#cb12-66" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>El precio **nunca se hace negativo** (es una exponencial) — realista para acciones.</span>
-<span id="cb12-67"><a href="#cb12-67" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Los retornos logarítmicos son normales, así que el precio final es **lognormal**: asimétrico, con una cola larga hacia arriba.</span>
+<span id="cb12-56"><a href="#cb12-56" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb12-57"><a href="#cb12-57" aria-hidden="true" tabindex="-1"></a><span class="co">#| include: false</span></span>
+<span id="cb12-58"><a href="#cb12-58" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> sys<span class="op">;</span> sys.path.insert(<span class="dv">0</span>, <span class="st">".."</span>)</span>
+<span id="cb12-59"><a href="#cb12-59" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> _esquemas <span class="im">import</span> aplicar_estilo</span>
+<span id="cb12-60"><a href="#cb12-60" aria-hidden="true" tabindex="-1"></a>aplicar_estilo()</span>
+<span id="cb12-61"><a href="#cb12-61" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb12-62"><a href="#cb12-62" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-63"><a href="#cb12-63" aria-hidden="true" tabindex="-1"></a>---</span>
+<span id="cb12-64"><a href="#cb12-64" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-65"><a href="#cb12-65" aria-hidden="true" tabindex="-1"></a><span class="fu">## El Movimiento Browniano Geométrico (GBM)</span></span>
+<span id="cb12-66"><a href="#cb12-66" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-67"><a href="#cb12-67" aria-hidden="true" tabindex="-1"></a><span class="fu">### La idea</span></span>
 <span id="cb12-68"><a href="#cb12-68" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-69"><a href="#cb12-69" aria-hidden="true" tabindex="-1"></a><span class="fu">## Simulación vectorizada</span></span>
+<span id="cb12-69"><a href="#cb12-69" aria-hidden="true" tabindex="-1"></a>¿Cómo modelar el precio de una acción? Dos observaciones empíricas nos guían:</span>
 <span id="cb12-70"><a href="#cb12-70" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-71"><a href="#cb12-71" aria-hidden="true" tabindex="-1"></a>Simulamos **todas las trayectorias a la vez** con una matriz de shocks: filas = pasos de tiempo, columnas = simulaciones. El único bucle recorre el tiempo (cada precio depende del anterior); las 10.000 simulaciones avanzan en paralelo gracias a la vectorización del Capítulo 5.</span>
-<span id="cb12-72"><a href="#cb12-72" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-75"><a href="#cb12-75" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
-<span id="cb12-76"><a href="#cb12-76" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: gbm</span></span>
-<span id="cb12-77"><a href="#cb12-77" aria-hidden="true" tabindex="-1"></a><span class="co"># Parámetros del activo y de la simulación</span></span>
-<span id="cb12-78"><a href="#cb12-78" aria-hidden="true" tabindex="-1"></a>S0 <span class="op">=</span> <span class="dv">100</span>          <span class="co"># precio inicial</span></span>
-<span id="cb12-79"><a href="#cb12-79" aria-hidden="true" tabindex="-1"></a>mu <span class="op">=</span> <span class="fl">0.10</span>         <span class="co"># drift anual (10%)</span></span>
-<span id="cb12-80"><a href="#cb12-80" aria-hidden="true" tabindex="-1"></a>sigma <span class="op">=</span> <span class="fl">0.25</span>      <span class="co"># volatilidad anual (25%)</span></span>
-<span id="cb12-81"><a href="#cb12-81" aria-hidden="true" tabindex="-1"></a>T <span class="op">=</span> <span class="fl">1.0</span>           <span class="co"># horizonte: 1 año</span></span>
-<span id="cb12-82"><a href="#cb12-82" aria-hidden="true" tabindex="-1"></a>n_pasos <span class="op">=</span> <span class="dv">252</span>     <span class="co"># pasos diarios</span></span>
-<span id="cb12-83"><a href="#cb12-83" aria-hidden="true" tabindex="-1"></a>n_sims <span class="op">=</span> <span class="dv">10_000</span>   <span class="co"># trayectorias</span></span>
-<span id="cb12-84"><a href="#cb12-84" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-85"><a href="#cb12-85" aria-hidden="true" tabindex="-1"></a>dt <span class="op">=</span> T <span class="op">/</span> n_pasos</span>
-<span id="cb12-86"><a href="#cb12-86" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-87"><a href="#cb12-87" aria-hidden="true" tabindex="-1"></a><span class="co"># Matriz de shocks: un N(0,1) por paso y por simulación</span></span>
-<span id="cb12-88"><a href="#cb12-88" aria-hidden="true" tabindex="-1"></a>Z <span class="op">=</span> rng.standard_normal((n_pasos, n_sims))</span>
+<span id="cb12-71"><a href="#cb12-71" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Los precios tienen una **tendencia** de largo plazo (el mercado sube "en promedio").</span>
+<span id="cb12-72"><a href="#cb12-72" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Alrededor de esa tendencia hay **ruido** permanente e impredecible.</span>
+<span id="cb12-73"><a href="#cb12-73" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-74"><a href="#cb12-74" aria-hidden="true" tabindex="-1"></a>El GBM formaliza exactamente eso. En su forma de ecuación diferencial estocástica:</span>
+<span id="cb12-75"><a href="#cb12-75" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-76"><a href="#cb12-76" aria-hidden="true" tabindex="-1"></a>$$\frac{dS}{S} = \mu \, dt + \sigma \, dW$$</span>
+<span id="cb12-77"><a href="#cb12-77" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-78"><a href="#cb12-78" aria-hidden="true" tabindex="-1"></a>Leela por partes: el retorno instantáneo del activo ($dS/S$) tiene un componente determinístico $\mu\,dt$ (el **drift**, la tendencia) y un componente aleatorio $\sigma\,dW$ (la **difusión**: ruido gaussiano escalado por la volatilidad). Es literalmente "tendencia + ruido".</span>
+<span id="cb12-79"><a href="#cb12-79" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-80"><a href="#cb12-80" aria-hidden="true" tabindex="-1"></a>Para simular necesitamos la versión discreta. Integrando la ecuación (los detalles requieren cálculo estocástico, pero el resultado es lo que importa):</span>
+<span id="cb12-81"><a href="#cb12-81" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-82"><a href="#cb12-82" aria-hidden="true" tabindex="-1"></a>$$S_{t+\Delta t} = S_t \cdot \exp<span class="sc">\!</span>\Big<span class="co">[</span><span class="ot">\big(\mu - \tfrac{\sigma^2}{2}\big)\Delta t + \sigma \sqrt{\Delta t} \, Z\Big</span><span class="co">]</span>, \qquad Z \sim N(0,1)$$</span>
+<span id="cb12-83"><a href="#cb12-83" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-84"><a href="#cb12-84" aria-hidden="true" tabindex="-1"></a>::: {.callout-note title="¿De dónde sale el −σ²/2?"}</span>
+<span id="cb12-85"><a href="#cb12-85" aria-hidden="true" tabindex="-1"></a>Ese término sorprende la primera vez. La intuición: la exponencial es convexa, así que el ruido simétrico en el exponente produce resultados *asimétricos* en el precio (una suba del 10% seguida de una baja del 10% no te devuelve al punto de partida: $1.1 \times 0.9 = 0.99$). El término $-\sigma^2/2$ corrige exactamente ese efecto para que el retorno *esperado* del precio sea $\mu$. Sin la corrección, la simulación tendría un sesgo alcista espurio.</span>
+<span id="cb12-86"><a href="#cb12-86" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb12-87"><a href="#cb12-87" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-88"><a href="#cb12-88" aria-hidden="true" tabindex="-1"></a>La @fig-arbol-convexidad muestra el efecto con el ejemplo más chico posible: dos días, cada uno con +10% o −10% con igual probabilidad. El precio *medio* no se mueve, pero el resultado *típico* (la mediana) pierde. Esa brecha entre media y mediana es exactamente lo que el término $-\sigma^2/2$ lleva en cuenta.</span>
 <span id="cb12-89"><a href="#cb12-89" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-90"><a href="#cb12-90" aria-hidden="true" tabindex="-1"></a><span class="co"># Simulación: el bucle recorre el tiempo; las columnas avanzan en paralelo</span></span>
-<span id="cb12-91"><a href="#cb12-91" aria-hidden="true" tabindex="-1"></a>S <span class="op">=</span> np.empty((n_pasos <span class="op">+</span> <span class="dv">1</span>, n_sims))</span>
-<span id="cb12-92"><a href="#cb12-92" aria-hidden="true" tabindex="-1"></a>S[<span class="dv">0</span>] <span class="op">=</span> S0</span>
-<span id="cb12-93"><a href="#cb12-93" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> t <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">1</span>, n_pasos <span class="op">+</span> <span class="dv">1</span>):</span>
-<span id="cb12-94"><a href="#cb12-94" aria-hidden="true" tabindex="-1"></a>    S[t] <span class="op">=</span> S[t<span class="op">-</span><span class="dv">1</span>] <span class="op">*</span> np.exp((mu <span class="op">-</span> <span class="fl">0.5</span> <span class="op">*</span> sigma<span class="op">**</span><span class="dv">2</span>) <span class="op">*</span> dt <span class="op">+</span> sigma <span class="op">*</span> np.sqrt(dt) <span class="op">*</span> Z[t<span class="op">-</span><span class="dv">1</span>])</span>
-<span id="cb12-95"><a href="#cb12-95" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-96"><a href="#cb12-96" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Precio inicial:       $</span><span class="sc">{</span>S0<span class="sc">:.2f}</span><span class="ss">"</span>)</span>
-<span id="cb12-97"><a href="#cb12-97" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Precio medio final:   $</span><span class="sc">{</span>S[<span class="op">-</span><span class="dv">1</span>]<span class="sc">.</span>mean()<span class="sc">:.2f}</span><span class="ss">   (teórico: $</span><span class="sc">{</span>S0 <span class="op">*</span> np<span class="sc">.</span>exp(mu <span class="op">*</span> T)<span class="sc">:.2f}</span><span class="ss">)"</span>)</span>
-<span id="cb12-98"><a href="#cb12-98" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Precio mediano final: $</span><span class="sc">{</span>np<span class="sc">.</span>median(S[<span class="op">-</span><span class="dv">1</span>])<span class="sc">:.2f}</span><span class="ss">"</span>)</span>
-<span id="cb12-99"><a href="#cb12-99" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Rango simulado:       $</span><span class="sc">{</span>S[<span class="op">-</span><span class="dv">1</span>]<span class="sc">.</span><span class="bu">min</span>()<span class="sc">:.2f}</span><span class="ss"> — $</span><span class="sc">{</span>S[<span class="op">-</span><span class="dv">1</span>]<span class="sc">.</span><span class="bu">max</span>()<span class="sc">:.2f}</span><span class="ss">"</span>)</span>
-<span id="cb12-100"><a href="#cb12-100" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb12-101"><a href="#cb12-101" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-102"><a href="#cb12-102" aria-hidden="true" tabindex="-1"></a>Verificación de cordura: la media simulada coincide con la teórica $E<span class="co">[</span><span class="ot">S_T</span><span class="co">]</span> = S_0 e^{\mu T}$. Notá también que la **mediana está por debajo de la media**: es la asimetría lognormal en acción (unas pocas trayectorias excelentes tiran el promedio hacia arriba).</span>
-<span id="cb12-103"><a href="#cb12-103" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-106"><a href="#cb12-106" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
-<span id="cb12-107"><a href="#cb12-107" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: plot-caminos</span></span>
-<span id="cb12-108"><a href="#cb12-108" aria-hidden="true" tabindex="-1"></a>fig, axes <span class="op">=</span> plt.subplots(<span class="dv">1</span>, <span class="dv">2</span>, figsize<span class="op">=</span>(<span class="dv">12</span>, <span class="fl">4.5</span>))</span>
-<span id="cb12-109"><a href="#cb12-109" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-110"><a href="#cb12-110" aria-hidden="true" tabindex="-1"></a><span class="co"># Panel 1: una muestra de trayectorias</span></span>
-<span id="cb12-111"><a href="#cb12-111" aria-hidden="true" tabindex="-1"></a>ax <span class="op">=</span> axes[<span class="dv">0</span>]</span>
-<span id="cb12-112"><a href="#cb12-112" aria-hidden="true" tabindex="-1"></a>tiempo <span class="op">=</span> np.arange(n_pasos <span class="op">+</span> <span class="dv">1</span>) <span class="op">/</span> <span class="dv">252</span></span>
-<span id="cb12-113"><a href="#cb12-113" aria-hidden="true" tabindex="-1"></a>ax.plot(tiempo, S[:, :<span class="dv">100</span>], alpha<span class="op">=</span><span class="fl">0.25</span>, linewidth<span class="op">=</span><span class="fl">0.6</span>)</span>
-<span id="cb12-114"><a href="#cb12-114" aria-hidden="true" tabindex="-1"></a>ax.plot(tiempo, S0 <span class="op">*</span> np.exp(mu <span class="op">*</span> tiempo), <span class="st">"k--"</span>, linewidth<span class="op">=</span><span class="dv">2</span>, label<span class="op">=</span><span class="st">"Tendencia $S_0 e^{</span><span class="ch">\\</span><span class="st">mu t}$"</span>)</span>
-<span id="cb12-115"><a href="#cb12-115" aria-hidden="true" tabindex="-1"></a>ax.set_title(<span class="ss">f"100 trayectorias (de </span><span class="sc">{</span>n_sims<span class="sc">:,}</span><span class="ss">)"</span>)</span>
-<span id="cb12-116"><a href="#cb12-116" aria-hidden="true" tabindex="-1"></a>ax.set_xlabel(<span class="st">"Años"</span>)</span>
-<span id="cb12-117"><a href="#cb12-117" aria-hidden="true" tabindex="-1"></a>ax.set_ylabel(<span class="st">"Precio ($)"</span>)</span>
-<span id="cb12-118"><a href="#cb12-118" aria-hidden="true" tabindex="-1"></a>ax.legend()</span>
-<span id="cb12-119"><a href="#cb12-119" aria-hidden="true" tabindex="-1"></a>ax.grid(<span class="va">True</span>, alpha<span class="op">=</span><span class="fl">0.3</span>)</span>
-<span id="cb12-120"><a href="#cb12-120" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-121"><a href="#cb12-121" aria-hidden="true" tabindex="-1"></a><span class="co"># Panel 2: distribución de precios finales</span></span>
-<span id="cb12-122"><a href="#cb12-122" aria-hidden="true" tabindex="-1"></a>ax <span class="op">=</span> axes[<span class="dv">1</span>]</span>
-<span id="cb12-123"><a href="#cb12-123" aria-hidden="true" tabindex="-1"></a>ax.hist(S[<span class="op">-</span><span class="dv">1</span>], bins<span class="op">=</span><span class="dv">80</span>, density<span class="op">=</span><span class="va">True</span>, alpha<span class="op">=</span><span class="fl">0.7</span>, color<span class="op">=</span><span class="st">"steelblue"</span>, edgecolor<span class="op">=</span><span class="st">"white"</span>)</span>
-<span id="cb12-124"><a href="#cb12-124" aria-hidden="true" tabindex="-1"></a>ax.axvline(S[<span class="op">-</span><span class="dv">1</span>].mean(), color<span class="op">=</span><span class="st">"green"</span>, linestyle<span class="op">=</span><span class="st">"--"</span>,</span>
-<span id="cb12-125"><a href="#cb12-125" aria-hidden="true" tabindex="-1"></a>           label<span class="op">=</span><span class="ss">f"Media: $</span><span class="sc">{</span>S[<span class="op">-</span><span class="dv">1</span>]<span class="sc">.</span>mean()<span class="sc">:.0f}</span><span class="ss">"</span>)</span>
-<span id="cb12-126"><a href="#cb12-126" aria-hidden="true" tabindex="-1"></a>ax.axvline(np.median(S[<span class="op">-</span><span class="dv">1</span>]), color<span class="op">=</span><span class="st">"red"</span>, linestyle<span class="op">=</span><span class="st">":"</span>,</span>
-<span id="cb12-127"><a href="#cb12-127" aria-hidden="true" tabindex="-1"></a>           label<span class="op">=</span><span class="ss">f"Mediana: $</span><span class="sc">{</span>np<span class="sc">.</span>median(S[<span class="op">-</span><span class="dv">1</span>])<span class="sc">:.0f}</span><span class="ss">"</span>)</span>
-<span id="cb12-128"><a href="#cb12-128" aria-hidden="true" tabindex="-1"></a>ax.set_title(<span class="st">"Distribución de $S_T$ (lognormal)"</span>)</span>
-<span id="cb12-129"><a href="#cb12-129" aria-hidden="true" tabindex="-1"></a>ax.set_xlabel(<span class="st">"Precio final ($)"</span>)</span>
-<span id="cb12-130"><a href="#cb12-130" aria-hidden="true" tabindex="-1"></a>ax.legend()</span>
-<span id="cb12-131"><a href="#cb12-131" aria-hidden="true" tabindex="-1"></a>ax.grid(<span class="va">True</span>, alpha<span class="op">=</span><span class="fl">0.3</span>)</span>
-<span id="cb12-132"><a href="#cb12-132" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-133"><a href="#cb12-133" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
-<span id="cb12-134"><a href="#cb12-134" aria-hidden="true" tabindex="-1"></a>plt.show()</span>
-<span id="cb12-135"><a href="#cb12-135" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb12-92"><a href="#cb12-92" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb12-93"><a href="#cb12-93" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: fig-arbol-convexidad</span></span>
+<span id="cb12-94"><a href="#cb12-94" aria-hidden="true" tabindex="-1"></a><span class="co">#| echo: false</span></span>
+<span id="cb12-95"><a href="#cb12-95" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-cap: "Dos días de ±10% con probabilidad 1/2 cada uno. La media de los cuatro caminos sigue en 100, pero tres de cuatro terminan en 99 o menos: ruido simétrico en los retornos produce un sesgo hacia abajo en el resultado típico."</span></span>
+<span id="cb12-96"><a href="#cb12-96" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> sys<span class="op">;</span> sys.path.insert(<span class="dv">0</span>, <span class="st">".."</span>)</span>
+<span id="cb12-97"><a href="#cb12-97" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> _esquemas <span class="im">import</span> <span class="op">*</span></span>
+<span id="cb12-98"><a href="#cb12-98" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-99"><a href="#cb12-99" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> _esquema():</span>
+<span id="cb12-100"><a href="#cb12-100" aria-hidden="true" tabindex="-1"></a>    fig, ax <span class="op">=</span> lienzo(<span class="dv">15</span>, <span class="fl">6.9</span>)</span>
+<span id="cb12-101"><a href="#cb12-101" aria-hidden="true" tabindex="-1"></a>    nodos <span class="op">=</span> {(<span class="dv">0</span>, <span class="dv">0</span>): <span class="dv">100</span>}</span>
+<span id="cb12-102"><a href="#cb12-102" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> t <span class="kw">in</span> (<span class="dv">1</span>, <span class="dv">2</span>):</span>
+<span id="cb12-103"><a href="#cb12-103" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> k <span class="kw">in</span> <span class="bu">range</span>(t <span class="op">+</span> <span class="dv">1</span>):                 <span class="co"># k = cantidad de subas</span></span>
+<span id="cb12-104"><a href="#cb12-104" aria-hidden="true" tabindex="-1"></a>            nodos[(t, k)] <span class="op">=</span> <span class="dv">100</span> <span class="op">*</span> <span class="fl">1.1</span><span class="op">**</span>k <span class="op">*</span> <span class="fl">0.9</span><span class="op">**</span>(t <span class="op">-</span> k)</span>
+<span id="cb12-105"><a href="#cb12-105" aria-hidden="true" tabindex="-1"></a>    pos <span class="op">=</span> {(t, k): (<span class="fl">1.2</span> <span class="op">+</span> t <span class="op">*</span> <span class="fl">4.2</span>, <span class="fl">3.7</span> <span class="op">+</span> (<span class="dv">2</span> <span class="op">*</span> k <span class="op">-</span> t) <span class="op">*</span> <span class="fl">1.25</span>) <span class="cf">for</span> (t, k) <span class="kw">in</span> nodos}</span>
+<span id="cb12-106"><a href="#cb12-106" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-107"><a href="#cb12-107" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> (t, k), (x, y) <span class="kw">in</span> pos.items():</span>
+<span id="cb12-108"><a href="#cb12-108" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> t <span class="op">&lt;</span> <span class="dv">2</span>:</span>
+<span id="cb12-109"><a href="#cb12-109" aria-hidden="true" tabindex="-1"></a>            <span class="cf">for</span> dk, etiqueta, color <span class="kw">in</span> [(<span class="dv">1</span>, <span class="st">"+10%"</span>, SECUNDARIO), (<span class="dv">0</span>, <span class="st">"−10%"</span>, ACENTO)]:</span>
+<span id="cb12-110"><a href="#cb12-110" aria-hidden="true" tabindex="-1"></a>                destino <span class="op">=</span> pos[(t <span class="op">+</span> <span class="dv">1</span>, k <span class="op">+</span> dk)]</span>
+<span id="cb12-111"><a href="#cb12-111" aria-hidden="true" tabindex="-1"></a>                flecha(ax, (x <span class="op">+</span> <span class="fl">0.75</span>, y), (destino[<span class="dv">0</span>] <span class="op">-</span> <span class="fl">0.75</span>, destino[<span class="dv">1</span>]), etiqueta,</span>
+<span id="cb12-112"><a href="#cb12-112" aria-hidden="true" tabindex="-1"></a>                       color<span class="op">=</span>color, tam<span class="op">=</span><span class="fl">8.5</span>, desplazamiento<span class="op">=</span>(<span class="dv">0</span>, <span class="fl">0.3</span> <span class="cf">if</span> dk <span class="cf">else</span> <span class="op">-</span><span class="fl">0.35</span>))</span>
+<span id="cb12-113"><a href="#cb12-113" aria-hidden="true" tabindex="-1"></a>        relleno <span class="op">=</span> FONDO_GRIS <span class="cf">if</span> t <span class="op">&lt;</span> <span class="dv">2</span> <span class="cf">else</span> (FONDO_SECUNDARIO <span class="cf">if</span> nodos[(t, k)] <span class="op">&gt;</span> <span class="dv">100</span> <span class="cf">else</span> FONDO_ACENTO)</span>
+<span id="cb12-114"><a href="#cb12-114" aria-hidden="true" tabindex="-1"></a>        caja(ax, x <span class="op">-</span> <span class="fl">0.7</span>, y <span class="op">-</span> <span class="fl">0.35</span>, <span class="fl">1.4</span>, <span class="fl">0.7</span>, <span class="ss">f"</span><span class="sc">{</span>nodos[(t, k)]<span class="sc">:.0f}</span><span class="ss">"</span>, relleno<span class="op">=</span>relleno,</span>
+<span id="cb12-115"><a href="#cb12-115" aria-hidden="true" tabindex="-1"></a>             mono<span class="op">=</span><span class="va">True</span>, tam<span class="op">=</span><span class="dv">10</span>)</span>
+<span id="cb12-116"><a href="#cb12-116" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Probabilidad de cada final</span></span>
+<span id="cb12-117"><a href="#cb12-117" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> k, prob <span class="kw">in</span> [(<span class="dv">2</span>, <span class="st">"1/4"</span>), (<span class="dv">1</span>, <span class="st">"2/4"</span>), (<span class="dv">0</span>, <span class="st">"1/4"</span>)]:</span>
+<span id="cb12-118"><a href="#cb12-118" aria-hidden="true" tabindex="-1"></a>        x, y <span class="op">=</span> pos[(<span class="dv">2</span>, k)]</span>
+<span id="cb12-119"><a href="#cb12-119" aria-hidden="true" tabindex="-1"></a>        texto(ax, x <span class="op">+</span> <span class="fl">1.0</span>, y, <span class="ss">f"prob. </span><span class="sc">{</span>prob<span class="sc">}</span><span class="ss">"</span>, tam<span class="op">=</span><span class="fl">8.5</span>, ha<span class="op">=</span><span class="st">"left"</span>, color<span class="op">=</span>TEXTO)</span>
+<span id="cb12-120"><a href="#cb12-120" aria-hidden="true" tabindex="-1"></a>    texto(ax, <span class="fl">13.3</span>, <span class="fl">5.2</span>, <span class="st">"media:</span><span class="ch">\n</span><span class="st">¼·121 + ½·99 + ¼·81</span><span class="ch">\n</span><span class="st">= 100"</span>, tam<span class="op">=</span><span class="dv">9</span>, color<span class="op">=</span>PRIMARIO, mono<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb12-121"><a href="#cb12-121" aria-hidden="true" tabindex="-1"></a>    texto(ax, <span class="fl">13.3</span>, <span class="fl">2.2</span>, <span class="st">"mediana: 99</span><span class="ch">\n</span><span class="st">(el camino típico</span><span class="ch">\n</span><span class="st">pierde)"</span>, tam<span class="op">=</span><span class="dv">9</span>, color<span class="op">=</span>ACENTO)</span>
+<span id="cb12-122"><a href="#cb12-122" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> t, etiqueta <span class="kw">in</span> <span class="bu">enumerate</span>([<span class="st">"hoy"</span>, <span class="st">"día 1"</span>, <span class="st">"día 2"</span>]):</span>
+<span id="cb12-123"><a href="#cb12-123" aria-hidden="true" tabindex="-1"></a>        texto(ax, <span class="fl">1.2</span> <span class="op">+</span> t <span class="op">*</span> <span class="fl">4.2</span>, <span class="fl">0.2</span>, etiqueta, tam<span class="op">=</span><span class="dv">9</span>, color<span class="op">=</span>GRIS)</span>
+<span id="cb12-124"><a href="#cb12-124" aria-hidden="true" tabindex="-1"></a>    plt.tight_layout()</span>
+<span id="cb12-125"><a href="#cb12-125" aria-hidden="true" tabindex="-1"></a>    plt.show()</span>
+<span id="cb12-126"><a href="#cb12-126" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-127"><a href="#cb12-127" aria-hidden="true" tabindex="-1"></a>_esquema()</span>
+<span id="cb12-128"><a href="#cb12-128" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb12-129"><a href="#cb12-129" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-130"><a href="#cb12-130" aria-hidden="true" tabindex="-1"></a>Dos propiedades del GBM que conviene tener presentes:</span>
+<span id="cb12-131"><a href="#cb12-131" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-132"><a href="#cb12-132" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>El precio **nunca se hace negativo** (es una exponencial) — realista para acciones.</span>
+<span id="cb12-133"><a href="#cb12-133" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Los retornos logarítmicos son normales, así que el precio final es **lognormal**: asimétrico, con una cola larga hacia arriba.</span>
+<span id="cb12-134"><a href="#cb12-134" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-135"><a href="#cb12-135" aria-hidden="true" tabindex="-1"></a><span class="fu">### Simulación vectorizada</span></span>
 <span id="cb12-136"><a href="#cb12-136" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-137"><a href="#cb12-137" aria-hidden="true" tabindex="-1"></a>El panel izquierdo es el "abanico de futuros": todas las trayectorias arrancan del mismo punto y se dispersan con el tiempo. El derecho resume dónde terminan: la forma asimétrica con cola derecha larga es la distribución lognormal.</span>
+<span id="cb12-137"><a href="#cb12-137" aria-hidden="true" tabindex="-1"></a>Simulamos **todas las trayectorias a la vez** con una matriz de shocks: filas = pasos de tiempo, columnas = simulaciones. El único bucle recorre el tiempo (cada precio depende del anterior); las 10.000 simulaciones avanzan en paralelo gracias a la vectorización del Capítulo 5.</span>
 <span id="cb12-138"><a href="#cb12-138" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-139"><a href="#cb12-139" aria-hidden="true" tabindex="-1"></a>---</span>
+<span id="cb12-139"><a href="#cb12-139" aria-hidden="true" tabindex="-1"></a>La @fig-matriz-shocks muestra la forma de los datos antes de escribir el código: una fila por día y una columna por futuro posible.</span>
 <span id="cb12-140"><a href="#cb12-140" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-141"><a href="#cb12-141" aria-hidden="true" tabindex="-1"></a><span class="fu"># VaR y Expected Shortfall por Monte Carlo</span></span>
-<span id="cb12-142"><a href="#cb12-142" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-143"><a href="#cb12-143" aria-hidden="true" tabindex="-1"></a>En el Capítulo 11 calculamos VaR y ES con dos métodos: paramétrico (asume normal) e histórico (usa el pasado). Monte Carlo es el **tercer método**, y el más flexible: la distribución de pérdidas sale de las trayectorias simuladas, con el modelo que queramos. Hoy el modelo es GBM; en el próximo capítulo será uno con saltos — y el código de abajo no cambia.</span>
-<span id="cb12-144"><a href="#cb12-144" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-147"><a href="#cb12-147" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
-<span id="cb12-148"><a href="#cb12-148" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: var-montecarlo</span></span>
-<span id="cb12-149"><a href="#cb12-149" aria-hidden="true" tabindex="-1"></a>valor_portafolio <span class="op">=</span> <span class="dv">10_000_000</span></span>
-<span id="cb12-150"><a href="#cb12-150" aria-hidden="true" tabindex="-1"></a>retornos_sim <span class="op">=</span> S[<span class="op">-</span><span class="dv">1</span>] <span class="op">/</span> S0 <span class="op">-</span> <span class="dv">1</span>     <span class="co"># retorno de cada trayectoria a 1 año</span></span>
-<span id="cb12-151"><a href="#cb12-151" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-152"><a href="#cb12-152" aria-hidden="true" tabindex="-1"></a>var_95 <span class="op">=</span> <span class="op">-</span>np.percentile(retornos_sim, <span class="dv">5</span>) <span class="op">*</span> valor_portafolio</span>
-<span id="cb12-153"><a href="#cb12-153" aria-hidden="true" tabindex="-1"></a>umbral <span class="op">=</span> np.percentile(retornos_sim, <span class="dv">5</span>)</span>
-<span id="cb12-154"><a href="#cb12-154" aria-hidden="true" tabindex="-1"></a>es_95 <span class="op">=</span> <span class="op">-</span>retornos_sim[retornos_sim <span class="op">&lt;=</span> umbral].mean() <span class="op">*</span> valor_portafolio</span>
+<span id="cb12-143"><a href="#cb12-143" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb12-144"><a href="#cb12-144" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: fig-matriz-shocks</span></span>
+<span id="cb12-145"><a href="#cb12-145" aria-hidden="true" tabindex="-1"></a><span class="co">#| echo: false</span></span>
+<span id="cb12-146"><a href="#cb12-146" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-cap: "Organización de la simulación. Z tiene un shock N(0,1) por día (fila) y por trayectoria (columna); S tiene una fila más, la del precio inicial. El bucle avanza fila por fila: cada fila de S se calcula con una sola operación vectorizada sobre la fila anterior y la fila de Z."</span></span>
+<span id="cb12-147"><a href="#cb12-147" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> sys<span class="op">;</span> sys.path.insert(<span class="dv">0</span>, <span class="st">".."</span>)</span>
+<span id="cb12-148"><a href="#cb12-148" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> _esquemas <span class="im">import</span> <span class="op">*</span></span>
+<span id="cb12-149"><a href="#cb12-149" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb12-150"><a href="#cb12-150" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-151"><a href="#cb12-151" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> _esquema():</span>
+<span id="cb12-152"><a href="#cb12-152" aria-hidden="true" tabindex="-1"></a>    demo <span class="op">=</span> np.random.default_rng(<span class="dv">3</span>).standard_normal((<span class="dv">4</span>, <span class="dv">5</span>))</span>
+<span id="cb12-153"><a href="#cb12-153" aria-hidden="true" tabindex="-1"></a>    fig, ax <span class="op">=</span> lienzo(<span class="dv">17</span>, <span class="fl">7.2</span>)</span>
+<span id="cb12-154"><a href="#cb12-154" aria-hidden="true" tabindex="-1"></a>    w, h <span class="op">=</span> <span class="fl">1.15</span>, <span class="fl">0.62</span></span>
 <span id="cb12-155"><a href="#cb12-155" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-156"><a href="#cb12-156" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Sobre un portafolio de $</span><span class="sc">{</span>valor_portafolio<span class="op">/</span><span class="fl">1e6</span><span class="sc">:.0f}</span><span class="ss">M, horizonte 1 año:"</span>)</span>
-<span id="cb12-157"><a href="#cb12-157" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"  VaR 95% (Monte Carlo): $</span><span class="sc">{</span>var_95<span class="sc">:&gt;12,.0f}</span><span class="ss">"</span>)</span>
-<span id="cb12-158"><a href="#cb12-158" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"  ES  95% (Monte Carlo): $</span><span class="sc">{</span>es_95<span class="sc">:&gt;12,.0f}</span><span class="ss">"</span>)</span>
-<span id="cb12-159"><a href="#cb12-159" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb12-160"><a href="#cb12-160" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-161"><a href="#cb12-161" aria-hidden="true" tabindex="-1"></a>---</span>
-<span id="cb12-162"><a href="#cb12-162" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-163"><a href="#cb12-163" aria-hidden="true" tabindex="-1"></a><span class="fu"># ¿Cuántas simulaciones son suficientes? Convergencia</span></span>
-<span id="cb12-164"><a href="#cb12-164" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-165"><a href="#cb12-165" aria-hidden="true" tabindex="-1"></a>Monte Carlo da una **estimación**, no un valor exacto, y su error decrece con la raíz del número de simulaciones: $\text{error} \propto 1/\sqrt{N}$. Esa raíz es una mala noticia práctica: para ganar **un dígito** de precisión hay que multiplicar las simulaciones **por 100**.</span>
-<span id="cb12-166"><a href="#cb12-166" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-169"><a href="#cb12-169" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
-<span id="cb12-170"><a href="#cb12-170" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: convergencia</span></span>
-<span id="cb12-171"><a href="#cb12-171" aria-hidden="true" tabindex="-1"></a>ns <span class="op">=</span> np.unique(np.logspace(<span class="dv">2</span>, <span class="dv">4</span>, <span class="dv">25</span>).astype(<span class="bu">int</span>))</span>
-<span id="cb12-172"><a href="#cb12-172" aria-hidden="true" tabindex="-1"></a>medias <span class="op">=</span> [S[<span class="op">-</span><span class="dv">1</span>, :n].mean() <span class="cf">for</span> n <span class="kw">in</span> ns]</span>
-<span id="cb12-173"><a href="#cb12-173" aria-hidden="true" tabindex="-1"></a>teorico <span class="op">=</span> S0 <span class="op">*</span> np.exp(mu <span class="op">*</span> T)</span>
-<span id="cb12-174"><a href="#cb12-174" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-175"><a href="#cb12-175" aria-hidden="true" tabindex="-1"></a><span class="co"># Banda de error teórica: ±2 desvíos del estimador de la media</span></span>
-<span id="cb12-176"><a href="#cb12-176" aria-hidden="true" tabindex="-1"></a>sd_ST <span class="op">=</span> S[<span class="op">-</span><span class="dv">1</span>].std()</span>
-<span id="cb12-177"><a href="#cb12-177" aria-hidden="true" tabindex="-1"></a>banda <span class="op">=</span> <span class="dv">2</span> <span class="op">*</span> sd_ST <span class="op">/</span> np.sqrt(ns)</span>
-<span id="cb12-178"><a href="#cb12-178" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-179"><a href="#cb12-179" aria-hidden="true" tabindex="-1"></a>fig, ax <span class="op">=</span> plt.subplots(figsize<span class="op">=</span>(<span class="dv">9</span>, <span class="fl">4.5</span>))</span>
-<span id="cb12-180"><a href="#cb12-180" aria-hidden="true" tabindex="-1"></a>ax.plot(ns, medias, <span class="st">"o-"</span>, color<span class="op">=</span><span class="st">"steelblue"</span>, markersize<span class="op">=</span><span class="dv">4</span>, label<span class="op">=</span><span class="st">"Media estimada"</span>)</span>
-<span id="cb12-181"><a href="#cb12-181" aria-hidden="true" tabindex="-1"></a>ax.axhline(teorico, color<span class="op">=</span><span class="st">"red"</span>, linestyle<span class="op">=</span><span class="st">"--"</span>, label<span class="op">=</span><span class="ss">f"Valor teórico ($</span><span class="sc">{</span>teorico<span class="sc">:.2f}</span><span class="ss">)"</span>)</span>
-<span id="cb12-182"><a href="#cb12-182" aria-hidden="true" tabindex="-1"></a>ax.fill_between(ns, teorico <span class="op">-</span> banda, teorico <span class="op">+</span> banda, alpha<span class="op">=</span><span class="fl">0.15</span>, color<span class="op">=</span><span class="st">"red"</span>,</span>
-<span id="cb12-183"><a href="#cb12-183" aria-hidden="true" tabindex="-1"></a>                label<span class="op">=</span><span class="st">"Banda ±2 errores estándar"</span>)</span>
-<span id="cb12-184"><a href="#cb12-184" aria-hidden="true" tabindex="-1"></a>ax.set_xscale(<span class="st">"log"</span>)</span>
-<span id="cb12-185"><a href="#cb12-185" aria-hidden="true" tabindex="-1"></a>ax.set_xlabel(<span class="st">"Número de simulaciones (escala log)"</span>)</span>
-<span id="cb12-186"><a href="#cb12-186" aria-hidden="true" tabindex="-1"></a>ax.set_ylabel(<span class="st">"Precio medio final ($)"</span>)</span>
-<span id="cb12-187"><a href="#cb12-187" aria-hidden="true" tabindex="-1"></a>ax.set_title(<span class="st">"Convergencia de Monte Carlo: el error cae como 1/√N"</span>)</span>
-<span id="cb12-188"><a href="#cb12-188" aria-hidden="true" tabindex="-1"></a>ax.legend()</span>
-<span id="cb12-189"><a href="#cb12-189" aria-hidden="true" tabindex="-1"></a>ax.grid(<span class="va">True</span>, alpha<span class="op">=</span><span class="fl">0.3</span>)</span>
-<span id="cb12-190"><a href="#cb12-190" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
-<span id="cb12-191"><a href="#cb12-191" aria-hidden="true" tabindex="-1"></a>plt.show()</span>
-<span id="cb12-192"><a href="#cb12-192" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb12-193"><a href="#cb12-193" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-194"><a href="#cb12-194" aria-hidden="true" tabindex="-1"></a>La estimación "baila" dentro de la banda teórica y se aquieta a medida que $N$ crece. Regla práctica: reportá siempre el **error estándar** de tu estimación Monte Carlo ($s/\sqrt{N}$), no solo el número.</span>
-<span id="cb12-195"><a href="#cb12-195" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-196"><a href="#cb12-196" aria-hidden="true" tabindex="-1"></a><span class="fu">## Reducción de varianza: variables antitéticas</span></span>
+<span id="cb12-156"><a href="#cb12-156" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Matriz Z</span></span>
+<span id="cb12-157"><a href="#cb12-157" aria-hidden="true" tabindex="-1"></a>    x0, y_top <span class="op">=</span> <span class="fl">1.6</span>, <span class="fl">5.2</span></span>
+<span id="cb12-158"><a href="#cb12-158" aria-hidden="true" tabindex="-1"></a>    texto(ax, x0 <span class="op">+</span> <span class="fl">2.5</span> <span class="op">*</span> w, <span class="fl">6.75</span>, <span class="st">"Z  (n_pasos × n_sims)"</span>, tam<span class="op">=</span><span class="dv">10</span>, peso<span class="op">=</span><span class="st">"bold"</span>, color<span class="op">=</span>PRIMARIO)</span>
+<span id="cb12-159"><a href="#cb12-159" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> j <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">5</span>):</span>
+<span id="cb12-160"><a href="#cb12-160" aria-hidden="true" tabindex="-1"></a>        texto(ax, x0 <span class="op">+</span> j <span class="op">*</span> w <span class="op">+</span> w <span class="op">/</span> <span class="dv">2</span>, y_top <span class="op">+</span> h <span class="op">+</span> <span class="fl">0.3</span>, <span class="ss">f"sim </span><span class="sc">{</span>j <span class="op">+</span> <span class="dv">1</span><span class="sc">}</span><span class="ss">"</span> <span class="cf">if</span> j <span class="op">&lt;</span> <span class="dv">4</span> <span class="cf">else</span> <span class="st">"…"</span>, tam<span class="op">=</span><span class="dv">8</span>,</span>
+<span id="cb12-161"><a href="#cb12-161" aria-hidden="true" tabindex="-1"></a>              color<span class="op">=</span>GRIS)</span>
+<span id="cb12-162"><a href="#cb12-162" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">4</span>):</span>
+<span id="cb12-163"><a href="#cb12-163" aria-hidden="true" tabindex="-1"></a>        y <span class="op">=</span> y_top <span class="op">-</span> i <span class="op">*</span> h</span>
+<span id="cb12-164"><a href="#cb12-164" aria-hidden="true" tabindex="-1"></a>        texto(ax, x0 <span class="op">-</span> <span class="fl">0.15</span>, y <span class="op">+</span> h <span class="op">/</span> <span class="dv">2</span>, <span class="ss">f"día </span><span class="sc">{</span>i <span class="op">+</span> <span class="dv">1</span><span class="sc">}</span><span class="ss">"</span> <span class="cf">if</span> i <span class="op">&lt;</span> <span class="dv">3</span> <span class="cf">else</span> <span class="st">"⋮"</span>, tam<span class="op">=</span><span class="dv">8</span>, ha<span class="op">=</span><span class="st">"right"</span>,</span>
+<span id="cb12-165"><a href="#cb12-165" aria-hidden="true" tabindex="-1"></a>              color<span class="op">=</span>GRIS)</span>
+<span id="cb12-166"><a href="#cb12-166" aria-hidden="true" tabindex="-1"></a>        fila_de_celdas(ax, x0, y, [<span class="ss">f"</span><span class="sc">{</span>v<span class="sc">:+.2f}</span><span class="ss">"</span> <span class="cf">for</span> v <span class="kw">in</span> demo[i]], w<span class="op">=</span>w, h<span class="op">=</span>h, tam<span class="op">=</span><span class="dv">8</span>,</span>
+<span id="cb12-167"><a href="#cb12-167" aria-hidden="true" tabindex="-1"></a>                       rellenos<span class="op">=</span>FONDO_ACENTO <span class="cf">if</span> i <span class="op">==</span> <span class="dv">1</span> <span class="cf">else</span> <span class="va">None</span>)</span>
+<span id="cb12-168"><a href="#cb12-168" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-169"><a href="#cb12-169" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Matriz S</span></span>
+<span id="cb12-170"><a href="#cb12-170" aria-hidden="true" tabindex="-1"></a>    x1 <span class="op">=</span> <span class="fl">10.0</span></span>
+<span id="cb12-171"><a href="#cb12-171" aria-hidden="true" tabindex="-1"></a>    texto(ax, x1 <span class="op">+</span> <span class="fl">2.5</span> <span class="op">*</span> w, <span class="fl">6.75</span>, <span class="st">"S  (n_pasos + 1 × n_sims)"</span>, tam<span class="op">=</span><span class="dv">10</span>, peso<span class="op">=</span><span class="st">"bold"</span>, color<span class="op">=</span>PRIMARIO)</span>
+<span id="cb12-172"><a href="#cb12-172" aria-hidden="true" tabindex="-1"></a>    precios <span class="op">=</span> <span class="dv">100</span> <span class="op">*</span> np.exp(np.vstack([np.zeros(<span class="dv">5</span>), np.cumsum(<span class="fl">0.0157</span> <span class="op">*</span> demo, axis<span class="op">=</span><span class="dv">0</span>)]))</span>
+<span id="cb12-173"><a href="#cb12-173" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">5</span>):</span>
+<span id="cb12-174"><a href="#cb12-174" aria-hidden="true" tabindex="-1"></a>        y <span class="op">=</span> y_top <span class="op">+</span> h <span class="op">-</span> i <span class="op">*</span> h</span>
+<span id="cb12-175"><a href="#cb12-175" aria-hidden="true" tabindex="-1"></a>        texto(ax, x1 <span class="op">-</span> <span class="fl">0.15</span>, y <span class="op">+</span> h <span class="op">/</span> <span class="dv">2</span>, <span class="st">"S0"</span> <span class="cf">if</span> i <span class="op">==</span> <span class="dv">0</span> <span class="cf">else</span> <span class="ss">f"día </span><span class="sc">{</span>i<span class="sc">}</span><span class="ss">"</span>, tam<span class="op">=</span><span class="dv">8</span>, ha<span class="op">=</span><span class="st">"right"</span>,</span>
+<span id="cb12-176"><a href="#cb12-176" aria-hidden="true" tabindex="-1"></a>              color<span class="op">=</span>GRIS)</span>
+<span id="cb12-177"><a href="#cb12-177" aria-hidden="true" tabindex="-1"></a>        fila_de_celdas(ax, x1, y, [<span class="ss">f"</span><span class="sc">{</span>v<span class="sc">:.1f}</span><span class="ss">"</span> <span class="cf">for</span> v <span class="kw">in</span> precios[i]], w<span class="op">=</span>w, h<span class="op">=</span>h, tam<span class="op">=</span><span class="dv">8</span>,</span>
+<span id="cb12-178"><a href="#cb12-178" aria-hidden="true" tabindex="-1"></a>                       rellenos<span class="op">=</span>FONDO_PRIMARIO <span class="cf">if</span> i <span class="kw">in</span> (<span class="dv">1</span>, <span class="dv">2</span>) <span class="cf">else</span> <span class="va">None</span>)</span>
+<span id="cb12-179"><a href="#cb12-179" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-180"><a href="#cb12-180" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Una fila de S nueva = fila anterior de S × exp(fila de Z)</span></span>
+<span id="cb12-181"><a href="#cb12-181" aria-hidden="true" tabindex="-1"></a>    flecha(ax, (x0 <span class="op">+</span> <span class="dv">5</span> <span class="op">*</span> w <span class="op">+</span> <span class="fl">0.2</span>, y_top <span class="op">-</span> h <span class="op">/</span> <span class="dv">2</span>), (x1 <span class="op">-</span> <span class="fl">1.1</span>, y_top <span class="op">-</span> h <span class="op">/</span> <span class="dv">2</span> <span class="op">+</span> <span class="fl">0.05</span>),</span>
+<span id="cb12-182"><a href="#cb12-182" aria-hidden="true" tabindex="-1"></a>           <span class="st">"fila t−1 de Z"</span>, color<span class="op">=</span>ACENTO, tam<span class="op">=</span><span class="fl">8.5</span>, desplazamiento<span class="op">=</span>(<span class="dv">0</span>, <span class="fl">0.3</span>))</span>
+<span id="cb12-183"><a href="#cb12-183" aria-hidden="true" tabindex="-1"></a>    flecha(ax, (x1 <span class="op">+</span> <span class="dv">5</span> <span class="op">*</span> w <span class="op">+</span> <span class="fl">0.2</span>, y_top <span class="op">+</span> h <span class="op">/</span> <span class="dv">2</span>), (x1 <span class="op">+</span> <span class="dv">5</span> <span class="op">*</span> w <span class="op">+</span> <span class="fl">0.2</span>, y_top <span class="op">-</span> h <span class="op">/</span> <span class="dv">2</span>),</span>
+<span id="cb12-184"><a href="#cb12-184" aria-hidden="true" tabindex="-1"></a>           <span class="va">None</span>, color<span class="op">=</span>PRIMARIO, curva<span class="op">=-</span><span class="fl">0.6</span>)</span>
+<span id="cb12-185"><a href="#cb12-185" aria-hidden="true" tabindex="-1"></a>    texto(ax, x1 <span class="op">+</span> <span class="dv">5</span> <span class="op">*</span> w <span class="op">+</span> <span class="fl">0.75</span>, y_top, <span class="st">"S[t] = S[t−1] ·</span><span class="ch">\n</span><span class="st">exp(… + σ√Δt · Z[t−1])"</span>, tam<span class="op">=</span><span class="fl">8.5</span>,</span>
+<span id="cb12-186"><a href="#cb12-186" aria-hidden="true" tabindex="-1"></a>          ha<span class="op">=</span><span class="st">"left"</span>, color<span class="op">=</span>PRIMARIO, mono<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb12-187"><a href="#cb12-187" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-188"><a href="#cb12-188" aria-hidden="true" tabindex="-1"></a>    texto(ax, <span class="fl">8.5</span>, <span class="fl">1.9</span>,</span>
+<span id="cb12-189"><a href="#cb12-189" aria-hidden="true" tabindex="-1"></a>          <span class="st">"↓ el bucle recorre las filas (el tiempo): cada precio depende del anterior</span><span class="ch">\n</span><span class="st">"</span></span>
+<span id="cb12-190"><a href="#cb12-190" aria-hidden="true" tabindex="-1"></a>          <span class="st">"→ dentro de cada fila, las 10.000 columnas se calculan a la vez (vectorizado)"</span>,</span>
+<span id="cb12-191"><a href="#cb12-191" aria-hidden="true" tabindex="-1"></a>          tam<span class="op">=</span><span class="fl">9.5</span>, color<span class="op">=</span>TEXTO)</span>
+<span id="cb12-192"><a href="#cb12-192" aria-hidden="true" tabindex="-1"></a>    plt.tight_layout()</span>
+<span id="cb12-193"><a href="#cb12-193" aria-hidden="true" tabindex="-1"></a>    plt.show()</span>
+<span id="cb12-194"><a href="#cb12-194" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-195"><a href="#cb12-195" aria-hidden="true" tabindex="-1"></a>_esquema()</span>
+<span id="cb12-196"><a href="#cb12-196" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb12-197"><a href="#cb12-197" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-198"><a href="#cb12-198" aria-hidden="true" tabindex="-1"></a>¿Se puede lograr más precisión sin más simulaciones? Sí — hay toda una familia de técnicas de **reducción de varianza**. La más simple y elegante: las **variables antitéticas**. La idea: por cada shock $Z$ que uses, usá también $-Z$. Cada trayectoria "optimista" queda emparejada con su gemela "pesimista", los errores de ambas se compensan, y el promedio del par es mucho más estable que dos trayectorias independientes.</span>
-<span id="cb12-199"><a href="#cb12-199" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-202"><a href="#cb12-202" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
-<span id="cb12-203"><a href="#cb12-203" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: antiteticas</span></span>
-<span id="cb12-204"><a href="#cb12-204" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> precio_final_gbm(Z):</span>
-<span id="cb12-205"><a href="#cb12-205" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""Precio final S_T dado un vector de shocks acumulados por trayectoria."""</span></span>
-<span id="cb12-206"><a href="#cb12-206" aria-hidden="true" tabindex="-1"></a>    log_ST <span class="op">=</span> (np.log(S0) <span class="op">+</span> (mu <span class="op">-</span> <span class="fl">0.5</span> <span class="op">*</span> sigma<span class="op">**</span><span class="dv">2</span>) <span class="op">*</span> T</span>
-<span id="cb12-207"><a href="#cb12-207" aria-hidden="true" tabindex="-1"></a>              <span class="op">+</span> sigma <span class="op">*</span> np.sqrt(dt) <span class="op">*</span> Z.<span class="bu">sum</span>(axis<span class="op">=</span><span class="dv">0</span>))</span>
-<span id="cb12-208"><a href="#cb12-208" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> np.exp(log_ST)</span>
+<span id="cb12-200"><a href="#cb12-200" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb12-201"><a href="#cb12-201" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: gbm</span></span>
+<span id="cb12-202"><a href="#cb12-202" aria-hidden="true" tabindex="-1"></a><span class="co"># Parámetros del activo y de la simulación</span></span>
+<span id="cb12-203"><a href="#cb12-203" aria-hidden="true" tabindex="-1"></a>S0 <span class="op">=</span> <span class="dv">100</span>          <span class="co"># precio inicial</span></span>
+<span id="cb12-204"><a href="#cb12-204" aria-hidden="true" tabindex="-1"></a>mu <span class="op">=</span> <span class="fl">0.10</span>         <span class="co"># drift anual (10%)</span></span>
+<span id="cb12-205"><a href="#cb12-205" aria-hidden="true" tabindex="-1"></a>sigma <span class="op">=</span> <span class="fl">0.25</span>      <span class="co"># volatilidad anual (25%)</span></span>
+<span id="cb12-206"><a href="#cb12-206" aria-hidden="true" tabindex="-1"></a>T <span class="op">=</span> <span class="fl">1.0</span>           <span class="co"># horizonte: 1 año</span></span>
+<span id="cb12-207"><a href="#cb12-207" aria-hidden="true" tabindex="-1"></a>n_pasos <span class="op">=</span> <span class="dv">252</span>     <span class="co"># pasos diarios</span></span>
+<span id="cb12-208"><a href="#cb12-208" aria-hidden="true" tabindex="-1"></a>n_sims <span class="op">=</span> <span class="dv">10_000</span>   <span class="co"># trayectorias</span></span>
 <span id="cb12-209"><a href="#cb12-209" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-210"><a href="#cb12-210" aria-hidden="true" tabindex="-1"></a>n_pares <span class="op">=</span> n_sims <span class="op">//</span> <span class="dv">2</span></span>
-<span id="cb12-211"><a href="#cb12-211" aria-hidden="true" tabindex="-1"></a>Z_half <span class="op">=</span> rng.standard_normal((n_pasos, n_pares))</span>
-<span id="cb12-212"><a href="#cb12-212" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-213"><a href="#cb12-213" aria-hidden="true" tabindex="-1"></a><span class="co"># Método estándar: n_sims trayectorias independientes</span></span>
-<span id="cb12-214"><a href="#cb12-214" aria-hidden="true" tabindex="-1"></a>ST_std <span class="op">=</span> precio_final_gbm(rng.standard_normal((n_pasos, n_sims)))</span>
-<span id="cb12-215"><a href="#cb12-215" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-216"><a href="#cb12-216" aria-hidden="true" tabindex="-1"></a><span class="co"># Método antitético: n_pares trayectorias + sus espejos (mismo costo total)</span></span>
-<span id="cb12-217"><a href="#cb12-217" aria-hidden="true" tabindex="-1"></a>ST_pos <span class="op">=</span> precio_final_gbm(Z_half)</span>
-<span id="cb12-218"><a href="#cb12-218" aria-hidden="true" tabindex="-1"></a>ST_neg <span class="op">=</span> precio_final_gbm(<span class="op">-</span>Z_half)</span>
-<span id="cb12-219"><a href="#cb12-219" aria-hidden="true" tabindex="-1"></a>ST_anti <span class="op">=</span> <span class="fl">0.5</span> <span class="op">*</span> (ST_pos <span class="op">+</span> ST_neg)      <span class="co"># promedio por par</span></span>
+<span id="cb12-210"><a href="#cb12-210" aria-hidden="true" tabindex="-1"></a>dt <span class="op">=</span> T <span class="op">/</span> n_pasos</span>
+<span id="cb12-211"><a href="#cb12-211" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-212"><a href="#cb12-212" aria-hidden="true" tabindex="-1"></a><span class="co"># Matriz de shocks: un N(0,1) por paso y por simulación</span></span>
+<span id="cb12-213"><a href="#cb12-213" aria-hidden="true" tabindex="-1"></a>Z <span class="op">=</span> rng.standard_normal((n_pasos, n_sims))</span>
+<span id="cb12-214"><a href="#cb12-214" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-215"><a href="#cb12-215" aria-hidden="true" tabindex="-1"></a><span class="co"># Simulación: el bucle recorre el tiempo; las columnas avanzan en paralelo</span></span>
+<span id="cb12-216"><a href="#cb12-216" aria-hidden="true" tabindex="-1"></a>S <span class="op">=</span> np.empty((n_pasos <span class="op">+</span> <span class="dv">1</span>, n_sims))</span>
+<span id="cb12-217"><a href="#cb12-217" aria-hidden="true" tabindex="-1"></a>S[<span class="dv">0</span>] <span class="op">=</span> S0</span>
+<span id="cb12-218"><a href="#cb12-218" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> t <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">1</span>, n_pasos <span class="op">+</span> <span class="dv">1</span>):</span>
+<span id="cb12-219"><a href="#cb12-219" aria-hidden="true" tabindex="-1"></a>    S[t] <span class="op">=</span> S[t<span class="op">-</span><span class="dv">1</span>] <span class="op">*</span> np.exp((mu <span class="op">-</span> <span class="fl">0.5</span> <span class="op">*</span> sigma<span class="op">**</span><span class="dv">2</span>) <span class="op">*</span> dt <span class="op">+</span> sigma <span class="op">*</span> np.sqrt(dt) <span class="op">*</span> Z[t<span class="op">-</span><span class="dv">1</span>])</span>
 <span id="cb12-220"><a href="#cb12-220" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-221"><a href="#cb12-221" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span><span class="st">''</span><span class="sc">:24}{</span><span class="st">'Estimación'</span><span class="sc">:&gt;12}{</span><span class="st">'Error estándar'</span><span class="sc">:&gt;16}</span><span class="ss">"</span>)</span>
-<span id="cb12-222"><a href="#cb12-222" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span><span class="st">'Estándar'</span><span class="sc">:&lt;24}{</span>ST_std<span class="sc">.</span>mean()<span class="sc">:&gt;12.3f}{</span>ST_std<span class="sc">.</span>std()<span class="op">/</span>np<span class="sc">.</span>sqrt(n_sims)<span class="sc">:&gt;16.4f}</span><span class="ss">"</span>)</span>
-<span id="cb12-223"><a href="#cb12-223" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span><span class="st">'Antitético'</span><span class="sc">:&lt;24}{</span>ST_anti<span class="sc">.</span>mean()<span class="sc">:&gt;12.3f}{</span>ST_anti<span class="sc">.</span>std()<span class="op">/</span>np<span class="sc">.</span>sqrt(n_pares)<span class="sc">:&gt;16.4f}</span><span class="ss">"</span>)</span>
-<span id="cb12-224"><a href="#cb12-224" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"</span><span class="ch">\n</span><span class="ss">Valor teórico: </span><span class="sc">{</span>teorico<span class="sc">:.3f}</span><span class="ss">"</span>)</span>
+<span id="cb12-221"><a href="#cb12-221" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Precio inicial:       $</span><span class="sc">{</span>S0<span class="sc">:.2f}</span><span class="ss">"</span>)</span>
+<span id="cb12-222"><a href="#cb12-222" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Precio medio final:   $</span><span class="sc">{</span>S[<span class="op">-</span><span class="dv">1</span>]<span class="sc">.</span>mean()<span class="sc">:.2f}</span><span class="ss">   (teórico: $</span><span class="sc">{</span>S0 <span class="op">*</span> np<span class="sc">.</span>exp(mu <span class="op">*</span> T)<span class="sc">:.2f}</span><span class="ss">)"</span>)</span>
+<span id="cb12-223"><a href="#cb12-223" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Precio mediano final: $</span><span class="sc">{</span>np<span class="sc">.</span>median(S[<span class="op">-</span><span class="dv">1</span>])<span class="sc">:.2f}</span><span class="ss">"</span>)</span>
+<span id="cb12-224"><a href="#cb12-224" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Rango simulado:       $</span><span class="sc">{</span>S[<span class="op">-</span><span class="dv">1</span>]<span class="sc">.</span><span class="bu">min</span>()<span class="sc">:.2f}</span><span class="ss"> — $</span><span class="sc">{</span>S[<span class="op">-</span><span class="dv">1</span>]<span class="sc">.</span><span class="bu">max</span>()<span class="sc">:.2f}</span><span class="ss">"</span>)</span>
 <span id="cb12-225"><a href="#cb12-225" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb12-226"><a href="#cb12-226" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-227"><a href="#cb12-227" aria-hidden="true" tabindex="-1"></a>Con el **mismo costo computacional**, el error estándar del método antitético es visiblemente menor. En simulaciones industriales (pricing de exóticos, XVA), estas técnicas marcan la diferencia entre horas y minutos.</span>
+<span id="cb12-227"><a href="#cb12-227" aria-hidden="true" tabindex="-1"></a>Verificación de cordura: la media simulada coincide con la teórica $E<span class="co">[</span><span class="ot">S_T</span><span class="co">]</span> = S_0 e^{\mu T}$. Notá también que la **mediana está por debajo de la media**: es la asimetría lognormal en acción (unas pocas trayectorias excelentes tiran el promedio hacia arriba).</span>
 <span id="cb12-228"><a href="#cb12-228" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-229"><a href="#cb12-229" aria-hidden="true" tabindex="-1"></a>---</span>
-<span id="cb12-230"><a href="#cb12-230" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-231"><a href="#cb12-231" aria-hidden="true" tabindex="-1"></a><span class="fu"># Puente al Módulo 4: valuar una opción por Monte Carlo</span></span>
-<span id="cb12-232"><a href="#cb12-232" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-233"><a href="#cb12-233" aria-hidden="true" tabindex="-1"></a>Cerremos con el uso más famoso de Monte Carlo en finanzas. Una **call europea** da derecho a comprar el activo a precio $K$ en la fecha $T$; su pago final es $\max(S_T - K, 0)$. Bajo valuación neutral al riesgo (lo desarrollamos en el Capítulo 18), su precio es el pago esperado descontado, **simulando con drift igual a la tasa libre de riesgo** $r$:</span>
-<span id="cb12-234"><a href="#cb12-234" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-235"><a href="#cb12-235" aria-hidden="true" tabindex="-1"></a>$$C = e^{-rT} \cdot E\big<span class="co">[</span><span class="ot">\max(S_T - K, 0)\big</span><span class="co">]</span>$$</span>
-<span id="cb12-236"><a href="#cb12-236" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-239"><a href="#cb12-239" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
-<span id="cb12-240"><a href="#cb12-240" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: opcion-mc</span></span>
-<span id="cb12-241"><a href="#cb12-241" aria-hidden="true" tabindex="-1"></a>r <span class="op">=</span> <span class="fl">0.05</span>      <span class="co"># tasa libre de riesgo</span></span>
-<span id="cb12-242"><a href="#cb12-242" aria-hidden="true" tabindex="-1"></a>K <span class="op">=</span> <span class="dv">105</span>       <span class="co"># strike</span></span>
-<span id="cb12-243"><a href="#cb12-243" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-244"><a href="#cb12-244" aria-hidden="true" tabindex="-1"></a><span class="co"># Simulamos S_T con drift r (mundo neutral al riesgo)</span></span>
-<span id="cb12-245"><a href="#cb12-245" aria-hidden="true" tabindex="-1"></a>Z_rn <span class="op">=</span> rng.standard_normal(<span class="dv">200_000</span>)</span>
-<span id="cb12-246"><a href="#cb12-246" aria-hidden="true" tabindex="-1"></a>ST_rn <span class="op">=</span> S0 <span class="op">*</span> np.exp((r <span class="op">-</span> <span class="fl">0.5</span> <span class="op">*</span> sigma<span class="op">**</span><span class="dv">2</span>) <span class="op">*</span> T <span class="op">+</span> sigma <span class="op">*</span> np.sqrt(T) <span class="op">*</span> Z_rn)</span>
-<span id="cb12-247"><a href="#cb12-247" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-248"><a href="#cb12-248" aria-hidden="true" tabindex="-1"></a>payoff <span class="op">=</span> np.maximum(ST_rn <span class="op">-</span> K, <span class="dv">0</span>)</span>
-<span id="cb12-249"><a href="#cb12-249" aria-hidden="true" tabindex="-1"></a>precio_mc <span class="op">=</span> np.exp(<span class="op">-</span>r <span class="op">*</span> T) <span class="op">*</span> payoff.mean()</span>
-<span id="cb12-250"><a href="#cb12-250" aria-hidden="true" tabindex="-1"></a>error_mc <span class="op">=</span> np.exp(<span class="op">-</span>r <span class="op">*</span> T) <span class="op">*</span> payoff.std() <span class="op">/</span> np.sqrt(<span class="bu">len</span>(payoff))</span>
-<span id="cb12-251"><a href="#cb12-251" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-252"><a href="#cb12-252" aria-hidden="true" tabindex="-1"></a><span class="co"># Comparación con la fórmula cerrada de Black-Scholes</span></span>
-<span id="cb12-253"><a href="#cb12-253" aria-hidden="true" tabindex="-1"></a>d1 <span class="op">=</span> (np.log(S0<span class="op">/</span>K) <span class="op">+</span> (r <span class="op">+</span> <span class="fl">0.5</span><span class="op">*</span>sigma<span class="op">**</span><span class="dv">2</span>)<span class="op">*</span>T) <span class="op">/</span> (sigma<span class="op">*</span>np.sqrt(T))</span>
-<span id="cb12-254"><a href="#cb12-254" aria-hidden="true" tabindex="-1"></a>d2 <span class="op">=</span> d1 <span class="op">-</span> sigma<span class="op">*</span>np.sqrt(T)</span>
-<span id="cb12-255"><a href="#cb12-255" aria-hidden="true" tabindex="-1"></a>precio_bs <span class="op">=</span> S0 <span class="op">*</span> stats.norm.cdf(d1) <span class="op">-</span> K <span class="op">*</span> np.exp(<span class="op">-</span>r<span class="op">*</span>T) <span class="op">*</span> stats.norm.cdf(d2)</span>
-<span id="cb12-256"><a href="#cb12-256" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-257"><a href="#cb12-257" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Precio call por Monte Carlo: $</span><span class="sc">{</span>precio_mc<span class="sc">:.3f}</span><span class="ss"> ± </span><span class="sc">{</span><span class="dv">2</span><span class="op">*</span>error_mc<span class="sc">:.3f}</span><span class="ss">"</span>)</span>
-<span id="cb12-258"><a href="#cb12-258" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Precio call Black-Scholes:   $</span><span class="sc">{</span>precio_bs<span class="sc">:.3f}</span><span class="ss">"</span>)</span>
-<span id="cb12-259"><a href="#cb12-259" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb12-260"><a href="#cb12-260" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-261"><a href="#cb12-261" aria-hidden="true" tabindex="-1"></a>La simulación reproduce la fórmula cerrada — y esa es justamente la gracia: para una call europea Black-Scholes ya existe, pero para opciones **path-dependent** (asiáticas, barrera) o con modelos más ricos que el GBM, la fórmula no existe y **Monte Carlo es el camino**. Volveremos sobre esto en el Módulo 4.</span>
+<span id="cb12-231"><a href="#cb12-231" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb12-232"><a href="#cb12-232" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: fig-caminos-gbm</span></span>
+<span id="cb12-233"><a href="#cb12-233" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-cap: "Izquierda: 100 de las 10.000 trayectorias simuladas y la tendencia teórica. Derecha: la distribución de los precios a un año, lognormal, con la media por encima de la mediana."</span></span>
+<span id="cb12-234"><a href="#cb12-234" aria-hidden="true" tabindex="-1"></a>fig, axes <span class="op">=</span> plt.subplots(<span class="dv">1</span>, <span class="dv">2</span>, figsize<span class="op">=</span>(<span class="dv">12</span>, <span class="fl">4.5</span>))</span>
+<span id="cb12-235"><a href="#cb12-235" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-236"><a href="#cb12-236" aria-hidden="true" tabindex="-1"></a><span class="co"># Panel 1: una muestra de trayectorias</span></span>
+<span id="cb12-237"><a href="#cb12-237" aria-hidden="true" tabindex="-1"></a>ax <span class="op">=</span> axes[<span class="dv">0</span>]</span>
+<span id="cb12-238"><a href="#cb12-238" aria-hidden="true" tabindex="-1"></a>tiempo <span class="op">=</span> np.arange(n_pasos <span class="op">+</span> <span class="dv">1</span>) <span class="op">/</span> <span class="dv">252</span></span>
+<span id="cb12-239"><a href="#cb12-239" aria-hidden="true" tabindex="-1"></a>ax.plot(tiempo, S[:, :<span class="dv">100</span>], alpha<span class="op">=</span><span class="fl">0.25</span>, linewidth<span class="op">=</span><span class="fl">0.6</span>)</span>
+<span id="cb12-240"><a href="#cb12-240" aria-hidden="true" tabindex="-1"></a>ax.plot(tiempo, S0 <span class="op">*</span> np.exp(mu <span class="op">*</span> tiempo), <span class="st">"k--"</span>, linewidth<span class="op">=</span><span class="dv">2</span>, label<span class="op">=</span><span class="st">"Tendencia $S_0 e^{</span><span class="ch">\\</span><span class="st">mu t}$"</span>)</span>
+<span id="cb12-241"><a href="#cb12-241" aria-hidden="true" tabindex="-1"></a>ax.set_title(<span class="ss">f"100 trayectorias (de </span><span class="sc">{</span>n_sims<span class="sc">:,}</span><span class="ss">)"</span>)</span>
+<span id="cb12-242"><a href="#cb12-242" aria-hidden="true" tabindex="-1"></a>ax.set_xlabel(<span class="st">"Años"</span>)</span>
+<span id="cb12-243"><a href="#cb12-243" aria-hidden="true" tabindex="-1"></a>ax.set_ylabel(<span class="st">"Precio ($)"</span>)</span>
+<span id="cb12-244"><a href="#cb12-244" aria-hidden="true" tabindex="-1"></a>ax.legend()</span>
+<span id="cb12-245"><a href="#cb12-245" aria-hidden="true" tabindex="-1"></a>ax.grid(<span class="va">True</span>, alpha<span class="op">=</span><span class="fl">0.3</span>)</span>
+<span id="cb12-246"><a href="#cb12-246" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-247"><a href="#cb12-247" aria-hidden="true" tabindex="-1"></a><span class="co"># Panel 2: distribución de precios finales</span></span>
+<span id="cb12-248"><a href="#cb12-248" aria-hidden="true" tabindex="-1"></a>ax <span class="op">=</span> axes[<span class="dv">1</span>]</span>
+<span id="cb12-249"><a href="#cb12-249" aria-hidden="true" tabindex="-1"></a>ax.hist(S[<span class="op">-</span><span class="dv">1</span>], bins<span class="op">=</span><span class="dv">80</span>, density<span class="op">=</span><span class="va">True</span>, alpha<span class="op">=</span><span class="fl">0.7</span>, color<span class="op">=</span><span class="st">"#94a3b8"</span>, edgecolor<span class="op">=</span><span class="st">"white"</span>)</span>
+<span id="cb12-250"><a href="#cb12-250" aria-hidden="true" tabindex="-1"></a>ax.axvline(S[<span class="op">-</span><span class="dv">1</span>].mean(), color<span class="op">=</span><span class="st">"#637238"</span>, linestyle<span class="op">=</span><span class="st">"--"</span>,</span>
+<span id="cb12-251"><a href="#cb12-251" aria-hidden="true" tabindex="-1"></a>           label<span class="op">=</span><span class="ss">f"Media: $</span><span class="sc">{</span>S[<span class="op">-</span><span class="dv">1</span>]<span class="sc">.</span>mean()<span class="sc">:.0f}</span><span class="ss">"</span>)</span>
+<span id="cb12-252"><a href="#cb12-252" aria-hidden="true" tabindex="-1"></a>ax.axvline(np.median(S[<span class="op">-</span><span class="dv">1</span>]), color<span class="op">=</span><span class="st">"#c2410c"</span>, linestyle<span class="op">=</span><span class="st">":"</span>,</span>
+<span id="cb12-253"><a href="#cb12-253" aria-hidden="true" tabindex="-1"></a>           label<span class="op">=</span><span class="ss">f"Mediana: $</span><span class="sc">{</span>np<span class="sc">.</span>median(S[<span class="op">-</span><span class="dv">1</span>])<span class="sc">:.0f}</span><span class="ss">"</span>)</span>
+<span id="cb12-254"><a href="#cb12-254" aria-hidden="true" tabindex="-1"></a>ax.set_title(<span class="st">"Distribución de $S_T$ (lognormal)"</span>)</span>
+<span id="cb12-255"><a href="#cb12-255" aria-hidden="true" tabindex="-1"></a>ax.set_xlabel(<span class="st">"Precio final ($)"</span>)</span>
+<span id="cb12-256"><a href="#cb12-256" aria-hidden="true" tabindex="-1"></a>ax.legend()</span>
+<span id="cb12-257"><a href="#cb12-257" aria-hidden="true" tabindex="-1"></a>ax.grid(<span class="va">True</span>, alpha<span class="op">=</span><span class="fl">0.3</span>)</span>
+<span id="cb12-258"><a href="#cb12-258" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-259"><a href="#cb12-259" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
+<span id="cb12-260"><a href="#cb12-260" aria-hidden="true" tabindex="-1"></a>plt.show()</span>
+<span id="cb12-261"><a href="#cb12-261" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb12-262"><a href="#cb12-262" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-263"><a href="#cb12-263" aria-hidden="true" tabindex="-1"></a>---</span>
+<span id="cb12-263"><a href="#cb12-263" aria-hidden="true" tabindex="-1"></a>El panel izquierdo de la @fig-caminos-gbm es el "abanico de futuros": todas las trayectorias arrancan del mismo punto y se dispersan con el tiempo. El derecho resume dónde terminan: la forma asimétrica con cola derecha larga es la distribución lognormal.</span>
 <span id="cb12-264"><a href="#cb12-264" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-265"><a href="#cb12-265" aria-hidden="true" tabindex="-1"></a><span class="fu"># Errores comunes</span></span>
+<span id="cb12-265"><a href="#cb12-265" aria-hidden="true" tabindex="-1"></a>---</span>
 <span id="cb12-266"><a href="#cb12-266" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-267"><a href="#cb12-267" aria-hidden="true" tabindex="-1"></a>::: {.callout-warning title="Trampas frecuentes"}</span>
-<span id="cb12-268"><a href="#cb12-268" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Olvidar el término $-\sigma^2/2$** en el exponente: infla sistemáticamente los precios simulados.</span>
-<span id="cb12-269"><a href="#cb12-269" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Confundir mundo real y mundo neutral al riesgo**: para *proyectar* escenarios usá el drift real $\mu$; para *valuar* derivados usá $r$. Mezclarlos da precios de opciones sin sentido.</span>
-<span id="cb12-270"><a href="#cb12-270" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Reportar la estimación sin su error estándar**: dos corridas con semillas distintas pueden diferir; el error estándar te dice cuánto es esperable.</span>
-<span id="cb12-271"><a href="#cb12-271" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Reusar los mismos shocks para todo**: si comparás dos estrategias, simulalas sobre los mismos shocks (para aislar la diferencia) — pero si estimás la incertidumbre, necesitás muestras independientes. Saber cuál corresponde a cada caso es parte del oficio.</span>
-<span id="cb12-272"><a href="#cb12-272" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Escalar mal el tiempo**: $\sigma$ anual con pasos diarios exige $\sqrt{\Delta t} = \sqrt{1/252}$ en el ruido. Un $\Delta t$ inconsistente distorsiona toda la dinámica.</span>
-<span id="cb12-273"><a href="#cb12-273" aria-hidden="true" tabindex="-1"></a>:::</span>
-<span id="cb12-274"><a href="#cb12-274" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-275"><a href="#cb12-275" aria-hidden="true" tabindex="-1"></a>---</span>
-<span id="cb12-276"><a href="#cb12-276" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-277"><a href="#cb12-277" aria-hidden="true" tabindex="-1"></a><span class="fu"># Ejercicios Propuestos</span></span>
-<span id="cb12-278"><a href="#cb12-278" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-279"><a href="#cb12-279" aria-hidden="true" tabindex="-1"></a>::: {.callout-important title="Ejercicios"}</span>
-<span id="cb12-280"><a href="#cb12-280" aria-hidden="true" tabindex="-1"></a><span class="ss">1. </span>**Sensibilidad a la volatilidad**: simulá con $\sigma \in <span class="sc">\{</span>15\%, 25\%, 50\%<span class="sc">\}</span>$ y superponé las tres distribuciones de $S_T$. ¿Qué pasa con la mediana a medida que sube $\sigma$, aun con el mismo $\mu$?</span>
-<span id="cb12-281"><a href="#cb12-281" aria-hidden="true" tabindex="-1"></a><span class="ss">2. </span>**Probabilidad de pérdida**: con las trayectorias del capítulo, estimá $P(S_T &lt; S_0)$ y comparala con la fórmula teórica lognormal.</span>
-<span id="cb12-282"><a href="#cb12-282" aria-hidden="true" tabindex="-1"></a><span class="ss">3. </span>**Activos correlacionados**: simulá 2 activos con correlación $\rho = 0.7$ usando la descomposición de Cholesky de la matriz de correlación, y verificá la correlación empírica de los retornos simulados.</span>
-<span id="cb12-283"><a href="#cb12-283" aria-hidden="true" tabindex="-1"></a><span class="ss">4. </span>**Put europea**: valuá una put con $K = 95$ por Monte Carlo y verificá la paridad put-call: $C - P = S_0 - Ke^{-rT}$.</span>
-<span id="cb12-284"><a href="#cb12-284" aria-hidden="true" tabindex="-1"></a><span class="ss">5. </span>**Opción asiática**: valuá una call asiática (el payoff usa el *promedio* de la trayectoria: $\max(\bar{S} - K, 0)$). ¿Por qué acá Monte Carlo es imprescindible?</span>
-<span id="cb12-285"><a href="#cb12-285" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb12-267"><a href="#cb12-267" aria-hidden="true" tabindex="-1"></a><span class="fu">## VaR y Expected Shortfall por Monte Carlo</span></span>
+<span id="cb12-268"><a href="#cb12-268" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-269"><a href="#cb12-269" aria-hidden="true" tabindex="-1"></a>En el Capítulo 11 calculamos VaR y ES con dos métodos: paramétrico (asume normal) e histórico (usa el pasado). Monte Carlo es el **tercer método**, y el más flexible: la distribución de pérdidas sale de las trayectorias simuladas, con el modelo que queramos. Hoy el modelo es GBM; en el próximo capítulo será uno con saltos — y el código de abajo no cambia.</span>
+<span id="cb12-270"><a href="#cb12-270" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-273"><a href="#cb12-273" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb12-274"><a href="#cb12-274" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: var-montecarlo</span></span>
+<span id="cb12-275"><a href="#cb12-275" aria-hidden="true" tabindex="-1"></a>valor_portafolio <span class="op">=</span> <span class="dv">10_000_000</span></span>
+<span id="cb12-276"><a href="#cb12-276" aria-hidden="true" tabindex="-1"></a>retornos_sim <span class="op">=</span> S[<span class="op">-</span><span class="dv">1</span>] <span class="op">/</span> S0 <span class="op">-</span> <span class="dv">1</span>     <span class="co"># retorno de cada trayectoria a 1 año</span></span>
+<span id="cb12-277"><a href="#cb12-277" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-278"><a href="#cb12-278" aria-hidden="true" tabindex="-1"></a>var_95 <span class="op">=</span> <span class="op">-</span>np.percentile(retornos_sim, <span class="dv">5</span>) <span class="op">*</span> valor_portafolio</span>
+<span id="cb12-279"><a href="#cb12-279" aria-hidden="true" tabindex="-1"></a>umbral <span class="op">=</span> np.percentile(retornos_sim, <span class="dv">5</span>)</span>
+<span id="cb12-280"><a href="#cb12-280" aria-hidden="true" tabindex="-1"></a>es_95 <span class="op">=</span> <span class="op">-</span>retornos_sim[retornos_sim <span class="op">&lt;=</span> umbral].mean() <span class="op">*</span> valor_portafolio</span>
+<span id="cb12-281"><a href="#cb12-281" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-282"><a href="#cb12-282" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Sobre un portafolio de $</span><span class="sc">{</span>valor_portafolio<span class="op">/</span><span class="fl">1e6</span><span class="sc">:.0f}</span><span class="ss">M, horizonte 1 año:"</span>)</span>
+<span id="cb12-283"><a href="#cb12-283" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"  VaR 95% (Monte Carlo): $</span><span class="sc">{</span>var_95<span class="sc">:&gt;12,.0f}</span><span class="ss">"</span>)</span>
+<span id="cb12-284"><a href="#cb12-284" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"  ES  95% (Monte Carlo): $</span><span class="sc">{</span>es_95<span class="sc">:&gt;12,.0f}</span><span class="ss">"</span>)</span>
+<span id="cb12-285"><a href="#cb12-285" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb12-286"><a href="#cb12-286" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-287"><a href="#cb12-287" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-288"><a href="#cb12-288" aria-hidden="true" tabindex="-1"></a>Podés resolver estos ejercicios acá mismo: la celda ejecuta Python **en tu navegador**, sin instalar nada (la primera ejecución tarda unos segundos mientras carga el entorno; los paquetes que importes se instalan solos).</span>
-<span id="cb12-289"><a href="#cb12-289" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-290"><a href="#cb12-290" aria-hidden="true" tabindex="-1"></a><span class="in">```{pyodide-python}</span></span>
-<span id="cb12-291"><a href="#cb12-291" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: practica-navegador</span></span>
-<span id="cb12-292"><a href="#cb12-292" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
-<span id="cb12-293"><a href="#cb12-293" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-294"><a href="#cb12-294" aria-hidden="true" tabindex="-1"></a>rng <span class="op">=</span> np.random.default_rng(<span class="dv">42</span>)</span>
-<span id="cb12-295"><a href="#cb12-295" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-296"><a href="#cb12-296" aria-hidden="true" tabindex="-1"></a><span class="co"># Tu solución acá...</span></span>
-<span id="cb12-297"><a href="#cb12-297" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb12-298"><a href="#cb12-298" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-299"><a href="#cb12-299" aria-hidden="true" tabindex="-1"></a>---</span>
-<span id="cb12-300"><a href="#cb12-300" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-301"><a href="#cb12-301" aria-hidden="true" tabindex="-1"></a><span class="fu"># Referencias</span></span>
-<span id="cb12-302"><a href="#cb12-302" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-303"><a href="#cb12-303" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-304"><a href="#cb12-304" aria-hidden="true" tabindex="-1"></a>::: {#refs}</span>
-<span id="cb12-305"><a href="#cb12-305" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb12-287"><a href="#cb12-287" aria-hidden="true" tabindex="-1"></a>---</span>
+<span id="cb12-288"><a href="#cb12-288" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-289"><a href="#cb12-289" aria-hidden="true" tabindex="-1"></a><span class="fu">## ¿Cuántas simulaciones son suficientes? Convergencia</span></span>
+<span id="cb12-290"><a href="#cb12-290" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-291"><a href="#cb12-291" aria-hidden="true" tabindex="-1"></a>Monte Carlo da una **estimación**, no un valor exacto, y su error decrece con la raíz del número de simulaciones: $\text{error} \propto 1/\sqrt{N}$. Esa raíz es una mala noticia práctica: para ganar **un dígito** de precisión hay que multiplicar las simulaciones **por 100**.</span>
+<span id="cb12-292"><a href="#cb12-292" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-295"><a href="#cb12-295" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb12-296"><a href="#cb12-296" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: fig-convergencia-mc</span></span>
+<span id="cb12-297"><a href="#cb12-297" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-cap: "Estimación de E[S_T] con cada vez más simulaciones. La estimación oscila dentro de la banda de ±2 errores estándar, que se angosta como 1/√N."</span></span>
+<span id="cb12-298"><a href="#cb12-298" aria-hidden="true" tabindex="-1"></a>ns <span class="op">=</span>np.unique(np.logspace(<span class="dv">2</span>, <span class="dv">4</span>, <span class="dv">25</span>).astype(<span class="bu">int</span>))</span>
+<span id="cb12-299"><a href="#cb12-299" aria-hidden="true" tabindex="-1"></a>medias <span class="op">=</span> [S[<span class="op">-</span><span class="dv">1</span>, :n].mean() <span class="cf">for</span> n <span class="kw">in</span> ns]</span>
+<span id="cb12-300"><a href="#cb12-300" aria-hidden="true" tabindex="-1"></a>teorico <span class="op">=</span> S0 <span class="op">*</span> np.exp(mu <span class="op">*</span> T)</span>
+<span id="cb12-301"><a href="#cb12-301" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-302"><a href="#cb12-302" aria-hidden="true" tabindex="-1"></a><span class="co"># Banda de error teórica: ±2 desvíos del estimador de la media</span></span>
+<span id="cb12-303"><a href="#cb12-303" aria-hidden="true" tabindex="-1"></a>sd_ST <span class="op">=</span> S[<span class="op">-</span><span class="dv">1</span>].std()</span>
+<span id="cb12-304"><a href="#cb12-304" aria-hidden="true" tabindex="-1"></a>banda <span class="op">=</span> <span class="dv">2</span> <span class="op">*</span> sd_ST <span class="op">/</span> np.sqrt(ns)</span>
+<span id="cb12-305"><a href="#cb12-305" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-306"><a href="#cb12-306" aria-hidden="true" tabindex="-1"></a>fig, ax <span class="op">=</span> plt.subplots(figsize<span class="op">=</span>(<span class="dv">9</span>, <span class="fl">4.5</span>))</span>
+<span id="cb12-307"><a href="#cb12-307" aria-hidden="true" tabindex="-1"></a>ax.plot(ns, medias, <span class="st">"o-"</span>, color<span class="op">=</span><span class="st">"#1e3a5f"</span>, markersize<span class="op">=</span><span class="dv">4</span>, label<span class="op">=</span><span class="st">"Media estimada"</span>)</span>
+<span id="cb12-308"><a href="#cb12-308" aria-hidden="true" tabindex="-1"></a>ax.axhline(teorico, color<span class="op">=</span><span class="st">"#c2410c"</span>, linestyle<span class="op">=</span><span class="st">"--"</span>, label<span class="op">=</span><span class="ss">f"Valor teórico ($</span><span class="sc">{</span>teorico<span class="sc">:.2f}</span><span class="ss">)"</span>)</span>
+<span id="cb12-309"><a href="#cb12-309" aria-hidden="true" tabindex="-1"></a>ax.fill_between(ns, teorico <span class="op">-</span> banda, teorico <span class="op">+</span> banda, alpha<span class="op">=</span><span class="fl">0.15</span>, color<span class="op">=</span><span class="st">"#c2410c"</span>,</span>
+<span id="cb12-310"><a href="#cb12-310" aria-hidden="true" tabindex="-1"></a>                label<span class="op">=</span><span class="st">"Banda ±2 errores estándar"</span>)</span>
+<span id="cb12-311"><a href="#cb12-311" aria-hidden="true" tabindex="-1"></a>ax.set_xscale(<span class="st">"log"</span>)</span>
+<span id="cb12-312"><a href="#cb12-312" aria-hidden="true" tabindex="-1"></a>ax.set_xlabel(<span class="st">"Número de simulaciones (escala log)"</span>)</span>
+<span id="cb12-313"><a href="#cb12-313" aria-hidden="true" tabindex="-1"></a>ax.set_ylabel(<span class="st">"Precio medio final ($)"</span>)</span>
+<span id="cb12-314"><a href="#cb12-314" aria-hidden="true" tabindex="-1"></a>ax.set_title(<span class="st">"Convergencia de Monte Carlo: el error cae como 1/√N"</span>)</span>
+<span id="cb12-315"><a href="#cb12-315" aria-hidden="true" tabindex="-1"></a>ax.legend()</span>
+<span id="cb12-316"><a href="#cb12-316" aria-hidden="true" tabindex="-1"></a>ax.grid(<span class="va">True</span>, alpha<span class="op">=</span><span class="fl">0.3</span>)</span>
+<span id="cb12-317"><a href="#cb12-317" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
+<span id="cb12-318"><a href="#cb12-318" aria-hidden="true" tabindex="-1"></a>plt.show()</span>
+<span id="cb12-319"><a href="#cb12-319" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb12-320"><a href="#cb12-320" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-321"><a href="#cb12-321" aria-hidden="true" tabindex="-1"></a>En la @fig-convergencia-mc, la estimación "baila" dentro de la banda teórica y se aquieta a medida que $N$ crece. Regla práctica: reportá siempre el **error estándar** de tu estimación Monte Carlo ($s/\sqrt{N}$), no solo el número.</span>
+<span id="cb12-322"><a href="#cb12-322" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-323"><a href="#cb12-323" aria-hidden="true" tabindex="-1"></a><span class="fu">### Reducción de varianza: variables antitéticas</span></span>
+<span id="cb12-324"><a href="#cb12-324" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-325"><a href="#cb12-325" aria-hidden="true" tabindex="-1"></a>¿Se puede lograr más precisión sin más simulaciones? Sí — hay toda una familia de técnicas de **reducción de varianza**. La más simple y elegante: las **variables antitéticas**. La idea: por cada shock $Z$ que uses, usá también $-Z$. Cada trayectoria "optimista" queda emparejada con su gemela "pesimista", los errores de ambas se compensan, y el promedio del par es mucho más estable que dos trayectorias independientes.</span>
+<span id="cb12-326"><a href="#cb12-326" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-327"><a href="#cb12-327" aria-hidden="true" tabindex="-1"></a>La @fig-antiteticas muestra tres de esos pares: cada trayectoria tiene una gemela que recibe exactamente los shocks opuestos y queda reflejada del otro lado de la tendencia.</span>
+<span id="cb12-328"><a href="#cb12-328" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-331"><a href="#cb12-331" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb12-332"><a href="#cb12-332" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: fig-antiteticas</span></span>
+<span id="cb12-333"><a href="#cb12-333" aria-hidden="true" tabindex="-1"></a><span class="co">#| echo: false</span></span>
+<span id="cb12-334"><a href="#cb12-334" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-cap: "Tres pares antitéticos: la línea llena usa los shocks Z y la punteada usa −Z. Cada par queda en espejo alrededor de la tendencia (en escala logarítmica), así que los desvíos de uno compensan los del otro."</span></span>
+<span id="cb12-335"><a href="#cb12-335" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> sys<span class="op">;</span> sys.path.insert(<span class="dv">0</span>, <span class="st">".."</span>)</span>
+<span id="cb12-336"><a href="#cb12-336" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> _esquemas <span class="im">import</span> <span class="op">*</span></span>
+<span id="cb12-337"><a href="#cb12-337" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb12-338"><a href="#cb12-338" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-339"><a href="#cb12-339" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> _esquema():</span>
+<span id="cb12-340"><a href="#cb12-340" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Usa S0, mu, sigma, dt, n_pasos y T del capítulo, con su propia semilla</span></span>
+<span id="cb12-341"><a href="#cb12-341" aria-hidden="true" tabindex="-1"></a>    Z <span class="op">=</span> np.random.default_rng(<span class="dv">11</span>).standard_normal((n_pasos, <span class="dv">3</span>))</span>
+<span id="cb12-342"><a href="#cb12-342" aria-hidden="true" tabindex="-1"></a>    t <span class="op">=</span> np.arange(n_pasos <span class="op">+</span> <span class="dv">1</span>) <span class="op">*</span> dt</span>
+<span id="cb12-343"><a href="#cb12-343" aria-hidden="true" tabindex="-1"></a>    deriva <span class="op">=</span> (mu <span class="op">-</span> <span class="fl">0.5</span> <span class="op">*</span> sigma<span class="op">**</span><span class="dv">2</span>) <span class="op">*</span> t</span>
+<span id="cb12-344"><a href="#cb12-344" aria-hidden="true" tabindex="-1"></a>    fig, ax <span class="op">=</span> plt.subplots(figsize<span class="op">=</span>(<span class="fl">9.5</span>, <span class="fl">4.3</span>))</span>
+<span id="cb12-345"><a href="#cb12-345" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> j, color <span class="kw">in</span> <span class="bu">enumerate</span>([PRIMARIO, ACENTO, SECUNDARIO]):</span>
+<span id="cb12-346"><a href="#cb12-346" aria-hidden="true" tabindex="-1"></a>        ruido <span class="op">=</span> np.concatenate([[<span class="dv">0</span>], np.cumsum(sigma <span class="op">*</span> np.sqrt(dt) <span class="op">*</span> Z[:, j])])</span>
+<span id="cb12-347"><a href="#cb12-347" aria-hidden="true" tabindex="-1"></a>        ax.plot(t, S0 <span class="op">*</span> np.exp(deriva <span class="op">+</span> ruido), color<span class="op">=</span>color, lw<span class="op">=</span><span class="fl">1.3</span>)</span>
+<span id="cb12-348"><a href="#cb12-348" aria-hidden="true" tabindex="-1"></a>        ax.plot(t, S0 <span class="op">*</span> np.exp(deriva <span class="op">-</span> ruido), color<span class="op">=</span>color, lw<span class="op">=</span><span class="fl">1.3</span>, ls<span class="op">=</span><span class="st">"--"</span>)</span>
+<span id="cb12-349"><a href="#cb12-349" aria-hidden="true" tabindex="-1"></a>    ax.plot(t, S0 <span class="op">*</span> np.exp(deriva), color<span class="op">=</span>TEXTO, lw<span class="op">=</span><span class="dv">2</span>, label<span class="op">=</span><span class="st">"Tendencia (mediana)"</span>)</span>
+<span id="cb12-350"><a href="#cb12-350" aria-hidden="true" tabindex="-1"></a>    ax.plot([], [], color<span class="op">=</span>GRIS, lw<span class="op">=</span><span class="fl">1.3</span>, label<span class="op">=</span><span class="st">"con Z"</span>)</span>
+<span id="cb12-351"><a href="#cb12-351" aria-hidden="true" tabindex="-1"></a>    ax.plot([], [], color<span class="op">=</span>GRIS, lw<span class="op">=</span><span class="fl">1.3</span>, ls<span class="op">=</span><span class="st">"--"</span>, label<span class="op">=</span><span class="st">"con −Z (gemela)"</span>)</span>
+<span id="cb12-352"><a href="#cb12-352" aria-hidden="true" tabindex="-1"></a>    ax.set_yscale(<span class="st">"log"</span>)</span>
+<span id="cb12-353"><a href="#cb12-353" aria-hidden="true" tabindex="-1"></a>    ax.set_yticks([<span class="dv">60</span>, <span class="dv">80</span>, <span class="dv">100</span>, <span class="dv">125</span>, <span class="dv">160</span>], [<span class="st">"60"</span>, <span class="st">"80"</span>, <span class="st">"100"</span>, <span class="st">"125"</span>, <span class="st">"160"</span>])</span>
+<span id="cb12-354"><a href="#cb12-354" aria-hidden="true" tabindex="-1"></a>    ax.minorticks_off()</span>
+<span id="cb12-355"><a href="#cb12-355" aria-hidden="true" tabindex="-1"></a>    ax.set_xlabel(<span class="st">"Años"</span>)</span>
+<span id="cb12-356"><a href="#cb12-356" aria-hidden="true" tabindex="-1"></a>    ax.set_ylabel(<span class="st">"Precio ($, escala log)"</span>)</span>
+<span id="cb12-357"><a href="#cb12-357" aria-hidden="true" tabindex="-1"></a>    ax.legend(frameon<span class="op">=</span><span class="va">False</span>, fontsize<span class="op">=</span><span class="dv">9</span>, loc<span class="op">=</span><span class="st">"upper left"</span>)</span>
+<span id="cb12-358"><a href="#cb12-358" aria-hidden="true" tabindex="-1"></a>    ax.grid(alpha<span class="op">=</span><span class="fl">0.3</span>)</span>
+<span id="cb12-359"><a href="#cb12-359" aria-hidden="true" tabindex="-1"></a>    ax.spines[[<span class="st">"top"</span>, <span class="st">"right"</span>]].set_visible(<span class="va">False</span>)</span>
+<span id="cb12-360"><a href="#cb12-360" aria-hidden="true" tabindex="-1"></a>    plt.tight_layout()</span>
+<span id="cb12-361"><a href="#cb12-361" aria-hidden="true" tabindex="-1"></a>    plt.show()</span>
+<span id="cb12-362"><a href="#cb12-362" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-363"><a href="#cb12-363" aria-hidden="true" tabindex="-1"></a>_esquema()</span>
+<span id="cb12-364"><a href="#cb12-364" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb12-365"><a href="#cb12-365" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-368"><a href="#cb12-368" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb12-369"><a href="#cb12-369" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: antiteticas</span></span>
+<span id="cb12-370"><a href="#cb12-370" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> precio_final_gbm(Z):</span>
+<span id="cb12-371"><a href="#cb12-371" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""Precio final S_T dado un vector de shocks acumulados por trayectoria."""</span></span>
+<span id="cb12-372"><a href="#cb12-372" aria-hidden="true" tabindex="-1"></a>    log_ST <span class="op">=</span> (np.log(S0) <span class="op">+</span> (mu <span class="op">-</span> <span class="fl">0.5</span> <span class="op">*</span> sigma<span class="op">**</span><span class="dv">2</span>) <span class="op">*</span> T</span>
+<span id="cb12-373"><a href="#cb12-373" aria-hidden="true" tabindex="-1"></a>              <span class="op">+</span> sigma <span class="op">*</span> np.sqrt(dt) <span class="op">*</span> Z.<span class="bu">sum</span>(axis<span class="op">=</span><span class="dv">0</span>))</span>
+<span id="cb12-374"><a href="#cb12-374" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> np.exp(log_ST)</span>
+<span id="cb12-375"><a href="#cb12-375" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-376"><a href="#cb12-376" aria-hidden="true" tabindex="-1"></a>n_pares <span class="op">=</span> n_sims <span class="op">//</span> <span class="dv">2</span></span>
+<span id="cb12-377"><a href="#cb12-377" aria-hidden="true" tabindex="-1"></a>Z_half <span class="op">=</span> rng.standard_normal((n_pasos, n_pares))</span>
+<span id="cb12-378"><a href="#cb12-378" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-379"><a href="#cb12-379" aria-hidden="true" tabindex="-1"></a><span class="co"># Método estándar: n_sims trayectorias independientes</span></span>
+<span id="cb12-380"><a href="#cb12-380" aria-hidden="true" tabindex="-1"></a>ST_std <span class="op">=</span> precio_final_gbm(rng.standard_normal((n_pasos, n_sims)))</span>
+<span id="cb12-381"><a href="#cb12-381" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-382"><a href="#cb12-382" aria-hidden="true" tabindex="-1"></a><span class="co"># Método antitético: n_pares trayectorias + sus espejos (mismo costo total)</span></span>
+<span id="cb12-383"><a href="#cb12-383" aria-hidden="true" tabindex="-1"></a>ST_pos <span class="op">=</span> precio_final_gbm(Z_half)</span>
+<span id="cb12-384"><a href="#cb12-384" aria-hidden="true" tabindex="-1"></a>ST_neg <span class="op">=</span> precio_final_gbm(<span class="op">-</span>Z_half)</span>
+<span id="cb12-385"><a href="#cb12-385" aria-hidden="true" tabindex="-1"></a>ST_anti <span class="op">=</span> <span class="fl">0.5</span> <span class="op">*</span> (ST_pos <span class="op">+</span> ST_neg)      <span class="co"># promedio por par</span></span>
+<span id="cb12-386"><a href="#cb12-386" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-387"><a href="#cb12-387" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span><span class="st">''</span><span class="sc">:24}{</span><span class="st">'Estimación'</span><span class="sc">:&gt;12}{</span><span class="st">'Error estándar'</span><span class="sc">:&gt;16}</span><span class="ss">"</span>)</span>
+<span id="cb12-388"><a href="#cb12-388" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span><span class="st">'Estándar'</span><span class="sc">:&lt;24}{</span>ST_std<span class="sc">.</span>mean()<span class="sc">:&gt;12.3f}{</span>ST_std<span class="sc">.</span>std()<span class="op">/</span>np<span class="sc">.</span>sqrt(n_sims)<span class="sc">:&gt;16.4f}</span><span class="ss">"</span>)</span>
+<span id="cb12-389"><a href="#cb12-389" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span><span class="st">'Antitético'</span><span class="sc">:&lt;24}{</span>ST_anti<span class="sc">.</span>mean()<span class="sc">:&gt;12.3f}{</span>ST_anti<span class="sc">.</span>std()<span class="op">/</span>np<span class="sc">.</span>sqrt(n_pares)<span class="sc">:&gt;16.4f}</span><span class="ss">"</span>)</span>
+<span id="cb12-390"><a href="#cb12-390" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"</span><span class="ch">\n</span><span class="ss">Valor teórico: </span><span class="sc">{</span>teorico<span class="sc">:.3f}</span><span class="ss">"</span>)</span>
+<span id="cb12-391"><a href="#cb12-391" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb12-392"><a href="#cb12-392" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-393"><a href="#cb12-393" aria-hidden="true" tabindex="-1"></a>Con el **mismo costo computacional**, el error estándar del método antitético es visiblemente menor. En simulaciones industriales (pricing de exóticos, XVA), estas técnicas marcan la diferencia entre horas y minutos.</span>
+<span id="cb12-394"><a href="#cb12-394" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-395"><a href="#cb12-395" aria-hidden="true" tabindex="-1"></a>---</span>
+<span id="cb12-396"><a href="#cb12-396" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-397"><a href="#cb12-397" aria-hidden="true" tabindex="-1"></a><span class="fu">## Puente al Módulo 4: valuar una opción por Monte Carlo</span></span>
+<span id="cb12-398"><a href="#cb12-398" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-399"><a href="#cb12-399" aria-hidden="true" tabindex="-1"></a>Cerremos con el uso más famoso de Monte Carlo en finanzas. Una **call europea** da derecho a comprar el activo a precio $K$ en la fecha $T$; su pago final es $\max(S_T - K, 0)$. Bajo valuación neutral al riesgo (lo desarrollamos en el Capítulo 18), su precio es el pago esperado descontado, **simulando con drift igual a la tasa libre de riesgo** $r$:</span>
+<span id="cb12-400"><a href="#cb12-400" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-401"><a href="#cb12-401" aria-hidden="true" tabindex="-1"></a>$$C = e^{-rT} \cdot E\big<span class="co">[</span><span class="ot">\max(S_T - K, 0)\big</span><span class="co">]</span>$$</span>
+<span id="cb12-402"><a href="#cb12-402" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-405"><a href="#cb12-405" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb12-406"><a href="#cb12-406" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: opcion-mc</span></span>
+<span id="cb12-407"><a href="#cb12-407" aria-hidden="true" tabindex="-1"></a>r <span class="op">=</span> <span class="fl">0.05</span>      <span class="co"># tasa libre de riesgo</span></span>
+<span id="cb12-408"><a href="#cb12-408" aria-hidden="true" tabindex="-1"></a>K <span class="op">=</span> <span class="dv">105</span>       <span class="co"># strike</span></span>
+<span id="cb12-409"><a href="#cb12-409" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-410"><a href="#cb12-410" aria-hidden="true" tabindex="-1"></a><span class="co"># Simulamos S_T con drift r (mundo neutral al riesgo)</span></span>
+<span id="cb12-411"><a href="#cb12-411" aria-hidden="true" tabindex="-1"></a>Z_rn <span class="op">=</span> rng.standard_normal(<span class="dv">200_000</span>)</span>
+<span id="cb12-412"><a href="#cb12-412" aria-hidden="true" tabindex="-1"></a>ST_rn <span class="op">=</span> S0 <span class="op">*</span> np.exp((r <span class="op">-</span> <span class="fl">0.5</span> <span class="op">*</span> sigma<span class="op">**</span><span class="dv">2</span>) <span class="op">*</span> T <span class="op">+</span> sigma <span class="op">*</span> np.sqrt(T) <span class="op">*</span> Z_rn)</span>
+<span id="cb12-413"><a href="#cb12-413" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-414"><a href="#cb12-414" aria-hidden="true" tabindex="-1"></a>payoff <span class="op">=</span> np.maximum(ST_rn <span class="op">-</span> K, <span class="dv">0</span>)</span>
+<span id="cb12-415"><a href="#cb12-415" aria-hidden="true" tabindex="-1"></a>precio_mc <span class="op">=</span> np.exp(<span class="op">-</span>r <span class="op">*</span> T) <span class="op">*</span> payoff.mean()</span>
+<span id="cb12-416"><a href="#cb12-416" aria-hidden="true" tabindex="-1"></a>error_mc <span class="op">=</span> np.exp(<span class="op">-</span>r <span class="op">*</span> T) <span class="op">*</span> payoff.std() <span class="op">/</span> np.sqrt(<span class="bu">len</span>(payoff))</span>
+<span id="cb12-417"><a href="#cb12-417" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-418"><a href="#cb12-418" aria-hidden="true" tabindex="-1"></a><span class="co"># Comparación con la fórmula cerrada de Black-Scholes</span></span>
+<span id="cb12-419"><a href="#cb12-419" aria-hidden="true" tabindex="-1"></a>d1 <span class="op">=</span> (np.log(S0<span class="op">/</span>K) <span class="op">+</span> (r <span class="op">+</span> <span class="fl">0.5</span><span class="op">*</span>sigma<span class="op">**</span><span class="dv">2</span>)<span class="op">*</span>T) <span class="op">/</span> (sigma<span class="op">*</span>np.sqrt(T))</span>
+<span id="cb12-420"><a href="#cb12-420" aria-hidden="true" tabindex="-1"></a>d2 <span class="op">=</span> d1 <span class="op">-</span> sigma<span class="op">*</span>np.sqrt(T)</span>
+<span id="cb12-421"><a href="#cb12-421" aria-hidden="true" tabindex="-1"></a>precio_bs <span class="op">=</span> S0 <span class="op">*</span> stats.norm.cdf(d1) <span class="op">-</span> K <span class="op">*</span> np.exp(<span class="op">-</span>r<span class="op">*</span>T) <span class="op">*</span> stats.norm.cdf(d2)</span>
+<span id="cb12-422"><a href="#cb12-422" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-423"><a href="#cb12-423" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Precio call por Monte Carlo: $</span><span class="sc">{</span>precio_mc<span class="sc">:.3f}</span><span class="ss"> ± </span><span class="sc">{</span><span class="dv">2</span><span class="op">*</span>error_mc<span class="sc">:.3f}</span><span class="ss">"</span>)</span>
+<span id="cb12-424"><a href="#cb12-424" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Precio call Black-Scholes:   $</span><span class="sc">{</span>precio_bs<span class="sc">:.3f}</span><span class="ss">"</span>)</span>
+<span id="cb12-425"><a href="#cb12-425" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb12-426"><a href="#cb12-426" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-427"><a href="#cb12-427" aria-hidden="true" tabindex="-1"></a>La @fig-payoff-mc muestra qué está promediando la simulación: la mayoría de las trayectorias terminan por debajo del strike y pagan cero; el precio sale de las que terminan arriba.</span>
+<span id="cb12-428"><a href="#cb12-428" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-431"><a href="#cb12-431" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb12-432"><a href="#cb12-432" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: fig-payoff-mc</span></span>
+<span id="cb12-433"><a href="#cb12-433" aria-hidden="true" tabindex="-1"></a><span class="co">#| echo: false</span></span>
+<span id="cb12-434"><a href="#cb12-434" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-cap: "Valuación de la call por Monte Carlo. Histograma de los precios finales simulados con drift r; solo las trayectorias a la derecha del strike (zona sombreada) pagan algo. El precio es el promedio del payoff de todas las trayectorias (incluidos los ceros), descontado."</span></span>
+<span id="cb12-435"><a href="#cb12-435" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> sys<span class="op">;</span> sys.path.insert(<span class="dv">0</span>, <span class="st">".."</span>)</span>
+<span id="cb12-436"><a href="#cb12-436" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> _esquemas <span class="im">import</span> <span class="op">*</span></span>
+<span id="cb12-437"><a href="#cb12-437" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb12-438"><a href="#cb12-438" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-439"><a href="#cb12-439" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> _esquema():</span>
+<span id="cb12-440"><a href="#cb12-440" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Usa ST_rn, K, payoff, precio_mc, r y T del capítulo</span></span>
+<span id="cb12-441"><a href="#cb12-441" aria-hidden="true" tabindex="-1"></a>    fig, ax <span class="op">=</span> plt.subplots(figsize<span class="op">=</span>(<span class="fl">9.5</span>, <span class="fl">4.3</span>))</span>
+<span id="cb12-442"><a href="#cb12-442" aria-hidden="true" tabindex="-1"></a>    bins <span class="op">=</span> np.linspace(<span class="dv">30</span>, <span class="dv">250</span>, <span class="dv">90</span>)</span>
+<span id="cb12-443"><a href="#cb12-443" aria-hidden="true" tabindex="-1"></a>    _, _, barras <span class="op">=</span> ax.hist(ST_rn, bins<span class="op">=</span>bins, density<span class="op">=</span><span class="va">True</span>, color<span class="op">=</span>GRIS, alpha<span class="op">=</span><span class="fl">0.8</span>)</span>
+<span id="cb12-444"><a href="#cb12-444" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> b <span class="kw">in</span> barras:</span>
+<span id="cb12-445"><a href="#cb12-445" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> b.get_x() <span class="op">&gt;=</span> K:</span>
+<span id="cb12-446"><a href="#cb12-446" aria-hidden="true" tabindex="-1"></a>            b.set_facecolor(SECUNDARIO)</span>
+<span id="cb12-447"><a href="#cb12-447" aria-hidden="true" tabindex="-1"></a>    ax.axvline(K, color<span class="op">=</span>TEXTO, ls<span class="op">=</span><span class="st">"--"</span>, lw<span class="op">=</span><span class="fl">1.2</span>)</span>
+<span id="cb12-448"><a href="#cb12-448" aria-hidden="true" tabindex="-1"></a>    ax.text(K <span class="op">-</span> <span class="dv">2</span>, ax.get_ylim()[<span class="dv">1</span>] <span class="op">*</span> <span class="fl">0.92</span>, <span class="ss">f"strike K = </span><span class="sc">{</span>K<span class="sc">}</span><span class="ss">"</span>, ha<span class="op">=</span><span class="st">"right"</span>, fontsize<span class="op">=</span><span class="dv">9</span>)</span>
+<span id="cb12-449"><a href="#cb12-449" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-450"><a href="#cb12-450" aria-hidden="true" tabindex="-1"></a>    ax2 <span class="op">=</span> ax.twinx()</span>
+<span id="cb12-451"><a href="#cb12-451" aria-hidden="true" tabindex="-1"></a>    s <span class="op">=</span> np.linspace(<span class="dv">30</span>, <span class="dv">250</span>, <span class="dv">200</span>)</span>
+<span id="cb12-452"><a href="#cb12-452" aria-hidden="true" tabindex="-1"></a>    ax2.plot(s, np.maximum(s <span class="op">-</span> K, <span class="dv">0</span>), color<span class="op">=</span>ACENTO, lw<span class="op">=</span><span class="dv">2</span>, label<span class="op">=</span><span class="st">"payoff max(S_T − K, 0)"</span>)</span>
+<span id="cb12-453"><a href="#cb12-453" aria-hidden="true" tabindex="-1"></a>    ax2.set_ylabel(<span class="st">"Payoff ($)"</span>, color<span class="op">=</span>ACENTO)</span>
+<span id="cb12-454"><a href="#cb12-454" aria-hidden="true" tabindex="-1"></a>    ax2.spines[[<span class="st">"top"</span>]].set_visible(<span class="va">False</span>)</span>
+<span id="cb12-455"><a href="#cb12-455" aria-hidden="true" tabindex="-1"></a>    ax2.legend(frameon<span class="op">=</span><span class="va">False</span>, fontsize<span class="op">=</span><span class="dv">9</span>, loc<span class="op">=</span><span class="st">"upper right"</span>)</span>
+<span id="cb12-456"><a href="#cb12-456" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-457"><a href="#cb12-457" aria-hidden="true" tabindex="-1"></a>    ax.text(<span class="dv">172</span>, ax.get_ylim()[<span class="dv">1</span>] <span class="op">*</span> <span class="fl">0.08</span>,</span>
+<span id="cb12-458"><a href="#cb12-458" aria-hidden="true" tabindex="-1"></a>            <span class="ss">f"</span><span class="sc">{</span>(ST_rn <span class="op">&gt;</span> K)<span class="sc">.</span>mean()<span class="sc">:.0%}</span><span class="ss"> de las trayectorias pagan algo</span><span class="ch">\n</span><span class="ss">"</span></span>
+<span id="cb12-459"><a href="#cb12-459" aria-hidden="true" tabindex="-1"></a>            <span class="ss">f"payoff medio: $</span><span class="sc">{</span>payoff<span class="sc">.</span>mean()<span class="sc">:.2f}</span><span class="ch">\n</span><span class="ss">"</span></span>
+<span id="cb12-460"><a href="#cb12-460" aria-hidden="true" tabindex="-1"></a>            <span class="ss">f"precio = e^(−rT) × </span><span class="sc">{</span>payoff<span class="sc">.</span>mean()<span class="sc">:.2f}</span><span class="ss"> = $</span><span class="sc">{</span>precio_mc<span class="sc">:.2f}</span><span class="ss">"</span>,</span>
+<span id="cb12-461"><a href="#cb12-461" aria-hidden="true" tabindex="-1"></a>            fontsize<span class="op">=</span><span class="dv">9</span>, family<span class="op">=</span>MONO, color<span class="op">=</span>TEXTO)</span>
+<span id="cb12-462"><a href="#cb12-462" aria-hidden="true" tabindex="-1"></a>    ax.set_xlabel(<span class="st">"Precio final simulado S_T (mundo neutral al riesgo)"</span>)</span>
+<span id="cb12-463"><a href="#cb12-463" aria-hidden="true" tabindex="-1"></a>    ax.set_yticks([])</span>
+<span id="cb12-464"><a href="#cb12-464" aria-hidden="true" tabindex="-1"></a>    ax.spines[[<span class="st">"top"</span>, <span class="st">"left"</span>]].set_visible(<span class="va">False</span>)</span>
+<span id="cb12-465"><a href="#cb12-465" aria-hidden="true" tabindex="-1"></a>    plt.tight_layout()</span>
+<span id="cb12-466"><a href="#cb12-466" aria-hidden="true" tabindex="-1"></a>    plt.show()</span>
+<span id="cb12-467"><a href="#cb12-467" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-468"><a href="#cb12-468" aria-hidden="true" tabindex="-1"></a>_esquema()</span>
+<span id="cb12-469"><a href="#cb12-469" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb12-470"><a href="#cb12-470" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-471"><a href="#cb12-471" aria-hidden="true" tabindex="-1"></a>La simulación reproduce la fórmula cerrada — y esa es justamente la gracia: para una call europea Black-Scholes ya existe, pero para opciones **path-dependent** (asiáticas, barrera) o con modelos más ricos que el GBM, la fórmula no existe y **Monte Carlo es el camino**. Volveremos sobre esto en el Módulo 4.</span>
+<span id="cb12-472"><a href="#cb12-472" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-473"><a href="#cb12-473" aria-hidden="true" tabindex="-1"></a>---</span>
+<span id="cb12-474"><a href="#cb12-474" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-475"><a href="#cb12-475" aria-hidden="true" tabindex="-1"></a><span class="fu">## Errores comunes</span></span>
+<span id="cb12-476"><a href="#cb12-476" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-477"><a href="#cb12-477" aria-hidden="true" tabindex="-1"></a>::: {.callout-warning title="Trampas frecuentes"}</span>
+<span id="cb12-478"><a href="#cb12-478" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Olvidar el término $-\sigma^2/2$** en el exponente: infla sistemáticamente los precios simulados.</span>
+<span id="cb12-479"><a href="#cb12-479" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Confundir mundo real y mundo neutral al riesgo**: para *proyectar* escenarios usá el drift real $\mu$; para *valuar* derivados usá $r$. Mezclarlos da precios de opciones sin sentido.</span>
+<span id="cb12-480"><a href="#cb12-480" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Reportar la estimación sin su error estándar**: dos corridas con semillas distintas pueden diferir; el error estándar te dice cuánto es esperable.</span>
+<span id="cb12-481"><a href="#cb12-481" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Reusar los mismos shocks para todo**: si comparás dos estrategias, simulalas sobre los mismos shocks (para aislar la diferencia) — pero si estimás la incertidumbre, necesitás muestras independientes. Saber cuál corresponde a cada caso es parte del oficio.</span>
+<span id="cb12-482"><a href="#cb12-482" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Escalar mal el tiempo**: $\sigma$ anual con pasos diarios exige $\sqrt{\Delta t} = \sqrt{1/252}$ en el ruido. Un $\Delta t$ inconsistente distorsiona toda la dinámica.</span>
+<span id="cb12-483"><a href="#cb12-483" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb12-484"><a href="#cb12-484" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-485"><a href="#cb12-485" aria-hidden="true" tabindex="-1"></a>---</span>
+<span id="cb12-486"><a href="#cb12-486" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-487"><a href="#cb12-487" aria-hidden="true" tabindex="-1"></a><span class="fu">## Ejercicios Propuestos</span></span>
+<span id="cb12-488"><a href="#cb12-488" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-489"><a href="#cb12-489" aria-hidden="true" tabindex="-1"></a>::: {.callout-important title="Ejercicios"}</span>
+<span id="cb12-490"><a href="#cb12-490" aria-hidden="true" tabindex="-1"></a><span class="ss">1. </span>**Sensibilidad a la volatilidad**: simulá con $\sigma \in <span class="sc">\{</span>15\%, 25\%, 50\%<span class="sc">\}</span>$ y superponé las tres distribuciones de $S_T$. ¿Qué pasa con la mediana a medida que sube $\sigma$, aun con el mismo $\mu$?</span>
+<span id="cb12-491"><a href="#cb12-491" aria-hidden="true" tabindex="-1"></a><span class="ss">2. </span>**Probabilidad de pérdida**: con las trayectorias del capítulo, estimá $P(S_T &lt; S_0)$ y comparala con la fórmula teórica lognormal.</span>
+<span id="cb12-492"><a href="#cb12-492" aria-hidden="true" tabindex="-1"></a><span class="ss">3. </span>**Activos correlacionados**: simulá 2 activos con correlación $\rho = 0.7$ usando la descomposición de Cholesky de la matriz de correlación, y verificá la correlación empírica de los retornos simulados.</span>
+<span id="cb12-493"><a href="#cb12-493" aria-hidden="true" tabindex="-1"></a><span class="ss">4. </span>**Put europea**: valuá una put con $K = 95$ por Monte Carlo y verificá la paridad put-call: $C - P = S_0 - Ke^{-rT}$.</span>
+<span id="cb12-494"><a href="#cb12-494" aria-hidden="true" tabindex="-1"></a><span class="ss">5. </span>**Opción asiática**: valuá una call asiática (el payoff usa el *promedio* de la trayectoria: $\max(\bar{S} - K, 0)$). ¿Por qué acá Monte Carlo es imprescindible?</span>
+<span id="cb12-495"><a href="#cb12-495" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb12-496"><a href="#cb12-496" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-497"><a href="#cb12-497" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-498"><a href="#cb12-498" aria-hidden="true" tabindex="-1"></a>Podés resolver estos ejercicios acá mismo: la celda ejecuta Python **en tu navegador**, sin instalar nada (la primera ejecución tarda unos segundos mientras carga el entorno; los paquetes que importes se instalan solos).</span>
+<span id="cb12-499"><a href="#cb12-499" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-500"><a href="#cb12-500" aria-hidden="true" tabindex="-1"></a><span class="in">```{pyodide-python}</span></span>
+<span id="cb12-501"><a href="#cb12-501" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: practica-navegador</span></span>
+<span id="cb12-502"><a href="#cb12-502" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb12-503"><a href="#cb12-503" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-504"><a href="#cb12-504" aria-hidden="true" tabindex="-1"></a>rng <span class="op">=</span> np.random.default_rng(<span class="dv">42</span>)</span>
+<span id="cb12-505"><a href="#cb12-505" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-506"><a href="#cb12-506" aria-hidden="true" tabindex="-1"></a><span class="co"># Tu solución acá...</span></span>
+<span id="cb12-507"><a href="#cb12-507" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb12-508"><a href="#cb12-508" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-509"><a href="#cb12-509" aria-hidden="true" tabindex="-1"></a>---</span>
+<span id="cb12-510"><a href="#cb12-510" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-511"><a href="#cb12-511" aria-hidden="true" tabindex="-1"></a><span class="fu">## Referencias</span></span>
+<span id="cb12-512"><a href="#cb12-512" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-513"><a href="#cb12-513" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-514"><a href="#cb12-514" aria-hidden="true" tabindex="-1"></a>::: {#refs}</span>
+<span id="cb12-515"><a href="#cb12-515" aria-hidden="true" tabindex="-1"></a>:::</span>
 </code></pre></div><button title="Copiar al portapapeles" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></div>
 </div></div></div></div></div>
 </div> <!-- /content -->

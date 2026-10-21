@@ -12,7 +12,7 @@ nocite: |
   @merton1976, @cont2004, @madan1998, @mandelbrot1963
 ---
 
-# Introducción
+# Introducción {.unnumbered}
 
 En el capítulo anterior simulamos precios con el Movimiento Browniano Geométrico y todo funcionó de maravilla. Ahora toca la pregunta incómoda: **¿el GBM describe bien los precios reales?**
 
@@ -33,9 +33,16 @@ from scipy import stats
 rng = np.random.default_rng(42)
 ```
 
+```{python}
+#| include: false
+import sys; sys.path.insert(0, "..")
+from _esquemas import aplicar_estilo
+aplicar_estilo()
+```
+
 ---
 
-# El diagnóstico: qué le falta al GBM
+## El diagnóstico: qué le falta al GBM
 
 Antes de proponer modelos nuevos, midamos la falla del viejo. Comparemos los retornos diarios de un GBM contra una serie con "días de shock" ocasionales (nuestra maqueta de los datos reales):
 
@@ -61,9 +68,41 @@ print(f"{'Peor día':<22}{ret_gbm.min():>10.2%}{ret_real.min():>14.2%}")
 
 Misma volatilidad total, pero el "mercado real" tiene curtosis alta, asimetría negativa y días mucho peores. Un gestor de riesgo que use el GBM para estimar el VaR de esta serie va a **subestimar sistemáticamente las colas** — el pecado capital del Capítulo 11.
 
+Las tablas de momentos resumen, pero la herramienta visual clásica para diagnosticar colas es el **gráfico Q-Q** (el del ejercicio del Capítulo 7): enfrenta cada cuantil observado con el que tendría una normal. Si los datos son normales, los puntos caen sobre la recta; si tienen colas pesadas, los extremos se despegan. La @fig-qq-colas lo aplica a las dos series.
+
+```{python}
+#| label: fig-qq-colas
+#| echo: false
+#| fig-cap: "Gráficos Q-Q contra la normal. Los retornos del GBM caen sobre la recta en toda su extensión. Los del «mercado real» se despegan en los extremos, sobre todo en la cola izquierda: los peores días son mucho peores de lo que la normal admite."
+import sys; sys.path.insert(0, "..")
+from _esquemas import *
+from scipy import stats
+
+def _esquema():
+    # Usa ret_gbm y ret_real del capítulo
+    fig, axes = plt.subplots(1, 2, figsize=(10, 4.2), sharey=True)
+    for ax, r, titulo, color in [(axes[0], ret_gbm, "GBM", PRIMARIO),
+                                 (axes[1], ret_real, "«Mercado real» (con shocks)", ACENTO)]:
+        (teo, obs), (pend, ord_, _) = stats.probplot(r, dist="norm")
+        ax.scatter(teo, obs * 100, s=6, color=color, alpha=0.6)
+        ax.plot(teo, (pend * teo + ord_) * 100, color=TEXTO, lw=1.2, ls="--", label="normal")
+        ax.set_title(titulo, fontsize=11, color=PRIMARIO, fontweight="bold")
+        ax.set_xlabel("Cuantil teórico de la normal (desvíos)")
+        ax.grid(alpha=0.3)
+        ax.spines[["top", "right"]].set_visible(False)
+    axes[0].set_ylabel("Retorno observado (%)")
+    axes[1].annotate("cola izquierda:\nmucho peor que la normal", xy=(-3.3, ret_real.min() * 100 * 0.8),
+                     xytext=(-1.2, ret_real.min() * 100 * 0.9), fontsize=9, color=ACENTO,
+                     arrowprops=dict(arrowstyle="-|>", color=ACENTO))
+    plt.tight_layout()
+    plt.show()
+
+_esquema()
+```
+
 ---
 
-# Jump-diffusion de Merton: difusión + saltos de Poisson
+## Jump-diffusion de Merton: difusión + saltos de Poisson
 
 En 1976, Robert Merton (sí, el mismo de Black-Scholes y de LTCM — la historia tiene ironías) propuso la extensión natural: superponer al Browniano un **proceso de saltos**. El precio evoluciona como un GBM *casi todo el tiempo*, pero en momentos aleatorios llega un shock discreto:
 
@@ -79,7 +118,54 @@ Los tres ingredientes:
 El proceso de Poisson es el modelo matemático de "eventos raros que llegan de sorpresa": no sabés *cuándo* llega el próximo salto, pero sí *cada cuánto* llegan en promedio. Con $\lambda = 5$, esperás unos 5 saltos por año, quizás 2 este año y 8 el próximo. Es el mismo objeto que modela llegadas de clientes o fallas de máquinas — acá modela pánicos y sorpresas.
 :::
 
-## Simulación
+La @fig-anatomia-merton desarma una trayectoria en sus piezas: la difusión de siempre, el "timbre" de Poisson que cuenta los saltos, y la suma de ambas.
+
+```{python}
+#| label: fig-anatomia-merton
+#| echo: false
+#| fig-cap: "Anatomía de una trayectoria de Merton (log-precio, un año). Arriba: la difusión continua del GBM. Al medio: el proceso de saltos; el contador N_t sube de a uno cada vez que suena el timbre de Poisson, y cada salto tiene un tamaño aleatorio. Abajo: la suma, que avanza suave y de pronto escalona."
+import sys; sys.path.insert(0, "..")
+from _esquemas import *
+import numpy as np
+
+def _esquema():
+    g = np.random.default_rng(21)
+    n, dt = 252, 1 / 252
+    dias = np.arange(n + 1)
+    difusion = np.concatenate([[0], np.cumsum(0.0003 + 0.15 * np.sqrt(dt) * g.standard_normal(n))])
+    llegadas = g.random(n) < 5 * dt                       # ~5 saltos por año
+    tamanos = np.where(llegadas, g.normal(-0.04, 0.03, n), 0.0)
+    saltos = np.concatenate([[0], np.cumsum(tamanos)])
+    contador = np.concatenate([[0], np.cumsum(llegadas)])
+
+    fig, axes = plt.subplots(3, 1, figsize=(10, 6.6), sharex=True)
+    axes[0].plot(dias, difusion * 100, color=PRIMARIO, lw=1.3)
+    axes[0].set_ylabel("difusión\nμdt + σdW (%)")
+
+    axes[1].step(dias, saltos * 100, where="post", color=ACENTO, lw=1.6)
+    for d in np.flatnonzero(llegadas) + 1:
+        axes[1].axvline(d, color=ACENTO, lw=0.8, ls=":", alpha=0.7)
+    ax_n = axes[1].twinx()
+    ax_n.step(dias, contador, where="post", color=GRIS, lw=1.2)
+    ax_n.set_ylabel("N_t (saltos)", color=GRIS)
+    ax_n.spines[["top"]].set_visible(False)
+    axes[1].set_ylabel("saltos\nacumulados (%)", color=ACENTO)
+
+    axes[2].plot(dias, (difusion + saltos) * 100, color=TEXTO, lw=1.3)
+    for d in np.flatnonzero(llegadas) + 1:
+        axes[2].axvline(d, color=ACENTO, lw=0.8, ls=":", alpha=0.7)
+    axes[2].set_ylabel("Merton =\nsuma (%)")
+    axes[2].set_xlabel("Día")
+    for ax in axes:
+        ax.grid(alpha=0.3)
+        ax.spines[["top", "right"]].set_visible(False)
+    plt.tight_layout()
+    plt.show()
+
+_esquema()
+```
+
+### Simulación
 
 Discretizar es directo: en cada paso, la difusión avanza como siempre, y además sorteamos cuántos saltos ocurrieron en el intervalo (casi siempre 0, a veces 1):
 
@@ -131,7 +217,8 @@ print(f"Vol. total (ambos modelos):     {sigma_total:.1%}")
 ```
 
 ```{python}
-#| label: merton-trayectorias
+#| label: fig-merton-trayectorias
+#| fig-cap: "Ocho trayectorias de cada modelo, con la misma volatilidad total. Las del GBM se mueven de a pasitos; las de Merton tienen escalones."
 fig, axes = plt.subplots(1, 2, figsize=(12, 4.5), sharey=True)
 
 for ax, S, titulo in [(axes[0], S_gbm, "GBM (continuo)"),
@@ -146,21 +233,22 @@ plt.tight_layout()
 plt.show()
 ```
 
-Se ve a simple vista: las trayectorias del GBM son "peludas pero suaves"; las de Merton muestran **escalones** — el precio de pronto está en otro lado, sin pasar por el medio. Así se ve un evento de riesgo real.
+Se ve a simple vista en la @fig-merton-trayectorias: las trayectorias del GBM son "peludas pero suaves"; las de Merton muestran **escalones** — el precio de pronto está en otro lado, sin pasar por el medio. Así se ve un evento de riesgo real.
 
-## La firma en las distribuciones
+### La firma en las distribuciones
 
 La diferencia decisiva está en la distribución de los retornos:
 
 ```{python}
-#| label: merton-distribucion
+#| label: fig-merton-colas
+#| fig-cap: "Distribución de los retornos a un año, con el eje vertical en escala logarítmica para que se vean las colas. Misma varianza, pero la cola izquierda de Merton llega mucho más lejos."
 ret_m = np.log(S_merton[-1] / S0)
 ret_g = np.log(S_gbm[-1] / S0)
 
 fig, ax = plt.subplots(figsize=(9, 5))
 bins = np.linspace(min(ret_m.min(), ret_g.min()), max(ret_m.max(), ret_g.max()), 80)
-ax.hist(ret_g, bins=bins, density=True, alpha=0.55, label="GBM", color="steelblue")
-ax.hist(ret_m, bins=bins, density=True, alpha=0.55, label="Merton", color="indianred")
+ax.hist(ret_g, bins=bins, density=True, alpha=0.55, label="GBM", color="#1e3a5f")
+ax.hist(ret_m, bins=bins, density=True, alpha=0.55, label="Merton", color="#c2410c")
 ax.set_yscale("log")   # escala log para VER las colas
 ax.set_xlabel("Retorno logarítmico a 1 año")
 ax.set_ylabel("Densidad (escala log)")
@@ -169,18 +257,21 @@ ax.legend()
 ax.grid(True, alpha=0.3)
 plt.tight_layout()
 plt.show()
+```
 
+```{python}
+#| label: merton-momentos
 print(f"{'':24}{'GBM':>10}{'Merton':>10}")
 print(f"{'Asimetría':<24}{stats.skew(ret_g):>10.2f}{stats.skew(ret_m):>10.2f}")
 print(f"{'Curtosis (exceso)':<24}{stats.kurtosis(ret_g):>10.2f}{stats.kurtosis(ret_m):>10.2f}")
 print(f"{'Percentil 1%':<24}{np.percentile(ret_g, 1):>10.2%}{np.percentile(ret_m, 1):>10.2%}")
 ```
 
-La escala logarítmica del eje y revela lo que el histograma común esconde: la **cola izquierda de Merton se extiende mucho más lejos** con probabilidad no despreciable. Ambos modelos tienen la misma varianza — un optimizador de Markowitz los vería idénticos — pero el VaR y el ES del 1% son muy distintos. Esta es la materialización de la lección de 2008 del capítulo anterior: **media y varianza no cuentan la historia de las colas**.
+En la @fig-merton-colas, la escala logarítmica del eje y revela lo que el histograma común esconde: la **cola izquierda de Merton se extiende mucho más lejos** con probabilidad no despreciable. Ambos modelos tienen la misma varianza — un optimizador de Markowitz los vería idénticos — pero el VaR y el ES del 1% son muy distintos. Esta es la materialización de la lección de 2008 del capítulo anterior: **media y varianza no cuentan la historia de las colas**.
 
 ---
 
-# Procesos de Lévy: la familia general
+## Procesos de Lévy: la familia general
 
 El Browniano y el Poisson comparten una propiedad estructural: **incrementos independientes y estacionarios** (lo que pasa hoy no depende de ayer, y las reglas del juego no cambian con el tiempo). La familia completa de procesos con esa propiedad son los **procesos de Lévy**, y hay un teorema hermoso (Lévy-Itô) que dice que *todo* proceso de Lévy se descompone en exactamente tres partes:
 
@@ -212,13 +303,82 @@ print(f"{'Asimetría':<24}{stats.skew(ret_g):>10.2f}{stats.skew(ret_vg):>10.2f}"
 print(f"{'Curtosis (exceso)':<24}{stats.kurtosis(ret_g):>10.2f}{stats.kurtosis(ret_vg):>10.2f}")
 ```
 
+La idea del "reloj aleatorio" es más fácil de ver que de leer. En la @fig-reloj-vg, el reloj de mercado avanza en promedio igual que el calendario, pero a tirones: a veces casi se detiene y a veces corre. El precio solo se mueve cuando corre ese reloj.
+
+```{python}
+#| label: fig-reloj-vg
+#| echo: false
+#| fig-cap: "Variance Gamma por subordinación. Izquierda: el «tiempo de mercado» G_t (incrementos Gamma) contra el tiempo calendario; en promedio coinciden, pero G_t avanza a saltos. Derecha: un Browniano evaluado en ese reloj. Los tramos donde el reloj corre son los días agitados; donde se frena, el precio casi no se mueve."
+import sys; sys.path.insert(0, "..")
+from _esquemas import *
+import numpy as np
+
+def _esquema():
+    g = np.random.default_rng(5)
+    n, nu = 252, 0.4
+    dt = 1 / n
+    t = np.arange(n + 1) * dt
+    dG = g.gamma(shape=dt / nu, scale=nu, size=n)
+    G = np.concatenate([[0], np.cumsum(dG)])
+    X = np.concatenate([[0], np.cumsum(-0.10 * dG + 0.18 * np.sqrt(dG) * g.standard_normal(n))])
+
+    fig, (izq, der) = plt.subplots(1, 2, figsize=(11, 4.2))
+    izq.plot(t, t, color=GRIS, ls="--", lw=1.2, label="calendario (t)")
+    izq.step(t, G, where="post", color=ACENTO, lw=1.6, label="reloj de mercado G_t")
+    izq.set_xlabel("Tiempo calendario (años)")
+    izq.set_ylabel("Tiempo transcurrido (años)")
+    izq.legend(frameon=False, fontsize=9)
+    izq.set_title("El reloj aleatorio", fontsize=11, color=PRIMARIO, fontweight="bold")
+
+    der.plot(t, X * 100, color=PRIMARIO, lw=1.3)
+    rapidos = np.argsort(dG)[-4:]
+    for i in rapidos:
+        der.axvspan(t[i], t[i + 1] + 0.004, color=ACENTO, alpha=0.25, lw=0)
+        izq.axvspan(t[i], t[i + 1] + 0.004, color=ACENTO, alpha=0.25, lw=0)
+    der.set_xlabel("Tiempo calendario (años)")
+    der.set_ylabel("Retorno log acumulado (%)")
+    der.set_title("El precio, en ese reloj", fontsize=11, color=PRIMARIO, fontweight="bold")
+    for ax in (izq, der):
+        ax.grid(alpha=0.3)
+        ax.spines[["top", "right"]].set_visible(False)
+    plt.tight_layout()
+    plt.show()
+
+_esquema()
+```
+
 ::: {.callout-note title="¿Por qué molestarse con estos modelos?"}
 Porque el uso profesional los exige en dos frentes. **Riesgo**: un VaR/ES calculado con colas realistas (Capítulo 11 + este) es la diferencia entre estar preparado o no. **Derivados**: las opciones fuera del dinero cotizan "caras" respecto de Black-Scholes precisamente porque el mercado *sí* les pone precio a los saltos; los modelos de Lévy reproducen ese patrón (la *sonrisa* de volatilidad, que formalizamos en el Módulo 4).
 :::
 
 ---
 
-# ¿Qué modelo usar? Un mapa
+## ¿Qué modelo usar? Un mapa
+
+La descomposición de Lévy-Itô funciona como un menú: cada modelo es una elección de qué ingredientes poner en la olla. La @fig-levy-ingredientes muestra qué toma cada uno.
+
+```{mermaid}
+%%| label: fig-levy-ingredientes
+%%| fig-cap: "Los modelos del capítulo como combinaciones de los tres ingredientes de Lévy-Itô. El GBM usa solo tendencia y difusión; Merton agrega saltos raros y grandes; Variance Gamma reemplaza la difusión por infinitos saltos chicos."
+flowchart LR
+    T["Tendencia<br/><i>bt</i>"]
+    D["Difusión<br/><i>σW_t</i>"]
+    SG["Saltos raros<br/>y grandes<br/><i>Poisson</i>"]
+    SC["Infinitos saltos<br/>chicos<br/><i>reloj Gamma</i>"]
+    T --> GBM(["<b>GBM</b><br/>colas finas"])
+    D --> GBM
+    T --> M(["<b>Merton</b><br/>colas pesadas,<br/>eventos discretos"])
+    D --> M
+    SG --> M
+    T --> VG(["<b>Variance Gamma</b><br/>colas pesadas,<br/>sin difusión"])
+    SC --> VG
+    classDef ing fill:#e0e9f4,stroke:#1e3a5f,color:#1f2937
+    classDef salto fill:#fde8dc,stroke:#c2410c,color:#1f2937
+    classDef mod fill:#eef2e3,stroke:#637238,color:#1f2937
+    class T,D ing
+    class SG,SC salto
+    class GBM,M,VG mod
+```
 
 | Modelo | Colas | Saltos | Costo | Cuándo usarlo |
 |---|---|---|---|---|
@@ -231,7 +391,7 @@ La regla general del oficio: **el modelo correcto depende de la pregunta**. Para
 
 ---
 
-# Errores comunes
+## Errores comunes
 
 ::: {.callout-warning title="Trampas frecuentes"}
 - **Olvidar el compensador** ($-\lambda k\, dt$) en Merton: sin él, los saltos negativos sesgan el drift y la media simulada no coincide con la teórica.
@@ -242,7 +402,7 @@ La regla general del oficio: **el modelo correcto depende de la pregunta**. Para
 
 ---
 
-# Ejercicios Propuestos
+## Ejercicios Propuestos
 
 ::: {.callout-important title="Ejercicios"}
 1. **ES bajo saltos**: calculá el Expected Shortfall al 99% a 1 año bajo GBM y bajo Merton (misma varianza total). ¿Qué error porcentual comete el GBM?
@@ -266,7 +426,7 @@ rng = np.random.default_rng(42)
 
 ---
 
-# Referencias
+## Referencias
 
 
 ::: {#refs}

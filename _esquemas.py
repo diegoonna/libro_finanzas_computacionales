@@ -29,6 +29,24 @@ MONO = "DejaVu Sans Mono"
 ESCALA = 0.55  # pulgadas por unidad de esquema
 
 
+def aplicar_estilo():
+    """Paleta del libro como ciclo de colores por defecto, para los gráficos con código visible."""
+    from cycler import cycler
+    plt.rcParams["axes.prop_cycle"] = cycler(color=[
+        PRIMARIO, ACENTO, SECUNDARIO, GRIS, "#7c3aed", "#0f766e", "#b45309", "#be185d"])
+    plt.rcParams["axes.spines.top"] = False
+    plt.rcParams["axes.spines.right"] = False
+
+
+def sombrear_cola(ax, x, densidad, umbral, color=ACENTO, etiqueta=None, alpha=0.35):
+    """Dibuja una densidad y rellena su cola izquierda (``x <= umbral``)."""
+    import numpy as np
+    x, densidad = np.asarray(x), np.asarray(densidad)
+    ax.plot(x, densidad, color=color, lw=2, label=etiqueta)
+    cola = x <= umbral
+    ax.fill_between(x[cola], densidad[cola], color=color, alpha=alpha, lw=0)
+
+
 def _preparar(ax, ancho, alto):
     ax.set_xlim(0, ancho)
     ax.set_ylim(0, alto)

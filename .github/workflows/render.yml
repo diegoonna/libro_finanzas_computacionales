@@ -30,6 +30,13 @@ concurrency:
 jobs:
   render:
     runs-on: ubuntu-latest
+    # Un render normal tarda minutos. Sin este tope, un render colgado (pasó en
+    # oct-2026: 6 h hasta que GitHub lo canceló) bloquea todo hasta el límite.
+    timeout-minutes: 45
+    env:
+      # Chrome viene preinstalado en ubuntu-latest; Quarto lo usa para convertir
+      # los diagramas mermaid a imagen en el PDF.
+      QUARTO_CHROMIUM: /usr/bin/google-chrome
     steps:
       - name: Checkout con historial completo
         uses: actions/checkout@v4
@@ -45,7 +52,7 @@ jobs:
       - name: Instalar Python
         uses: actions/setup-python@v5
         with:
-          python-version: "3.12"
+          python-version: "3.13"   # la de las versiones fijadas en requirements.txt
           cache: pip
 
       - name: Instalar dependencias de Python
@@ -57,8 +64,26 @@ jobs:
           version: 1.8.26
           tinytex: true
 
-      - name: Renderizar el libro
+      # lang: es necesita el babel en español, que TinyTeX no trae de base
+      - name: Instalar el soporte de español para LaTeX
+        run: |
+          TLMGR="$(command -v tlmgr || find "$HOME/.TinyTeX/bin" -name tlmgr | head -1)"
+          "$TLMGR" install babel-spanish hyphen-spanish
+
+      # Render completo (web + PDF). Si falla (casi siempre por el PDF), el paso
+      # siguiente publica al menos la web, para que un PDF roto no frene el sitio.
+      - name: Renderizar el libro (web + PDF)
+        id: completo
+        continue-on-error: true
+        timeout-minutes: 30
         run: quarto render
+
+      - name: Si el PDF falló, renderizar solo la web
+        if: steps.completo.outcome == 'failure'
+        timeout-minutes: 20
+        run: |
+          echo "::warning::El render completo falló; se publica solo la web (sin PDF actualizado)."
+          quarto render --to html
 
       - name: Commitear docs/ si quedó desactualizado
         run: |

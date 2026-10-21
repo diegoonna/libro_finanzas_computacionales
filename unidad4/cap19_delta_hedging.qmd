@@ -12,7 +12,7 @@ nocite: |
   @hull2018options, @taleb1997, @derman2016
 ---
 
-# Introducción
+# Introducción {.unnumbered}
 
 Imaginate que trabajás en la mesa de derivados de un banco y un cliente te compra una call. Cobraste la prima, pero ahora tenés un problema: si la acción sube fuerte, el payoff que vas a tener que pagar crece sin límite. **¿Cómo dormís tranquilo?**
 
@@ -53,9 +53,54 @@ def bs_delta(S, K, T, r, sigma):
     return norm.cdf(d1)
 ```
 
+```{python}
+#| include: false
+import sys; sys.path.insert(0, "..")
+from _esquemas import aplicar_estilo
+aplicar_estilo()
+```
+
+La @fig-cartera-cubierta muestra qué significa "quedar insensible al precio". La call vendida pierde valor cuando el precio sube; las Δ acciones compradas lo ganan; la suma queda plana justo en el precio actual. Pero solo ahí: como la call es curva y las acciones son una recta, la suma se dobla hacia abajo apenas el precio se aleja. Esa curvatura es el gamma, y es la razón por la que hay que rebalancear.
+
+```{python}
+#| label: fig-cartera-cubierta
+#| echo: false
+#| fig-cap: "Resultado inmediato (antes de que pase el tiempo) de cada pieza de la cobertura si el precio salta desde S0 = 100. La call vendida es cóncava; las Δ acciones, una recta tangente; la cartera cubierta es plana en S0 pero pierde ante movimientos grandes en cualquier dirección. Esa pérdida, ½Γ(ΔS)², es lo que el rebalanceo va corrigiendo."
+import sys; sys.path.insert(0, "..")
+from _esquemas import *
+import numpy as np
+
+def _esquema():
+    # Usa bs_call, bs_delta, S0, K, T, r, sigma del capítulo
+    s = np.linspace(70, 130, 300)
+    c0, d0 = bs_call(S0, K, T, r, sigma), bs_delta(S0, K, T, r, sigma)
+    call_vendida = -(bs_call(s, K, T, r, sigma) - c0)
+    acciones = d0 * (s - S0)
+    fig, ax = plt.subplots(figsize=(9.5, 4.6))
+    ax.plot(s, call_vendida, color=ACENTO, lw=2, label="Call vendida")
+    ax.plot(s, acciones, color=SECUNDARIO, lw=2, ls="--", label=f"{d0:.2f} acciones (= Δ)")
+    ax.plot(s, call_vendida + acciones, color=PRIMARIO, lw=2.8, label="Cartera cubierta (suma)")
+    ax.axhline(0, color=TEXTO, lw=0.8)
+    ax.axvline(S0, color=GRIS, lw=1, ls=":")
+    s1 = 120
+    ax.annotate("½Γ(ΔS)²: lo que pierde\nla cobertura si el precio\nsalta sin rebalancear",
+                xy=(s1, -(bs_call(s1, K, T, r, sigma) - c0) + d0 * (s1 - S0)),
+                xytext=(103, 14), fontsize=9, color=PRIMARIO,
+                arrowprops=dict(arrowstyle="-|>", color=PRIMARIO))
+    ax.set_xlabel("Precio del subyacente (salto inmediato desde S0 = 100)")
+    ax.set_ylabel("Ganancia / pérdida ($)")
+    ax.legend(frameon=False, fontsize=9, loc="upper left")
+    ax.grid(alpha=0.3)
+    ax.spines[["top", "right"]].set_visible(False)
+    plt.tight_layout()
+    plt.show()
+
+_esquema()
+```
+
 ---
 
-# La mecánica de un día de trading
+## La mecánica de un día de trading
 
 La rutina diaria del trader cubierto, que vamos a codificar tal cual:
 
@@ -63,6 +108,25 @@ La rutina diaria del trader cubierto, que vamos a codificar tal cual:
 2. **Rebalanceás**: si el delta subió de 0.55 a 0.60, comprás 0.05 acciones más; si bajó, vendés. El cash de esas operaciones entra o sale de tu cuenta.
 3. **El cash devenga interés** (o pagás por el financiamiento si estás en descubierto).
 4. Al vencimiento, pagás el payoff al cliente y cerrás la posición en acciones.
+
+```{mermaid}
+%%| label: fig-rutina-hedge
+%%| fig-cap: "El ciclo diario del delta hedging. El bucle se repite una vez por día; al vencimiento, lo que queda en la cartera replicante se compara con el payoff que hay que pagar, y la diferencia es el error de cobertura."
+flowchart LR
+    I(["Día 0<br/>cobrar la prima<br/><i>cash = prima</i>"]) --> A
+    A["<b>Amanece</b><br/>nuevo precio S_t"] --> D["<b>Recalcular Δ</b><br/>con S_t y el<br/>tiempo restante"]
+    D --> R["<b>Rebalancear</b><br/>comprar o vender<br/>Δ − acciones"]
+    R --> C["<b>Cash</b><br/>devenga r<br/>hasta mañana"]
+    C --> V{"¿Vencimiento?"}
+    V -->|"no"| A
+    V -->|"sí"| F(["Pagar el payoff<br/>y cerrar<br/>→ <b>error de cobertura</b>"])
+    classDef paso fill:#e0e9f4,stroke:#1e3a5f,color:#1f2937
+    classDef extremo fill:#eef2e3,stroke:#637238,color:#1f2937
+    classDef dec fill:#fde8dc,stroke:#c2410c,color:#1f2937
+    class A,D,R,C paso
+    class I,F extremo
+    class V dec
+```
 
 Si la réplica es buena, la prima cobrada al inicio + los resultados del trading deberían cubrir **casi exactamente** el payoff. La diferencia es el **error de cobertura**.
 
@@ -126,19 +190,20 @@ print(f"Error de cobertura:       ${error_hedge:8.2f}  "
 Leé el resultado con perspectiva: el precio se movió durante un año entero —quizás terminó 20% arriba o abajo— y sin embargo el trader cubierto termina con un error de **centavos por cada 100 de prima**. No adivinó el mercado ni le hizo falta: la réplica transformó una posición especulativa en un negocio de fabricación. El banco "fabrica" la opción comprando y vendiendo el subyacente, y su ganancia es el margen sobre el costo de fabricación — no una apuesta direccional.
 
 ```{python}
-#| label: plots
+#| label: fig-hedge-cuatro-paneles
+#| fig-cap: "Un año de delta hedging. Arriba: el escenario de precio y el delta (las acciones en cartera). Abajo: la cartera replicante contra el valor de la opción, y el tamaño de cada rebalanceo diario."
 fig, axes = plt.subplots(2, 2, figsize=(12, 8))
 
 ax = axes[0, 0]
 ax.plot(df["dia"], df["precio"], linewidth=1.2)
-ax.axhline(K, color="red", linestyle="--", alpha=0.6, label=f"Strike K={K}")
+ax.axhline(K, color="#c2410c", linestyle="--", alpha=0.6, label=f"Strike K={K}")
 ax.set_title("El escenario: precio del subyacente")
 ax.set_ylabel("Precio ($)")
 ax.legend()
 ax.grid(True, alpha=0.3)
 
 ax = axes[0, 1]
-ax.plot(df["dia"], df["delta"], color="green", linewidth=1.2)
+ax.plot(df["dia"], df["delta"], color="#637238", linewidth=1.2)
 ax.set_title("La posición: delta = acciones en cartera")
 ax.set_ylabel("Delta")
 ax.grid(True, alpha=0.3)
@@ -153,7 +218,7 @@ ax.legend()
 ax.grid(True, alpha=0.3)
 
 ax = axes[1, 1]
-ax.bar(df["dia"], df["trade"], color="steelblue", alpha=0.7, width=1.5)
+ax.bar(df["dia"], df["trade"], color="#1e3a5f", alpha=0.7, width=1.5)
 ax.set_title("Los rebalanceos diarios")
 ax.set_xlabel("Día")
 ax.set_ylabel("Acciones operadas")
@@ -163,15 +228,48 @@ plt.tight_layout()
 plt.show()
 ```
 
-Fijate dos cosas en los gráficos. Primero, el panel inferior izquierdo: la cartera replicante **persigue al valor de la opción** durante todo el año — esa es la réplica funcionando. Segundo, el panel del delta comparado con el del precio: cuando el precio cruza el strike, el delta se mueve rápido y los rebalanceos se agrandan. Ahí gobierna el **gamma**.
+Fijate dos cosas en la @fig-hedge-cuatro-paneles. Primero, el panel inferior izquierdo: la cartera replicante **persigue al valor de la opción** durante todo el año — esa es la réplica funcionando. Segundo, el panel del delta comparado con el del precio: cuando el precio cruza el strike, el delta se mueve rápido y los rebalanceos se agrandan. Ahí gobierna el **gamma**.
 
 ::: {.callout-tip title="Comprar caro y vender barato, por diseño"}
 Observá el patrón de los trades: cuando el precio **sube**, el delta sube y el trader **compra**; cuando **baja**, **vende**. El cubridor de una opción vendida compra en las subas y vende en las bajas — sistemáticamente pierde en cada ida y vuelta. Ese costo acumulado no es un defecto: **es exactamente el valor temporal de la opción** que cobró como prima. Si la volatilidad realizada termina siendo la que cotizó ($\sigma$), prima y costo de cobertura se cancelan. Si el mercado se mueve *más* que lo cotizado, el cubridor pierde; si se mueve *menos*, gana. Vender opciones cubiertas es, en el fondo, **vender volatilidad**.
 :::
 
+La @fig-compra-cara verifica el patrón con los datos de la simulación: cada punto es un día, con el movimiento del precio en el eje horizontal y la cantidad de acciones operadas en el vertical.
+
+```{python}
+#| label: fig-compra-cara
+#| echo: false
+#| fig-cap: "Cada punto es un día de la simulación: cambio del precio contra acciones operadas ese día. Casi todos caen en los cuadrantes «subió y compré» o «bajó y vendí» (los que quedan en cero son días en que la opción estaba tan dentro o tan fuera del dinero que el delta casi no se movió): el cubridor de una call vendida compra caro y vende barato, de forma sistemática."
+import sys; sys.path.insert(0, "..")
+from _esquemas import *
+import numpy as np
+
+def _esquema():
+    # Usa df del capítulo
+    d_precio = df["precio"].diff().iloc[1:]
+    trade = df["trade"].iloc[1:]
+    fig, ax = plt.subplots(figsize=(8.5, 4.6))
+    ax.scatter(d_precio, trade, s=14, alpha=0.7,
+               color=np.where(trade > 0, SECUNDARIO, ACENTO))
+    ax.axhline(0, color=TEXTO, lw=0.8)
+    ax.axvline(0, color=TEXTO, lw=0.8)
+    ax.text(0.97, 0.93, "subió → compré", transform=ax.transAxes, ha="right", fontsize=9.5,
+            color=SECUNDARIO, fontweight="bold")
+    ax.text(0.03, 0.05, "bajó → vendí", transform=ax.transAxes, fontsize=9.5, color=ACENTO,
+            fontweight="bold")
+    ax.set_xlabel("Cambio diario del precio ($)")
+    ax.set_ylabel("Acciones compradas (+) o vendidas (−)")
+    ax.grid(alpha=0.3)
+    ax.spines[["top", "right"]].set_visible(False)
+    plt.tight_layout()
+    plt.show()
+
+_esquema()
+```
+
 ---
 
-# El error de cobertura: de dónde viene y cómo se achica
+## El error de cobertura: de dónde viene y cómo se achica
 
 En el mundo ideal de Black-Scholes el rebalanceo es *continuo* y el error es cero. Nosotros rebalanceamos una vez por día, y entre rebalanceo y rebalanceo el delta queda desactualizado. ¿Cuánto cuesta esa discretización? La respuesta la da el **gamma**: entre dos rebalanceos, el error de la aproximación lineal es $\tfrac{1}{2}\Gamma (\Delta S)^2$ — cuadrático en el movimiento del precio.
 
@@ -203,7 +301,11 @@ resultados = {nombre: error_hedging(n, 400, np.random.default_rng(7))
 print(f"{'Rebalanceo':<16}{'Error medio':>12}{'Desvío':>10}")
 for nombre, err in resultados.items():
     print(f"{nombre:<16}{err.mean():>12.3f}{err.std():>10.3f}")
+```
 
+```{python}
+#| label: fig-error-frecuencia
+#| fig-cap: "Distribución del error de cobertura en 400 escenarios para tres frecuencias de rebalanceo. Las tres están centradas en cero; rebalancear más seguido las angosta."
 fig, ax = plt.subplots(figsize=(9, 4.5))
 for nombre, err in resultados.items():
     ax.hist(err, bins=40, alpha=0.55, label=nombre, density=True)
@@ -217,9 +319,9 @@ plt.tight_layout()
 plt.show()
 ```
 
-La media es ~0 en todos los casos (la cobertura no está sesgada) y el desvío se achica con la raíz de la frecuencia: de mensual a diario hay un factor $\sqrt{252/12} \approx 4.6$. En el límite continuo, el error desaparece — **esa es la demostración experimental del argumento de Black-Scholes**.
+En la @fig-error-frecuencia, la media es ~0 en todos los casos (la cobertura no está sesgada) y el desvío se achica con la raíz de la frecuencia: de mensual a diario hay un factor $\sqrt{252/12} \approx 4.6$. En el límite continuo, el error desaparece — **esa es la demostración experimental del argumento de Black-Scholes**.
 
-## El freno del mundo real: costos de transacción
+### El freno del mundo real: costos de transacción
 
 ¿Entonces por qué no rebalancear cada minuto? Porque cada operación **cuesta** (comisiones, spread). Más frecuencia = menos error de gamma pero más costos: hay un punto óptimo intermedio, y encontrarlo es un problema clásico de la microestructura de la cobertura.
 
@@ -250,14 +352,64 @@ for nombre, n in frecuencias.items():
 
 Ahora el error medio es **negativo y empeora con la frecuencia**: los costos son un peaje que se paga en cada rebalanceo. El trader real equilibra: rebalancea por bandas ("solo si el delta se desvió más de X"), usa el gamma para decidir cuándo vale la pena, y cotiza la opción con un margen que cubra este peaje.
 
+La @fig-frecuencia-costos junta los dos experimentos en un barrido más fino de frecuencias. A la izquierda, sin costos, el desvío cae siguiendo la recta $1/\sqrt{n}$ de la teoría. A la derecha, el peaje: como las dos funciones reciben la misma semilla, simulan exactamente los mismos escenarios, y la diferencia entre sus resultados es el costo de transacción puro, sin ruido de muestreo encima.
+
+```{python}
+#| label: fig-frecuencia-costos
+#| echo: false
+#| fig-cap: "Seis frecuencias de rebalanceo, 300 escenarios cada una. Izquierda (sin costos, escalas log): el desvío del error cae en paralelo a la recta 1/√n. Derecha: costo de transacción medio pagado en el año con 5 pb por operación, que crece con la frecuencia. El rebalanceo óptimo equilibra ambos efectos."
+import sys; sys.path.insert(0, "..")
+from _esquemas import *
+import numpy as np
+
+def _esquema():
+    # Usa error_hedging y error_con_costos del capítulo. Con la misma semilla, ambas
+    # simulan los mismos caminos: la diferencia es el costo de transacción puro.
+    ns = np.array([4, 12, 26, 52, 126, 252])
+    sin_costos = [error_hedging(n, 300, np.random.default_rng(31)) for n in ns]
+    con_costos = [error_con_costos(n, 5, 300, np.random.default_rng(31)) for n in ns]
+    desvios = np.array([e.std() for e in sin_costos])
+    medias_c = np.array([(c - s).mean() for c, s in zip(con_costos, sin_costos)])
+
+    fig, (izq, der) = plt.subplots(1, 2, figsize=(11, 4))
+    izq.loglog(ns, desvios, "o-", color=PRIMARIO, lw=2, label="desvío simulado")
+    izq.loglog(ns, desvios[0] * np.sqrt(ns[0] / ns), color=GRIS, ls="--",
+               label="pendiente teórica 1/√n")
+    izq.set_xticks(ns, [str(n) for n in ns])
+    izq.set_yticks([0.5, 1, 2, 4], ["0.5", "1", "2", "4"])
+    izq.minorticks_off()
+    izq.set_xlabel("Rebalanceos por año (n)")
+    izq.set_ylabel("Desvío del error ($)")
+    izq.set_title("Sin costos: más rebalanceo, menos error", fontsize=10.5, color=PRIMARIO,
+                  fontweight="bold")
+    izq.legend(frameon=False, fontsize=9)
+
+    der.semilogx(ns, -medias_c, "o-", color=ACENTO, lw=2)
+    der.set_ylim(bottom=0)
+    der.set_xticks(ns, [str(n) for n in ns])
+    der.minorticks_off()
+    der.set_xlabel("Rebalanceos por año (n)")
+    der.set_ylabel("Costo medio pagado ($)")
+    der.set_title("Con costos (5 pb): cada rebalanceo cobra peaje", fontsize=10.5,
+                  color=PRIMARIO, fontweight="bold")
+    for ax in (izq, der):
+        ax.grid(alpha=0.3)
+        ax.spines[["top", "right"]].set_visible(False)
+    plt.tight_layout()
+    plt.show()
+
+_esquema()
+```
+
 ---
 
-# Cuando el gamma muerde: cerca del strike, cerca del vencimiento
+## Cuando el gamma muerde: cerca del strike, cerca del vencimiento
 
 El talón de Aquiles de la cobertura delta es la zona donde el gamma explota: **strike cercano y poco tiempo restante** (el pico puntiagudo del capítulo anterior). Ahí el delta salta de casi-0 a casi-1 con movimientos chicos del precio, y ninguna frecuencia razonable de rebalanceo alcanza.
 
 ```{python}
-#| label: pin-risk
+#| label: fig-pin-risk
+#| fig-cap: "Pin risk en los últimos 40 días: el precio oscila alrededor del strike justo antes del vencimiento, y el delta salta entre casi 0 y casi 1 con cada cruce."
 # Un escenario malicioso: el precio termina oscilando alrededor del strike
 dias_final = 20
 S_pin = np.concatenate([
@@ -270,22 +422,22 @@ deltas_pin = [bs_delta(S_pin[t], K, max(T - t * dt, 1e-9), r, sigma)
 
 fig, ax = plt.subplots(figsize=(9, 4))
 ax2 = ax.twinx()
-ax.plot(S_pin[-40:], color="steelblue", label="Precio")
-ax.axhline(K, color="red", linestyle="--", alpha=0.5)
-ax2.plot(deltas_pin[-40:], color="darkorange", label="Delta")
+ax.plot(S_pin[-40:], color="#1e3a5f", label="Precio")
+ax.axhline(K, color="#94a3b8", linestyle="--")
+ax2.plot(deltas_pin[-40:], color="#c2410c", label="Delta")
 ax.set_xlabel("Últimos 40 días")
-ax.set_ylabel("Precio ($)", color="steelblue")
-ax2.set_ylabel("Delta", color="darkorange")
+ax.set_ylabel("Precio ($)", color="#1e3a5f")
+ax2.set_ylabel("Delta", color="#c2410c")
 ax.set_title("Pin risk: el delta se vuelve loco cuando el precio baila sobre el strike")
 plt.tight_layout()
 plt.show()
 ```
 
-En esos últimos días el trader compra arriba y vende abajo una y otra vez, sangrando en cada vuelta — el famoso **pin risk**. La respuesta profesional es cubrir también la curvatura: el **delta-gamma hedging** agrega *otra opción* a la cartera para neutralizar el gamma (las acciones solas no pueden: su gamma es cero). Queda como ejercicio, y es la puerta de entrada a la gestión de books de opciones reales.
+En esos últimos días de la @fig-pin-risk, el trader compra arriba y vende abajo una y otra vez, sangrando en cada vuelta — el famoso **pin risk**. La respuesta profesional es cubrir también la curvatura: el **delta-gamma hedging** agrega *otra opción* a la cartera para neutralizar el gamma (las acciones solas no pueden: su gamma es cero). Queda como ejercicio, y es la puerta de entrada a la gestión de books de opciones reales.
 
 ---
 
-# Errores comunes
+## Errores comunes
 
 ::: {.callout-warning title="Trampas frecuentes"}
 - **Olvidar el interés del cash**: en horizontes largos, el carry del cash es parte material del resultado; omitirlo sesga el error de cobertura.
@@ -297,7 +449,7 @@ En esos últimos días el trader compra arriba y vende abajo una y otra vez, san
 
 ---
 
-# Ejercicios Propuestos
+## Ejercicios Propuestos
 
 ::: {.callout-important title="Ejercicios"}
 1. **Vol realizada vs. cotizada**: simulá el mercado con $\sigma_{real} = 30\%$ pero cubrí usando $\sigma = 25\%$ en las fórmulas. ¿El error medio sigue siendo cero? ¿Quién gana, el comprador o el vendedor de la opción?
@@ -320,7 +472,7 @@ from scipy.stats import norm
 
 ---
 
-# Referencias
+## Referencias
 
 
 ::: {#refs}

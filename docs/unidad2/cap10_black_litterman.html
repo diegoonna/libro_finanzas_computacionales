@@ -862,7 +862,7 @@ window.Quarto = {
 <p>Markowitz te pregunta <em>“¿cuánto va a rendir cada activo?”</em> y se cree tu respuesta al pie de la letra. Black-Litterman te pregunta <em>“¿en qué diferís del mercado, y cuán seguro estás?”</em> — una pregunta mucho más honesta y fácil de responder.</p>
 </div>
 </div>
-<p>La <a href="#fig-pipeline-bl" class="quarto-xref">Figura&nbsp;<span>10.4</span></a>, al final del capítulo, resume el recorrido completo en un solo diagrama; volvé a ella si en algún paso perdés el hilo.</p>
+<p>La <a href="#fig-pipeline-bl" class="quarto-xref">Figura&nbsp;<span>10.5</span></a>, al final del capítulo, resume el recorrido completo en un solo diagrama; volvé a ella si en algún paso perdés el hilo.</p>
 <div id="setup" class="cell" data-execution_count="1">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
@@ -879,7 +879,7 @@ window.Quarto = {
 </ol>
 <p>¿Con qué te quedás? Ni una ni otra a ciegas: hacés un <strong>promedio ponderado por tu confianza</strong>. Si tu análisis es muy sólido, tu estimación final se acerca al 12%; si tenés dudas, se queda cerca del 8% del mercado. Y si tu opinión coincide con el mercado, no cambia nada.</p>
 <p>La <a href="#fig-mezcla-bayesiana" class="quarto-xref">Figura&nbsp;<span>10.1</span></a> dibuja ese razonamiento con números: cada fuente es una campana centrada en su estimación, más angosta cuanto más confiable. La combinación cae entre ambas, más cerca de la más precisa, y es más angosta que las dos: juntar información reduce la incertidumbre.</p>
-<div id="cell-fig-mezcla-bayesiana" class="cell" data-execution_count="2">
+<div id="cell-fig-mezcla-bayesiana" class="cell" data-execution_count="3">
 <div class="cell-output cell-output-display">
 <div id="fig-mezcla-bayesiana" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
@@ -908,7 +908,7 @@ Figura&nbsp;10.1: Combinar el equilibrio (8% ± 2%) con una view (12% ± 3%): el
 <li><span class="math inline">\(\Sigma\)</span> es la matriz de covarianzas de los retornos,</li>
 <li><span class="math inline">\(\delta\)</span> es el <strong>coeficiente de aversión al riesgo</strong> del mercado (típicamente entre 2 y 3).</li>
 </ul>
-<div id="equilibrio" class="cell" data-execution_count="3">
+<div id="equilibrio" class="cell" data-execution_count="4">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Universo de ejemplo: 3 activos (digamos, tres clases de activos)</span></span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>activos <span class="op">=</span> [<span class="st">"Acciones USA"</span>, <span class="st">"Acciones EU"</span>, <span class="st">"Bonos"</span>]</span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -965,7 +965,7 @@ Bonos          retorno implícito:  0.36%</code></pre>
 <li><strong>Absolutas</strong>: “Acciones EU van a rendir 12%”. La fila de <span class="math inline">\(P\)</span> tiene un <code>1</code> en ese activo y <code>0</code> en el resto.</li>
 <li><strong>Relativas</strong>: “Acciones USA van a superar a Bonos por 4%”. La fila tiene un <code>+1</code> en USA y un <code>-1</code> en Bonos.</li>
 </ul>
-<div id="views" class="cell" data-execution_count="4">
+<div id="views" class="cell" data-execution_count="5">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># View 1 (absoluta): "Acciones EU rendirán 12%"</span></span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="co"># View 2 (relativa): "Acciones USA superarán a Bonos por 4%"</span></span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>P <span class="op">=</span> np.array([</span>
@@ -986,7 +986,7 @@ Vector Q (views): [0.12 0.04]</code></pre>
 </div>
 </div>
 <p>Para la incertidumbre <span class="math inline">\(\Omega\)</span>, una convención estándar (He y Litterman, 1999) es hacerla proporcional a la varianza de la propia view bajo el modelo: views sobre activos más volátiles arrastran más incertidumbre. Aparece también un parámetro escalar <span class="math inline">\(\tau\)</span> (chico, ~0.025–0.05) que refleja la confianza global en el equilibrio. Una alternativa popular es la de Idzorek (2007): en lugar de fijar <span class="math inline">\(\Omega\)</span> directamente, le pide al inversor un <strong>porcentaje de confianza</strong> (de 0 a 100%) para cada view y deduce <span class="math inline">\(\Omega\)</span> a partir de él.</p>
-<div id="omega" class="cell" data-execution_count="5">
+<div id="omega" class="cell" data-execution_count="6">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>tau <span class="op">=</span> <span class="fl">0.05</span>   <span class="co"># escala de la incertidumbre del equilibrio</span></span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Ω diagonal, proporcional a la incertidumbre de cada view: diag(P (τΣ) Pᵀ)</span></span>
@@ -1000,7 +1000,7 @@ Vector Q (views): [0.12 0.04]</code></pre>
 </div>
 </div>
 <p>La <a href="#fig-anatomia-views" class="quarto-xref">Figura&nbsp;<span>10.2</span></a> junta las tres piezas: cada fila es una view, y se lee de izquierda a derecha.</p>
-<div id="cell-fig-anatomia-views" class="cell" data-execution_count="6">
+<div id="cell-fig-anatomia-views" class="cell" data-execution_count="7">
 <div class="cell-output cell-output-display">
 <div id="fig-anatomia-views" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
@@ -1037,7 +1037,7 @@ Figura&nbsp;10.2: Anatomía de las views del capítulo. Cada fila de P indica qu
 <p>Para verlo, conviene mirar el caso de <strong>un solo activo con una sola view</strong>: la fórmula se reduce a</p>
 <p><span class="math display">\[\mu_{BL} = \frac{\pi/\sigma_\pi^2 + q/\sigma_q^2}{1/\sigma_\pi^2 + 1/\sigma_q^2}\]</span></p>
 <p>que es literalmente un promedio de <span class="math inline">\(\pi\)</span> (equilibrio) y <span class="math inline">\(q\)</span> (view) ponderado por las precisiones. La versión matricial hace lo mismo con todos los activos y views a la vez, respetando las correlaciones.</p>
-<div id="formula-maestra" class="cell" data-execution_count="7">
+<div id="formula-maestra" class="cell" data-execution_count="8">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>inv_tau_Sigma <span class="op">=</span> np.linalg.inv(tau <span class="op">*</span> Sigma)</span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>inv_Omega <span class="op">=</span> np.linalg.inv(Omega)</span>
 <span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -1064,7 +1064,7 @@ Bonos                 0.36%            0.70%</code></pre>
 <h2 data-number="10.5" class="anchored" data-anchor-id="paso-4-del-retorno-ajustado-a-la-cartera-óptima"><span class="header-section-number">10.5</span> Paso 4: del retorno ajustado a la cartera óptima</h2>
 <p>El vector <span class="math inline">\(\boldsymbol{\mu}_{BL}\)</span> es un input de retornos esperados <strong>mucho más robusto</strong> que un promedio histórico. Ahora sí lo metemos en la optimización de Markowitz para obtener los pesos. Sin restricciones adicionales, los pesos óptimos tienen forma cerrada:</p>
 <p><span class="math display">\[\mathbf{w}_{BL} = \frac{1}{\delta} \, \Sigma^{-1} \, \boldsymbol{\mu}_{BL}\]</span></p>
-<div id="pesos-optimos" class="cell" data-execution_count="8">
+<div id="pesos-optimos" class="cell" data-execution_count="9">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Pesos óptimos con los retornos de Black-Litterman</span></span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>w_BL <span class="op">=</span> (<span class="dv">1</span> <span class="op">/</span> delta) <span class="op">*</span> np.linalg.solve(Sigma, mu_BL)</span>
 <span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -1083,7 +1083,7 @@ Suma de pesos BL: 197.6%</code></pre>
 </div>
 </div>
 <p>Cuando <strong>no hay views</strong>, <span class="math inline">\(\mathbf{w}_{BL}\)</span> reproduce la cartera de mercado (por construcción: es el punto de partida). Al agregar opiniones, el modelo <strong>se desvía del mercado en la dirección de esas views</strong>, y la magnitud del desvío depende de dos cosas: cuánto difiere cada view del equilibrio y cuánto confiás en ella. Acá la view sobre EU es muy agresiva —12% contra un equilibrio de 2.5%—, y la cartera sin restricciones lo refleja: Acciones EU pasa del 30% a casi 130%, y los pesos suman cerca de 200%, es decir, una cartera apalancada. No es un error del modelo: es lo que implica <em>creer</em> esa view con esa confianza. Por eso en la práctica se combinan views más moderadas con las restricciones del recuadro siguiente. La <a href="#fig-equilibrio-vs-bl" class="quarto-xref">Figura&nbsp;<span>10.3</span></a> muestra los dos desplazamientos juntos.</p>
-<div id="cell-fig-equilibrio-vs-bl" class="cell" data-execution_count="9">
+<div id="cell-fig-equilibrio-vs-bl" class="cell" data-execution_count="10">
 <div class="cell-output cell-output-display">
 <div id="fig-equilibrio-vs-bl" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
@@ -1115,7 +1115,7 @@ Figura&nbsp;10.3: Del equilibrio a Black-Litterman. Izquierda: los retornos espe
 <section id="visualizando-el-efecto-de-la-confianza" class="level2" data-number="10.6">
 <h2 data-number="10.6" class="anchored" data-anchor-id="visualizando-el-efecto-de-la-confianza"><span class="header-section-number">10.6</span> Visualizando el efecto de la confianza</h2>
 <p>Para cerrar la intuición, veamos cómo la confianza en las views gobierna el resultado. Escalamos <span class="math inline">\(\Omega\)</span> con un factor: valores chicos = mucha confianza, grandes = poca.</p>
-<div id="cell-efecto-confianza" class="cell" data-execution_count="10">
+<div id="cell-fig-efecto-confianza" class="cell" data-execution_count="11">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>factores <span class="op">=</span> np.logspace(<span class="op">-</span><span class="fl">1.5</span>, <span class="fl">1.5</span>, <span class="dv">40</span>)   <span class="co"># de mucha a poca confianza</span></span>
 <span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>trayectorias <span class="op">=</span> []</span>
 <span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -1129,8 +1129,8 @@ Figura&nbsp;10.3: Del equilibrio a Black-Litterman. Izquierda: los retornos espe
 <span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a>fig, ax <span class="op">=</span> plt.subplots(figsize<span class="op">=</span>(<span class="dv">9</span>, <span class="dv">5</span>))</span>
 <span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i, a <span class="kw">in</span> <span class="bu">enumerate</span>(activos):</span>
-<span id="cb12-14"><a href="#cb12-14" aria-hidden="true" tabindex="-1"></a>    ax.plot(factores, trayectorias[:, i] <span class="op">*</span> <span class="dv">100</span>, linewidth<span class="op">=</span><span class="dv">2</span>, label<span class="op">=</span>a)</span>
-<span id="cb12-15"><a href="#cb12-15" aria-hidden="true" tabindex="-1"></a>    ax.axhline(Pi[i] <span class="op">*</span> <span class="dv">100</span>, linestyle<span class="op">=</span><span class="st">":"</span>, alpha<span class="op">=</span><span class="fl">0.4</span>)</span>
+<span id="cb12-14"><a href="#cb12-14" aria-hidden="true" tabindex="-1"></a>    linea, <span class="op">=</span> ax.plot(factores, trayectorias[:, i] <span class="op">*</span> <span class="dv">100</span>, linewidth<span class="op">=</span><span class="dv">2</span>, label<span class="op">=</span>a)</span>
+<span id="cb12-15"><a href="#cb12-15" aria-hidden="true" tabindex="-1"></a>    ax.axhline(Pi[i] <span class="op">*</span> <span class="dv">100</span>, linestyle<span class="op">=</span><span class="st">":"</span>, alpha<span class="op">=</span><span class="fl">0.6</span>, color<span class="op">=</span>linea.get_color())  <span class="co"># su equilibrio</span></span>
 <span id="cb12-16"><a href="#cb12-16" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb12-17"><a href="#cb12-17" aria-hidden="true" tabindex="-1"></a>ax.set_xscale(<span class="st">"log"</span>)</span>
 <span id="cb12-18"><a href="#cb12-18" aria-hidden="true" tabindex="-1"></a>ax.set_xlabel(<span class="st">"Factor de escala de Ω  (← más confianza en las views | menos confianza →)"</span>)</span>
@@ -1141,14 +1141,19 @@ Figura&nbsp;10.3: Del equilibrio a Black-Litterman. Izquierda: los retornos espe
 <span id="cb12-23"><a href="#cb12-23" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
 <span id="cb12-24"><a href="#cb12-24" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="cap10_black_litterman_files/figure-html/efecto-confianza-output-1.png" id="efecto-confianza" width="853" height="468" class="figure-img"></p>
+<div id="fig-efecto-confianza" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-efecto-confianza-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="cap10_black_litterman_files/figure-html/fig-efecto-confianza-output-1.png" width="853" height="468" class="figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-efecto-confianza-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figura&nbsp;10.4: Retornos esperados de Black-Litterman de cada activo según la confianza en las views (factor de escala de Ω, en escala log). Cada línea punteada es el retorno de equilibrio Π del activo del mismo color.
+</figcaption>
 </figure>
 </div>
 </div>
 </div>
-<p>A la izquierda (mucha confianza) los retornos se acercan a lo que afirman las views; a la derecha (poca confianza) vuelven a las líneas punteadas del equilibrio. <strong>El modelo nunca te deja “irte” más allá de tus propias views ni ignorar del todo al mercado</strong>: interpola entre ambos de manera controlada.</p>
+<p>En la <a href="#fig-efecto-confianza" class="quarto-xref">Figura&nbsp;<span>10.4</span></a>, a la izquierda (mucha confianza) los retornos se acercan a lo que afirman las views; a la derecha (poca confianza) vuelven a las líneas punteadas del equilibrio. <strong>El modelo nunca te deja “irte” más allá de tus propias views ni ignorar del todo al mercado</strong>: interpola entre ambos de manera controlada.</p>
 <hr>
 </section>
 <section id="recapitulando-el-flujo" class="level2" data-number="10.7">
@@ -1186,7 +1191,7 @@ Figura&nbsp;10.3: Del equilibrio a Black-Litterman. Izquierda: los retornos espe
 </div>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-pipeline-bl-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figura&nbsp;10.4: La tubería de Black-Litterman. El equilibrio sale del mercado sin estimar retornos a mano; las views entran con su incertidumbre; la fórmula maestra las mezcla y el resultado alimenta la optimización.
+Figura&nbsp;10.5: La tubería de Black-Litterman. El equilibrio sale del mercado sin estimar retornos a mano; las views entran con su incertidumbre; la fórmula maestra las mezcla y el resultado alimenta la optimización.
 </figcaption>
 </figure>
 </div>
@@ -1769,414 +1774,422 @@ Meucci, Attilio. 2010. <span>«The <span>Black-Litterman</span> Approach: Origin
 <span id="cb13-37"><a href="#cb13-37" aria-hidden="true" tabindex="-1"></a>np.set_printoptions(precision<span class="op">=</span><span class="dv">4</span>, suppress<span class="op">=</span><span class="va">True</span>)</span>
 <span id="cb13-38"><a href="#cb13-38" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb13-39"><a href="#cb13-39" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-40"><a href="#cb13-40" aria-hidden="true" tabindex="-1"></a>---</span>
-<span id="cb13-41"><a href="#cb13-41" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-42"><a href="#cb13-42" aria-hidden="true" tabindex="-1"></a><span class="fu">## La intuición: combinar una creencia previa con nueva información</span></span>
-<span id="cb13-43"><a href="#cb13-43" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-44"><a href="#cb13-44" aria-hidden="true" tabindex="-1"></a>Antes de la matemática, la intuición, porque es el corazón del modelo.</span>
-<span id="cb13-45"><a href="#cb13-45" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-46"><a href="#cb13-46" aria-hidden="true" tabindex="-1"></a>Imaginate que querés estimar cuánto va a rendir una acción. Tenés dos fuentes de información:</span>
-<span id="cb13-47"><a href="#cb13-47" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-48"><a href="#cb13-48" aria-hidden="true" tabindex="-1"></a><span class="ss">1. </span>Una **creencia previa**: "el mercado, con todo su peso, está descontando un 8% para este activo". Es una referencia sensata y difícil de discutir.</span>
-<span id="cb13-49"><a href="#cb13-49" aria-hidden="true" tabindex="-1"></a><span class="ss">2. </span>Una **opinión propia** (nueva información): "yo estudié el sector y creo que va a rendir 12%".</span>
+<span id="cb13-42"><a href="#cb13-42" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb13-43"><a href="#cb13-43" aria-hidden="true" tabindex="-1"></a><span class="co">#| include: false</span></span>
+<span id="cb13-44"><a href="#cb13-44" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> sys<span class="op">;</span> sys.path.insert(<span class="dv">0</span>, <span class="st">".."</span>)</span>
+<span id="cb13-45"><a href="#cb13-45" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> _esquemas <span class="im">import</span> aplicar_estilo</span>
+<span id="cb13-46"><a href="#cb13-46" aria-hidden="true" tabindex="-1"></a>aplicar_estilo()</span>
+<span id="cb13-47"><a href="#cb13-47" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb13-48"><a href="#cb13-48" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-49"><a href="#cb13-49" aria-hidden="true" tabindex="-1"></a>---</span>
 <span id="cb13-50"><a href="#cb13-50" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-51"><a href="#cb13-51" aria-hidden="true" tabindex="-1"></a>¿Con qué te quedás? Ni una ni otra a ciegas: hacés un **promedio ponderado por tu confianza**. Si tu análisis es muy sólido, tu estimación final se acerca al 12%; si tenés dudas, se queda cerca del 8% del mercado. Y si tu opinión coincide con el mercado, no cambia nada.</span>
+<span id="cb13-51"><a href="#cb13-51" aria-hidden="true" tabindex="-1"></a><span class="fu">## La intuición: combinar una creencia previa con nueva información</span></span>
 <span id="cb13-52"><a href="#cb13-52" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-53"><a href="#cb13-53" aria-hidden="true" tabindex="-1"></a>La @fig-mezcla-bayesiana dibuja ese razonamiento con números: cada fuente es una campana centrada en su estimación, más angosta cuanto más confiable. La combinación cae entre ambas, más cerca de la más precisa, y es más angosta que las dos: juntar información reduce la incertidumbre.</span>
+<span id="cb13-53"><a href="#cb13-53" aria-hidden="true" tabindex="-1"></a>Antes de la matemática, la intuición, porque es el corazón del modelo.</span>
 <span id="cb13-54"><a href="#cb13-54" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-57"><a href="#cb13-57" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
-<span id="cb13-58"><a href="#cb13-58" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: fig-mezcla-bayesiana</span></span>
-<span id="cb13-59"><a href="#cb13-59" aria-hidden="true" tabindex="-1"></a><span class="co">#| echo: false</span></span>
-<span id="cb13-60"><a href="#cb13-60" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-cap: "Combinar el equilibrio (8% ± 2%) con una view (12% ± 3%): el resultado es un promedio ponderado por precisión, 9.2% ± 1.7%, más cerca del equilibrio porque es la fuente más precisa."</span></span>
-<span id="cb13-61"><a href="#cb13-61" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> sys<span class="op">;</span> sys.path.insert(<span class="dv">0</span>, <span class="st">".."</span>)</span>
-<span id="cb13-62"><a href="#cb13-62" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> _esquemas <span class="im">import</span> <span class="op">*</span></span>
-<span id="cb13-63"><a href="#cb13-63" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
-<span id="cb13-64"><a href="#cb13-64" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> scipy <span class="im">import</span> stats</span>
-<span id="cb13-65"><a href="#cb13-65" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-66"><a href="#cb13-66" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> _esquema():</span>
-<span id="cb13-67"><a href="#cb13-67" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Un activo: el mercado descuenta 8% (±2%), nuestra view dice 12% (±3%)</span></span>
-<span id="cb13-68"><a href="#cb13-68" aria-hidden="true" tabindex="-1"></a>    pi, s_pi <span class="op">=</span> <span class="fl">0.08</span>, <span class="fl">0.02</span></span>
-<span id="cb13-69"><a href="#cb13-69" aria-hidden="true" tabindex="-1"></a>    q, s_q <span class="op">=</span> <span class="fl">0.12</span>, <span class="fl">0.03</span></span>
-<span id="cb13-70"><a href="#cb13-70" aria-hidden="true" tabindex="-1"></a>    precision <span class="op">=</span> <span class="dv">1</span> <span class="op">/</span> s_pi<span class="op">**</span><span class="dv">2</span> <span class="op">+</span> <span class="dv">1</span> <span class="op">/</span> s_q<span class="op">**</span><span class="dv">2</span></span>
-<span id="cb13-71"><a href="#cb13-71" aria-hidden="true" tabindex="-1"></a>    mu_post <span class="op">=</span> (pi <span class="op">/</span> s_pi<span class="op">**</span><span class="dv">2</span> <span class="op">+</span> q <span class="op">/</span> s_q<span class="op">**</span><span class="dv">2</span>) <span class="op">/</span> precision</span>
-<span id="cb13-72"><a href="#cb13-72" aria-hidden="true" tabindex="-1"></a>    s_post <span class="op">=</span> np.sqrt(<span class="dv">1</span> <span class="op">/</span> precision)</span>
-<span id="cb13-73"><a href="#cb13-73" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-74"><a href="#cb13-74" aria-hidden="true" tabindex="-1"></a>    x <span class="op">=</span> np.linspace(<span class="fl">0.0</span>, <span class="fl">0.22</span>, <span class="dv">400</span>)</span>
-<span id="cb13-75"><a href="#cb13-75" aria-hidden="true" tabindex="-1"></a>    fig, ax <span class="op">=</span> plt.subplots(figsize<span class="op">=</span>(<span class="dv">9</span>, <span class="fl">4.2</span>))</span>
-<span id="cb13-76"><a href="#cb13-76" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> m, s, color, etiqueta <span class="kw">in</span> [(pi, s_pi, PRIMARIO, <span class="st">"Equilibrio del mercado: 8% ± 2%"</span>),</span>
-<span id="cb13-77"><a href="#cb13-77" aria-hidden="true" tabindex="-1"></a>                                  (q, s_q, ACENTO, <span class="st">"Tu view: 12% ± 3%"</span>),</span>
-<span id="cb13-78"><a href="#cb13-78" aria-hidden="true" tabindex="-1"></a>                                  (mu_post, s_post, SECUNDARIO,</span>
-<span id="cb13-79"><a href="#cb13-79" aria-hidden="true" tabindex="-1"></a>                                   <span class="ss">f"Black-Litterman: </span><span class="sc">{</span>mu_post<span class="sc">:.1%}</span><span class="ss"> ± </span><span class="sc">{</span>s_post<span class="sc">:.1%}</span><span class="ss">"</span>)]:</span>
-<span id="cb13-80"><a href="#cb13-80" aria-hidden="true" tabindex="-1"></a>        y <span class="op">=</span> stats.norm.pdf(x, m, s)</span>
-<span id="cb13-81"><a href="#cb13-81" aria-hidden="true" tabindex="-1"></a>        ax.plot(x <span class="op">*</span> <span class="dv">100</span>, y, color<span class="op">=</span>color, lw<span class="op">=</span><span class="fl">2.2</span>, label<span class="op">=</span>etiqueta)</span>
-<span id="cb13-82"><a href="#cb13-82" aria-hidden="true" tabindex="-1"></a>        ax.fill_between(x <span class="op">*</span> <span class="dv">100</span>, y, color<span class="op">=</span>color, alpha<span class="op">=</span><span class="fl">0.12</span>)</span>
-<span id="cb13-83"><a href="#cb13-83" aria-hidden="true" tabindex="-1"></a>        ax.axvline(m <span class="op">*</span> <span class="dv">100</span>, color<span class="op">=</span>color, lw<span class="op">=</span><span class="dv">1</span>, ls<span class="op">=</span><span class="st">":"</span>)</span>
-<span id="cb13-84"><a href="#cb13-84" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-85"><a href="#cb13-85" aria-hidden="true" tabindex="-1"></a>    ax.annotate(<span class="st">"la mezcla queda más cerca</span><span class="ch">\n</span><span class="st">de la fuente más precisa</span><span class="ch">\n</span><span class="st">(y es más angosta que ambas)"</span>,</span>
-<span id="cb13-86"><a href="#cb13-86" aria-hidden="true" tabindex="-1"></a>                xy<span class="op">=</span>(mu_post <span class="op">*</span> <span class="dv">100</span>, stats.norm.pdf(mu_post, mu_post, s_post) <span class="op">*</span> <span class="fl">0.75</span>),</span>
-<span id="cb13-87"><a href="#cb13-87" aria-hidden="true" tabindex="-1"></a>                xytext<span class="op">=</span>(<span class="dv">15</span>, <span class="dv">9</span>), fontsize<span class="op">=</span><span class="dv">9</span>, color<span class="op">=</span>SECUNDARIO,</span>
-<span id="cb13-88"><a href="#cb13-88" aria-hidden="true" tabindex="-1"></a>                arrowprops<span class="op">=</span><span class="bu">dict</span>(arrowstyle<span class="op">=</span><span class="st">"-|&gt;"</span>, color<span class="op">=</span>SECUNDARIO))</span>
-<span id="cb13-89"><a href="#cb13-89" aria-hidden="true" tabindex="-1"></a>    ax.set_xlabel(<span class="st">"Retorno esperado anual (%)"</span>)</span>
-<span id="cb13-90"><a href="#cb13-90" aria-hidden="true" tabindex="-1"></a>    ax.set_yticks([])</span>
-<span id="cb13-91"><a href="#cb13-91" aria-hidden="true" tabindex="-1"></a>    ax.legend(loc<span class="op">=</span><span class="st">"upper right"</span>, fontsize<span class="op">=</span><span class="dv">9</span>, frameon<span class="op">=</span><span class="va">False</span>)</span>
-<span id="cb13-92"><a href="#cb13-92" aria-hidden="true" tabindex="-1"></a>    ax.spines[[<span class="st">"top"</span>, <span class="st">"right"</span>, <span class="st">"left"</span>]].set_visible(<span class="va">False</span>)</span>
-<span id="cb13-93"><a href="#cb13-93" aria-hidden="true" tabindex="-1"></a>    plt.tight_layout()</span>
-<span id="cb13-94"><a href="#cb13-94" aria-hidden="true" tabindex="-1"></a>    plt.show()</span>
-<span id="cb13-95"><a href="#cb13-95" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-96"><a href="#cb13-96" aria-hidden="true" tabindex="-1"></a>_esquema()</span>
-<span id="cb13-97"><a href="#cb13-97" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb13-98"><a href="#cb13-98" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-99"><a href="#cb13-99" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-100"><a href="#cb13-100" aria-hidden="true" tabindex="-1"></a>Ese mecanismo —partir de una creencia y moverla hacia la nueva evidencia en proporción a la confianza— es exactamente lo que formaliza Black-Litterman. En la literatura vas a ver que la versión completa se deriva como una actualización bayesiana (*prior* + verosimilitud → *posterior*), pero **no hace falta la maquinaria bayesiana** para entenderlo ni usarlo: se puede escribir como un conjunto de operaciones matriciales cerradas. Ese es el camino que vamos a tomar.</span>
-<span id="cb13-101"><a href="#cb13-101" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-102"><a href="#cb13-102" aria-hidden="true" tabindex="-1"></a>---</span>
-<span id="cb13-103"><a href="#cb13-103" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-104"><a href="#cb13-104" aria-hidden="true" tabindex="-1"></a><span class="fu">## Paso 1: los retornos implícitos de equilibrio (optimización inversa)</span></span>
-<span id="cb13-105"><a href="#cb13-105" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-106"><a href="#cb13-106" aria-hidden="true" tabindex="-1"></a>La primera pieza es la creencia de partida: ¿cuáles son los retornos que el mercado está asumiendo? Acá viene el truco más lindo del modelo.</span>
+<span id="cb13-55"><a href="#cb13-55" aria-hidden="true" tabindex="-1"></a>Imaginate que querés estimar cuánto va a rendir una acción. Tenés dos fuentes de información:</span>
+<span id="cb13-56"><a href="#cb13-56" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-57"><a href="#cb13-57" aria-hidden="true" tabindex="-1"></a><span class="ss">1. </span>Una **creencia previa**: "el mercado, con todo su peso, está descontando un 8% para este activo". Es una referencia sensata y difícil de discutir.</span>
+<span id="cb13-58"><a href="#cb13-58" aria-hidden="true" tabindex="-1"></a><span class="ss">2. </span>Una **opinión propia** (nueva información): "yo estudié el sector y creo que va a rendir 12%".</span>
+<span id="cb13-59"><a href="#cb13-59" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-60"><a href="#cb13-60" aria-hidden="true" tabindex="-1"></a>¿Con qué te quedás? Ni una ni otra a ciegas: hacés un **promedio ponderado por tu confianza**. Si tu análisis es muy sólido, tu estimación final se acerca al 12%; si tenés dudas, se queda cerca del 8% del mercado. Y si tu opinión coincide con el mercado, no cambia nada.</span>
+<span id="cb13-61"><a href="#cb13-61" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-62"><a href="#cb13-62" aria-hidden="true" tabindex="-1"></a>La @fig-mezcla-bayesiana dibuja ese razonamiento con números: cada fuente es una campana centrada en su estimación, más angosta cuanto más confiable. La combinación cae entre ambas, más cerca de la más precisa, y es más angosta que las dos: juntar información reduce la incertidumbre.</span>
+<span id="cb13-63"><a href="#cb13-63" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-66"><a href="#cb13-66" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb13-67"><a href="#cb13-67" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: fig-mezcla-bayesiana</span></span>
+<span id="cb13-68"><a href="#cb13-68" aria-hidden="true" tabindex="-1"></a><span class="co">#| echo: false</span></span>
+<span id="cb13-69"><a href="#cb13-69" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-cap: "Combinar el equilibrio (8% ± 2%) con una view (12% ± 3%): el resultado es un promedio ponderado por precisión, 9.2% ± 1.7%, más cerca del equilibrio porque es la fuente más precisa."</span></span>
+<span id="cb13-70"><a href="#cb13-70" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> sys<span class="op">;</span> sys.path.insert(<span class="dv">0</span>, <span class="st">".."</span>)</span>
+<span id="cb13-71"><a href="#cb13-71" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> _esquemas <span class="im">import</span> <span class="op">*</span></span>
+<span id="cb13-72"><a href="#cb13-72" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb13-73"><a href="#cb13-73" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> scipy <span class="im">import</span> stats</span>
+<span id="cb13-74"><a href="#cb13-74" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-75"><a href="#cb13-75" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> _esquema():</span>
+<span id="cb13-76"><a href="#cb13-76" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Un activo: el mercado descuenta 8% (±2%), nuestra view dice 12% (±3%)</span></span>
+<span id="cb13-77"><a href="#cb13-77" aria-hidden="true" tabindex="-1"></a>    pi, s_pi <span class="op">=</span> <span class="fl">0.08</span>, <span class="fl">0.02</span></span>
+<span id="cb13-78"><a href="#cb13-78" aria-hidden="true" tabindex="-1"></a>    q, s_q <span class="op">=</span> <span class="fl">0.12</span>, <span class="fl">0.03</span></span>
+<span id="cb13-79"><a href="#cb13-79" aria-hidden="true" tabindex="-1"></a>    precision <span class="op">=</span> <span class="dv">1</span> <span class="op">/</span> s_pi<span class="op">**</span><span class="dv">2</span> <span class="op">+</span> <span class="dv">1</span> <span class="op">/</span> s_q<span class="op">**</span><span class="dv">2</span></span>
+<span id="cb13-80"><a href="#cb13-80" aria-hidden="true" tabindex="-1"></a>    mu_post <span class="op">=</span> (pi <span class="op">/</span> s_pi<span class="op">**</span><span class="dv">2</span> <span class="op">+</span> q <span class="op">/</span> s_q<span class="op">**</span><span class="dv">2</span>) <span class="op">/</span> precision</span>
+<span id="cb13-81"><a href="#cb13-81" aria-hidden="true" tabindex="-1"></a>    s_post <span class="op">=</span> np.sqrt(<span class="dv">1</span> <span class="op">/</span> precision)</span>
+<span id="cb13-82"><a href="#cb13-82" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-83"><a href="#cb13-83" aria-hidden="true" tabindex="-1"></a>    x <span class="op">=</span> np.linspace(<span class="fl">0.0</span>, <span class="fl">0.22</span>, <span class="dv">400</span>)</span>
+<span id="cb13-84"><a href="#cb13-84" aria-hidden="true" tabindex="-1"></a>    fig, ax <span class="op">=</span> plt.subplots(figsize<span class="op">=</span>(<span class="dv">9</span>, <span class="fl">4.2</span>))</span>
+<span id="cb13-85"><a href="#cb13-85" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> m, s, color, etiqueta <span class="kw">in</span> [(pi, s_pi, PRIMARIO, <span class="st">"Equilibrio del mercado: 8% ± 2%"</span>),</span>
+<span id="cb13-86"><a href="#cb13-86" aria-hidden="true" tabindex="-1"></a>                                  (q, s_q, ACENTO, <span class="st">"Tu view: 12% ± 3%"</span>),</span>
+<span id="cb13-87"><a href="#cb13-87" aria-hidden="true" tabindex="-1"></a>                                  (mu_post, s_post, SECUNDARIO,</span>
+<span id="cb13-88"><a href="#cb13-88" aria-hidden="true" tabindex="-1"></a>                                   <span class="ss">f"Black-Litterman: </span><span class="sc">{</span>mu_post<span class="sc">:.1%}</span><span class="ss"> ± </span><span class="sc">{</span>s_post<span class="sc">:.1%}</span><span class="ss">"</span>)]:</span>
+<span id="cb13-89"><a href="#cb13-89" aria-hidden="true" tabindex="-1"></a>        y <span class="op">=</span> stats.norm.pdf(x, m, s)</span>
+<span id="cb13-90"><a href="#cb13-90" aria-hidden="true" tabindex="-1"></a>        ax.plot(x <span class="op">*</span> <span class="dv">100</span>, y, color<span class="op">=</span>color, lw<span class="op">=</span><span class="fl">2.2</span>, label<span class="op">=</span>etiqueta)</span>
+<span id="cb13-91"><a href="#cb13-91" aria-hidden="true" tabindex="-1"></a>        ax.fill_between(x <span class="op">*</span> <span class="dv">100</span>, y, color<span class="op">=</span>color, alpha<span class="op">=</span><span class="fl">0.12</span>)</span>
+<span id="cb13-92"><a href="#cb13-92" aria-hidden="true" tabindex="-1"></a>        ax.axvline(m <span class="op">*</span> <span class="dv">100</span>, color<span class="op">=</span>color, lw<span class="op">=</span><span class="dv">1</span>, ls<span class="op">=</span><span class="st">":"</span>)</span>
+<span id="cb13-93"><a href="#cb13-93" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-94"><a href="#cb13-94" aria-hidden="true" tabindex="-1"></a>    ax.annotate(<span class="st">"la mezcla queda más cerca</span><span class="ch">\n</span><span class="st">de la fuente más precisa</span><span class="ch">\n</span><span class="st">(y es más angosta que ambas)"</span>,</span>
+<span id="cb13-95"><a href="#cb13-95" aria-hidden="true" tabindex="-1"></a>                xy<span class="op">=</span>(mu_post <span class="op">*</span> <span class="dv">100</span>, stats.norm.pdf(mu_post, mu_post, s_post) <span class="op">*</span> <span class="fl">0.75</span>),</span>
+<span id="cb13-96"><a href="#cb13-96" aria-hidden="true" tabindex="-1"></a>                xytext<span class="op">=</span>(<span class="dv">15</span>, <span class="dv">9</span>), fontsize<span class="op">=</span><span class="dv">9</span>, color<span class="op">=</span>SECUNDARIO,</span>
+<span id="cb13-97"><a href="#cb13-97" aria-hidden="true" tabindex="-1"></a>                arrowprops<span class="op">=</span><span class="bu">dict</span>(arrowstyle<span class="op">=</span><span class="st">"-|&gt;"</span>, color<span class="op">=</span>SECUNDARIO))</span>
+<span id="cb13-98"><a href="#cb13-98" aria-hidden="true" tabindex="-1"></a>    ax.set_xlabel(<span class="st">"Retorno esperado anual (%)"</span>)</span>
+<span id="cb13-99"><a href="#cb13-99" aria-hidden="true" tabindex="-1"></a>    ax.set_yticks([])</span>
+<span id="cb13-100"><a href="#cb13-100" aria-hidden="true" tabindex="-1"></a>    ax.legend(loc<span class="op">=</span><span class="st">"upper right"</span>, fontsize<span class="op">=</span><span class="dv">9</span>, frameon<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb13-101"><a href="#cb13-101" aria-hidden="true" tabindex="-1"></a>    ax.spines[[<span class="st">"top"</span>, <span class="st">"right"</span>, <span class="st">"left"</span>]].set_visible(<span class="va">False</span>)</span>
+<span id="cb13-102"><a href="#cb13-102" aria-hidden="true" tabindex="-1"></a>    plt.tight_layout()</span>
+<span id="cb13-103"><a href="#cb13-103" aria-hidden="true" tabindex="-1"></a>    plt.show()</span>
+<span id="cb13-104"><a href="#cb13-104" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-105"><a href="#cb13-105" aria-hidden="true" tabindex="-1"></a>_esquema()</span>
+<span id="cb13-106"><a href="#cb13-106" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb13-107"><a href="#cb13-107" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-108"><a href="#cb13-108" aria-hidden="true" tabindex="-1"></a>En Markowitz, dada una matriz de covarianzas $\Sigma$ y unos retornos esperados $\boldsymbol{\mu}$, buscamos los pesos óptimos $\mathbf{w}$. Black-Litterman **invierte esa lógica**: si suponemos que la cartera de mercado (la capitalización de cada activo) ya es óptima —porque es el consenso agregado de todos los inversores—, entonces podemos despejar qué retornos $\boldsymbol{\Pi}$ la harían óptima. Es *optimización inversa*.</span>
-<span id="cb13-109"><a href="#cb13-109" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-110"><a href="#cb13-110" aria-hidden="true" tabindex="-1"></a>El resultado es la fórmula del retorno implícito de equilibrio:</span>
-<span id="cb13-111"><a href="#cb13-111" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-112"><a href="#cb13-112" aria-hidden="true" tabindex="-1"></a>$$\boldsymbol{\Pi} = \delta \, \Sigma \, \mathbf{w}_{mkt}$$</span>
-<span id="cb13-113"><a href="#cb13-113" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-114"><a href="#cb13-114" aria-hidden="true" tabindex="-1"></a>donde:</span>
-<span id="cb13-115"><a href="#cb13-115" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-116"><a href="#cb13-116" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>$\mathbf{w}_{mkt}$ son los pesos de la cartera de mercado (por capitalización),</span>
-<span id="cb13-117"><a href="#cb13-117" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>$\Sigma$ es la matriz de covarianzas de los retornos,</span>
-<span id="cb13-118"><a href="#cb13-118" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>$\delta$ es el **coeficiente de aversión al riesgo** del mercado (típicamente entre 2 y 3).</span>
-<span id="cb13-119"><a href="#cb13-119" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-122"><a href="#cb13-122" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
-<span id="cb13-123"><a href="#cb13-123" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: equilibrio</span></span>
-<span id="cb13-124"><a href="#cb13-124" aria-hidden="true" tabindex="-1"></a><span class="co"># Universo de ejemplo: 3 activos (digamos, tres clases de activos)</span></span>
-<span id="cb13-125"><a href="#cb13-125" aria-hidden="true" tabindex="-1"></a>activos <span class="op">=</span> [<span class="st">"Acciones USA"</span>, <span class="st">"Acciones EU"</span>, <span class="st">"Bonos"</span>]</span>
-<span id="cb13-126"><a href="#cb13-126" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-127"><a href="#cb13-127" aria-hidden="true" tabindex="-1"></a><span class="co"># Pesos de mercado (por capitalización) — suman 1</span></span>
-<span id="cb13-128"><a href="#cb13-128" aria-hidden="true" tabindex="-1"></a>w_mkt <span class="op">=</span> np.array([<span class="fl">0.55</span>, <span class="fl">0.30</span>, <span class="fl">0.15</span>])</span>
-<span id="cb13-129"><a href="#cb13-129" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-130"><a href="#cb13-130" aria-hidden="true" tabindex="-1"></a><span class="co"># Matriz de covarianzas anual de los retornos</span></span>
-<span id="cb13-131"><a href="#cb13-131" aria-hidden="true" tabindex="-1"></a>Sigma <span class="op">=</span> np.array([</span>
-<span id="cb13-132"><a href="#cb13-132" aria-hidden="true" tabindex="-1"></a>    [<span class="fl">0.0225</span>, <span class="fl">0.0075</span>, <span class="fl">0.0010</span>],</span>
-<span id="cb13-133"><a href="#cb13-133" aria-hidden="true" tabindex="-1"></a>    [<span class="fl">0.0075</span>, <span class="fl">0.0196</span>, <span class="fl">0.0012</span>],</span>
-<span id="cb13-134"><a href="#cb13-134" aria-hidden="true" tabindex="-1"></a>    [<span class="fl">0.0010</span>, <span class="fl">0.0012</span>, <span class="fl">0.0036</span>],</span>
-<span id="cb13-135"><a href="#cb13-135" aria-hidden="true" tabindex="-1"></a>])</span>
-<span id="cb13-136"><a href="#cb13-136" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-137"><a href="#cb13-137" aria-hidden="true" tabindex="-1"></a><span class="co"># Aversión al riesgo del mercado</span></span>
-<span id="cb13-138"><a href="#cb13-138" aria-hidden="true" tabindex="-1"></a>delta <span class="op">=</span> <span class="fl">2.5</span></span>
-<span id="cb13-139"><a href="#cb13-139" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-140"><a href="#cb13-140" aria-hidden="true" tabindex="-1"></a><span class="co"># Retornos implícitos de equilibrio: Π = δ Σ w_mkt</span></span>
-<span id="cb13-141"><a href="#cb13-141" aria-hidden="true" tabindex="-1"></a>Pi <span class="op">=</span> delta <span class="op">*</span> Sigma <span class="op">@</span> w_mkt</span>
-<span id="cb13-142"><a href="#cb13-142" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-143"><a href="#cb13-143" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> a, pi <span class="kw">in</span> <span class="bu">zip</span>(activos, Pi):</span>
-<span id="cb13-144"><a href="#cb13-144" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span>a<span class="sc">:&lt;14}</span><span class="ss"> retorno implícito: </span><span class="sc">{</span>pi<span class="sc">:6.2%}</span><span class="ss">"</span>)</span>
-<span id="cb13-145"><a href="#cb13-145" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb13-146"><a href="#cb13-146" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-147"><a href="#cb13-147" aria-hidden="true" tabindex="-1"></a>Fijate lo que acabamos de lograr: **sin estimar un solo retorno esperado a mano**, obtuvimos un vector $\boldsymbol{\Pi}$ razonable, coherente con el riesgo de cada activo y con lo que el mercado efectivamente tiene comprado. Los activos más riesgosos y con más peso en el mercado tienen mayor retorno implícito. Este $\boldsymbol{\Pi}$ es nuestra creencia de partida.</span>
+<span id="cb13-108"><a href="#cb13-108" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-109"><a href="#cb13-109" aria-hidden="true" tabindex="-1"></a>Ese mecanismo —partir de una creencia y moverla hacia la nueva evidencia en proporción a la confianza— es exactamente lo que formaliza Black-Litterman. En la literatura vas a ver que la versión completa se deriva como una actualización bayesiana (*prior* + verosimilitud → *posterior*), pero **no hace falta la maquinaria bayesiana** para entenderlo ni usarlo: se puede escribir como un conjunto de operaciones matriciales cerradas. Ese es el camino que vamos a tomar.</span>
+<span id="cb13-110"><a href="#cb13-110" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-111"><a href="#cb13-111" aria-hidden="true" tabindex="-1"></a>---</span>
+<span id="cb13-112"><a href="#cb13-112" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-113"><a href="#cb13-113" aria-hidden="true" tabindex="-1"></a><span class="fu">## Paso 1: los retornos implícitos de equilibrio (optimización inversa)</span></span>
+<span id="cb13-114"><a href="#cb13-114" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-115"><a href="#cb13-115" aria-hidden="true" tabindex="-1"></a>La primera pieza es la creencia de partida: ¿cuáles son los retornos que el mercado está asumiendo? Acá viene el truco más lindo del modelo.</span>
+<span id="cb13-116"><a href="#cb13-116" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-117"><a href="#cb13-117" aria-hidden="true" tabindex="-1"></a>En Markowitz, dada una matriz de covarianzas $\Sigma$ y unos retornos esperados $\boldsymbol{\mu}$, buscamos los pesos óptimos $\mathbf{w}$. Black-Litterman **invierte esa lógica**: si suponemos que la cartera de mercado (la capitalización de cada activo) ya es óptima —porque es el consenso agregado de todos los inversores—, entonces podemos despejar qué retornos $\boldsymbol{\Pi}$ la harían óptima. Es *optimización inversa*.</span>
+<span id="cb13-118"><a href="#cb13-118" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-119"><a href="#cb13-119" aria-hidden="true" tabindex="-1"></a>El resultado es la fórmula del retorno implícito de equilibrio:</span>
+<span id="cb13-120"><a href="#cb13-120" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-121"><a href="#cb13-121" aria-hidden="true" tabindex="-1"></a>$$\boldsymbol{\Pi} = \delta \, \Sigma \, \mathbf{w}_{mkt}$$</span>
+<span id="cb13-122"><a href="#cb13-122" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-123"><a href="#cb13-123" aria-hidden="true" tabindex="-1"></a>donde:</span>
+<span id="cb13-124"><a href="#cb13-124" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-125"><a href="#cb13-125" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>$\mathbf{w}_{mkt}$ son los pesos de la cartera de mercado (por capitalización),</span>
+<span id="cb13-126"><a href="#cb13-126" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>$\Sigma$ es la matriz de covarianzas de los retornos,</span>
+<span id="cb13-127"><a href="#cb13-127" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>$\delta$ es el **coeficiente de aversión al riesgo** del mercado (típicamente entre 2 y 3).</span>
+<span id="cb13-128"><a href="#cb13-128" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-131"><a href="#cb13-131" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb13-132"><a href="#cb13-132" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: equilibrio</span></span>
+<span id="cb13-133"><a href="#cb13-133" aria-hidden="true" tabindex="-1"></a><span class="co"># Universo de ejemplo: 3 activos (digamos, tres clases de activos)</span></span>
+<span id="cb13-134"><a href="#cb13-134" aria-hidden="true" tabindex="-1"></a>activos <span class="op">=</span> [<span class="st">"Acciones USA"</span>, <span class="st">"Acciones EU"</span>, <span class="st">"Bonos"</span>]</span>
+<span id="cb13-135"><a href="#cb13-135" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-136"><a href="#cb13-136" aria-hidden="true" tabindex="-1"></a><span class="co"># Pesos de mercado (por capitalización) — suman 1</span></span>
+<span id="cb13-137"><a href="#cb13-137" aria-hidden="true" tabindex="-1"></a>w_mkt <span class="op">=</span> np.array([<span class="fl">0.55</span>, <span class="fl">0.30</span>, <span class="fl">0.15</span>])</span>
+<span id="cb13-138"><a href="#cb13-138" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-139"><a href="#cb13-139" aria-hidden="true" tabindex="-1"></a><span class="co"># Matriz de covarianzas anual de los retornos</span></span>
+<span id="cb13-140"><a href="#cb13-140" aria-hidden="true" tabindex="-1"></a>Sigma <span class="op">=</span> np.array([</span>
+<span id="cb13-141"><a href="#cb13-141" aria-hidden="true" tabindex="-1"></a>    [<span class="fl">0.0225</span>, <span class="fl">0.0075</span>, <span class="fl">0.0010</span>],</span>
+<span id="cb13-142"><a href="#cb13-142" aria-hidden="true" tabindex="-1"></a>    [<span class="fl">0.0075</span>, <span class="fl">0.0196</span>, <span class="fl">0.0012</span>],</span>
+<span id="cb13-143"><a href="#cb13-143" aria-hidden="true" tabindex="-1"></a>    [<span class="fl">0.0010</span>, <span class="fl">0.0012</span>, <span class="fl">0.0036</span>],</span>
+<span id="cb13-144"><a href="#cb13-144" aria-hidden="true" tabindex="-1"></a>])</span>
+<span id="cb13-145"><a href="#cb13-145" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-146"><a href="#cb13-146" aria-hidden="true" tabindex="-1"></a><span class="co"># Aversión al riesgo del mercado</span></span>
+<span id="cb13-147"><a href="#cb13-147" aria-hidden="true" tabindex="-1"></a>delta <span class="op">=</span> <span class="fl">2.5</span></span>
 <span id="cb13-148"><a href="#cb13-148" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-149"><a href="#cb13-149" aria-hidden="true" tabindex="-1"></a>::: {.callout-note title="¿De dónde sale δ?"}</span>
-<span id="cb13-150"><a href="#cb13-150" aria-hidden="true" tabindex="-1"></a>El coeficiente de aversión al riesgo se puede estimar como $\delta = (\mu_{mkt} - r_f) / \sigma_{mkt}^2$: el premio por riesgo del mercado dividido por su varianza. Con un premio del ~5% y una volatilidad del ~14% anual, da $\delta \approx 2.5$, el valor que usamos.</span>
-<span id="cb13-151"><a href="#cb13-151" aria-hidden="true" tabindex="-1"></a>:::</span>
-<span id="cb13-152"><a href="#cb13-152" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-153"><a href="#cb13-153" aria-hidden="true" tabindex="-1"></a>---</span>
-<span id="cb13-154"><a href="#cb13-154" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-155"><a href="#cb13-155" aria-hidden="true" tabindex="-1"></a><span class="fu">## Paso 2: expresar las views del inversor</span></span>
-<span id="cb13-156"><a href="#cb13-156" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-157"><a href="#cb13-157" aria-hidden="true" tabindex="-1"></a>Ahora incorporamos nuestras opiniones. Black-Litterman las representa con tres objetos:</span>
-<span id="cb13-158"><a href="#cb13-158" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-159"><a href="#cb13-159" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**$P$** (matriz de *picks*): qué activos involucra cada view. Cada fila es una view.</span>
-<span id="cb13-160"><a href="#cb13-160" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**$Q$** (vector): el retorno que afirma cada view.</span>
-<span id="cb13-161"><a href="#cb13-161" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**$\Omega$** (matriz): la **incertidumbre** de cada view (cuánto desconfiamos de ella). Diagonal, un valor por view.</span>
-<span id="cb13-162"><a href="#cb13-162" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-163"><a href="#cb13-163" aria-hidden="true" tabindex="-1"></a>Las views pueden ser de dos tipos:</span>
-<span id="cb13-164"><a href="#cb13-164" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-165"><a href="#cb13-165" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Absolutas**: "Acciones EU van a rendir 12%". La fila de $P$ tiene un <span class="in">`1`</span> en ese activo y <span class="in">`0`</span> en el resto.</span>
-<span id="cb13-166"><a href="#cb13-166" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Relativas**: "Acciones USA van a superar a Bonos por 4%". La fila tiene un <span class="in">`+1`</span> en USA y un <span class="in">`-1`</span> en Bonos.</span>
+<span id="cb13-149"><a href="#cb13-149" aria-hidden="true" tabindex="-1"></a><span class="co"># Retornos implícitos de equilibrio: Π = δ Σ w_mkt</span></span>
+<span id="cb13-150"><a href="#cb13-150" aria-hidden="true" tabindex="-1"></a>Pi <span class="op">=</span> delta <span class="op">*</span> Sigma <span class="op">@</span> w_mkt</span>
+<span id="cb13-151"><a href="#cb13-151" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-152"><a href="#cb13-152" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> a, pi <span class="kw">in</span> <span class="bu">zip</span>(activos, Pi):</span>
+<span id="cb13-153"><a href="#cb13-153" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span>a<span class="sc">:&lt;14}</span><span class="ss"> retorno implícito: </span><span class="sc">{</span>pi<span class="sc">:6.2%}</span><span class="ss">"</span>)</span>
+<span id="cb13-154"><a href="#cb13-154" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb13-155"><a href="#cb13-155" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-156"><a href="#cb13-156" aria-hidden="true" tabindex="-1"></a>Fijate lo que acabamos de lograr: **sin estimar un solo retorno esperado a mano**, obtuvimos un vector $\boldsymbol{\Pi}$ razonable, coherente con el riesgo de cada activo y con lo que el mercado efectivamente tiene comprado. Los activos más riesgosos y con más peso en el mercado tienen mayor retorno implícito. Este $\boldsymbol{\Pi}$ es nuestra creencia de partida.</span>
+<span id="cb13-157"><a href="#cb13-157" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-158"><a href="#cb13-158" aria-hidden="true" tabindex="-1"></a>::: {.callout-note title="¿De dónde sale δ?"}</span>
+<span id="cb13-159"><a href="#cb13-159" aria-hidden="true" tabindex="-1"></a>El coeficiente de aversión al riesgo se puede estimar como $\delta = (\mu_{mkt} - r_f) / \sigma_{mkt}^2$: el premio por riesgo del mercado dividido por su varianza. Con un premio del ~5% y una volatilidad del ~14% anual, da $\delta \approx 2.5$, el valor que usamos.</span>
+<span id="cb13-160"><a href="#cb13-160" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb13-161"><a href="#cb13-161" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-162"><a href="#cb13-162" aria-hidden="true" tabindex="-1"></a>---</span>
+<span id="cb13-163"><a href="#cb13-163" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-164"><a href="#cb13-164" aria-hidden="true" tabindex="-1"></a><span class="fu">## Paso 2: expresar las views del inversor</span></span>
+<span id="cb13-165"><a href="#cb13-165" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-166"><a href="#cb13-166" aria-hidden="true" tabindex="-1"></a>Ahora incorporamos nuestras opiniones. Black-Litterman las representa con tres objetos:</span>
 <span id="cb13-167"><a href="#cb13-167" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-170"><a href="#cb13-170" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
-<span id="cb13-171"><a href="#cb13-171" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: views</span></span>
-<span id="cb13-172"><a href="#cb13-172" aria-hidden="true" tabindex="-1"></a><span class="co"># View 1 (absoluta): "Acciones EU rendirán 12%"</span></span>
-<span id="cb13-173"><a href="#cb13-173" aria-hidden="true" tabindex="-1"></a><span class="co"># View 2 (relativa): "Acciones USA superarán a Bonos por 4%"</span></span>
-<span id="cb13-174"><a href="#cb13-174" aria-hidden="true" tabindex="-1"></a>P <span class="op">=</span> np.array([</span>
-<span id="cb13-175"><a href="#cb13-175" aria-hidden="true" tabindex="-1"></a>    [<span class="fl">0.0</span>, <span class="fl">1.0</span>,  <span class="fl">0.0</span>],   <span class="co"># EU</span></span>
-<span id="cb13-176"><a href="#cb13-176" aria-hidden="true" tabindex="-1"></a>    [<span class="fl">1.0</span>, <span class="fl">0.0</span>, <span class="op">-</span><span class="fl">1.0</span>],   <span class="co"># USA - Bonos</span></span>
-<span id="cb13-177"><a href="#cb13-177" aria-hidden="true" tabindex="-1"></a>])</span>
-<span id="cb13-178"><a href="#cb13-178" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-179"><a href="#cb13-179" aria-hidden="true" tabindex="-1"></a>Q <span class="op">=</span> np.array([<span class="fl">0.12</span>, <span class="fl">0.04</span>])   <span class="co"># retornos afirmados por cada view</span></span>
-<span id="cb13-180"><a href="#cb13-180" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-181"><a href="#cb13-181" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Matriz P (picks):</span><span class="ch">\n</span><span class="st">"</span>, P)</span>
-<span id="cb13-182"><a href="#cb13-182" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"</span><span class="ch">\n</span><span class="st">Vector Q (views):"</span>, Q)</span>
-<span id="cb13-183"><a href="#cb13-183" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb13-184"><a href="#cb13-184" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-185"><a href="#cb13-185" aria-hidden="true" tabindex="-1"></a>Para la incertidumbre $\Omega$, una convención estándar (He y Litterman, 1999) es hacerla proporcional a la varianza de la propia view bajo el modelo: views sobre activos más volátiles arrastran más incertidumbre. Aparece también un parámetro escalar $\tau$ (chico, ~0.025–0.05) que refleja la confianza global en el equilibrio. Una alternativa popular es la de Idzorek (2007): en lugar de fijar $\Omega$ directamente, le pide al inversor un **porcentaje de confianza** (de 0 a 100%) para cada view y deduce $\Omega$ a partir de él.</span>
-<span id="cb13-186"><a href="#cb13-186" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-189"><a href="#cb13-189" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
-<span id="cb13-190"><a href="#cb13-190" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: omega</span></span>
-<span id="cb13-191"><a href="#cb13-191" aria-hidden="true" tabindex="-1"></a>tau <span class="op">=</span> <span class="fl">0.05</span>   <span class="co"># escala de la incertidumbre del equilibrio</span></span>
-<span id="cb13-192"><a href="#cb13-192" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-193"><a href="#cb13-193" aria-hidden="true" tabindex="-1"></a><span class="co"># Ω diagonal, proporcional a la incertidumbre de cada view: diag(P (τΣ) Pᵀ)</span></span>
-<span id="cb13-194"><a href="#cb13-194" aria-hidden="true" tabindex="-1"></a>Omega <span class="op">=</span> np.diag(np.diag(P <span class="op">@</span> (tau <span class="op">*</span> Sigma) <span class="op">@</span> P.T))</span>
+<span id="cb13-168"><a href="#cb13-168" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**$P$** (matriz de *picks*): qué activos involucra cada view. Cada fila es una view.</span>
+<span id="cb13-169"><a href="#cb13-169" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**$Q$** (vector): el retorno que afirma cada view.</span>
+<span id="cb13-170"><a href="#cb13-170" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**$\Omega$** (matriz): la **incertidumbre** de cada view (cuánto desconfiamos de ella). Diagonal, un valor por view.</span>
+<span id="cb13-171"><a href="#cb13-171" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-172"><a href="#cb13-172" aria-hidden="true" tabindex="-1"></a>Las views pueden ser de dos tipos:</span>
+<span id="cb13-173"><a href="#cb13-173" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-174"><a href="#cb13-174" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Absolutas**: "Acciones EU van a rendir 12%". La fila de $P$ tiene un <span class="in">`1`</span> en ese activo y <span class="in">`0`</span> en el resto.</span>
+<span id="cb13-175"><a href="#cb13-175" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Relativas**: "Acciones USA van a superar a Bonos por 4%". La fila tiene un <span class="in">`+1`</span> en USA y un <span class="in">`-1`</span> en Bonos.</span>
+<span id="cb13-176"><a href="#cb13-176" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-179"><a href="#cb13-179" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb13-180"><a href="#cb13-180" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: views</span></span>
+<span id="cb13-181"><a href="#cb13-181" aria-hidden="true" tabindex="-1"></a><span class="co"># View 1 (absoluta): "Acciones EU rendirán 12%"</span></span>
+<span id="cb13-182"><a href="#cb13-182" aria-hidden="true" tabindex="-1"></a><span class="co"># View 2 (relativa): "Acciones USA superarán a Bonos por 4%"</span></span>
+<span id="cb13-183"><a href="#cb13-183" aria-hidden="true" tabindex="-1"></a>P <span class="op">=</span> np.array([</span>
+<span id="cb13-184"><a href="#cb13-184" aria-hidden="true" tabindex="-1"></a>    [<span class="fl">0.0</span>, <span class="fl">1.0</span>,  <span class="fl">0.0</span>],   <span class="co"># EU</span></span>
+<span id="cb13-185"><a href="#cb13-185" aria-hidden="true" tabindex="-1"></a>    [<span class="fl">1.0</span>, <span class="fl">0.0</span>, <span class="op">-</span><span class="fl">1.0</span>],   <span class="co"># USA - Bonos</span></span>
+<span id="cb13-186"><a href="#cb13-186" aria-hidden="true" tabindex="-1"></a>])</span>
+<span id="cb13-187"><a href="#cb13-187" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-188"><a href="#cb13-188" aria-hidden="true" tabindex="-1"></a>Q <span class="op">=</span> np.array([<span class="fl">0.12</span>, <span class="fl">0.04</span>])   <span class="co"># retornos afirmados por cada view</span></span>
+<span id="cb13-189"><a href="#cb13-189" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-190"><a href="#cb13-190" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Matriz P (picks):</span><span class="ch">\n</span><span class="st">"</span>, P)</span>
+<span id="cb13-191"><a href="#cb13-191" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"</span><span class="ch">\n</span><span class="st">Vector Q (views):"</span>, Q)</span>
+<span id="cb13-192"><a href="#cb13-192" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb13-193"><a href="#cb13-193" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-194"><a href="#cb13-194" aria-hidden="true" tabindex="-1"></a>Para la incertidumbre $\Omega$, una convención estándar (He y Litterman, 1999) es hacerla proporcional a la varianza de la propia view bajo el modelo: views sobre activos más volátiles arrastran más incertidumbre. Aparece también un parámetro escalar $\tau$ (chico, ~0.025–0.05) que refleja la confianza global en el equilibrio. Una alternativa popular es la de Idzorek (2007): en lugar de fijar $\Omega$ directamente, le pide al inversor un **porcentaje de confianza** (de 0 a 100%) para cada view y deduce $\Omega$ a partir de él.</span>
 <span id="cb13-195"><a href="#cb13-195" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-196"><a href="#cb13-196" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Matriz Ω (incertidumbre de las views):</span><span class="ch">\n</span><span class="st">"</span>, Omega)</span>
-<span id="cb13-197"><a href="#cb13-197" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb13-198"><a href="#cb13-198" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-199"><a href="#cb13-199" aria-hidden="true" tabindex="-1"></a>La @fig-anatomia-views junta las tres piezas: cada fila es una view, y se lee de izquierda a derecha.</span>
-<span id="cb13-200"><a href="#cb13-200" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-203"><a href="#cb13-203" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
-<span id="cb13-204"><a href="#cb13-204" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: fig-anatomia-views</span></span>
-<span id="cb13-205"><a href="#cb13-205" aria-hidden="true" tabindex="-1"></a><span class="co">#| echo: false</span></span>
-<span id="cb13-206"><a href="#cb13-206" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-cap: "Anatomía de las views del capítulo. Cada fila de P indica qué activos involucra la view (+1 compra, −1 vende, 0 no participa); Q dice qué retorno afirma, y Ω, cuánta incertidumbre le asignamos."</span></span>
-<span id="cb13-207"><a href="#cb13-207" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> sys<span class="op">;</span> sys.path.insert(<span class="dv">0</span>, <span class="st">".."</span>)</span>
-<span id="cb13-208"><a href="#cb13-208" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> _esquemas <span class="im">import</span> <span class="op">*</span></span>
+<span id="cb13-198"><a href="#cb13-198" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb13-199"><a href="#cb13-199" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: omega</span></span>
+<span id="cb13-200"><a href="#cb13-200" aria-hidden="true" tabindex="-1"></a>tau <span class="op">=</span> <span class="fl">0.05</span>   <span class="co"># escala de la incertidumbre del equilibrio</span></span>
+<span id="cb13-201"><a href="#cb13-201" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-202"><a href="#cb13-202" aria-hidden="true" tabindex="-1"></a><span class="co"># Ω diagonal, proporcional a la incertidumbre de cada view: diag(P (τΣ) Pᵀ)</span></span>
+<span id="cb13-203"><a href="#cb13-203" aria-hidden="true" tabindex="-1"></a>Omega <span class="op">=</span> np.diag(np.diag(P <span class="op">@</span> (tau <span class="op">*</span> Sigma) <span class="op">@</span> P.T))</span>
+<span id="cb13-204"><a href="#cb13-204" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-205"><a href="#cb13-205" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Matriz Ω (incertidumbre de las views):</span><span class="ch">\n</span><span class="st">"</span>, Omega)</span>
+<span id="cb13-206"><a href="#cb13-206" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb13-207"><a href="#cb13-207" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-208"><a href="#cb13-208" aria-hidden="true" tabindex="-1"></a>La @fig-anatomia-views junta las tres piezas: cada fila es una view, y se lee de izquierda a derecha.</span>
 <span id="cb13-209"><a href="#cb13-209" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-210"><a href="#cb13-210" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> _esquema():</span>
-<span id="cb13-211"><a href="#cb13-211" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Usa P, Q, Omega y activos del capítulo</span></span>
-<span id="cb13-212"><a href="#cb13-212" aria-hidden="true" tabindex="-1"></a>    fig, ax <span class="op">=</span> lienzo(<span class="dv">17</span>, <span class="fl">4.3</span>)</span>
-<span id="cb13-213"><a href="#cb13-213" aria-hidden="true" tabindex="-1"></a>    w, h, x0, y_top <span class="op">=</span> <span class="fl">2.1</span>, <span class="fl">0.9</span>, <span class="fl">3.6</span>, <span class="fl">2.2</span></span>
-<span id="cb13-214"><a href="#cb13-214" aria-hidden="true" tabindex="-1"></a>    vistas <span class="op">=</span> [<span class="st">"View 1</span><span class="ch">\n</span><span class="st">(absoluta)"</span>, <span class="st">"View 2</span><span class="ch">\n</span><span class="st">(relativa)"</span>]</span>
-<span id="cb13-215"><a href="#cb13-215" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-216"><a href="#cb13-216" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> color(v):</span>
-<span id="cb13-217"><a href="#cb13-217" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> FONDO_SECUNDARIO <span class="cf">if</span> v <span class="op">&gt;</span> <span class="dv">0</span> <span class="cf">else</span> (FONDO_ACENTO <span class="cf">if</span> v <span class="op">&lt;</span> <span class="dv">0</span> <span class="cf">else</span> <span class="st">"white"</span>)</span>
+<span id="cb13-212"><a href="#cb13-212" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb13-213"><a href="#cb13-213" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: fig-anatomia-views</span></span>
+<span id="cb13-214"><a href="#cb13-214" aria-hidden="true" tabindex="-1"></a><span class="co">#| echo: false</span></span>
+<span id="cb13-215"><a href="#cb13-215" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-cap: "Anatomía de las views del capítulo. Cada fila de P indica qué activos involucra la view (+1 compra, −1 vende, 0 no participa); Q dice qué retorno afirma, y Ω, cuánta incertidumbre le asignamos."</span></span>
+<span id="cb13-216"><a href="#cb13-216" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> sys<span class="op">;</span> sys.path.insert(<span class="dv">0</span>, <span class="st">".."</span>)</span>
+<span id="cb13-217"><a href="#cb13-217" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> _esquemas <span class="im">import</span> <span class="op">*</span></span>
 <span id="cb13-218"><a href="#cb13-218" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-219"><a href="#cb13-219" aria-hidden="true" tabindex="-1"></a>    <span class="co"># P: filas = views, columnas = activos</span></span>
-<span id="cb13-220"><a href="#cb13-220" aria-hidden="true" tabindex="-1"></a>    texto(ax, x0 <span class="op">+</span> <span class="fl">1.5</span> <span class="op">*</span> w, y_top <span class="op">+</span> h <span class="op">+</span> <span class="fl">1.05</span>, <span class="st">"P  (qué activos toca cada view)"</span>, tam<span class="op">=</span><span class="dv">10</span>,</span>
-<span id="cb13-221"><a href="#cb13-221" aria-hidden="true" tabindex="-1"></a>          peso<span class="op">=</span><span class="st">"bold"</span>, color<span class="op">=</span>PRIMARIO)</span>
-<span id="cb13-222"><a href="#cb13-222" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> j, a <span class="kw">in</span> <span class="bu">enumerate</span>(activos):</span>
-<span id="cb13-223"><a href="#cb13-223" aria-hidden="true" tabindex="-1"></a>        texto(ax, x0 <span class="op">+</span> j <span class="op">*</span> w <span class="op">+</span> w <span class="op">/</span> <span class="dv">2</span>, y_top <span class="op">+</span> h <span class="op">+</span> <span class="fl">0.35</span>, a, tam<span class="op">=</span><span class="fl">8.5</span>, color<span class="op">=</span>PRIMARIO)</span>
-<span id="cb13-224"><a href="#cb13-224" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> i, v <span class="kw">in</span> <span class="bu">enumerate</span>(vistas):</span>
-<span id="cb13-225"><a href="#cb13-225" aria-hidden="true" tabindex="-1"></a>        y <span class="op">=</span> y_top <span class="op">-</span> i <span class="op">*</span> h</span>
-<span id="cb13-226"><a href="#cb13-226" aria-hidden="true" tabindex="-1"></a>        texto(ax, x0 <span class="op">-</span> <span class="fl">0.2</span>, y <span class="op">+</span> h <span class="op">/</span> <span class="dv">2</span>, v, tam<span class="op">=</span><span class="fl">8.5</span>, ha<span class="op">=</span><span class="st">"right"</span>, color<span class="op">=</span>TEXTO)</span>
-<span id="cb13-227"><a href="#cb13-227" aria-hidden="true" tabindex="-1"></a>        fila_de_celdas(ax, x0, y, [<span class="ss">f"</span><span class="sc">{</span>p<span class="sc">:+.0f}</span><span class="ss">"</span> <span class="cf">if</span> p <span class="cf">else</span> <span class="st">"0"</span> <span class="cf">for</span> p <span class="kw">in</span> P[i]], w<span class="op">=</span>w, h<span class="op">=</span>h,</span>
-<span id="cb13-228"><a href="#cb13-228" aria-hidden="true" tabindex="-1"></a>                       rellenos<span class="op">=</span>[color(p) <span class="cf">for</span> p <span class="kw">in</span> P[i]], tam<span class="op">=</span><span class="dv">11</span>)</span>
-<span id="cb13-229"><a href="#cb13-229" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-230"><a href="#cb13-230" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Q: lo que afirma cada view</span></span>
-<span id="cb13-231"><a href="#cb13-231" aria-hidden="true" tabindex="-1"></a>    xq <span class="op">=</span> x0 <span class="op">+</span> <span class="dv">3</span> <span class="op">*</span> w <span class="op">+</span> <span class="fl">1.0</span></span>
-<span id="cb13-232"><a href="#cb13-232" aria-hidden="true" tabindex="-1"></a>    texto(ax, xq <span class="op">+</span> <span class="fl">0.9</span>, y_top <span class="op">+</span> h <span class="op">+</span> <span class="fl">1.05</span>, <span class="st">"Q"</span>, tam<span class="op">=</span><span class="dv">10</span>, peso<span class="op">=</span><span class="st">"bold"</span>, color<span class="op">=</span>PRIMARIO)</span>
-<span id="cb13-233"><a href="#cb13-233" aria-hidden="true" tabindex="-1"></a>    texto(ax, xq <span class="op">+</span> <span class="fl">0.9</span>, y_top <span class="op">+</span> h <span class="op">+</span> <span class="fl">0.35</span>, <span class="st">"qué afirma"</span>, tam<span class="op">=</span><span class="fl">8.5</span>, color<span class="op">=</span>PRIMARIO)</span>
-<span id="cb13-234"><a href="#cb13-234" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">2</span>):</span>
-<span id="cb13-235"><a href="#cb13-235" aria-hidden="true" tabindex="-1"></a>        caja(ax, xq, y_top <span class="op">-</span> i <span class="op">*</span> h, <span class="fl">1.8</span>, h, <span class="ss">f"</span><span class="sc">{</span>Q[i]<span class="sc">:.0%}</span><span class="ss">"</span>, relleno<span class="op">=</span>FONDO_PRIMARIO, mono<span class="op">=</span><span class="va">True</span>,</span>
-<span id="cb13-236"><a href="#cb13-236" aria-hidden="true" tabindex="-1"></a>             tam<span class="op">=</span><span class="dv">11</span>, lw<span class="op">=</span><span class="fl">1.2</span>, redondeo<span class="op">=</span><span class="fl">0.02</span>)</span>
-<span id="cb13-237"><a href="#cb13-237" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-238"><a href="#cb13-238" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Ω: incertidumbre de cada view (diagonal)</span></span>
-<span id="cb13-239"><a href="#cb13-239" aria-hidden="true" tabindex="-1"></a>    xo <span class="op">=</span> xq <span class="op">+</span> <span class="fl">2.8</span></span>
-<span id="cb13-240"><a href="#cb13-240" aria-hidden="true" tabindex="-1"></a>    texto(ax, xo <span class="op">+</span> <span class="fl">1.0</span>, y_top <span class="op">+</span> h <span class="op">+</span> <span class="fl">1.05</span>, <span class="st">"Ω (diagonal)"</span>, tam<span class="op">=</span><span class="dv">10</span>, peso<span class="op">=</span><span class="st">"bold"</span>, color<span class="op">=</span>PRIMARIO)</span>
-<span id="cb13-241"><a href="#cb13-241" aria-hidden="true" tabindex="-1"></a>    texto(ax, xo <span class="op">+</span> <span class="fl">1.0</span>, y_top <span class="op">+</span> h <span class="op">+</span> <span class="fl">0.35</span>, <span class="st">"cuánto dudás"</span>, tam<span class="op">=</span><span class="fl">8.5</span>, color<span class="op">=</span>PRIMARIO)</span>
-<span id="cb13-242"><a href="#cb13-242" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">2</span>):</span>
-<span id="cb13-243"><a href="#cb13-243" aria-hidden="true" tabindex="-1"></a>        caja(ax, xo, y_top <span class="op">-</span> i <span class="op">*</span> h, <span class="fl">2.0</span>, h, <span class="ss">f"</span><span class="sc">{</span>Omega[i, i]<span class="sc">:.5f}</span><span class="ss">"</span>, relleno<span class="op">=</span>FONDO_GRIS, mono<span class="op">=</span><span class="va">True</span>,</span>
-<span id="cb13-244"><a href="#cb13-244" aria-hidden="true" tabindex="-1"></a>             tam<span class="op">=</span><span class="dv">10</span>, lw<span class="op">=</span><span class="fl">1.2</span>, redondeo<span class="op">=</span><span class="fl">0.02</span>)</span>
-<span id="cb13-245"><a href="#cb13-245" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-246"><a href="#cb13-246" aria-hidden="true" tabindex="-1"></a>    texto(ax, x0 <span class="op">+</span> <span class="fl">1.5</span> <span class="op">*</span> w, <span class="fl">0.45</span>,</span>
-<span id="cb13-247"><a href="#cb13-247" aria-hidden="true" tabindex="-1"></a>          <span class="st">"View 1: +1 en EU  →  «EU rendirá 12%»</span><span class="ch">\n</span><span class="st">"</span></span>
-<span id="cb13-248"><a href="#cb13-248" aria-hidden="true" tabindex="-1"></a>          <span class="st">"View 2: +1 en USA y −1 en Bonos  →  «USA superará a Bonos por 4%»"</span>,</span>
-<span id="cb13-249"><a href="#cb13-249" aria-hidden="true" tabindex="-1"></a>          tam<span class="op">=</span><span class="dv">9</span>, color<span class="op">=</span>TEXTO)</span>
-<span id="cb13-250"><a href="#cb13-250" aria-hidden="true" tabindex="-1"></a>    plt.tight_layout()</span>
-<span id="cb13-251"><a href="#cb13-251" aria-hidden="true" tabindex="-1"></a>    plt.show()</span>
-<span id="cb13-252"><a href="#cb13-252" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-253"><a href="#cb13-253" aria-hidden="true" tabindex="-1"></a>_esquema()</span>
-<span id="cb13-254"><a href="#cb13-254" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb13-255"><a href="#cb13-255" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-256"><a href="#cb13-256" aria-hidden="true" tabindex="-1"></a>::: {.callout-tip title="El sentido de Ω"}</span>
-<span id="cb13-257"><a href="#cb13-257" aria-hidden="true" tabindex="-1"></a>$\Omega$ es la perilla de confianza. Si ponés valores **chicos**, le estás diciendo al modelo "estoy muy seguro de estas views" y el resultado se pegará a $Q$. Si los ponés **grandes**, el modelo casi las ignora y se queda con el equilibrio $\Pi$. Es la traducción matemática del "cuán seguro estás" de la introducción.</span>
-<span id="cb13-258"><a href="#cb13-258" aria-hidden="true" tabindex="-1"></a>:::</span>
-<span id="cb13-259"><a href="#cb13-259" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-260"><a href="#cb13-260" aria-hidden="true" tabindex="-1"></a>---</span>
+<span id="cb13-219"><a href="#cb13-219" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> _esquema():</span>
+<span id="cb13-220"><a href="#cb13-220" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Usa P, Q, Omega y activos del capítulo</span></span>
+<span id="cb13-221"><a href="#cb13-221" aria-hidden="true" tabindex="-1"></a>    fig, ax <span class="op">=</span> lienzo(<span class="dv">17</span>, <span class="fl">4.3</span>)</span>
+<span id="cb13-222"><a href="#cb13-222" aria-hidden="true" tabindex="-1"></a>    w, h, x0, y_top <span class="op">=</span> <span class="fl">2.1</span>, <span class="fl">0.9</span>, <span class="fl">3.6</span>, <span class="fl">2.2</span></span>
+<span id="cb13-223"><a href="#cb13-223" aria-hidden="true" tabindex="-1"></a>    vistas <span class="op">=</span> [<span class="st">"View 1</span><span class="ch">\n</span><span class="st">(absoluta)"</span>, <span class="st">"View 2</span><span class="ch">\n</span><span class="st">(relativa)"</span>]</span>
+<span id="cb13-224"><a href="#cb13-224" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-225"><a href="#cb13-225" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> color(v):</span>
+<span id="cb13-226"><a href="#cb13-226" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> FONDO_SECUNDARIO <span class="cf">if</span> v <span class="op">&gt;</span> <span class="dv">0</span> <span class="cf">else</span> (FONDO_ACENTO <span class="cf">if</span> v <span class="op">&lt;</span> <span class="dv">0</span> <span class="cf">else</span> <span class="st">"white"</span>)</span>
+<span id="cb13-227"><a href="#cb13-227" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-228"><a href="#cb13-228" aria-hidden="true" tabindex="-1"></a>    <span class="co"># P: filas = views, columnas = activos</span></span>
+<span id="cb13-229"><a href="#cb13-229" aria-hidden="true" tabindex="-1"></a>    texto(ax, x0 <span class="op">+</span> <span class="fl">1.5</span> <span class="op">*</span> w, y_top <span class="op">+</span> h <span class="op">+</span> <span class="fl">1.05</span>, <span class="st">"P  (qué activos toca cada view)"</span>, tam<span class="op">=</span><span class="dv">10</span>,</span>
+<span id="cb13-230"><a href="#cb13-230" aria-hidden="true" tabindex="-1"></a>          peso<span class="op">=</span><span class="st">"bold"</span>, color<span class="op">=</span>PRIMARIO)</span>
+<span id="cb13-231"><a href="#cb13-231" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> j, a <span class="kw">in</span> <span class="bu">enumerate</span>(activos):</span>
+<span id="cb13-232"><a href="#cb13-232" aria-hidden="true" tabindex="-1"></a>        texto(ax, x0 <span class="op">+</span> j <span class="op">*</span> w <span class="op">+</span> w <span class="op">/</span> <span class="dv">2</span>, y_top <span class="op">+</span> h <span class="op">+</span> <span class="fl">0.35</span>, a, tam<span class="op">=</span><span class="fl">8.5</span>, color<span class="op">=</span>PRIMARIO)</span>
+<span id="cb13-233"><a href="#cb13-233" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> i, v <span class="kw">in</span> <span class="bu">enumerate</span>(vistas):</span>
+<span id="cb13-234"><a href="#cb13-234" aria-hidden="true" tabindex="-1"></a>        y <span class="op">=</span> y_top <span class="op">-</span> i <span class="op">*</span> h</span>
+<span id="cb13-235"><a href="#cb13-235" aria-hidden="true" tabindex="-1"></a>        texto(ax, x0 <span class="op">-</span> <span class="fl">0.2</span>, y <span class="op">+</span> h <span class="op">/</span> <span class="dv">2</span>, v, tam<span class="op">=</span><span class="fl">8.5</span>, ha<span class="op">=</span><span class="st">"right"</span>, color<span class="op">=</span>TEXTO)</span>
+<span id="cb13-236"><a href="#cb13-236" aria-hidden="true" tabindex="-1"></a>        fila_de_celdas(ax, x0, y, [<span class="ss">f"</span><span class="sc">{</span>p<span class="sc">:+.0f}</span><span class="ss">"</span> <span class="cf">if</span> p <span class="cf">else</span> <span class="st">"0"</span> <span class="cf">for</span> p <span class="kw">in</span> P[i]], w<span class="op">=</span>w, h<span class="op">=</span>h,</span>
+<span id="cb13-237"><a href="#cb13-237" aria-hidden="true" tabindex="-1"></a>                       rellenos<span class="op">=</span>[color(p) <span class="cf">for</span> p <span class="kw">in</span> P[i]], tam<span class="op">=</span><span class="dv">11</span>)</span>
+<span id="cb13-238"><a href="#cb13-238" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-239"><a href="#cb13-239" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Q: lo que afirma cada view</span></span>
+<span id="cb13-240"><a href="#cb13-240" aria-hidden="true" tabindex="-1"></a>    xq <span class="op">=</span> x0 <span class="op">+</span> <span class="dv">3</span> <span class="op">*</span> w <span class="op">+</span> <span class="fl">1.0</span></span>
+<span id="cb13-241"><a href="#cb13-241" aria-hidden="true" tabindex="-1"></a>    texto(ax, xq <span class="op">+</span> <span class="fl">0.9</span>, y_top <span class="op">+</span> h <span class="op">+</span> <span class="fl">1.05</span>, <span class="st">"Q"</span>, tam<span class="op">=</span><span class="dv">10</span>, peso<span class="op">=</span><span class="st">"bold"</span>, color<span class="op">=</span>PRIMARIO)</span>
+<span id="cb13-242"><a href="#cb13-242" aria-hidden="true" tabindex="-1"></a>    texto(ax, xq <span class="op">+</span> <span class="fl">0.9</span>, y_top <span class="op">+</span> h <span class="op">+</span> <span class="fl">0.35</span>, <span class="st">"qué afirma"</span>, tam<span class="op">=</span><span class="fl">8.5</span>, color<span class="op">=</span>PRIMARIO)</span>
+<span id="cb13-243"><a href="#cb13-243" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">2</span>):</span>
+<span id="cb13-244"><a href="#cb13-244" aria-hidden="true" tabindex="-1"></a>        caja(ax, xq, y_top <span class="op">-</span> i <span class="op">*</span> h, <span class="fl">1.8</span>, h, <span class="ss">f"</span><span class="sc">{</span>Q[i]<span class="sc">:.0%}</span><span class="ss">"</span>, relleno<span class="op">=</span>FONDO_PRIMARIO, mono<span class="op">=</span><span class="va">True</span>,</span>
+<span id="cb13-245"><a href="#cb13-245" aria-hidden="true" tabindex="-1"></a>             tam<span class="op">=</span><span class="dv">11</span>, lw<span class="op">=</span><span class="fl">1.2</span>, redondeo<span class="op">=</span><span class="fl">0.02</span>)</span>
+<span id="cb13-246"><a href="#cb13-246" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-247"><a href="#cb13-247" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Ω: incertidumbre de cada view (diagonal)</span></span>
+<span id="cb13-248"><a href="#cb13-248" aria-hidden="true" tabindex="-1"></a>    xo <span class="op">=</span> xq <span class="op">+</span> <span class="fl">2.8</span></span>
+<span id="cb13-249"><a href="#cb13-249" aria-hidden="true" tabindex="-1"></a>    texto(ax, xo <span class="op">+</span> <span class="fl">1.0</span>, y_top <span class="op">+</span> h <span class="op">+</span> <span class="fl">1.05</span>, <span class="st">"Ω (diagonal)"</span>, tam<span class="op">=</span><span class="dv">10</span>, peso<span class="op">=</span><span class="st">"bold"</span>, color<span class="op">=</span>PRIMARIO)</span>
+<span id="cb13-250"><a href="#cb13-250" aria-hidden="true" tabindex="-1"></a>    texto(ax, xo <span class="op">+</span> <span class="fl">1.0</span>, y_top <span class="op">+</span> h <span class="op">+</span> <span class="fl">0.35</span>, <span class="st">"cuánto dudás"</span>, tam<span class="op">=</span><span class="fl">8.5</span>, color<span class="op">=</span>PRIMARIO)</span>
+<span id="cb13-251"><a href="#cb13-251" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">2</span>):</span>
+<span id="cb13-252"><a href="#cb13-252" aria-hidden="true" tabindex="-1"></a>        caja(ax, xo, y_top <span class="op">-</span> i <span class="op">*</span> h, <span class="fl">2.0</span>, h, <span class="ss">f"</span><span class="sc">{</span>Omega[i, i]<span class="sc">:.5f}</span><span class="ss">"</span>, relleno<span class="op">=</span>FONDO_GRIS, mono<span class="op">=</span><span class="va">True</span>,</span>
+<span id="cb13-253"><a href="#cb13-253" aria-hidden="true" tabindex="-1"></a>             tam<span class="op">=</span><span class="dv">10</span>, lw<span class="op">=</span><span class="fl">1.2</span>, redondeo<span class="op">=</span><span class="fl">0.02</span>)</span>
+<span id="cb13-254"><a href="#cb13-254" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-255"><a href="#cb13-255" aria-hidden="true" tabindex="-1"></a>    texto(ax, x0 <span class="op">+</span> <span class="fl">1.5</span> <span class="op">*</span> w, <span class="fl">0.45</span>,</span>
+<span id="cb13-256"><a href="#cb13-256" aria-hidden="true" tabindex="-1"></a>          <span class="st">"View 1: +1 en EU  →  «EU rendirá 12%»</span><span class="ch">\n</span><span class="st">"</span></span>
+<span id="cb13-257"><a href="#cb13-257" aria-hidden="true" tabindex="-1"></a>          <span class="st">"View 2: +1 en USA y −1 en Bonos  →  «USA superará a Bonos por 4%»"</span>,</span>
+<span id="cb13-258"><a href="#cb13-258" aria-hidden="true" tabindex="-1"></a>          tam<span class="op">=</span><span class="dv">9</span>, color<span class="op">=</span>TEXTO)</span>
+<span id="cb13-259"><a href="#cb13-259" aria-hidden="true" tabindex="-1"></a>    plt.tight_layout()</span>
+<span id="cb13-260"><a href="#cb13-260" aria-hidden="true" tabindex="-1"></a>    plt.show()</span>
 <span id="cb13-261"><a href="#cb13-261" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-262"><a href="#cb13-262" aria-hidden="true" tabindex="-1"></a><span class="fu">## Paso 3: la fórmula maestra de Black-Litterman</span></span>
-<span id="cb13-263"><a href="#cb13-263" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-264"><a href="#cb13-264" aria-hidden="true" tabindex="-1"></a>Con el equilibrio $\boldsymbol{\Pi}$ y las views $(P, Q, \Omega)$, combinamos ambas fuentes en un único vector de retornos esperados ajustados, $\boldsymbol{\mu}_{BL}$. Esta es la célebre *fórmula maestra*:</span>
-<span id="cb13-265"><a href="#cb13-265" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-266"><a href="#cb13-266" aria-hidden="true" tabindex="-1"></a>$$\boldsymbol{\mu}_{BL} = \left<span class="co">[</span><span class="ot"> (\tau\Sigma)^{-1} + P^T \Omega^{-1} P \right</span><span class="co">]</span>^{-1} \left<span class="co">[</span><span class="ot"> (\tau\Sigma)^{-1} \boldsymbol{\Pi} + P^T \Omega^{-1} Q \right</span><span class="co">]</span>$$</span>
-<span id="cb13-267"><a href="#cb13-267" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-268"><a href="#cb13-268" aria-hidden="true" tabindex="-1"></a>Parece intimidante, pero es exactamente el **promedio ponderado por confianza** de la intuición, escrito en matrices. Cada término $(\cdot)^{-1}$ es una "precisión" (lo inverso de la incertidumbre): el equilibrio pesa según su precisión $(\tau\Sigma)^{-1}$ y las views según la suya $P^T\Omega^{-1}P$. Donde no hay view, prevalece el equilibrio; donde hay una view muy confiable, ella domina.</span>
-<span id="cb13-269"><a href="#cb13-269" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-270"><a href="#cb13-270" aria-hidden="true" tabindex="-1"></a>Para verlo, conviene mirar el caso de **un solo activo con una sola view**: la fórmula se reduce a</span>
-<span id="cb13-271"><a href="#cb13-271" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-272"><a href="#cb13-272" aria-hidden="true" tabindex="-1"></a>$$\mu_{BL} = \frac{\pi/\sigma_\pi^2 + q/\sigma_q^2}{1/\sigma_\pi^2 + 1/\sigma_q^2}$$</span>
-<span id="cb13-273"><a href="#cb13-273" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-274"><a href="#cb13-274" aria-hidden="true" tabindex="-1"></a>que es literalmente un promedio de $\pi$ (equilibrio) y $q$ (view) ponderado por las precisiones. La versión matricial hace lo mismo con todos los activos y views a la vez, respetando las correlaciones.</span>
-<span id="cb13-275"><a href="#cb13-275" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-278"><a href="#cb13-278" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
-<span id="cb13-279"><a href="#cb13-279" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: formula-maestra</span></span>
-<span id="cb13-280"><a href="#cb13-280" aria-hidden="true" tabindex="-1"></a>inv_tau_Sigma <span class="op">=</span> np.linalg.inv(tau <span class="op">*</span> Sigma)</span>
-<span id="cb13-281"><a href="#cb13-281" aria-hidden="true" tabindex="-1"></a>inv_Omega <span class="op">=</span> np.linalg.inv(Omega)</span>
+<span id="cb13-262"><a href="#cb13-262" aria-hidden="true" tabindex="-1"></a>_esquema()</span>
+<span id="cb13-263"><a href="#cb13-263" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb13-264"><a href="#cb13-264" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-265"><a href="#cb13-265" aria-hidden="true" tabindex="-1"></a>::: {.callout-tip title="El sentido de Ω"}</span>
+<span id="cb13-266"><a href="#cb13-266" aria-hidden="true" tabindex="-1"></a>$\Omega$ es la perilla de confianza. Si ponés valores **chicos**, le estás diciendo al modelo "estoy muy seguro de estas views" y el resultado se pegará a $Q$. Si los ponés **grandes**, el modelo casi las ignora y se queda con el equilibrio $\Pi$. Es la traducción matemática del "cuán seguro estás" de la introducción.</span>
+<span id="cb13-267"><a href="#cb13-267" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb13-268"><a href="#cb13-268" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-269"><a href="#cb13-269" aria-hidden="true" tabindex="-1"></a>---</span>
+<span id="cb13-270"><a href="#cb13-270" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-271"><a href="#cb13-271" aria-hidden="true" tabindex="-1"></a><span class="fu">## Paso 3: la fórmula maestra de Black-Litterman</span></span>
+<span id="cb13-272"><a href="#cb13-272" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-273"><a href="#cb13-273" aria-hidden="true" tabindex="-1"></a>Con el equilibrio $\boldsymbol{\Pi}$ y las views $(P, Q, \Omega)$, combinamos ambas fuentes en un único vector de retornos esperados ajustados, $\boldsymbol{\mu}_{BL}$. Esta es la célebre *fórmula maestra*:</span>
+<span id="cb13-274"><a href="#cb13-274" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-275"><a href="#cb13-275" aria-hidden="true" tabindex="-1"></a>$$\boldsymbol{\mu}_{BL} = \left<span class="co">[</span><span class="ot"> (\tau\Sigma)^{-1} + P^T \Omega^{-1} P \right</span><span class="co">]</span>^{-1} \left<span class="co">[</span><span class="ot"> (\tau\Sigma)^{-1} \boldsymbol{\Pi} + P^T \Omega^{-1} Q \right</span><span class="co">]</span>$$</span>
+<span id="cb13-276"><a href="#cb13-276" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-277"><a href="#cb13-277" aria-hidden="true" tabindex="-1"></a>Parece intimidante, pero es exactamente el **promedio ponderado por confianza** de la intuición, escrito en matrices. Cada término $(\cdot)^{-1}$ es una "precisión" (lo inverso de la incertidumbre): el equilibrio pesa según su precisión $(\tau\Sigma)^{-1}$ y las views según la suya $P^T\Omega^{-1}P$. Donde no hay view, prevalece el equilibrio; donde hay una view muy confiable, ella domina.</span>
+<span id="cb13-278"><a href="#cb13-278" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-279"><a href="#cb13-279" aria-hidden="true" tabindex="-1"></a>Para verlo, conviene mirar el caso de **un solo activo con una sola view**: la fórmula se reduce a</span>
+<span id="cb13-280"><a href="#cb13-280" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-281"><a href="#cb13-281" aria-hidden="true" tabindex="-1"></a>$$\mu_{BL} = \frac{\pi/\sigma_\pi^2 + q/\sigma_q^2}{1/\sigma_\pi^2 + 1/\sigma_q^2}$$</span>
 <span id="cb13-282"><a href="#cb13-282" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-283"><a href="#cb13-283" aria-hidden="true" tabindex="-1"></a><span class="co"># Fórmula maestra</span></span>
-<span id="cb13-284"><a href="#cb13-284" aria-hidden="true" tabindex="-1"></a>A <span class="op">=</span> inv_tau_Sigma <span class="op">+</span> P.T <span class="op">@</span> inv_Omega <span class="op">@</span> P</span>
-<span id="cb13-285"><a href="#cb13-285" aria-hidden="true" tabindex="-1"></a>b <span class="op">=</span> inv_tau_Sigma <span class="op">@</span> Pi <span class="op">+</span> P.T <span class="op">@</span> inv_Omega <span class="op">@</span> Q</span>
-<span id="cb13-286"><a href="#cb13-286" aria-hidden="true" tabindex="-1"></a>mu_BL <span class="op">=</span> np.linalg.solve(A, b)   <span class="co"># resolvemos A μ = b (más estable que invertir A)</span></span>
-<span id="cb13-287"><a href="#cb13-287" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-288"><a href="#cb13-288" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span><span class="st">'Activo'</span><span class="sc">:&lt;14}{</span><span class="st">'Equilibrio Π'</span><span class="sc">:&gt;14}{</span><span class="st">'Black-Litterman'</span><span class="sc">:&gt;18}</span><span class="ss">"</span>)</span>
-<span id="cb13-289"><a href="#cb13-289" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> a, pi, m <span class="kw">in</span> <span class="bu">zip</span>(activos, Pi, mu_BL):</span>
-<span id="cb13-290"><a href="#cb13-290" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span>a<span class="sc">:&lt;14}{</span>pi<span class="sc">:&gt;13.2%}{</span>m<span class="sc">:&gt;17.2%}</span><span class="ss">"</span>)</span>
-<span id="cb13-291"><a href="#cb13-291" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb13-292"><a href="#cb13-292" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-293"><a href="#cb13-293" aria-hidden="true" tabindex="-1"></a>Leé la tabla con calma: los retornos ajustados se **movieron desde el equilibrio hacia nuestras views**. Acciones EU subió del 2.5% al 7.2%: bastante, pero lejos del 12% que afirmamos, porque el modelo pondera esa view contra el equilibrio. USA también subió, empujado por la view relativa. Ningún valor saltó hasta la view: el modelo mezcló, no reemplazó. Eso es precisamente lo que le faltaba a Markowitz.</span>
-<span id="cb13-294"><a href="#cb13-294" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-295"><a href="#cb13-295" aria-hidden="true" tabindex="-1"></a>Fijate también un efecto menos obvio: Bonos **subió** (de 0.4% a 0.7%), aunque la view 2 lo ponía *por debajo* de USA. La razón es que la fórmula propaga la información a través de $\Sigma$: si EU y USA rinden más, y Bonos está (poco, pero) correlacionado con ellos, su retorno esperado también se ajusta. Las views no actúan aisladas: viajan por las covarianzas.</span>
+<span id="cb13-283"><a href="#cb13-283" aria-hidden="true" tabindex="-1"></a>que es literalmente un promedio de $\pi$ (equilibrio) y $q$ (view) ponderado por las precisiones. La versión matricial hace lo mismo con todos los activos y views a la vez, respetando las correlaciones.</span>
+<span id="cb13-284"><a href="#cb13-284" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-287"><a href="#cb13-287" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb13-288"><a href="#cb13-288" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: formula-maestra</span></span>
+<span id="cb13-289"><a href="#cb13-289" aria-hidden="true" tabindex="-1"></a>inv_tau_Sigma <span class="op">=</span> np.linalg.inv(tau <span class="op">*</span> Sigma)</span>
+<span id="cb13-290"><a href="#cb13-290" aria-hidden="true" tabindex="-1"></a>inv_Omega <span class="op">=</span> np.linalg.inv(Omega)</span>
+<span id="cb13-291"><a href="#cb13-291" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-292"><a href="#cb13-292" aria-hidden="true" tabindex="-1"></a><span class="co"># Fórmula maestra</span></span>
+<span id="cb13-293"><a href="#cb13-293" aria-hidden="true" tabindex="-1"></a>A <span class="op">=</span> inv_tau_Sigma <span class="op">+</span> P.T <span class="op">@</span> inv_Omega <span class="op">@</span> P</span>
+<span id="cb13-294"><a href="#cb13-294" aria-hidden="true" tabindex="-1"></a>b <span class="op">=</span> inv_tau_Sigma <span class="op">@</span> Pi <span class="op">+</span> P.T <span class="op">@</span> inv_Omega <span class="op">@</span> Q</span>
+<span id="cb13-295"><a href="#cb13-295" aria-hidden="true" tabindex="-1"></a>mu_BL <span class="op">=</span> np.linalg.solve(A, b)   <span class="co"># resolvemos A μ = b (más estable que invertir A)</span></span>
 <span id="cb13-296"><a href="#cb13-296" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-297"><a href="#cb13-297" aria-hidden="true" tabindex="-1"></a>---</span>
-<span id="cb13-298"><a href="#cb13-298" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-299"><a href="#cb13-299" aria-hidden="true" tabindex="-1"></a><span class="fu">## Paso 4: del retorno ajustado a la cartera óptima</span></span>
-<span id="cb13-300"><a href="#cb13-300" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-301"><a href="#cb13-301" aria-hidden="true" tabindex="-1"></a>El vector $\boldsymbol{\mu}_{BL}$ es un input de retornos esperados **mucho más robusto** que un promedio histórico. Ahora sí lo metemos en la optimización de Markowitz para obtener los pesos. Sin restricciones adicionales, los pesos óptimos tienen forma cerrada:</span>
-<span id="cb13-302"><a href="#cb13-302" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-303"><a href="#cb13-303" aria-hidden="true" tabindex="-1"></a>$$\mathbf{w}_{BL} = \frac{1}{\delta} \, \Sigma^{-1} \, \boldsymbol{\mu}_{BL}$$</span>
-<span id="cb13-304"><a href="#cb13-304" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-307"><a href="#cb13-307" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
-<span id="cb13-308"><a href="#cb13-308" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: pesos-optimos</span></span>
-<span id="cb13-309"><a href="#cb13-309" aria-hidden="true" tabindex="-1"></a><span class="co"># Pesos óptimos con los retornos de Black-Litterman</span></span>
-<span id="cb13-310"><a href="#cb13-310" aria-hidden="true" tabindex="-1"></a>w_BL <span class="op">=</span> (<span class="dv">1</span> <span class="op">/</span> delta) <span class="op">*</span> np.linalg.solve(Sigma, mu_BL)</span>
+<span id="cb13-297"><a href="#cb13-297" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span><span class="st">'Activo'</span><span class="sc">:&lt;14}{</span><span class="st">'Equilibrio Π'</span><span class="sc">:&gt;14}{</span><span class="st">'Black-Litterman'</span><span class="sc">:&gt;18}</span><span class="ss">"</span>)</span>
+<span id="cb13-298"><a href="#cb13-298" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> a, pi, m <span class="kw">in</span> <span class="bu">zip</span>(activos, Pi, mu_BL):</span>
+<span id="cb13-299"><a href="#cb13-299" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span>a<span class="sc">:&lt;14}{</span>pi<span class="sc">:&gt;13.2%}{</span>m<span class="sc">:&gt;17.2%}</span><span class="ss">"</span>)</span>
+<span id="cb13-300"><a href="#cb13-300" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb13-301"><a href="#cb13-301" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-302"><a href="#cb13-302" aria-hidden="true" tabindex="-1"></a>Leé la tabla con calma: los retornos ajustados se **movieron desde el equilibrio hacia nuestras views**. Acciones EU subió del 2.5% al 7.2%: bastante, pero lejos del 12% que afirmamos, porque el modelo pondera esa view contra el equilibrio. USA también subió, empujado por la view relativa. Ningún valor saltó hasta la view: el modelo mezcló, no reemplazó. Eso es precisamente lo que le faltaba a Markowitz.</span>
+<span id="cb13-303"><a href="#cb13-303" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-304"><a href="#cb13-304" aria-hidden="true" tabindex="-1"></a>Fijate también un efecto menos obvio: Bonos **subió** (de 0.4% a 0.7%), aunque la view 2 lo ponía *por debajo* de USA. La razón es que la fórmula propaga la información a través de $\Sigma$: si EU y USA rinden más, y Bonos está (poco, pero) correlacionado con ellos, su retorno esperado también se ajusta. Las views no actúan aisladas: viajan por las covarianzas.</span>
+<span id="cb13-305"><a href="#cb13-305" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-306"><a href="#cb13-306" aria-hidden="true" tabindex="-1"></a>---</span>
+<span id="cb13-307"><a href="#cb13-307" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-308"><a href="#cb13-308" aria-hidden="true" tabindex="-1"></a><span class="fu">## Paso 4: del retorno ajustado a la cartera óptima</span></span>
+<span id="cb13-309"><a href="#cb13-309" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-310"><a href="#cb13-310" aria-hidden="true" tabindex="-1"></a>El vector $\boldsymbol{\mu}_{BL}$ es un input de retornos esperados **mucho más robusto** que un promedio histórico. Ahora sí lo metemos en la optimización de Markowitz para obtener los pesos. Sin restricciones adicionales, los pesos óptimos tienen forma cerrada:</span>
 <span id="cb13-311"><a href="#cb13-311" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-312"><a href="#cb13-312" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span><span class="st">'Activo'</span><span class="sc">:&lt;14}{</span><span class="st">'Cartera mercado'</span><span class="sc">:&gt;16}{</span><span class="st">'BL con views'</span><span class="sc">:&gt;15}</span><span class="ss">"</span>)</span>
-<span id="cb13-313"><a href="#cb13-313" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> a, wm, wb <span class="kw">in</span> <span class="bu">zip</span>(activos, w_mkt, w_BL):</span>
-<span id="cb13-314"><a href="#cb13-314" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span>a<span class="sc">:&lt;14}{</span>wm<span class="sc">:&gt;15.1%}{</span>wb<span class="sc">:&gt;14.1%}</span><span class="ss">"</span>)</span>
-<span id="cb13-315"><a href="#cb13-315" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-316"><a href="#cb13-316" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"</span><span class="ch">\n</span><span class="ss">Suma de pesos BL: </span><span class="sc">{</span>w_BL<span class="sc">.</span><span class="bu">sum</span>()<span class="sc">:.1%}</span><span class="ss">"</span>)</span>
-<span id="cb13-317"><a href="#cb13-317" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb13-318"><a href="#cb13-318" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-319"><a href="#cb13-319" aria-hidden="true" tabindex="-1"></a>Cuando **no hay views**, $\mathbf{w}_{BL}$ reproduce la cartera de mercado (por construcción: es el punto de partida). Al agregar opiniones, el modelo **se desvía del mercado en la dirección de esas views**, y la magnitud del desvío depende de dos cosas: cuánto difiere cada view del equilibrio y cuánto confiás en ella. Acá la view sobre EU es muy agresiva —12% contra un equilibrio de 2.5%—, y la cartera sin restricciones lo refleja: Acciones EU pasa del 30% a casi 130%, y los pesos suman cerca de 200%, es decir, una cartera apalancada. No es un error del modelo: es lo que implica *creer* esa view con esa confianza. Por eso en la práctica se combinan views más moderadas con las restricciones del recuadro siguiente. La @fig-equilibrio-vs-bl muestra los dos desplazamientos juntos.</span>
+<span id="cb13-312"><a href="#cb13-312" aria-hidden="true" tabindex="-1"></a>$$\mathbf{w}_{BL} = \frac{1}{\delta} \, \Sigma^{-1} \, \boldsymbol{\mu}_{BL}$$</span>
+<span id="cb13-313"><a href="#cb13-313" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-316"><a href="#cb13-316" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb13-317"><a href="#cb13-317" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: pesos-optimos</span></span>
+<span id="cb13-318"><a href="#cb13-318" aria-hidden="true" tabindex="-1"></a><span class="co"># Pesos óptimos con los retornos de Black-Litterman</span></span>
+<span id="cb13-319"><a href="#cb13-319" aria-hidden="true" tabindex="-1"></a>w_BL <span class="op">=</span> (<span class="dv">1</span> <span class="op">/</span> delta) <span class="op">*</span> np.linalg.solve(Sigma, mu_BL)</span>
 <span id="cb13-320"><a href="#cb13-320" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-323"><a href="#cb13-323" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
-<span id="cb13-324"><a href="#cb13-324" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: fig-equilibrio-vs-bl</span></span>
-<span id="cb13-325"><a href="#cb13-325" aria-hidden="true" tabindex="-1"></a><span class="co">#| echo: false</span></span>
-<span id="cb13-326"><a href="#cb13-326" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-cap: "Del equilibrio a Black-Litterman. Izquierda: los retornos esperados se desplazan desde Π hacia las views. Derecha: la cartera sin restricciones sobrepondera fuertemente Acciones EU y suma casi 200% (apalancada)."</span></span>
-<span id="cb13-327"><a href="#cb13-327" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> sys<span class="op">;</span> sys.path.insert(<span class="dv">0</span>, <span class="st">".."</span>)</span>
-<span id="cb13-328"><a href="#cb13-328" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> _esquemas <span class="im">import</span> <span class="op">*</span></span>
+<span id="cb13-321"><a href="#cb13-321" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span><span class="st">'Activo'</span><span class="sc">:&lt;14}{</span><span class="st">'Cartera mercado'</span><span class="sc">:&gt;16}{</span><span class="st">'BL con views'</span><span class="sc">:&gt;15}</span><span class="ss">"</span>)</span>
+<span id="cb13-322"><a href="#cb13-322" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> a, wm, wb <span class="kw">in</span> <span class="bu">zip</span>(activos, w_mkt, w_BL):</span>
+<span id="cb13-323"><a href="#cb13-323" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span>a<span class="sc">:&lt;14}{</span>wm<span class="sc">:&gt;15.1%}{</span>wb<span class="sc">:&gt;14.1%}</span><span class="ss">"</span>)</span>
+<span id="cb13-324"><a href="#cb13-324" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-325"><a href="#cb13-325" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"</span><span class="ch">\n</span><span class="ss">Suma de pesos BL: </span><span class="sc">{</span>w_BL<span class="sc">.</span><span class="bu">sum</span>()<span class="sc">:.1%}</span><span class="ss">"</span>)</span>
+<span id="cb13-326"><a href="#cb13-326" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb13-327"><a href="#cb13-327" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-328"><a href="#cb13-328" aria-hidden="true" tabindex="-1"></a>Cuando **no hay views**, $\mathbf{w}_{BL}$ reproduce la cartera de mercado (por construcción: es el punto de partida). Al agregar opiniones, el modelo **se desvía del mercado en la dirección de esas views**, y la magnitud del desvío depende de dos cosas: cuánto difiere cada view del equilibrio y cuánto confiás en ella. Acá la view sobre EU es muy agresiva —12% contra un equilibrio de 2.5%—, y la cartera sin restricciones lo refleja: Acciones EU pasa del 30% a casi 130%, y los pesos suman cerca de 200%, es decir, una cartera apalancada. No es un error del modelo: es lo que implica *creer* esa view con esa confianza. Por eso en la práctica se combinan views más moderadas con las restricciones del recuadro siguiente. La @fig-equilibrio-vs-bl muestra los dos desplazamientos juntos.</span>
 <span id="cb13-329"><a href="#cb13-329" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-330"><a href="#cb13-330" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> _esquema():</span>
-<span id="cb13-331"><a href="#cb13-331" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Usa activos, Pi, mu_BL, w_mkt y w_BL del capítulo</span></span>
-<span id="cb13-332"><a href="#cb13-332" aria-hidden="true" tabindex="-1"></a>    fig, (izq, der) <span class="op">=</span> plt.subplots(<span class="dv">1</span>, <span class="dv">2</span>, figsize<span class="op">=</span>(<span class="dv">11</span>, <span class="dv">4</span>))</span>
-<span id="cb13-333"><a href="#cb13-333" aria-hidden="true" tabindex="-1"></a>    barras_comparadas(izq, activos, {<span class="st">"Equilibrio Π"</span>: Pi, <span class="st">"Black-Litterman μ_BL"</span>: mu_BL},</span>
-<span id="cb13-334"><a href="#cb13-334" aria-hidden="true" tabindex="-1"></a>                      fmt<span class="op">=</span><span class="st">"</span><span class="sc">{:.1%}</span><span class="st">"</span>, colores<span class="op">=</span>[GRIS, PRIMARIO])</span>
-<span id="cb13-335"><a href="#cb13-335" aria-hidden="true" tabindex="-1"></a>    izq.set_title(<span class="st">"Retornos esperados"</span>, fontsize<span class="op">=</span><span class="dv">11</span>, color<span class="op">=</span>PRIMARIO, fontweight<span class="op">=</span><span class="st">"bold"</span>)</span>
-<span id="cb13-336"><a href="#cb13-336" aria-hidden="true" tabindex="-1"></a>    barras_comparadas(der, activos, {<span class="st">"Cartera de mercado"</span>: w_mkt, <span class="st">"Cartera BL"</span>: w_BL},</span>
-<span id="cb13-337"><a href="#cb13-337" aria-hidden="true" tabindex="-1"></a>                      colores<span class="op">=</span>[GRIS, ACENTO])</span>
-<span id="cb13-338"><a href="#cb13-338" aria-hidden="true" tabindex="-1"></a>    der.set_title(<span class="st">"Pesos de la cartera"</span>, fontsize<span class="op">=</span><span class="dv">11</span>, color<span class="op">=</span>PRIMARIO, fontweight<span class="op">=</span><span class="st">"bold"</span>)</span>
-<span id="cb13-339"><a href="#cb13-339" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> ax <span class="kw">in</span> (izq, der):</span>
-<span id="cb13-340"><a href="#cb13-340" aria-hidden="true" tabindex="-1"></a>        ax.yaxis.set_major_formatter(plt.FuncFormatter(<span class="kw">lambda</span> v, _: <span class="ss">f"</span><span class="sc">{</span>v<span class="sc">:.0%}</span><span class="ss">"</span>))</span>
-<span id="cb13-341"><a href="#cb13-341" aria-hidden="true" tabindex="-1"></a>        ax.legend(frameon<span class="op">=</span><span class="va">False</span>, fontsize<span class="op">=</span><span class="fl">8.5</span>, loc<span class="op">=</span><span class="st">"upper right"</span>)</span>
-<span id="cb13-342"><a href="#cb13-342" aria-hidden="true" tabindex="-1"></a>    plt.tight_layout()</span>
-<span id="cb13-343"><a href="#cb13-343" aria-hidden="true" tabindex="-1"></a>    plt.show()</span>
-<span id="cb13-344"><a href="#cb13-344" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-345"><a href="#cb13-345" aria-hidden="true" tabindex="-1"></a>_esquema()</span>
-<span id="cb13-346"><a href="#cb13-346" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb13-347"><a href="#cb13-347" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-348"><a href="#cb13-348" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-349"><a href="#cb13-349" aria-hidden="true" tabindex="-1"></a>::: {.callout-warning title="Detalle práctico"}</span>
-<span id="cb13-350"><a href="#cb13-350" aria-hidden="true" tabindex="-1"></a>Los pesos de arriba no suman 1 (acá, casi 2) y pueden incluir cortos. En la práctica se re-normalizan y se agregan restricciones (no negatividad, límites por activo) resolviendo la optimización con <span class="in">`scipy.optimize.minimize`</span>, como en el Capítulo 8, pero usando $\boldsymbol{\mu}_{BL}$ como retornos esperados.</span>
-<span id="cb13-351"><a href="#cb13-351" aria-hidden="true" tabindex="-1"></a>:::</span>
-<span id="cb13-352"><a href="#cb13-352" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-353"><a href="#cb13-353" aria-hidden="true" tabindex="-1"></a>---</span>
-<span id="cb13-354"><a href="#cb13-354" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-355"><a href="#cb13-355" aria-hidden="true" tabindex="-1"></a><span class="fu">## Visualizando el efecto de la confianza</span></span>
+<span id="cb13-332"><a href="#cb13-332" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb13-333"><a href="#cb13-333" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: fig-equilibrio-vs-bl</span></span>
+<span id="cb13-334"><a href="#cb13-334" aria-hidden="true" tabindex="-1"></a><span class="co">#| echo: false</span></span>
+<span id="cb13-335"><a href="#cb13-335" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-cap: "Del equilibrio a Black-Litterman. Izquierda: los retornos esperados se desplazan desde Π hacia las views. Derecha: la cartera sin restricciones sobrepondera fuertemente Acciones EU y suma casi 200% (apalancada)."</span></span>
+<span id="cb13-336"><a href="#cb13-336" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> sys<span class="op">;</span> sys.path.insert(<span class="dv">0</span>, <span class="st">".."</span>)</span>
+<span id="cb13-337"><a href="#cb13-337" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> _esquemas <span class="im">import</span> <span class="op">*</span></span>
+<span id="cb13-338"><a href="#cb13-338" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-339"><a href="#cb13-339" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> _esquema():</span>
+<span id="cb13-340"><a href="#cb13-340" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Usa activos, Pi, mu_BL, w_mkt y w_BL del capítulo</span></span>
+<span id="cb13-341"><a href="#cb13-341" aria-hidden="true" tabindex="-1"></a>    fig, (izq, der) <span class="op">=</span> plt.subplots(<span class="dv">1</span>, <span class="dv">2</span>, figsize<span class="op">=</span>(<span class="dv">11</span>, <span class="dv">4</span>))</span>
+<span id="cb13-342"><a href="#cb13-342" aria-hidden="true" tabindex="-1"></a>    barras_comparadas(izq, activos, {<span class="st">"Equilibrio Π"</span>: Pi, <span class="st">"Black-Litterman μ_BL"</span>: mu_BL},</span>
+<span id="cb13-343"><a href="#cb13-343" aria-hidden="true" tabindex="-1"></a>                      fmt<span class="op">=</span><span class="st">"</span><span class="sc">{:.1%}</span><span class="st">"</span>, colores<span class="op">=</span>[GRIS, PRIMARIO])</span>
+<span id="cb13-344"><a href="#cb13-344" aria-hidden="true" tabindex="-1"></a>    izq.set_title(<span class="st">"Retornos esperados"</span>, fontsize<span class="op">=</span><span class="dv">11</span>, color<span class="op">=</span>PRIMARIO, fontweight<span class="op">=</span><span class="st">"bold"</span>)</span>
+<span id="cb13-345"><a href="#cb13-345" aria-hidden="true" tabindex="-1"></a>    barras_comparadas(der, activos, {<span class="st">"Cartera de mercado"</span>: w_mkt, <span class="st">"Cartera BL"</span>: w_BL},</span>
+<span id="cb13-346"><a href="#cb13-346" aria-hidden="true" tabindex="-1"></a>                      colores<span class="op">=</span>[GRIS, ACENTO])</span>
+<span id="cb13-347"><a href="#cb13-347" aria-hidden="true" tabindex="-1"></a>    der.set_title(<span class="st">"Pesos de la cartera"</span>, fontsize<span class="op">=</span><span class="dv">11</span>, color<span class="op">=</span>PRIMARIO, fontweight<span class="op">=</span><span class="st">"bold"</span>)</span>
+<span id="cb13-348"><a href="#cb13-348" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> ax <span class="kw">in</span> (izq, der):</span>
+<span id="cb13-349"><a href="#cb13-349" aria-hidden="true" tabindex="-1"></a>        ax.yaxis.set_major_formatter(plt.FuncFormatter(<span class="kw">lambda</span> v, _: <span class="ss">f"</span><span class="sc">{</span>v<span class="sc">:.0%}</span><span class="ss">"</span>))</span>
+<span id="cb13-350"><a href="#cb13-350" aria-hidden="true" tabindex="-1"></a>        ax.legend(frameon<span class="op">=</span><span class="va">False</span>, fontsize<span class="op">=</span><span class="fl">8.5</span>, loc<span class="op">=</span><span class="st">"upper right"</span>)</span>
+<span id="cb13-351"><a href="#cb13-351" aria-hidden="true" tabindex="-1"></a>    plt.tight_layout()</span>
+<span id="cb13-352"><a href="#cb13-352" aria-hidden="true" tabindex="-1"></a>    plt.show()</span>
+<span id="cb13-353"><a href="#cb13-353" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-354"><a href="#cb13-354" aria-hidden="true" tabindex="-1"></a>_esquema()</span>
+<span id="cb13-355"><a href="#cb13-355" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb13-356"><a href="#cb13-356" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-357"><a href="#cb13-357" aria-hidden="true" tabindex="-1"></a>Para cerrar la intuición, veamos cómo la confianza en las views gobierna el resultado. Escalamos $\Omega$ con un factor: valores chicos = mucha confianza, grandes = poca.</span>
-<span id="cb13-358"><a href="#cb13-358" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-361"><a href="#cb13-361" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
-<span id="cb13-362"><a href="#cb13-362" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: efecto-confianza</span></span>
-<span id="cb13-363"><a href="#cb13-363" aria-hidden="true" tabindex="-1"></a>factores <span class="op">=</span> np.logspace(<span class="op">-</span><span class="fl">1.5</span>, <span class="fl">1.5</span>, <span class="dv">40</span>)   <span class="co"># de mucha a poca confianza</span></span>
-<span id="cb13-364"><a href="#cb13-364" aria-hidden="true" tabindex="-1"></a>trayectorias <span class="op">=</span> []</span>
+<span id="cb13-357"><a href="#cb13-357" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-358"><a href="#cb13-358" aria-hidden="true" tabindex="-1"></a>::: {.callout-warning title="Detalle práctico"}</span>
+<span id="cb13-359"><a href="#cb13-359" aria-hidden="true" tabindex="-1"></a>Los pesos de arriba no suman 1 (acá, casi 2) y pueden incluir cortos. En la práctica se re-normalizan y se agregan restricciones (no negatividad, límites por activo) resolviendo la optimización con <span class="in">`scipy.optimize.minimize`</span>, como en el Capítulo 8, pero usando $\boldsymbol{\mu}_{BL}$ como retornos esperados.</span>
+<span id="cb13-360"><a href="#cb13-360" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb13-361"><a href="#cb13-361" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-362"><a href="#cb13-362" aria-hidden="true" tabindex="-1"></a>---</span>
+<span id="cb13-363"><a href="#cb13-363" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-364"><a href="#cb13-364" aria-hidden="true" tabindex="-1"></a><span class="fu">## Visualizando el efecto de la confianza</span></span>
 <span id="cb13-365"><a href="#cb13-365" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-366"><a href="#cb13-366" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> f <span class="kw">in</span> factores:</span>
-<span id="cb13-367"><a href="#cb13-367" aria-hidden="true" tabindex="-1"></a>    Omega_f <span class="op">=</span> Omega <span class="op">*</span> f</span>
-<span id="cb13-368"><a href="#cb13-368" aria-hidden="true" tabindex="-1"></a>    A_f <span class="op">=</span> inv_tau_Sigma <span class="op">+</span> P.T <span class="op">@</span> np.linalg.inv(Omega_f) <span class="op">@</span> P</span>
-<span id="cb13-369"><a href="#cb13-369" aria-hidden="true" tabindex="-1"></a>    b_f <span class="op">=</span> inv_tau_Sigma <span class="op">@</span> Pi <span class="op">+</span> P.T <span class="op">@</span> np.linalg.inv(Omega_f) <span class="op">@</span> Q</span>
-<span id="cb13-370"><a href="#cb13-370" aria-hidden="true" tabindex="-1"></a>    trayectorias.append(np.linalg.solve(A_f, b_f))</span>
-<span id="cb13-371"><a href="#cb13-371" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-372"><a href="#cb13-372" aria-hidden="true" tabindex="-1"></a>trayectorias <span class="op">=</span> np.array(trayectorias)</span>
-<span id="cb13-373"><a href="#cb13-373" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-374"><a href="#cb13-374" aria-hidden="true" tabindex="-1"></a>fig, ax <span class="op">=</span> plt.subplots(figsize<span class="op">=</span>(<span class="dv">9</span>, <span class="dv">5</span>))</span>
-<span id="cb13-375"><a href="#cb13-375" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i, a <span class="kw">in</span> <span class="bu">enumerate</span>(activos):</span>
-<span id="cb13-376"><a href="#cb13-376" aria-hidden="true" tabindex="-1"></a>    ax.plot(factores, trayectorias[:, i] <span class="op">*</span> <span class="dv">100</span>, linewidth<span class="op">=</span><span class="dv">2</span>, label<span class="op">=</span>a)</span>
-<span id="cb13-377"><a href="#cb13-377" aria-hidden="true" tabindex="-1"></a>    ax.axhline(Pi[i] <span class="op">*</span> <span class="dv">100</span>, linestyle<span class="op">=</span><span class="st">":"</span>, alpha<span class="op">=</span><span class="fl">0.4</span>)</span>
-<span id="cb13-378"><a href="#cb13-378" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-379"><a href="#cb13-379" aria-hidden="true" tabindex="-1"></a>ax.set_xscale(<span class="st">"log"</span>)</span>
-<span id="cb13-380"><a href="#cb13-380" aria-hidden="true" tabindex="-1"></a>ax.set_xlabel(<span class="st">"Factor de escala de Ω  (← más confianza en las views | menos confianza →)"</span>)</span>
-<span id="cb13-381"><a href="#cb13-381" aria-hidden="true" tabindex="-1"></a>ax.set_ylabel(<span class="st">"Retorno esperado μ_BL (%)"</span>)</span>
-<span id="cb13-382"><a href="#cb13-382" aria-hidden="true" tabindex="-1"></a>ax.set_title(<span class="st">"Los retornos BL viajan entre las views y el equilibrio según la confianza"</span>)</span>
-<span id="cb13-383"><a href="#cb13-383" aria-hidden="true" tabindex="-1"></a>ax.legend()</span>
-<span id="cb13-384"><a href="#cb13-384" aria-hidden="true" tabindex="-1"></a>ax.grid(<span class="va">True</span>, alpha<span class="op">=</span><span class="fl">0.3</span>)</span>
-<span id="cb13-385"><a href="#cb13-385" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
-<span id="cb13-386"><a href="#cb13-386" aria-hidden="true" tabindex="-1"></a>plt.show()</span>
-<span id="cb13-387"><a href="#cb13-387" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb13-366"><a href="#cb13-366" aria-hidden="true" tabindex="-1"></a>Para cerrar la intuición, veamos cómo la confianza en las views gobierna el resultado. Escalamos $\Omega$ con un factor: valores chicos = mucha confianza, grandes = poca.</span>
+<span id="cb13-367"><a href="#cb13-367" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-370"><a href="#cb13-370" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb13-371"><a href="#cb13-371" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: fig-efecto-confianza</span></span>
+<span id="cb13-372"><a href="#cb13-372" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-cap: "Retornos esperados de Black-Litterman de cada activo según la confianza en las views (factor de escala de Ω, en escala log). Cada línea punteada es el retorno de equilibrio Π del activo del mismo color."</span></span>
+<span id="cb13-373"><a href="#cb13-373" aria-hidden="true" tabindex="-1"></a>factores <span class="op">=</span> np.logspace(<span class="op">-</span><span class="fl">1.5</span>, <span class="fl">1.5</span>, <span class="dv">40</span>)   <span class="co"># de mucha a poca confianza</span></span>
+<span id="cb13-374"><a href="#cb13-374" aria-hidden="true" tabindex="-1"></a>trayectorias <span class="op">=</span> []</span>
+<span id="cb13-375"><a href="#cb13-375" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-376"><a href="#cb13-376" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> f <span class="kw">in</span> factores:</span>
+<span id="cb13-377"><a href="#cb13-377" aria-hidden="true" tabindex="-1"></a>    Omega_f <span class="op">=</span> Omega <span class="op">*</span> f</span>
+<span id="cb13-378"><a href="#cb13-378" aria-hidden="true" tabindex="-1"></a>    A_f <span class="op">=</span> inv_tau_Sigma <span class="op">+</span> P.T <span class="op">@</span> np.linalg.inv(Omega_f) <span class="op">@</span> P</span>
+<span id="cb13-379"><a href="#cb13-379" aria-hidden="true" tabindex="-1"></a>    b_f <span class="op">=</span> inv_tau_Sigma <span class="op">@</span> Pi <span class="op">+</span> P.T <span class="op">@</span> np.linalg.inv(Omega_f) <span class="op">@</span> Q</span>
+<span id="cb13-380"><a href="#cb13-380" aria-hidden="true" tabindex="-1"></a>    trayectorias.append(np.linalg.solve(A_f, b_f))</span>
+<span id="cb13-381"><a href="#cb13-381" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-382"><a href="#cb13-382" aria-hidden="true" tabindex="-1"></a>trayectorias <span class="op">=</span> np.array(trayectorias)</span>
+<span id="cb13-383"><a href="#cb13-383" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-384"><a href="#cb13-384" aria-hidden="true" tabindex="-1"></a>fig, ax <span class="op">=</span> plt.subplots(figsize<span class="op">=</span>(<span class="dv">9</span>, <span class="dv">5</span>))</span>
+<span id="cb13-385"><a href="#cb13-385" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i, a <span class="kw">in</span> <span class="bu">enumerate</span>(activos):</span>
+<span id="cb13-386"><a href="#cb13-386" aria-hidden="true" tabindex="-1"></a>    linea, <span class="op">=</span> ax.plot(factores, trayectorias[:, i] <span class="op">*</span> <span class="dv">100</span>, linewidth<span class="op">=</span><span class="dv">2</span>, label<span class="op">=</span>a)</span>
+<span id="cb13-387"><a href="#cb13-387" aria-hidden="true" tabindex="-1"></a>    ax.axhline(Pi[i] <span class="op">*</span> <span class="dv">100</span>, linestyle<span class="op">=</span><span class="st">":"</span>, alpha<span class="op">=</span><span class="fl">0.6</span>, color<span class="op">=</span>linea.get_color())  <span class="co"># su equilibrio</span></span>
 <span id="cb13-388"><a href="#cb13-388" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-389"><a href="#cb13-389" aria-hidden="true" tabindex="-1"></a>A la izquierda (mucha confianza) los retornos se acercan a lo que afirman las views; a la derecha (poca confianza) vuelven a las líneas punteadas del equilibrio. **El modelo nunca te deja "irte" más allá de tus propias views ni ignorar del todo al mercado**: interpola entre ambos de manera controlada.</span>
-<span id="cb13-390"><a href="#cb13-390" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-391"><a href="#cb13-391" aria-hidden="true" tabindex="-1"></a>---</span>
-<span id="cb13-392"><a href="#cb13-392" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-393"><a href="#cb13-393" aria-hidden="true" tabindex="-1"></a><span class="fu">## Recapitulando el flujo</span></span>
-<span id="cb13-394"><a href="#cb13-394" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-395"><a href="#cb13-395" aria-hidden="true" tabindex="-1"></a>El modelo completo es una tubería de cuatro pasos:</span>
-<span id="cb13-396"><a href="#cb13-396" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-397"><a href="#cb13-397" aria-hidden="true" tabindex="-1"></a><span class="ss">1. </span>**Equilibrio** → $\boldsymbol{\Pi} = \delta \Sigma \mathbf{w}_{mkt}$ (la creencia de partida, gratis, desde el mercado).</span>
-<span id="cb13-398"><a href="#cb13-398" aria-hidden="true" tabindex="-1"></a><span class="ss">2. </span>**Views** → armar $P$, $Q$, $\Omega$ (nuestras opiniones y su confianza).</span>
-<span id="cb13-399"><a href="#cb13-399" aria-hidden="true" tabindex="-1"></a><span class="ss">3. </span>**Fórmula maestra** → $\boldsymbol{\mu}_{BL}$ (la mezcla ponderada por precisión).</span>
-<span id="cb13-400"><a href="#cb13-400" aria-hidden="true" tabindex="-1"></a><span class="ss">4. </span>**Optimización** → $\mathbf{w}_{BL}$ (la cartera final).</span>
-<span id="cb13-401"><a href="#cb13-401" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-389"><a href="#cb13-389" aria-hidden="true" tabindex="-1"></a>ax.set_xscale(<span class="st">"log"</span>)</span>
+<span id="cb13-390"><a href="#cb13-390" aria-hidden="true" tabindex="-1"></a>ax.set_xlabel(<span class="st">"Factor de escala de Ω  (← más confianza en las views | menos confianza →)"</span>)</span>
+<span id="cb13-391"><a href="#cb13-391" aria-hidden="true" tabindex="-1"></a>ax.set_ylabel(<span class="st">"Retorno esperado μ_BL (%)"</span>)</span>
+<span id="cb13-392"><a href="#cb13-392" aria-hidden="true" tabindex="-1"></a>ax.set_title(<span class="st">"Los retornos BL viajan entre las views y el equilibrio según la confianza"</span>)</span>
+<span id="cb13-393"><a href="#cb13-393" aria-hidden="true" tabindex="-1"></a>ax.legend()</span>
+<span id="cb13-394"><a href="#cb13-394" aria-hidden="true" tabindex="-1"></a>ax.grid(<span class="va">True</span>, alpha<span class="op">=</span><span class="fl">0.3</span>)</span>
+<span id="cb13-395"><a href="#cb13-395" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
+<span id="cb13-396"><a href="#cb13-396" aria-hidden="true" tabindex="-1"></a>plt.show()</span>
+<span id="cb13-397"><a href="#cb13-397" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb13-398"><a href="#cb13-398" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-399"><a href="#cb13-399" aria-hidden="true" tabindex="-1"></a>En la @fig-efecto-confianza, a la izquierda (mucha confianza) los retornos se acercan a lo que afirman las views; a la derecha (poca confianza) vuelven a las líneas punteadas del equilibrio. **El modelo nunca te deja "irte" más allá de tus propias views ni ignorar del todo al mercado**: interpola entre ambos de manera controlada.</span>
+<span id="cb13-400"><a href="#cb13-400" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-401"><a href="#cb13-401" aria-hidden="true" tabindex="-1"></a>---</span>
 <span id="cb13-402"><a href="#cb13-402" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-405"><a href="#cb13-405" aria-hidden="true" tabindex="-1"></a><span class="in">```{mermaid}</span></span>
-<span id="cb13-406"><a href="#cb13-406" aria-hidden="true" tabindex="-1"></a>%%| label: fig-pipeline-bl</span>
-<span id="cb13-407"><a href="#cb13-407" aria-hidden="true" tabindex="-1"></a>%%| fig-cap: <span class="ot">"</span><span class="st">La tubería de Black-Litterman. El equilibrio sale del mercado sin estimar retornos a mano; las views entran con su incertidumbre; la fórmula maestra las mezcla y el resultado alimenta la optimización.</span><span class="ot">"</span></span>
-<span id="cb13-408"><a href="#cb13-408" aria-hidden="true" tabindex="-1"></a>flowchart LR</span>
-<span id="cb13-409"><a href="#cb13-409" aria-hidden="true" tabindex="-1"></a>    WM[<span class="ot">"</span><span class="st">w_mkt&lt;br/&gt;&lt;i&gt;pesos de mercado&lt;/i&gt;</span><span class="ot">"</span>] --&gt; PI</span>
-<span id="cb13-410"><a href="#cb13-410" aria-hidden="true" tabindex="-1"></a>    S[<span class="ot">"</span><span class="st">Σ&lt;br/&gt;&lt;i&gt;covarianzas&lt;/i&gt;</span><span class="ot">"</span>] --&gt; PI</span>
-<span id="cb13-411"><a href="#cb13-411" aria-hidden="true" tabindex="-1"></a>    D[<span class="ot">"</span><span class="st">δ&lt;br/&gt;&lt;i&gt;aversión al riesgo&lt;/i&gt;</span><span class="ot">"</span>] --&gt; PI</span>
-<span id="cb13-412"><a href="#cb13-412" aria-hidden="true" tabindex="-1"></a>    PI[<span class="ot">"</span><span class="st">&lt;b&gt;1 · Equilibrio&lt;/b&gt;&lt;br/&gt;Π = δ Σ w_mkt</span><span class="ot">"</span>] --&gt; FM</span>
-<span id="cb13-413"><a href="#cb13-413" aria-hidden="true" tabindex="-1"></a>    V[<span class="ot">"</span><span class="st">&lt;b&gt;2 · Views&lt;/b&gt;&lt;br/&gt;P, Q, Ω</span><span class="ot">"</span>] --&gt; FM</span>
-<span id="cb13-414"><a href="#cb13-414" aria-hidden="true" tabindex="-1"></a>    T[<span class="ot">"</span><span class="st">τ&lt;br/&gt;&lt;i&gt;confianza en el&lt;br/&gt;equilibrio&lt;/i&gt;</span><span class="ot">"</span>] --&gt; FM</span>
-<span id="cb13-415"><a href="#cb13-415" aria-hidden="true" tabindex="-1"></a>    FM[[<span class="ot">"</span><span class="st">&lt;b&gt;3 · Fórmula maestra&lt;/b&gt;</span><span class="ot">"</span>]] --&gt; MU[<span class="ot">"</span><span class="st">μ_BL</span><span class="ot">"</span>]</span>
-<span id="cb13-416"><a href="#cb13-416" aria-hidden="true" tabindex="-1"></a>    MU --&gt; OPT[[<span class="ot">"</span><span class="st">&lt;b&gt;4 · Optimización&lt;/b&gt;&lt;br/&gt;w = Σ⁻¹ μ_BL / δ&lt;br/&gt;o minimize()</span><span class="ot">"</span>]]</span>
-<span id="cb13-417"><a href="#cb13-417" aria-hidden="true" tabindex="-1"></a>    OPT --&gt; W([<span class="ot">"</span><span class="st">w_BL</span><span class="ot">"</span>])</span>
-<span id="cb13-418"><a href="#cb13-418" aria-hidden="true" tabindex="-1"></a>    classDef dato fill:<span class="co">#e0e9f4,stroke:#1e3a5f</span></span>
-<span id="cb13-419"><a href="#cb13-419" aria-hidden="true" tabindex="-1"></a>    classDef view fill:<span class="co">#fde8dc,stroke:#c2410c</span></span>
-<span id="cb13-420"><a href="#cb13-420" aria-hidden="true" tabindex="-1"></a>    classDef fin fill:<span class="co">#eef2e3,stroke:#637238</span></span>
-<span id="cb13-421"><a href="#cb13-421" aria-hidden="true" tabindex="-1"></a>    class WM,S,D,T,PI dato</span>
-<span id="cb13-422"><a href="#cb13-422" aria-hidden="true" tabindex="-1"></a>    class V view</span>
-<span id="cb13-423"><a href="#cb13-423" aria-hidden="true" tabindex="-1"></a>    class MU,W fin</span>
-<span id="cb13-424"><a href="#cb13-424" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb13-425"><a href="#cb13-425" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-426"><a href="#cb13-426" aria-hidden="true" tabindex="-1"></a>La gran ventaja: cada paso tiene una interpretación económica clara, y en ningún momento tuvimos que inventar retornos esperados de la nada. Por eso Black-Litterman es, todavía hoy, uno de los modelos de asignación de activos más usados en la industria.</span>
-<span id="cb13-427"><a href="#cb13-427" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-428"><a href="#cb13-428" aria-hidden="true" tabindex="-1"></a>---</span>
-<span id="cb13-429"><a href="#cb13-429" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-430"><a href="#cb13-430" aria-hidden="true" tabindex="-1"></a><span class="fu">## Errores comunes</span></span>
-<span id="cb13-431"><a href="#cb13-431" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-432"><a href="#cb13-432" aria-hidden="true" tabindex="-1"></a>::: {.callout-warning title="Trampas frecuentes"}</span>
-<span id="cb13-433"><a href="#cb13-433" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Confundir $\tau$ con $\Omega$**: $\tau$ escala la incertidumbre *global* del equilibrio; $\Omega$ es la incertidumbre *de cada view*. Son perillas distintas.</span>
-<span id="cb13-434"><a href="#cb13-434" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Views inconsistentes con $\Sigma$**: si afirmás que dos activos altamente correlacionados se moverán en direcciones opuestas, el modelo hará contorsiones raras. Las views deberían ser coherentes con la estructura de covarianzas.</span>
-<span id="cb13-435"><a href="#cb13-435" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Olvidar re-normalizar los pesos** o permitir cortos sin querer: siempre revisá que $\mathbf{w}_{BL}$ sume 1 y respete tus restricciones.</span>
-<span id="cb13-436"><a href="#cb13-436" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Invertir matrices con `inv` para resolver sistemas**: usá <span class="in">`np.linalg.solve`</span>, que es más estable numéricamente que calcular la inversa y multiplicar.</span>
-<span id="cb13-437"><a href="#cb13-437" aria-hidden="true" tabindex="-1"></a>:::</span>
-<span id="cb13-438"><a href="#cb13-438" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-439"><a href="#cb13-439" aria-hidden="true" tabindex="-1"></a>---</span>
-<span id="cb13-440"><a href="#cb13-440" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-441"><a href="#cb13-441" aria-hidden="true" tabindex="-1"></a><span class="fu">## Ejercicios Propuestos</span></span>
-<span id="cb13-442"><a href="#cb13-442" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-443"><a href="#cb13-443" aria-hidden="true" tabindex="-1"></a>::: {.callout-important title="Ejercicios"}</span>
-<span id="cb13-444"><a href="#cb13-444" aria-hidden="true" tabindex="-1"></a><span class="ss">1. </span>**Sin views**: corré el modelo sin ninguna view (saltando la fórmula maestra, $\boldsymbol{\mu}_{BL} = \boldsymbol{\Pi}$) y verificá que $\mathbf{w}_{BL}$ reproduce la cartera de mercado $\mathbf{w}_{mkt}$.</span>
-<span id="cb13-445"><a href="#cb13-445" aria-hidden="true" tabindex="-1"></a><span class="ss">2. </span>**Subiendo la confianza**: reducí a la mitad los valores de $\Omega$ y observá cómo $\boldsymbol{\mu}_{BL}$ se acerca a $Q$.</span>
-<span id="cb13-446"><a href="#cb13-446" aria-hidden="true" tabindex="-1"></a><span class="ss">3. </span>**View relativa pura**: eliminá la view absoluta y dejá solo "USA supera a Bonos por 4%". ¿Cómo cambian los pesos frente al mercado? ¿Qué pasa con EU, sobre el que ya no opinás?</span>
-<span id="cb13-447"><a href="#cb13-447" aria-hidden="true" tabindex="-1"></a><span class="ss">4. </span>**Con restricciones**: usando <span class="in">`scipy.optimize.minimize`</span>, resolvé la cartera óptima con $\boldsymbol{\mu}_{BL}$ imponiendo pesos no negativos que sumen 1, y compará con la solución cerrada.</span>
-<span id="cb13-448"><a href="#cb13-448" aria-hidden="true" tabindex="-1"></a><span class="ss">5. </span>**Cuarto activo**: extendé el universo a cuatro activos, definí una view sobre el nuevo y recalculá todo el pipeline.</span>
-<span id="cb13-449"><a href="#cb13-449" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb13-403"><a href="#cb13-403" aria-hidden="true" tabindex="-1"></a><span class="fu">## Recapitulando el flujo</span></span>
+<span id="cb13-404"><a href="#cb13-404" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-405"><a href="#cb13-405" aria-hidden="true" tabindex="-1"></a>El modelo completo es una tubería de cuatro pasos:</span>
+<span id="cb13-406"><a href="#cb13-406" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-407"><a href="#cb13-407" aria-hidden="true" tabindex="-1"></a><span class="ss">1. </span>**Equilibrio** → $\boldsymbol{\Pi} = \delta \Sigma \mathbf{w}_{mkt}$ (la creencia de partida, gratis, desde el mercado).</span>
+<span id="cb13-408"><a href="#cb13-408" aria-hidden="true" tabindex="-1"></a><span class="ss">2. </span>**Views** → armar $P$, $Q$, $\Omega$ (nuestras opiniones y su confianza).</span>
+<span id="cb13-409"><a href="#cb13-409" aria-hidden="true" tabindex="-1"></a><span class="ss">3. </span>**Fórmula maestra** → $\boldsymbol{\mu}_{BL}$ (la mezcla ponderada por precisión).</span>
+<span id="cb13-410"><a href="#cb13-410" aria-hidden="true" tabindex="-1"></a><span class="ss">4. </span>**Optimización** → $\mathbf{w}_{BL}$ (la cartera final).</span>
+<span id="cb13-411"><a href="#cb13-411" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-412"><a href="#cb13-412" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-415"><a href="#cb13-415" aria-hidden="true" tabindex="-1"></a><span class="in">```{mermaid}</span></span>
+<span id="cb13-416"><a href="#cb13-416" aria-hidden="true" tabindex="-1"></a>%%| label: fig-pipeline-bl</span>
+<span id="cb13-417"><a href="#cb13-417" aria-hidden="true" tabindex="-1"></a>%%| fig-cap: <span class="ot">"</span><span class="st">La tubería de Black-Litterman. El equilibrio sale del mercado sin estimar retornos a mano; las views entran con su incertidumbre; la fórmula maestra las mezcla y el resultado alimenta la optimización.</span><span class="ot">"</span></span>
+<span id="cb13-418"><a href="#cb13-418" aria-hidden="true" tabindex="-1"></a>flowchart LR</span>
+<span id="cb13-419"><a href="#cb13-419" aria-hidden="true" tabindex="-1"></a>    WM[<span class="ot">"</span><span class="st">w_mkt&lt;br/&gt;&lt;i&gt;pesos de mercado&lt;/i&gt;</span><span class="ot">"</span>] --&gt; PI</span>
+<span id="cb13-420"><a href="#cb13-420" aria-hidden="true" tabindex="-1"></a>    S[<span class="ot">"</span><span class="st">Σ&lt;br/&gt;&lt;i&gt;covarianzas&lt;/i&gt;</span><span class="ot">"</span>] --&gt; PI</span>
+<span id="cb13-421"><a href="#cb13-421" aria-hidden="true" tabindex="-1"></a>    D[<span class="ot">"</span><span class="st">δ&lt;br/&gt;&lt;i&gt;aversión al riesgo&lt;/i&gt;</span><span class="ot">"</span>] --&gt; PI</span>
+<span id="cb13-422"><a href="#cb13-422" aria-hidden="true" tabindex="-1"></a>    PI[<span class="ot">"</span><span class="st">&lt;b&gt;1 · Equilibrio&lt;/b&gt;&lt;br/&gt;Π = δ Σ w_mkt</span><span class="ot">"</span>] --&gt; FM</span>
+<span id="cb13-423"><a href="#cb13-423" aria-hidden="true" tabindex="-1"></a>    V[<span class="ot">"</span><span class="st">&lt;b&gt;2 · Views&lt;/b&gt;&lt;br/&gt;P, Q, Ω</span><span class="ot">"</span>] --&gt; FM</span>
+<span id="cb13-424"><a href="#cb13-424" aria-hidden="true" tabindex="-1"></a>    T[<span class="ot">"</span><span class="st">τ&lt;br/&gt;&lt;i&gt;confianza en el&lt;br/&gt;equilibrio&lt;/i&gt;</span><span class="ot">"</span>] --&gt; FM</span>
+<span id="cb13-425"><a href="#cb13-425" aria-hidden="true" tabindex="-1"></a>    FM[[<span class="ot">"</span><span class="st">&lt;b&gt;3 · Fórmula maestra&lt;/b&gt;</span><span class="ot">"</span>]] --&gt; MU[<span class="ot">"</span><span class="st">μ_BL</span><span class="ot">"</span>]</span>
+<span id="cb13-426"><a href="#cb13-426" aria-hidden="true" tabindex="-1"></a>    MU --&gt; OPT[[<span class="ot">"</span><span class="st">&lt;b&gt;4 · Optimización&lt;/b&gt;&lt;br/&gt;w = Σ⁻¹ μ_BL / δ&lt;br/&gt;o minimize()</span><span class="ot">"</span>]]</span>
+<span id="cb13-427"><a href="#cb13-427" aria-hidden="true" tabindex="-1"></a>    OPT --&gt; W([<span class="ot">"</span><span class="st">w_BL</span><span class="ot">"</span>])</span>
+<span id="cb13-428"><a href="#cb13-428" aria-hidden="true" tabindex="-1"></a>    classDef dato fill:<span class="co">#e0e9f4,stroke:#1e3a5f</span></span>
+<span id="cb13-429"><a href="#cb13-429" aria-hidden="true" tabindex="-1"></a>    classDef view fill:<span class="co">#fde8dc,stroke:#c2410c</span></span>
+<span id="cb13-430"><a href="#cb13-430" aria-hidden="true" tabindex="-1"></a>    classDef fin fill:<span class="co">#eef2e3,stroke:#637238</span></span>
+<span id="cb13-431"><a href="#cb13-431" aria-hidden="true" tabindex="-1"></a>    class WM,S,D,T,PI dato</span>
+<span id="cb13-432"><a href="#cb13-432" aria-hidden="true" tabindex="-1"></a>    class V view</span>
+<span id="cb13-433"><a href="#cb13-433" aria-hidden="true" tabindex="-1"></a>    class MU,W fin</span>
+<span id="cb13-434"><a href="#cb13-434" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb13-435"><a href="#cb13-435" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-436"><a href="#cb13-436" aria-hidden="true" tabindex="-1"></a>La gran ventaja: cada paso tiene una interpretación económica clara, y en ningún momento tuvimos que inventar retornos esperados de la nada. Por eso Black-Litterman es, todavía hoy, uno de los modelos de asignación de activos más usados en la industria.</span>
+<span id="cb13-437"><a href="#cb13-437" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-438"><a href="#cb13-438" aria-hidden="true" tabindex="-1"></a>---</span>
+<span id="cb13-439"><a href="#cb13-439" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-440"><a href="#cb13-440" aria-hidden="true" tabindex="-1"></a><span class="fu">## Errores comunes</span></span>
+<span id="cb13-441"><a href="#cb13-441" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-442"><a href="#cb13-442" aria-hidden="true" tabindex="-1"></a>::: {.callout-warning title="Trampas frecuentes"}</span>
+<span id="cb13-443"><a href="#cb13-443" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Confundir $\tau$ con $\Omega$**: $\tau$ escala la incertidumbre *global* del equilibrio; $\Omega$ es la incertidumbre *de cada view*. Son perillas distintas.</span>
+<span id="cb13-444"><a href="#cb13-444" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Views inconsistentes con $\Sigma$**: si afirmás que dos activos altamente correlacionados se moverán en direcciones opuestas, el modelo hará contorsiones raras. Las views deberían ser coherentes con la estructura de covarianzas.</span>
+<span id="cb13-445"><a href="#cb13-445" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Olvidar re-normalizar los pesos** o permitir cortos sin querer: siempre revisá que $\mathbf{w}_{BL}$ sume 1 y respete tus restricciones.</span>
+<span id="cb13-446"><a href="#cb13-446" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Invertir matrices con `inv` para resolver sistemas**: usá <span class="in">`np.linalg.solve`</span>, que es más estable numéricamente que calcular la inversa y multiplicar.</span>
+<span id="cb13-447"><a href="#cb13-447" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb13-448"><a href="#cb13-448" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-449"><a href="#cb13-449" aria-hidden="true" tabindex="-1"></a>---</span>
 <span id="cb13-450"><a href="#cb13-450" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-451"><a href="#cb13-451" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-452"><a href="#cb13-452" aria-hidden="true" tabindex="-1"></a>Podés resolver estos ejercicios acá mismo: la celda ejecuta Python **en tu navegador**, sin instalar nada (la primera ejecución tarda unos segundos mientras carga el entorno; los paquetes que importes se instalan solos).</span>
-<span id="cb13-453"><a href="#cb13-453" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-454"><a href="#cb13-454" aria-hidden="true" tabindex="-1"></a><span class="in">```{pyodide-python}</span></span>
-<span id="cb13-455"><a href="#cb13-455" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: practica-navegador</span></span>
-<span id="cb13-456"><a href="#cb13-456" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
-<span id="cb13-457"><a href="#cb13-457" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-458"><a href="#cb13-458" aria-hidden="true" tabindex="-1"></a><span class="co"># Tu solución acá...</span></span>
-<span id="cb13-459"><a href="#cb13-459" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb13-451"><a href="#cb13-451" aria-hidden="true" tabindex="-1"></a><span class="fu">## Ejercicios Propuestos</span></span>
+<span id="cb13-452"><a href="#cb13-452" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-453"><a href="#cb13-453" aria-hidden="true" tabindex="-1"></a>::: {.callout-important title="Ejercicios"}</span>
+<span id="cb13-454"><a href="#cb13-454" aria-hidden="true" tabindex="-1"></a><span class="ss">1. </span>**Sin views**: corré el modelo sin ninguna view (saltando la fórmula maestra, $\boldsymbol{\mu}_{BL} = \boldsymbol{\Pi}$) y verificá que $\mathbf{w}_{BL}$ reproduce la cartera de mercado $\mathbf{w}_{mkt}$.</span>
+<span id="cb13-455"><a href="#cb13-455" aria-hidden="true" tabindex="-1"></a><span class="ss">2. </span>**Subiendo la confianza**: reducí a la mitad los valores de $\Omega$ y observá cómo $\boldsymbol{\mu}_{BL}$ se acerca a $Q$.</span>
+<span id="cb13-456"><a href="#cb13-456" aria-hidden="true" tabindex="-1"></a><span class="ss">3. </span>**View relativa pura**: eliminá la view absoluta y dejá solo "USA supera a Bonos por 4%". ¿Cómo cambian los pesos frente al mercado? ¿Qué pasa con EU, sobre el que ya no opinás?</span>
+<span id="cb13-457"><a href="#cb13-457" aria-hidden="true" tabindex="-1"></a><span class="ss">4. </span>**Con restricciones**: usando <span class="in">`scipy.optimize.minimize`</span>, resolvé la cartera óptima con $\boldsymbol{\mu}_{BL}$ imponiendo pesos no negativos que sumen 1, y compará con la solución cerrada.</span>
+<span id="cb13-458"><a href="#cb13-458" aria-hidden="true" tabindex="-1"></a><span class="ss">5. </span>**Cuarto activo**: extendé el universo a cuatro activos, definí una view sobre el nuevo y recalculá todo el pipeline.</span>
+<span id="cb13-459"><a href="#cb13-459" aria-hidden="true" tabindex="-1"></a>:::</span>
 <span id="cb13-460"><a href="#cb13-460" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-461"><a href="#cb13-461" aria-hidden="true" tabindex="-1"></a>---</span>
-<span id="cb13-462"><a href="#cb13-462" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-463"><a href="#cb13-463" aria-hidden="true" tabindex="-1"></a><span class="fu">## Referencias</span></span>
-<span id="cb13-464"><a href="#cb13-464" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-465"><a href="#cb13-465" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-466"><a href="#cb13-466" aria-hidden="true" tabindex="-1"></a>::: {#refs}</span>
-<span id="cb13-467"><a href="#cb13-467" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb13-461"><a href="#cb13-461" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-462"><a href="#cb13-462" aria-hidden="true" tabindex="-1"></a>Podés resolver estos ejercicios acá mismo: la celda ejecuta Python **en tu navegador**, sin instalar nada (la primera ejecución tarda unos segundos mientras carga el entorno; los paquetes que importes se instalan solos).</span>
+<span id="cb13-463"><a href="#cb13-463" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-464"><a href="#cb13-464" aria-hidden="true" tabindex="-1"></a><span class="in">```{pyodide-python}</span></span>
+<span id="cb13-465"><a href="#cb13-465" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: practica-navegador</span></span>
+<span id="cb13-466"><a href="#cb13-466" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb13-467"><a href="#cb13-467" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-468"><a href="#cb13-468" aria-hidden="true" tabindex="-1"></a><span class="co"># Tu solución acá...</span></span>
+<span id="cb13-469"><a href="#cb13-469" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb13-470"><a href="#cb13-470" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-471"><a href="#cb13-471" aria-hidden="true" tabindex="-1"></a>---</span>
+<span id="cb13-472"><a href="#cb13-472" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-473"><a href="#cb13-473" aria-hidden="true" tabindex="-1"></a><span class="fu">## Referencias</span></span>
+<span id="cb13-474"><a href="#cb13-474" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-475"><a href="#cb13-475" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-476"><a href="#cb13-476" aria-hidden="true" tabindex="-1"></a>::: {#refs}</span>
+<span id="cb13-477"><a href="#cb13-477" aria-hidden="true" tabindex="-1"></a>:::</span>
 </code></pre></div><button title="Copiar al portapapeles" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></div>
 </div></div></div></div></div>
 </div> <!-- /content -->

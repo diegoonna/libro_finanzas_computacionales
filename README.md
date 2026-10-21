@@ -19,6 +19,10 @@ La configuración principal vive en [`_quarto.yml`](./_quarto.yml) y el sitio re
 
   El núcleo es `numpy`, `pandas`, `scipy`, `matplotlib` y `statsmodels`, más el kernel de Jupyter. Los opcionales de datos (`yfinance`, `pandas-datareader`, `fredapi`) solo hacen falta para reproducir el apéndice de obtención de datos.
 
+  Las versiones están **fijadas** a propósito (Python 3.13): los números que cita el texto salen de ejecutar el código, y una versión nueva de una librería puede cambiarlos. Subir una versión es una decisión editorial: re-renderizá y revisá las cifras.
+
+- Para el PDF, TinyTeX necesita el soporte de español (`lang: es`): `tlmgr install babel-spanish hyphen-spanish`. Si tu TinyTeX es de un año anterior al del repositorio de TeX Live, `tlmgr` se niega a instalar; usá el repositorio archivado de tu versión, por ejemplo `tlmgr --repository https://ftp.tu-chemnitz.de/pub/tug/historic/systems/texlive/2025/tlnet-final install babel-spanish hyphen-spanish`.
+
 > **Render incremental:** el proyecto usa `freeze: auto`, así que Quarto cachea los resultados de ejecución en `_freeze/` y solo re-ejecuta los capítulos cuyo código cambió. El primer render construye la cache (tarda unos minutos); los siguientes son casi instantáneos.
 
 ## Renderizar el libro
@@ -36,7 +40,7 @@ El sitio queda en `docs/` (ver `output-dir: docs` en [`_quarto.yml`](./_quarto.y
 quarto preview
 ```
 
-> **Red de seguridad (CI):** el workflow [`.github/workflows/render.yml`](./.github/workflows/render.yml) re-renderiza el libro en cada push a `main`. Si pusheaste un capítulo editado sin correr `quarto render`, el CI detecta que `docs/` quedó desactualizado y commitea la diferencia automáticamente (commit `chore: re-render automático de docs/ [CI]`). Si renderizaste localmente, el CI no agrega nada. Acordate de hacer `git pull` después de un push en el que te hayas olvidado de renderizar, para traerte el commit del bot. El mismo workflow corre un job `links` con [lychee](https://github.com/lycheeverse/lychee) que chequea los links externos de los `.qmd`; si alguno murió, el job queda en rojo pero no bloquea la publicación.
+> **Red de seguridad (CI):** el workflow [`.github/workflows/render.yml`](./.github/workflows/render.yml) re-renderiza el libro en cada push a `main`. Si pusheaste un capítulo editado sin correr `quarto render`, el CI detecta que `docs/` quedó desactualizado y commitea la diferencia automáticamente (commit `chore: re-render automático de docs/ [CI]`). Si renderizaste localmente, el CI no agrega nada. Acordate de hacer `git pull` después de un push en el que te hayas olvidado de renderizar, para traerte el commit del bot. El render tiene un tope de 45 minutos (un render colgado ya no puede bloquear todo durante horas), y si el render completo falla —casi siempre por el PDF—, el workflow publica igual la web con `quarto render --to html` y deja un aviso en la corrida. El mismo workflow corre un job `links` con [lychee](https://github.com/lycheeverse/lychee) que chequea los links externos de los `.qmd`; si alguno murió, el job queda en rojo pero no bloquea la publicación.
 
 > **Nota (Windows):** si Quarto no encuentra el intérprete correcto, apuntá `QUARTO_PYTHON` al Python del entorno virtual antes de renderizar:
 >
@@ -56,7 +60,7 @@ El libro mezcla dos tipos de bloques ejecutables, y conviene respetar la diferen
 
 ## Dataset del libro
 
-`datos/precios.csv` contiene cinco años de precios diarios ajustados (jul-2021 a jun-2026) de 10 tickers: 9 acciones de sectores distintos + SPY. Lo usan las secciones **"Con datos reales"** de los capítulos 8 (Markowitz), 9 (HRP), 11 (VaR/ES) y 17 (backtesting), y está documentado en el apéndice de obtención de datos. Está listado en `project: resources:` para que se publique con el sitio, así las celdas Pyodide pueden cargarlo por URL. Si lo regenerás (script en el apéndice), los números impresos en esos capítulos van a cambiar — regenerarlo es una decisión editorial, no mantenimiento.
+`datos/precios.csv` contiene cinco años de precios diarios ajustados (jul-2021 a jun-2026) de 10 tickers: 9 acciones de sectores distintos + SPY. Lo usan las secciones **"Con datos reales"** de los capítulos 6 (pandas), 7 (hechos estilizados), 8 (Markowitz), 9 (HRP), 11 (VaR/ES), 15 (betas del CAPM), 16 (ACF y clustering de volatilidad) y 17 (backtesting), y está documentado en el apéndice de obtención de datos. Está listado en `project: resources:` para que se publique con el sitio, así las celdas Pyodide pueden cargarlo por URL. Si lo regenerás (script en el apéndice), los números impresos en esos capítulos van a cambiar — regenerarlo es una decisión editorial, no mantenimiento.
 
 ## Bibliografía
 
@@ -70,7 +74,9 @@ Las referencias viven centralizadas en [`references.bib`](./references.bib). Cad
 - `datos/`: el dataset real congelado del libro (ver arriba)
 - `references.bib`: bibliografía centralizada (ver arriba)
 - `_extensions/`: extensiones de Quarto que usa el proyecto (incluye `coatless-quarto/pyodide`)
-- `docs/`: salida generada por Quarto (sitio + PDF) — no se edita a mano
+- `docs/`: salida generada por Quarto (sitio + PDF) — no se edita a mano. Es la **única** salida: si aparecen `.html`, `*_files/` o `site_libs/` junto a las fuentes, son restos de un render sin `output-dir` y el `.gitignore` los ignora.
+- `_tex/doc-class.tex`: ajuste de la plantilla LaTeX del PDF (desactiva las comillas `<<>>` de babel-spanish, que chocan con la clase KOMA-Script del libro)
+- `_esquemas.py`: primitivas de dibujo para los esquemas y figuras ocultas de los capítulos (y `aplicar_estilo()`, la paleta del libro para los gráficos con código visible)
 - `_caso_practico_template.qmd`: plantilla para los interludios aplicados (ver abajo)
 
 ## Casos prácticos (interludios aplicados)
@@ -95,16 +101,51 @@ Si querés otro estilo o imagen, ajustá `cover-image`, `favicon` o el tema en [
 
 ## Versiones
 
-Cada versión agrupa los commits de un hito del libro: algo que el lector notaría al abrir el sitio. Los commits chicos (correcciones, retoques, re-renders) se acumulan dentro de la versión en curso. La más reciente arriba.
+Lo que fue cambiando en el libro, de lo más nuevo a lo más viejo. Cada versión junta un hito que se nota al abrir el sitio; los arreglos chicos quedan adentro de la versión en la que entraron.
 
-| Versión | Fecha | Commits | Qué cambió |
-|---------|------------|-----------|------------|
-| v0.6 | 2026-07-13 | `8fade5a` | Publicación pulida: workflow de CI que re-renderiza `docs/` en cada push, `.nojekyll` para GitHub Pages, portada optimizada (`cover.jpg`) y favicon. |
-| v0.5 | 2026-07-12 → 07-13 | `833f405`…`2fd2598` | Reescritura integral: intros narrativas para los 4 módulos, revisión de todo el módulo 1 y del capítulo de VaR, apéndice de obtención de datos financieros y `requirements.txt`. |
-| v0.4 | 2026-07-11 | `fcb993b` | Gran expansión: el libro pasa a 20 capítulos. Nuevos: NumPy, HRP, Black-Litterman, riesgo y regulación, procesos estocásticos, econometría, series macro, backtesting y volatilidad estocástica. Se suma la plantilla de casos prácticos. |
-| v0.3 | 2026-03-20 → 03-31 | `ea76c0e`…`8fae2b7` | Módulo 1 desarrollado: capítulos de funciones, POO y series de tiempo con pandas. Primer README del proyecto y nueva portada. |
-| v0.2 | 2026-03-13 → 03-17 | `bc82d46`…`28f21c9` | Reorganización de "semanas" a capítulos numerados (`capXX`), índice detallado con el esquema de cada capítulo, apéndice de introducción a Python y revisión de los capítulos 1 y 2. |
-| v0.1 | 2026-03-10 | `e3cfb40`…`e55d6ec` | Nace el proyecto: estructura Quarto, 13 capítulos iniciales en 4 módulos y código ejecutable en el navegador (arrancó con Shinylive y ese mismo día migró a Pyodide). |
+**v0.9 (octubre 2026)**
+
+- Los módulos 3 y 4 recibieron el mismo trabajo visual que los dos primeros: esquemas y diagramas para las ideas que antes solo estaban explicadas en texto (VaR contra ES, Kupiec, la cascada de un CDO, walk-forward, Newton-Raphson, la cartera cubierta, Heston, entre otras), y mapas al comienzo de cada módulo.
+- Se arregló la numeración de secciones de los capítulos 11 a 20, que se mezclaba con la de los capítulos.
+- Todos los gráficos tienen número, epígrafe y la paleta del libro, así el texto puede citarlos.
+- Más capítulos con datos reales: pandas (6), hechos estilizados (7), betas del CAPM (15) y autocorrelación de la volatilidad (16).
+- En el capítulo 17, la demostración de data snooping ahora sí muestra lo que dice el texto.
+- El PDF vuelve a generarse y el CI ya no se cuelga. Las dependencias quedaron con versiones fijas para que los números del libro no cambien solos.
+
+**v0.8 (octubre 2026)**
+
+- Esquemas y diagramas en los módulos 1 y 2: cómo funcionan las variables, los arrays, el broadcasting, la frontera eficiente, el árbol de HRP, las views de Black-Litterman.
+
+**v0.7 (julio 2026)**
+
+- Dataset propio: cinco años de precios de 9 acciones y el S&P 500, guardados en el repo para que los resultados no dependan de bajar datos.
+- Primeras secciones "Con datos reales" (Markowitz, HRP, VaR y backtesting).
+- Celda para practicar en el navegador al final de cada capítulo de los módulos 2 a 4.
+- Bibliografía centralizada y chequeo automático de links rotos.
+
+**v0.6 (julio 2026)**
+
+- El sitio se re-renderiza solo con cada push. Portada y favicon nuevos.
+
+**v0.5 (julio 2026)**
+
+- Reescritura completa: introducciones narrativas para cada módulo, revisión del módulo 1 y del capítulo de VaR, y apéndice sobre cómo conseguir datos financieros.
+
+**v0.4 (julio 2026)**
+
+- El libro pasa de 13 a 20 capítulos: NumPy, HRP, Black-Litterman, regulación, procesos estocásticos, econometría, series de tiempo, backtesting y volatilidad estocástica.
+
+**v0.3 (marzo 2026)**
+
+- Se completa el módulo 1 con funciones, programación orientada a objetos y pandas.
+
+**v0.2 (marzo 2026)**
+
+- Se pasa de "semanas" a capítulos numerados, con un índice detallado y el apéndice de introducción a Python.
+
+**v0.1 (marzo 2026)**
+
+- Primera versión publicada: 13 capítulos en 4 módulos, con código que se puede correr en el navegador.
 
 ### Cómo versionar de ahora en más
 
@@ -113,13 +154,13 @@ La regla: **una versión nueva solo cuando el lector notaría la diferencia** �
 El flujo con cada commit:
 
 1. Escribí un mensaje que describa el cambio (`"Agrega caso práctico de cuchillos cayendo"`), no `"commit 14"`. Es lo que después permite armar la fila de la versión sin arqueología.
-2. Si el commit **cierra un hito**, agregá una fila arriba de la tabla con la versión siguiente, el rango de commits desde la versión anterior y un resumen en términos del libro (qué gana el lector, no qué archivos se tocaron). Para listar qué entró: `git log --oneline v0.6..HEAD`.
+2. Si el commit **cierra un hito**, agregá arriba de todo una entrada con la versión siguiente, el mes y unas pocas líneas sobre qué gana el lector (no qué archivos se tocaron). Para repasar qué entró desde la última etiqueta: `git log --oneline v0.9..HEAD`.
 3. Si es un commit chico, no hagas nada: se sumará al rango de la próxima versión.
 
-Opcional pero recomendado: etiquetá el commit que cierra cada versión, así GitHub las muestra como releases y los rangos de la tabla se vuelven navegables:
+Opcional pero recomendado: etiquetá el commit que cierra cada versión, así GitHub las muestra como releases:
 
 ```powershell
-git tag -a v0.7 -m "Resumen del hito"
+git tag -a v0.9 -m "Resumen del hito"
 git push --tags
 ```
 

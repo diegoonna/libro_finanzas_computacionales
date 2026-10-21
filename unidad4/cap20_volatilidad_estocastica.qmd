@@ -13,7 +13,7 @@ nocite: |
   @heston1993, @hagan2002, @gatheral2006, @andersen2008
 ---
 
-# Introducción
+# Introducción {.unnumbered}
 
 Cerramos el libro atacando la última gran mentira piadosa de Black-Scholes. En el Capítulo 18 vimos la evidencia: la **sonrisa de volatilidad**. Si la volatilidad fuera constante como supone el modelo, la vol implícita sería la misma en todos los strikes — y no lo es, en ningún mercado de opciones del planeta.
 
@@ -31,9 +31,16 @@ from scipy.stats import norm
 rng = np.random.default_rng(42)
 ```
 
+```{python}
+#| include: false
+import sys; sys.path.insert(0, "..")
+from _esquemas import aplicar_estilo
+aplicar_estilo()
+```
+
 ---
 
-# La evidencia: la volatilidad no se queda quieta
+## La evidencia: la volatilidad no se queda quieta
 
 Antes de los modelos, los hechos. Tres rasgos empíricos que cualquier serie financiera larga exhibe:
 
@@ -42,7 +49,8 @@ Antes de los modelos, los hechos. Tres rasgos empíricos que cualquier serie fin
 3. **Efecto apalancamiento** (*leverage effect*): las caídas del precio vienen acompañadas de subas de volatilidad — la correlación entre retornos y cambios de vol es **negativa**.
 
 ```{python}
-#| label: evidencia
+#| label: fig-clustering
+#| fig-cap: "Una serie con volatilidad que se agrupa. Arriba, los retornos diarios: hay tramos tranquilos y tramos agitados. Abajo, la volatilidad que los generó, que sube de golpe y vuelve despacio."
 # Ilustración con datos simulados de un proceso con clustering (GARCH-like)
 n = 1500
 vol = np.empty(n); vol[0] = 0.015
@@ -56,7 +64,7 @@ fig, axes = plt.subplots(2, 1, figsize=(10, 5), sharex=True)
 axes[0].plot(ret, linewidth=0.6)
 axes[0].set_ylabel("Retorno diario")
 axes[0].set_title("Volatility clustering: la agitación viene en rachas")
-axes[1].plot(vol * np.sqrt(252) * 100, color="darkorange", linewidth=1)
+axes[1].plot(vol * np.sqrt(252) * 100, color="#c2410c", linewidth=1)
 axes[1].set_ylabel("Vol anualizada (%)")
 axes[1].set_xlabel("Día")
 for ax in axes:
@@ -65,11 +73,11 @@ plt.tight_layout()
 plt.show()
 ```
 
-El GBM no puede producir el panel de arriba: su volatilidad es una línea horizontal. Necesitamos que $\sigma$ tenga su propia ecuación.
+El GBM no puede producir el panel de arriba de la @fig-clustering: su volatilidad es una línea horizontal. Necesitamos que $\sigma$ tenga su propia ecuación.
 
 ---
 
-# El modelo de Heston
+## El modelo de Heston
 
 Steven Heston (1993) propuso el modelo de volatilidad estocástica más usado de la historia, porque combina realismo con una virtud práctica enorme (tiene fórmulas semi-cerradas para valuar opciones). Son **dos procesos acoplados** — el precio y su varianza $v_t = \sigma_t^2$:
 
@@ -87,7 +95,64 @@ Cada parámetro tiene una interpretación económica limpia:
 
 La ecuación de la varianza es un proceso **CIR** (Cox-Ingersoll-Ross, el mismo que modela tasas de interés): el término $\kappa(\theta - v)\,dt$ la empuja hacia $\theta$ (reversión), y el $\sqrt{v}$ del ruido evita que se haga negativa.
 
-## Simulación
+La @fig-heston-acople muestra cómo están conectadas las piezas: dos fuentes de ruido correlacionadas, una que mueve la varianza y otra que mueve el precio, con la varianza alimentando el tamaño de los movimientos del precio.
+
+```{mermaid}
+%%| label: fig-heston-acople
+%%| fig-cap: "El acople de Heston. El ruido Z_v mueve la varianza, que κ tira siempre hacia θ; la raíz de la varianza fija la amplitud de los movimientos del precio. Como Z_S y Z_v están correlacionados (ρ < 0), cuando el precio cae la varianza tiende a subir."
+flowchart LR
+    ZV["Ruido Z_v"] --> V
+    ZS["Ruido Z_S"] --> S
+    ZV <-.->|"correlación ρ < 0<br/>efecto apalancamiento"| ZS
+    T(["θ: nivel de<br/>largo plazo"]) -->|"κ: velocidad de<br/>reversión"| V
+    V["<b>Varianza v_t</b><br/>proceso CIR<br/><i>ξ = vol de la vol</i>"] -->|"√v: amplitud<br/>del ruido"| S["<b>Precio S_t</b>"]
+    classDef ruido fill:#fde8dc,stroke:#c2410c,color:#1f2937
+    classDef proc fill:#e0e9f4,stroke:#1e3a5f,color:#1f2937
+    classDef param fill:#eef2e3,stroke:#637238,color:#1f2937
+    class ZV,ZS ruido
+    class V,S proc
+    class T param
+```
+
+La parte determinística de la ecuación de la varianza se puede resolver a mano: el valor esperado es $E[v_t] = \theta + (v_0 - \theta)\,e^{-\kappa t}$. La @fig-reversion-media lo dibuja: desde cualquier punto de partida, la varianza esperada vuelve a $\theta$, y $\kappa$ decide qué tan rápido.
+
+```{python}
+#| label: fig-reversion-media
+#| echo: false
+#| fig-cap: "Reversión a la media de la varianza esperada en Heston, expresada como volatilidad. Arrancando con la vol en 40% (pánico) o en 10% (calma), todas las curvas vuelven al nivel de largo plazo √θ = 20%. Con κ = 2, la mitad de la distancia se recorre en ln 2 / κ ≈ 0.35 años, unos 4 meses."
+import sys; sys.path.insert(0, "..")
+from _esquemas import *
+import numpy as np
+
+def _esquema():
+    theta = 0.04
+    t = np.linspace(0, 3, 300)
+    fig, ax = plt.subplots(figsize=(9.5, 4.3))
+    for kappa, color in [(0.5, GRIS), (2.0, PRIMARIO), (5.0, SECUNDARIO)]:
+        for v0, ls in [(0.16, "-"), (0.01, "--")]:
+            v = theta + (v0 - theta) * np.exp(-kappa * t)
+            ax.plot(t, np.sqrt(v) * 100, color=color, ls=ls, lw=2,
+                    label=f"κ = {kappa:g}" if ls == "-" else None)
+    ax.axhline(np.sqrt(theta) * 100, color=ACENTO, lw=1.2, ls=":")
+    ax.text(2.95, np.sqrt(theta) * 100 + 0.6, "√θ = 20%", ha="right", fontsize=9, color=ACENTO)
+    vida = np.log(2) / 2
+    v_vida = theta + (0.16 - theta) * 0.5
+    ax.annotate(f"vida media con κ = 2:\nln2/κ ≈ {vida:.2f} años (~4 meses)",
+                xy=(vida, np.sqrt(v_vida) * 100), xytext=(0.9, 34), fontsize=9, color=PRIMARIO,
+                arrowprops=dict(arrowstyle="-|>", color=PRIMARIO))
+    ax.set_xlabel("Años")
+    ax.set_ylabel("Volatilidad esperada (%)")
+    ax.legend(frameon=False, fontsize=9, title="arranque 40% (—) o 10% (- -)",
+              title_fontsize=8.5)
+    ax.grid(alpha=0.3)
+    ax.spines[["top", "right"]].set_visible(False)
+    plt.tight_layout()
+    plt.show()
+
+_esquema()
+```
+
+### Simulación
 
 ```{python}
 #| label: heston-sim
@@ -121,8 +186,42 @@ print(f"Correlación ret-Δvol:   "
       f"{np.corrcoef(np.diff(np.log(S_h[:,0])), np.diff(v_h[:,0]))[0,1]:.2f} (ρ={params['rho']})")
 ```
 
+La correlación que imprime la última línea es el efecto apalancamiento medido día a día. La @fig-leverage-heston la muestra punto por punto: los días en que el precio cae son, en promedio, días en que la varianza sube.
+
 ```{python}
-#| label: heston-trayectorias
+#| label: fig-leverage-heston
+#| echo: false
+#| fig-cap: "Efecto apalancamiento en la simulación de Heston: retorno diario contra cambio diario de la varianza, en cinco trayectorias. La pendiente negativa es ρ trabajando: caídas del precio y subas de la volatilidad vienen juntas."
+import sys; sys.path.insert(0, "..")
+from _esquemas import *
+import numpy as np
+
+def _esquema():
+    # Usa S_h y v_h del capítulo
+    ret = np.diff(np.log(S_h[:, :5]), axis=0).ravel() * 100
+    dv = np.diff(v_h[:, :5], axis=0).ravel() * 100
+    pend, ord_ = np.polyfit(ret, dv, 1)
+    fig, ax = plt.subplots(figsize=(8.5, 4.3))
+    ax.scatter(ret, dv, s=8, alpha=0.45, color=PRIMARIO)
+    x = np.linspace(ret.min(), ret.max(), 2)
+    ax.plot(x, pend * x + ord_, color=ACENTO, lw=2,
+            label=f"correlación = {np.corrcoef(ret, dv)[0, 1]:.2f}")
+    ax.axhline(0, color=TEXTO, lw=0.8)
+    ax.axvline(0, color=TEXTO, lw=0.8)
+    ax.set_xlabel("Retorno diario del precio (%)")
+    ax.set_ylabel("Cambio diario de la varianza (× 100)")
+    ax.legend(frameon=False, fontsize=9.5)
+    ax.grid(alpha=0.3)
+    ax.spines[["top", "right"]].set_visible(False)
+    plt.tight_layout()
+    plt.show()
+
+_esquema()
+```
+
+```{python}
+#| label: fig-heston-trayectorias
+#| fig-cap: "Cinco trayectorias de Heston. Arriba, el precio; abajo, su volatilidad, cada una con su propia historia de calma y turbulencia alrededor del nivel de largo plazo."
 fig, axes = plt.subplots(2, 1, figsize=(10, 6), sharex=True)
 
 axes[0].plot(S_h[:, :5], linewidth=1)
@@ -140,14 +239,15 @@ plt.tight_layout()
 plt.show()
 ```
 
-Compará las trayectorias de abajo con la línea horizontal que sería la vol del GBM: acá cada camino tiene su propia historia de calma y turbulencia, siempre gravitando alrededor de $\sqrt{\theta}$. Y mirá las trayectorias del precio junto a las de su vol: cuando el precio cae, su vol tiende a dispararse — el $\rho$ negativo trabajando.
+En la @fig-heston-trayectorias, compará las trayectorias de abajo con la línea horizontal que sería la vol del GBM: acá cada camino tiene su propia historia de calma y turbulencia, siempre gravitando alrededor de $\sqrt{\theta}$. Y mirá las trayectorias del precio junto a las de su vol: cuando el precio cae, su vol tiende a dispararse — el $\rho$ negativo trabajando.
 
-## Heston genera la sonrisa
+### Heston genera la sonrisa
 
 La prueba de fuego: valuemos opciones bajo Heston (por Monte Carlo, con drift $r$) y preguntémosle a Black-Scholes qué volatilidad implícita "ve" en cada strike. Si el modelo es bueno, debería aparecer la sonrisa del Capítulo 18 — sin que se la hayamos puesto a mano.
 
 ```{python}
-#| label: heston-smile
+#| label: fig-heston-smile
+#| fig-cap: "Volatilidad implícita por strike de los precios que genera Heston (100.000 trayectorias, 1 año). Sin haberle impuesto ninguna sonrisa, el modelo produce la mueca típica de las acciones."
 r = 0.03
 
 # Simulación neutral al riesgo (drift = r) con muchas trayectorias
@@ -177,9 +277,9 @@ for K in strikes:
     smile.append(vol_implicita(precio_heston, params["S0"], K, params["T"], r))
 
 fig, ax = plt.subplots(figsize=(9, 5))
-ax.plot(strikes, np.array(smile) * 100, "o-", color="steelblue",
+ax.plot(strikes, np.array(smile) * 100, "o-", color="#1e3a5f",
         label="Vol implícita de precios Heston")
-ax.axhline(np.sqrt(params["theta"]) * 100, color="red", linestyle="--", alpha=0.6,
+ax.axhline(np.sqrt(params["theta"]) * 100, color="#c2410c", linestyle="--", alpha=0.6,
            label="Vol 'constante' de referencia (√θ)")
 ax.set_xlabel("Strike K")
 ax.set_ylabel("Volatilidad implícita (%)")
@@ -190,13 +290,54 @@ plt.tight_layout()
 plt.show()
 ```
 
-Ahí está: la curva desciende de izquierda a derecha —el *smirk* de los mercados de acciones— generada **endógenamente** por la dinámica del modelo. La mecánica: el $\rho$ negativo hace que los escenarios de caída vengan con volatilidad alta, engordando la cola izquierda de la distribución de $S_T$; las puts de strikes bajos pagan justo ahí, valen más, y su vol implícita sube. La forma de la sonrisa es la huella digital de los parámetros: $\rho$ controla la **inclinación**, $\xi$ la **curvatura**, y $\kappa, \theta, v_0$ el nivel y su estructura temporal.
+Ahí está, en la @fig-heston-smile: la curva desciende de izquierda a derecha —el *smirk* de los mercados de acciones— generada **endógenamente** por la dinámica del modelo. La mecánica: el $\rho$ negativo hace que los escenarios de caída vengan con volatilidad alta, engordando la cola izquierda de la distribución de $S_T$; las puts de strikes bajos pagan justo ahí, valen más, y su vol implícita sube. La forma de la sonrisa es la huella digital de los parámetros: $\rho$ controla la **inclinación**, $\xi$ la **curvatura**, y $\kappa, \theta, v_0$ el nivel y su estructura temporal.
+
+La @fig-colas-heston muestra esa mecánica directamente sobre los precios simulados: la distribución de retornos de Heston frente a una normal con la misma media y el mismo desvío.
+
+```{python}
+#| label: fig-colas-heston
+#| echo: false
+#| fig-cap: "Distribución del retorno logarítmico a un año bajo Heston (100.000 trayectorias neutrales al riesgo) contra una normal con la misma media y desvío, en escala logarítmica. La cola izquierda de Heston es mucho más gruesa: los escenarios de caída llegan con volatilidad alta. Ahí pagan las puts de strike bajo, y por eso su vol implícita sube."
+import sys; sys.path.insert(0, "..")
+from _esquemas import *
+import numpy as np
+from scipy import stats
+
+def _esquema():
+    # Usa ST y params del capítulo
+    lr = np.log(ST / params["S0"])
+    bins = np.linspace(lr.min(), lr.max(), 90)
+    centros = 0.5 * (bins[1:] + bins[:-1])
+    dens, _ = np.histogram(lr, bins=bins, density=True)
+    normal = stats.norm.pdf(centros, lr.mean(), lr.std())
+    q5 = np.percentile(lr, 5)
+
+    fig, ax = plt.subplots(figsize=(9.5, 4.3))
+    ax.bar(centros, dens, width=bins[1] - bins[0], color=np.where(centros < q5, ACENTO, GRIS),
+           alpha=0.8, label="Heston (simulado)")
+    ax.plot(centros, normal, color=PRIMARIO, lw=2, label="Normal, misma media y desvío")
+    ax.set_yscale("log")
+    ax.set_ylim(1e-3, 20)
+    ax.set_xlim(np.percentile(lr, 0.01) - 0.05, lr.max() + 0.1)
+    ax.annotate("cola izquierda gruesa:\ncaídas con volatilidad alta", xy=(q5 - 0.35, 0.04),
+                xytext=(np.percentile(lr, 0.01), 1.5), fontsize=9, color=ACENTO,
+                arrowprops=dict(arrowstyle="-|>", color=ACENTO))
+    ax.set_xlabel("Retorno logarítmico a 1 año")
+    ax.set_ylabel("Densidad (escala log)")
+    ax.legend(frameon=False, fontsize=9, loc="upper left")
+    ax.grid(alpha=0.3)
+    ax.spines[["top", "right"]].set_visible(False)
+    plt.tight_layout()
+    plt.show()
+
+_esquema()
+```
 
 En la práctica profesional, el flujo es el inverso al nuestro: se **calibra** — se buscan los parámetros de Heston que reproducen los precios de opciones observados hoy — y con el modelo calibrado se valúan productos exóticos, se calculan griegas consistentes con la sonrisa y se arman coberturas.
 
 ---
 
-# SABR: el estándar de la industria para la sonrisa
+## SABR: el estándar de la industria para la sonrisa
 
 En los mercados de tasas de interés (swaptions, caps/floors), el modelo dominante es otro: **SABR** (*Stochastic Alpha, Beta, Rho*; Hagan et al., 2002):
 
@@ -207,7 +348,8 @@ donde $F$ es el precio *forward* y $\alpha$ su volatilidad. Diferencias de dise�
 ¿Por qué conquistó la industria un modelo *menos* realista que Heston? Por una razón práctica imbatible: Hagan y coautores derivaron una **fórmula aproximada cerrada** para la volatilidad implícita en función de $(K, F, \alpha, \beta, \rho, \nu)$. Sin simulaciones, sin transformadas: la sonrisa entera en una expresión evaluable al instante. SABR no se usa tanto para *simular* mercados como para **describir e interpolar sonrisas**: con 3-4 parámetros ajustás los puntos cotizados y leés cualquier strike intermedio.
 
 ```{python}
-#| label: sabr
+#| label: fig-sabr
+#| fig-cap: "Sonrisas de SABR (β = 1, α = 20%) para tres combinaciones de parámetros: ρ inclina la curva y ν la curva."
 def sabr_vol(K, F, T, alpha, beta, rho, nu):
     """Vol implícita SABR (aprox. de Hagan 2002), vectorizada en K."""
     K = np.atleast_1d(K).astype(float)
@@ -255,7 +397,7 @@ plt.tight_layout()
 plt.show()
 ```
 
-El gráfico es el manual de instrucciones del modelo: $\nu$ (vol de vol) **curva** la sonrisa, $\rho$ la **inclina**, y $\alpha$ fija el nivel. Un operador de swaptions calibra estos parámetros a las cotizaciones de la mañana y tiene toda la superficie descripta para el resto del día.
+La @fig-sabr es el manual de instrucciones del modelo: $\nu$ (vol de vol) **curva** la sonrisa, $\rho$ la **inclina**, y $\alpha$ fija el nivel. Un operador de swaptions calibra estos parámetros a las cotizaciones de la mañana y tiene toda la superficie descripta para el resto del día.
 
 ::: {.callout-note title="¿Heston o SABR? El criterio profesional"}
 No compiten: se usan para cosas distintas. **SABR** es el estándar para *cotizar e interpolar* sonrisas (sobre todo en tasas) por su fórmula instantánea. **Heston** es el caballo de batalla para *simular y valuar* productos dependientes de la trayectoria (exóticos, estructurados) porque tiene una dinámica temporal completa y consistente. Y la familia sigue: local vol (Dupire), modelos local-estocásticos (LSV), rough volatility — la frontera actual de la investigación.
@@ -263,7 +405,7 @@ No compiten: se usan para cosas distintas. **SABR** es el estándar para *cotiza
 
 ---
 
-# El arco completo del libro
+## El arco completo del libro
 
 Detengámonos un momento en el camino recorrido, porque este capítulo lo cierra:
 
@@ -272,11 +414,24 @@ Detengámonos un momento en el camino recorrido, porque este capítulo lo cierra
 3. **La sonrisa** (Cap. 18): el mercado cotiza las violaciones de Black-Scholes, cada día, en cada strike.
 4. **Volatilidad estocástica** (este capítulo): la vol tiene dinámica propia → clustering, leverage effect, y la sonrisa reproducida desde los fundamentos.
 
+```{mermaid}
+%%| label: fig-arco-libro
+%%| fig-cap: "El arco de los modelos de precio del libro. Cada flecha es un hecho empírico que el modelo anterior no podía explicar y que obligó a construir el siguiente."
+flowchart LR
+    G["<b>GBM</b><br/>Cap. 13<br/><i>vol constante,<br/>sin saltos</i>"] -->|"colas pesadas,<br/>crashes"| M["<b>Saltos</b><br/>Cap. 14<br/><i>Merton, Lévy</i>"]
+    M -->|"el mercado cotiza<br/>esas colas"| S["<b>La sonrisa</b><br/>Cap. 18<br/><i>vol implícita<br/>por strike</i>"]
+    S -->|"la vol cambia,<br/>se agrupa y sube<br/>en las caídas"| H["<b>Vol estocástica</b><br/>Cap. 20<br/><i>Heston, SABR</i>"]
+    classDef modelo fill:#e0e9f4,stroke:#1e3a5f,color:#1f2937
+    classDef hecho fill:#fde8dc,stroke:#c2410c,color:#1f2937
+    class G,M,H modelo
+    class S hecho
+```
+
 Cada modelo nace de un hecho empírico que el anterior no explicaba. Esa es la lección metodológica más importante que este libro puede darte: **los modelos no son verdades, son herramientas con dominio de validez** — y el trabajo del analista cuantitativo es conocer ese dominio, medir lo que queda afuera (Módulo 3 entero) y elegir la herramienta adecuada para cada pregunta.
 
 ---
 
-# Errores comunes
+## Errores comunes
 
 ::: {.callout-warning title="Trampas frecuentes"}
 - **Varianza negativa en la simulación de Heston**: el esquema de Euler ingenuo produce $v < 0$ y `sqrt` explota. Usá *full truncation* (como en el código) o esquemas exactos (QE de Andersen).
@@ -288,7 +443,7 @@ Cada modelo nace de un hecho empírico que el anterior no explicaba. Esa es la l
 
 ---
 
-# Ejercicios Propuestos
+## Ejercicios Propuestos
 
 ::: {.callout-important title="Ejercicios"}
 1. **El rol de ρ**: re-simulá Heston con $\rho \in \{-0.9, 0, +0.5\}$ y superponé las tres sonrisas resultantes. Verificá que $\rho$ controla la inclinación.
@@ -312,7 +467,7 @@ rng = np.random.default_rng(42)
 
 ---
 
-# Referencias
+## Referencias
 
 
 ::: {#refs}

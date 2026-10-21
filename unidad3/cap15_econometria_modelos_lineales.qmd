@@ -13,7 +13,7 @@ nocite: |
   @sharpe1964, @fama1993, @wooldridge2019, @newey1987
 ---
 
-# Introducción
+# Introducción {.unnumbered}
 
 Si tuvieras que quedarte con una sola herramienta estadística para trabajar en finanzas, sería la **regresión lineal**. Con ella se responde una familia enorme de preguntas que comparten la misma estructura: *¿cómo se mueve $y$ cuando se mueve $x$?*
 
@@ -35,9 +35,16 @@ import statsmodels.api as sm
 rng = np.random.default_rng(42)
 ```
 
+```{python}
+#| include: false
+import sys; sys.path.insert(0, "..")
+from _esquemas import aplicar_estilo
+aplicar_estilo()
+```
+
 ---
 
-# El modelo lineal: qué afirma exactamente
+## El modelo lineal: qué afirma exactamente
 
 El modelo de regresión lineal postula que la variable a explicar $y$ es una combinación lineal de las explicativas más un término de error:
 
@@ -49,13 +56,52 @@ Tres aclaraciones que evitan malentendidos comunes:
 2. **El error $\varepsilon$ no es un defecto**: representa todo lo que afecta a $y$ y no está en el modelo. La pregunta clave será qué propiedades tiene.
 3. **Los $\beta$ se interpretan "todo lo demás constante"**: $\beta_1$ es el efecto de $x_1$ sobre $y$ *manteniendo fijas las otras variables*. Esta lectura condicional es lo que hace potente (y delicada) a la regresión múltiple.
 
-## Estimación por Mínimos Cuadrados Ordinarios (MCO)
+### Estimación por Mínimos Cuadrados Ordinarios (MCO)
 
 ¿Cómo elegir los $\beta$? El criterio de **MCO** (*OLS* en inglés): minimizar la suma de los errores al cuadrado. Para el caso simple ($y = \alpha + \beta x + \varepsilon$) la solución tiene forma cerrada:
 
 $$\hat\beta = \frac{\text{Cov}(x, y)}{\text{Var}(x)}, \qquad \hat\alpha = \bar{y} - \hat\beta \bar{x}$$
 
 La primera fórmula es reveladora: **el beta es una covarianza normalizada**. Ya la conocés de la teoría de portafolios — no es casualidad, es la misma matemática.
+
+La @fig-mco-residuos muestra qué es exactamente lo que se minimiza: para cada punto, la distancia *vertical* hasta la recta (el residuo). MCO eleva cada residuo al cuadrado, los suma, y elige la recta que hace más chica esa suma.
+
+```{python}
+#| label: fig-mco-residuos
+#| echo: false
+#| fig-cap: "Lo que minimiza MCO. Cada segmento vertical es un residuo (dato menos recta). La recta MCO (izquierda) es la que hace mínima la suma de los residuos al cuadrado; cualquier otra recta, como la de la derecha, deja una suma mayor."
+import sys; sys.path.insert(0, "..")
+from _esquemas import *
+import numpy as np
+
+def _esquema():
+    g = np.random.default_rng(8)
+    x = np.sort(g.uniform(-4, 4, 12))
+    y = 0.5 + 1.3 * x + g.normal(0, 1.4, 12)
+    b = np.cov(x, y, bias=True)[0, 1] / np.var(x)
+    a = y.mean() - b * x.mean()
+
+    fig, axes = plt.subplots(1, 2, figsize=(11, 4.2), sharey=True)
+    for ax, (aa, bb, titulo, color) in zip(axes, [(a, b, "Recta MCO", PRIMARIO),
+                                                 (1.5, 0.7, "Otra recta cualquiera", GRIS)]):
+        y_hat = aa + bb * x
+        res = y - y_hat
+        for xi, yi, ri in zip(x, y_hat, res):
+            ax.plot([xi, xi], [yi, yi + ri], color=ACENTO, lw=1.6)
+        xs = np.linspace(-4.5, 4.5, 2)
+        ax.plot(xs, aa + bb * xs, color=color, lw=2.2)
+        ax.scatter(x, y, color=TEXTO, s=22, zorder=5)
+        ax.set_title(f"{titulo}: Σ residuo² = {np.sum(res**2):.1f}", fontsize=11,
+                     color=PRIMARIO, fontweight="bold")
+        ax.set_xlabel("x (exceso de retorno del mercado)")
+        ax.grid(alpha=0.3)
+        ax.spines[["top", "right"]].set_visible(False)
+    axes[0].set_ylabel("y (exceso de retorno del activo)")
+    plt.tight_layout()
+    plt.show()
+
+_esquema()
+```
 
 Implementémosla desde cero para desmitificarla:
 
@@ -96,7 +142,7 @@ class RegresionLineal:
 
 ---
 
-# Aplicación 1: el CAPM y la estimación del beta
+## Aplicación 1: el CAPM y la estimación del beta
 
 El **CAPM** (Capital Asset Pricing Model) afirma que el exceso de retorno esperado de un activo es proporcional al exceso de retorno del mercado:
 
@@ -126,12 +172,15 @@ print(f"\nValores reales: alpha={alpha_real}, beta={beta_real}")
 
 El beta se recupera con precisión; el alfa, no tanto (mirá su p-value en la salida de `statsmodels` más abajo). Esa asimetría no es un accidente de esta muestra, es una lección general: **detectar alfa exige muchísimos más datos que estimar beta**, porque el alfa es una constante pequeña escondida en mucho ruido.
 
+La @fig-capm-scl muestra la regresión que acabamos de estimar: cada punto es un mes, y la pendiente de la recta es el beta.
+
 ```{python}
-#| label: capm-grafico
+#| label: fig-capm-scl
+#| fig-cap: "Security Characteristic Line: 120 meses de excesos de retorno del activo contra los del mercado. La pendiente de la recta MCO es el beta; su ordenada en el origen, el alfa."
 fig, ax = plt.subplots(figsize=(8, 5))
 ax.scatter(exceso_mercado * 100, exceso_activo * 100, alpha=0.5, s=25)
 x_line = np.linspace(exceso_mercado.min(), exceso_mercado.max(), 50)
-ax.plot(x_line * 100, (modelo.alpha + modelo.beta * x_line) * 100, "r-",
+ax.plot(x_line * 100, (modelo.alpha + modelo.beta * x_line) * 100, color="#c2410c",
         linewidth=2, label=f"Recta MCO: β = {modelo.beta:.2f}")
 ax.set_xlabel("Exceso de retorno del mercado (%)")
 ax.set_ylabel("Exceso de retorno del activo (%)")
@@ -144,7 +193,7 @@ plt.show()
 
 ---
 
-# Leer una regresión: errores estándar, t y p-values
+## Leer una regresión: errores estándar, t y p-values
 
 Los coeficientes estimados son **variables aleatorias**: con otra muestra habrían dado distinto. La inferencia estadística cuantifica esa incertidumbre, y saber leerla es lo que separa un análisis serio de uno decorativo.
 
@@ -152,11 +201,94 @@ Los coeficientes estimados son **variables aleatorias**: con otra muestra habrí
 - **Estadístico t**: cuántos errores estándar dista el coeficiente de cero: $t = \hat\beta / se(\hat\beta)$. Regla mental: $|t| > 2$ ≈ significativo al 5%.
 - **p-value**: la probabilidad de observar un coeficiente tan grande (en valor absoluto) **si el verdadero fuera cero**. Un p-value de 0.03 dice: "si el activo no tuviera relación con el mercado, ver este beta sería raro (3%)".
 
+Para ver que los coeficientes son variables aleatorias, alcanza con repetir el experimento. La @fig-distribucion-muestral simula 2000 muestras de 120 meses con los mismos $\alpha$ y $\beta$ verdaderos del ejemplo y estima la regresión en cada una. El beta sale casi siempre cerca de 1.3; el alfa, en cambio, cae a ambos lados de cero muy seguido.
+
+```{python}
+#| label: fig-distribucion-muestral
+#| echo: false
+#| fig-cap: "Distribución de los estimadores en 2000 muestras simuladas de 120 meses (α = 0.2% mensual, β = 1.3). El beta queda bien concentrado lejos de cero; el alfa verdadero es positivo, pero una parte grande de las estimaciones sale negativa: con 10 años de datos, el alfa se confunde con el ruido."
+import sys; sys.path.insert(0, "..")
+from _esquemas import *
+import numpy as np
+
+def _esquema():
+    # Usa beta_real y alpha_real del capítulo, con su propia semilla
+    g = np.random.default_rng(15)
+    m, n = 2000, 120
+    x = g.normal(0.005, 0.04, (m, n))
+    y = alpha_real + beta_real * x + g.normal(0, 0.03, (m, n))
+    xc, yc = x - x.mean(1, keepdims=True), y - y.mean(1, keepdims=True)
+    betas = (xc * yc).sum(1) / (xc**2).sum(1)
+    alfas = y.mean(1) - betas * x.mean(1)
+
+    fig, (izq, der) = plt.subplots(1, 2, figsize=(11, 4))
+    for ax, est, real, color, nombre, escala in [(izq, betas, beta_real, PRIMARIO, "β estimado", 1),
+                                                 (der, alfas, alpha_real, ACENTO,
+                                                  "α estimado (% mensual)", 100)]:
+        ax.hist(est * escala, bins=50, color=color, alpha=0.75)
+        ax.axvline(real * escala, color=TEXTO, lw=1.5, label=f"valor real: {real * escala:g}")
+        ax.axvline(0, color=TEXTO, lw=1, ls=":")
+        ax.set_xlabel(nombre)
+        ax.set_yticks([])
+        ax.legend(frameon=False, fontsize=9, loc="upper left")
+        ax.spines[["top", "right", "left"]].set_visible(False)
+    izq.set_xlim(left=-0.1)
+    der.text(0.98, 0.8, f"{(alfas < 0).mean():.0%} de las muestras\ndan un alfa negativo",
+             transform=der.transAxes, ha="right", fontsize=9, color=ACENTO)
+    plt.tight_layout()
+    plt.show()
+
+_esquema()
+```
+
+La @fig-pvalue-t traduce esa incertidumbre a un p-value, con el alfa de nuestra muestra. Si el alfa verdadero fuera cero, el estadístico t seguiría la campana de la figura; el p-value es el área de las dos colas más allá del t que observamos.
+
+```{python}
+#| label: fig-pvalue-t
+#| echo: false
+#| fig-cap: "El p-value del alfa estimado. La campana es la distribución t bajo la hipótesis α = 0; las áreas sombreadas, más allá de ±t observado, suman el p-value. Las líneas en ±2 marcan la regla mental de significancia al 5%."
+import sys; sys.path.insert(0, "..")
+from _esquemas import *
+import numpy as np
+import statsmodels.api as sm
+from scipy import stats
+
+def _esquema():
+    # Usa exceso_mercado y exceso_activo del capítulo
+    ajuste = sm.OLS(exceso_activo, sm.add_constant(exceso_mercado)).fit()
+    t_obs, p_val, gl = ajuste.tvalues[0], ajuste.pvalues[0], ajuste.df_resid
+    x = np.linspace(-4.5, 4.5, 500)
+    dens = stats.t.pdf(x, gl)
+
+    fig, ax = plt.subplots(figsize=(9.5, 3.8))
+    ax.plot(x, dens, color=PRIMARIO, lw=2)
+    cola = np.abs(x) >= abs(t_obs)
+    ax.fill_between(x, dens, where=cola & (x < 0), color=ACENTO, alpha=0.35, lw=0)
+    ax.fill_between(x, dens, where=cola & (x > 0), color=ACENTO, alpha=0.35, lw=0,
+                    label=f"p-value = {p_val:.2f}")
+    for v in (-t_obs, t_obs):
+        ax.axvline(v, color=ACENTO, lw=1.5)
+    ax.text(t_obs, dens.max() * 1.02, f"t observado = {t_obs:.2f}", ha="center", fontsize=9,
+            color=ACENTO)
+    for v in (-2, 2):
+        ax.axvline(v, color=TEXTO, lw=1, ls=":")
+    ax.text(2.05, dens.max() * 0.5, "|t| = 2\n(≈ 5%)", fontsize=8.5, color=TEXTO)
+    ax.set_xlabel("Estadístico t del alfa bajo H₀: α = 0")
+    ax.set_yticks([])
+    ax.set_ylim(0, dens.max() * 1.12)
+    ax.legend(frameon=False, fontsize=9.5, loc="upper left")
+    ax.spines[["top", "right", "left"]].set_visible(False)
+    plt.tight_layout()
+    plt.show()
+
+_esquema()
+```
+
 ::: {.callout-warning title="Lo que el p-value NO dice"}
 El p-value **no** es "la probabilidad de que el coeficiente sea cero", ni "la probabilidad de que el modelo esté mal". Es una afirmación sobre los *datos bajo una hipótesis*, no sobre la hipótesis. Y con miles de datos, coeficientes económicamente irrelevantes se vuelven "significativos": **significancia estadística ≠ relevancia económica**. Mirá siempre la magnitud del coeficiente además de su p-value. Esta distinción reaparecerá con fuerza en el Capítulo 17 (backtesting), donde probar muchas estrategias infla los falsos positivos.
 :::
 
-## La versión profesional: statsmodels
+### La versión profesional: statsmodels
 
 Nuestra clase enseña la mecánica; para trabajar en serio usamos `statsmodels`, que reporta toda la inferencia de una vez:
 
@@ -171,7 +303,7 @@ De esta tabla, lo que hay que saber mirar: los **coeficientes** con sus interval
 
 ---
 
-# Los supuestos: cuándo confiar en MCO
+## Los supuestos: cuándo confiar en MCO
 
 Los estimadores MCO son insesgados y de mínima varianza (**teorema de Gauss-Markov**) cuando se cumplen ciertos supuestos. En finanzas, algunos se violan sistemáticamente, y conviene saber cuáles y qué hacer:
 
@@ -199,13 +331,33 @@ print(f"  Robusto (Newey-West, HAC):        {ols_robusto.bse[1]:.4f}")
 En regresiones con series de tiempo financieras, reportá errores **Newey-West (HAC)** por defecto. Si los datos fueran ideales, no perdés nada; si no lo son (lo usual), tus p-values dejan de estar inflados.
 :::
 
+La @fig-flujo-regresion ordena todo lo anterior como una rutina de trabajo: la estimación es un paso rápido en el medio; lo que decide si el resultado es creíble está antes y después.
+
+```{mermaid}
+%%| label: fig-flujo-regresion
+%%| fig-cap: "Rutina de una regresión financiera. Especificar antes de mirar los resultados, diagnosticar los supuestos después de estimar, y leer magnitud e incertidumbre juntas."
+flowchart LR
+    E["<b>Especificar</b><br/>qué y, qué x<br/><i>retornos, no precios</i>"] --> M[["<b>Estimar</b><br/>MCO"]]
+    M --> D{"<b>Diagnosticar</b><br/>¿heterocedasticidad?<br/>¿autocorrelación?"}
+    D -->|"sí (lo usual)"| H["Errores robustos<br/>Newey-West (HAC)"]
+    D -->|"no"| I
+    H --> I(["<b>Interpretar</b><br/>magnitud económica<br/>+ p-value"])
+    I -.->|"¿falta un factor?<br/>alfa sospechoso"| E
+    classDef paso fill:#e0e9f4,stroke:#1e3a5f,color:#1f2937
+    classDef alerta fill:#fde8dc,stroke:#c2410c,color:#1f2937
+    classDef fin fill:#eef2e3,stroke:#637238,color:#1f2937
+    class E,M paso
+    class D,H alerta
+    class I fin
+```
+
 ---
 
-# Regresión múltiple: más de una explicativa
+## Regresión múltiple: más de una explicativa
 
 La extensión a varias variables es directa en la práctica (`statsmodels` recibe una matriz en lugar de un vector) pero cambia la **interpretación**: cada coeficiente mide el efecto de su variable *controlando por las demás*. Esto permite responder preguntas imposibles para la regresión simple: *¿este fondo tiene alfa, o su "alfa" es en realidad exposición a las acciones pequeñas?*
 
-## Aplicación 2: modelos multifactor (Fama-French)
+### Aplicación 2: modelos multifactor (Fama-French)
 
 El CAPM explica los retornos con un solo factor (el mercado). La evidencia empírica encontró sistemáticamente dos anomalías: las empresas **chicas** rinden más que las grandes, y las **baratas** (alto valor libro / valor de mercado) más que las caras. Fama y French (1993) propusieron agregarlas como factores:
 
@@ -239,9 +391,50 @@ print(f"\nExposiciones estimadas (3F): mkt={ff_fit.params[1]:.2f}, "
       f"smb={ff_fit.params[2]:.2f}, hml={ff_fit.params[3]:.2f}")
 ```
 
+La @fig-alfa-disfrazado pone lado a lado lo que dice cada modelo. A la izquierda, el alfa estimado con su intervalo de confianza del 95%; a la derecha, las exposiciones que estima el modelo de tres factores contra las verdaderas con las que simulamos el fondo.
+
+```{python}
+#| label: fig-alfa-disfrazado
+#| echo: false
+#| fig-cap: "Izquierda: alfa anualizado estimado por cada modelo, con su intervalo del 95%. El CAPM estima un alfa positivo (con un intervalo muy ancho: en esta muestra ni siquiera es significativo); con tres factores, la estimación cae casi a cero, el valor verdadero. Derecha: el modelo de tres factores recupera las exposiciones con las que se construyó el fondo; esa exposición a tamaño y valor es lo que el CAPM confundía con alfa."
+import sys; sys.path.insert(0, "..")
+from _esquemas import *
+import numpy as np
+
+def _esquema():
+    # Usa capm_fit y ff_fit del capítulo; exposiciones reales: 1.1, 0.5, 0.7
+    fig, (izq, der) = plt.subplots(1, 2, figsize=(11, 3.8),
+                                   gridspec_kw={"width_ratios": [1.2, 1]})
+    for y, (nombre, ajuste, color) in enumerate([("CAPM", capm_fit, ACENTO),
+                                                 ("3 factores", ff_fit, PRIMARIO)]):
+        a, ic = ajuste.params[0] * 12 * 100, ajuste.conf_int()[0] * 12 * 100
+        izq.errorbar(a, y, xerr=[[a - ic[0]], [ic[1] - a]], fmt="o", color=color, ms=8,
+                     capsize=6, lw=2)
+        izq.text(a, y - 0.22, f"α = {a:+.1f}% anual  (p = {ajuste.pvalues[0]:.2f})",
+                 ha="center", fontsize=9, color=color)
+    izq.axvline(0, color=TEXTO, lw=1, ls=":")
+    izq.text(0.1, 1.45, "alfa verdadero = 0", fontsize=8.5, color=TEXTO)
+    izq.set_yticks([0, 1], ["CAPM", "3 factores"])
+    izq.set_ylim(1.6, -0.5)
+    izq.set_xlabel("Alfa anualizado (%)")
+    izq.set_title("¿Tiene alfa el fondo?", fontsize=11, color=PRIMARIO, fontweight="bold")
+
+    factores = ["Mercado", "SMB (tamaño)", "HML (valor)"]
+    barras_comparadas(der, factores, {"Verdadera": [1.1, 0.5, 0.7],
+                                      "Estimada (3F)": ff_fit.params[1:]},
+                      fmt="{:.2f}", colores=[GRIS, PRIMARIO])
+    der.set_title("Exposiciones del fondo", fontsize=11, color=PRIMARIO, fontweight="bold")
+    for ax in (izq, der):
+        ax.spines[["top", "right"]].set_visible(False)
+    plt.tight_layout()
+    plt.show()
+
+_esquema()
+```
+
 La lección del ejemplo: bajo el CAPM el fondo puede *parecer* tener alfa (el modelo de un factor le atribuye al gestor lo que en realidad es exposición a small y value). El modelo de tres factores **desenmascara** ese alfa: era beta disfrazado. Este análisis —"¿tu alfa sobrevive a los factores?"— es hoy el estándar para evaluar gestores.
 
-## Aplicación 3: ratio de cobertura
+### Aplicación 3: ratio de cobertura
 
 Otra pregunta con forma de regresión: tenés una cartera y querés **cubrirla** vendiendo futuros de un índice. ¿Cuántos? El ratio de cobertura de mínima varianza es, precisamente, el beta de tu cartera contra el instrumento de cobertura:
 
@@ -268,7 +461,41 @@ Por cada peso de cartera, vendés $h^*$ pesos de futuro, y la varianza cae en $R
 
 ---
 
-# Errores comunes
+## Con datos reales: los betas del dataset
+
+Todo el capítulo usó datos simulados con parámetros conocidos, para poder verificar que la regresión los recupera. Ahora el caso real, donde nadie conoce la respuesta: estimamos el CAPM de las 9 acciones del dataset del libro (`datos/precios.csv`, ver @sec-datos-financieros) contra el S&P 500, con cinco años de retornos diarios y errores Newey-West, como recomienda la regla práctica de arriba.
+
+Una simplificación: el dataset no trae la tasa libre de riesgo, así que regresamos retornos simples en lugar de excesos. Con datos diarios el beta casi no cambia; el alfa queda corrido en $r_f(1-\beta)$, un ajuste chico frente a la incertidumbre que vamos a ver.
+
+```{python}
+#| label: capm-datos-reales
+precios = pd.read_csv("../datos/precios.csv", index_col="Date", parse_dates=True)
+r = precios.pct_change().dropna()
+X_mkt = sm.add_constant(r["SPY"])
+
+filas = []
+for ticker in r.columns.drop("SPY"):
+    ajuste = sm.OLS(r[ticker], X_mkt).fit(cov_type="HAC", cov_kwds={"maxlags": 5})
+    filas.append({"Ticker": ticker,
+                  "Beta": ajuste.params["SPY"],
+                  "se(beta)": ajuste.bse["SPY"],
+                  "Alfa anual": ajuste.params["const"] * 252,
+                  "p-value alfa": ajuste.pvalues["const"],
+                  "R²": ajuste.rsquared})
+
+capm_real = pd.DataFrame(filas).set_index("Ticker").sort_values("Beta")
+print(capm_real.round(3))
+```
+
+Tres lecturas, cada una con una idea del capítulo:
+
+- **Los betas tienen sentido económico, y están bien estimados.** Ordenados de menor a mayor, aparecen primero las defensivas (JNJ, KO, WMT: betas por debajo de 0.5) y al final la tecnología (MSFT y AAPL entre 1.1 y 1.2; NVDA por encima de 2). Con más de 1.200 datos diarios, los errores estándar son de pocas centésimas: el beta se estima bien.
+- **El $R^2$ dice cuánto del riesgo es "de mercado".** Para AAPL o MSFT, el mercado explica alrededor de la mitad de la varianza diaria; para JNJ, apenas un 3%. El resto es riesgo propio de cada empresa, el que la diversificación elimina.
+- **El alfa casi nunca es significativo.** NVDA subió más de 50% anual en el período y su alfa estimado es enorme (cerca de 30% anual), pero su p-value no baja de 0.05: con cinco años de datos, ni siquiera eso alcanza para descartar la suerte. El único alfa "significativo" es el negativo de DIS (p ≈ 0.04). Pero probamos nueve acciones, y con nueve tests al 5% es esperable que alguno pase el umbral por azar. Es la trampa de las pruebas múltiples, el tema central del Capítulo 17.
+
+---
+
+## Errores comunes
 
 ::: {.callout-warning title="Trampas frecuentes"}
 - **Regresar precios en lugar de retornos**: dos precios que suben con el tiempo siempre parecen "correlacionados" (regresión espuria). Trabajá con retornos; la excepción (cointegración) llega en el capítulo siguiente.
@@ -280,7 +507,7 @@ Por cada peso de cartera, vendés $h^*$ pesos de futuro, y la varianza cae en $R
 
 ---
 
-# Ejercicios Propuestos
+## Ejercicios Propuestos
 
 ::: {.callout-important title="Ejercicios"}
 1. **Beta rodante**: estimá el beta del CAPM con una ventana móvil de 24 meses sobre los datos simulados y graficá su evolución con bandas de ±2 errores estándar.
@@ -303,7 +530,7 @@ import statsmodels.api as sm
 
 ---
 
-# Referencias
+## Referencias
 
 
 ::: {#refs}

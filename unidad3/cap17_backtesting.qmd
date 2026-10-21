@@ -12,7 +12,7 @@ nocite: |
   @lopezdeprado2018, @bailey2014, @harvey2015, @white2000
 ---
 
-# Introducción
+# Introducción {.unnumbered}
 
 Cerramos el módulo con la pregunta que une todo lo anterior: tenés una estrategia —una regla que decide cuándo comprar y vender— y su simulación histórica da ganancias. **¿Eso prueba algo?**
 
@@ -27,19 +27,49 @@ import pandas as pd
 import matplotlib.pyplot as plt
 from scipy import stats
 
-rng = np.random.default_rng(42)
+rng = np.random.default_rng(83)
+```
+
+```{python}
+#| include: false
+import sys; sys.path.insert(0, "..")
+from _esquemas import aplicar_estilo
+aplicar_estilo()
 ```
 
 ---
 
-# El pecado original: evaluar donde diseñaste
+## El pecado original: evaluar donde diseñaste
 
-## In-sample vs. out-of-sample
+### In-sample vs. out-of-sample
 
 La división fundamental:
 
 - **In-sample (IS)**: los datos usados para *diseñar* la estrategia (elegir reglas, calibrar parámetros). Ahí la estrategia siempre luce bien — la elegiste porque lucía bien ahí.
 - **Out-of-sample (OOS)**: datos que la estrategia **nunca vio**. La única evidencia admisible sobre su capacidad real.
+
+```{python}
+#| label: fig-split-is-oos
+#| echo: false
+#| fig-cap: "La partición básica de un backtest. Todo el diseño (probar reglas, elegir parámetros) ocurre en el tramo in-sample; el tramo out-of-sample queda guardado y se abre una sola vez, al final, para medir."
+import sys; sys.path.insert(0, "..")
+from _esquemas import *
+
+def _esquema():
+    fig, ax = lienzo(16, 4.2)
+    caja(ax, 0.5, 1.3, 9.6, 1.1, "In-sample (2/3)\ndiseñar · probar variantes · calibrar",
+         relleno=FONDO_PRIMARIO, tam=10)
+    caja(ax, 10.3, 1.3, 5.2, 1.1, "Out-of-sample (1/3)\nmedir, una sola vez", color=ACENTO,
+         relleno=FONDO_ACENTO, tam=10)
+    flecha(ax, (0.5, 0.75), (15.5, 0.75), color=GRIS)
+    texto(ax, 8.0, 0.35, "tiempo →", tam=9, color=GRIS)
+    flecha(ax, (5.3, 2.5), (12.9, 2.5), "la estrategia elegida pasa una sola vez", color=TEXTO,
+           curva=-0.18, tam=8.5, desplazamiento=(0, 1.1))
+    plt.tight_layout()
+    plt.show()
+
+_esquema()
+```
 
 La demostración más contundente de por qué esto importa: vamos a "descubrir" una estrategia excelente **en puro ruido**.
 
@@ -69,13 +99,49 @@ print(f"La misma estrategia out-of-sample:   Sharpe OOS = "
       f"{sharpe(estrategia_momentum(test, mejor_v)):.2f}")
 ```
 
+La @fig-snooping-is-oos muestra las 60 variantes a la vez: arriba, el Sharpe de cada ventana en el tramo de diseño; abajo, el de esa misma ventana en el tramo nunca visto.
+
+```{python}
+#| label: fig-snooping-is-oos
+#| echo: false
+#| fig-cap: "Las 60 ventanas de momentum sobre ruido puro. Arriba, Sharpe in-sample, con la ventana elegida en rojo; abajo, el Sharpe out-of-sample de cada una. La mejor in-sample no es mejor afuera: el ranking del diseño no predice nada."
+import sys; sys.path.insert(0, "..")
+from _esquemas import *
+import numpy as np
+
+def _esquema():
+    # Usa sharpes_is, mejor_v, test, estrategia_momentum y sharpe del capítulo
+    v = np.array(list(sharpes_is))
+    s_is = np.array([sharpes_is[k] for k in v])
+    s_oos = np.array([sharpe(estrategia_momentum(test, k)) for k in v])
+    colores = np.where(v == mejor_v, ACENTO, GRIS)
+
+    fig, (arriba, abajo) = plt.subplots(2, 1, figsize=(10, 5), sharex=True, sharey=True)
+    arriba.bar(v, s_is, color=colores)
+    abajo.bar(v, s_oos, color=np.where(v == mejor_v, ACENTO, PRIMARIO))
+    arriba.set_ylabel("Sharpe in-sample")
+    abajo.set_ylabel("Sharpe out-of-sample")
+    abajo.set_xlabel("Ventana de momentum (días)")
+    arriba.annotate(f"la elegida: {mejor_v} días", xy=(mejor_v, s_is.max()),
+                    xytext=(mejor_v + 8, s_is.max() * 0.9), fontsize=9, color=ACENTO,
+                    arrowprops=dict(arrowstyle="-|>", color=ACENTO))
+    for ax in (arriba, abajo):
+        ax.axhline(0, color=TEXTO, lw=0.8)
+        ax.grid(axis="y", alpha=0.3)
+        ax.spines[["top", "right"]].set_visible(False)
+    plt.tight_layout()
+    plt.show()
+
+_esquema()
+```
+
 Los datos son **ruido puro por construcción** — no hay nada que descubrir. Y sin embargo, probando 60 variantes, alguna siempre luce bien in-sample. Fuera de muestra, el castillo se derrumba. Ese mecanismo tiene nombre: **data snooping** (o *p-hacking*): probar hasta que algo "funcione" garantiza encontrar espejismos.
 
 ::: {.callout-warning title="La regla de oro"}
 Los datos out-of-sample se usan **una sola vez**. Si evaluás en OOS, no te gusta el resultado, retocás la estrategia y volvés a evaluar en el mismo OOS... el OOS acaba de convertirse en in-sample. Esta regla es incómoda y por eso casi nadie la cumple — y por eso la mayoría de los backtests publicados no se replican.
 :::
 
-## Sobreajuste: la curva que memoriza
+### Sobreajuste: la curva que memoriza
 
 El data snooping es la versión "entre estrategias" de un fenómeno general: el **sobreajuste** (*overfitting*). Un modelo con suficientes parámetros puede memorizar cualquier historia — incluyendo su ruido. Cuantos más parámetros libres tenga tu estrategia (ventanas, umbrales, filtros, horarios), más capacidad tiene de ajustarse a accidentes del pasado que no se repetirán.
 
@@ -83,7 +149,7 @@ Regla mental de López de Prado: **la probabilidad de que un backtest sea falso 
 
 ---
 
-# El p-value de una estrategia
+## El p-value de una estrategia
 
 ¿Cómo cuantificar si un resultado OOS es "suerte o señal"? Con la misma lógica inferencial del Capítulo 15. La hipótesis nula es dura pero justa:
 
@@ -94,6 +160,52 @@ Bajo $H_0$, el estadístico t del retorno medio nos dice cuán sorprendente es l
 $$t = \frac{\bar{r}}{s / \sqrt{n}} \qquad\text{y de hecho}\qquad t \approx \text{Sharpe anualizado} \times \sqrt{\text{años}}$$
 
 Esa equivalencia es una de las fórmulas más útiles del oficio: **el t-stat de una estrategia es su Sharpe por la raíz de los años observados**. Un Sharpe de 1.0 necesita ~4 años para ser significativo al 5%; un Sharpe de 0.5, ¡16 años!
+
+La @fig-vara-significancia dibuja las dos reglas que gobiernan este capítulo: cuánto historial hace falta para que un Sharpe sea creíble (izquierda), y cuán rápido se vuelve casi seguro encontrar un falso positivo cuando se prueban muchas variantes (derecha, el tema del recuadro que viene).
+
+```{python}
+#| label: fig-vara-significancia
+#| echo: false
+#| fig-cap: "Izquierda: años de track record necesarios para que un Sharpe dado sea significativo al 5%, de t = Sharpe × √años ≥ 2. Derecha: probabilidad de que al menos una de N estrategias sin ninguna habilidad pase el umbral del 5% por azar, 1 − 0.95^N."
+import sys; sys.path.insert(0, "..")
+from _esquemas import *
+import numpy as np
+
+def _esquema():
+    fig, (izq, der) = plt.subplots(1, 2, figsize=(11, 4))
+    sr = np.linspace(0.25, 2.0, 200)
+    izq.plot(sr, (2 / sr) ** 2, color=PRIMARIO, lw=2.2)
+    for s, desplazamiento in [(0.5, (10, 6)), (1.0, (10, 6)), (2.0, (-75, 12))]:
+        anios = (2 / s) ** 2
+        izq.scatter([s], [anios], color=ACENTO, zorder=5)
+        izq.annotate(f"Sharpe {s:g} → {anios:.0f} año{'s' if anios > 1 else ''}", (s, anios),
+                     xytext=desplazamiento, textcoords="offset points", fontsize=9, color=ACENTO)
+    izq.set_yscale("log")
+    izq.set_yticks([1, 2, 4, 10, 20, 50], ["1", "2", "4", "10", "20", "50"])
+    izq.minorticks_off()
+    izq.set_xlabel("Sharpe anualizado de la estrategia")
+    izq.set_ylabel("Años necesarios (escala log)")
+    izq.set_title("¿Cuánto historial hace falta?", fontsize=11, color=PRIMARIO, fontweight="bold")
+
+    n = np.arange(1, 101)
+    der.plot(n, (1 - 0.95**n) * 100, color=ACENTO, lw=2.2)
+    for k in (1, 10, 60):
+        p = 1 - 0.95**k
+        der.scatter([k], [p * 100], color=PRIMARIO, zorder=5)
+        der.annotate(f"N = {k}: {p:.0%}", (k, p * 100), xytext=(8, -14) if k > 1 else (8, 4),
+                     textcoords="offset points", fontsize=9, color=PRIMARIO)
+    der.set_ylim(0, 105)
+    der.set_xlabel("Estrategias probadas (N)")
+    der.set_ylabel("P(al menos un falso positivo) (%)")
+    der.set_title("La trampa de probar muchas", fontsize=11, color=PRIMARIO, fontweight="bold")
+    for ax in (izq, der):
+        ax.grid(alpha=0.3)
+        ax.spines[["top", "right"]].set_visible(False)
+    plt.tight_layout()
+    plt.show()
+
+_esquema()
+```
 
 ```{python}
 #| label: pvalue-estrategia
@@ -118,7 +230,7 @@ Cuidado: ese p-value asume que evaluaste **una** estrategia. Si probaste 60, la 
 
 ---
 
-# Walk-forward: el estándar profesional
+## Walk-forward: el estándar profesional
 
 La partición simple IS/OOS tiene una debilidad: la evaluación depende de *un* corte particular. Además, las estrategias reales se recalibran periódicamente. El **análisis walk-forward** resuelve ambas cosas imitando la operatoria real:
 
@@ -126,6 +238,44 @@ La partición simple IS/OOS tiene una debilidad: la evaluación depende de *un* 
 2. **Operá** con esos parámetros el período siguiente (nunca visto).
 3. **Rodá** la ventana hacia adelante y repetí.
 4. Concatená todos los tramos operados: eso es tu track record **100% out-of-sample**.
+
+La @fig-walk-forward dibuja el esquema con los números que vamos a usar: dos años para entrenar, medio año para operar, y la ventana que avanza medio año por vez.
+
+```{python}
+#| label: fig-walk-forward
+#| echo: false
+#| fig-cap: "Walk-forward sobre los 10 años de datos: cada fila es una vuelta, con 504 días de entrenamiento (azul) seguidos de 126 días de operación (rojo). La ventana rueda 126 días por vuelta. La fila de abajo concatena todos los tramos rojos: un track record de 8 años en el que ningún día fue usado para elegir los parámetros con los que se operó."
+import sys; sys.path.insert(0, "..")
+from _esquemas import *
+
+def _esquema():
+    # Usa n_dias del capítulo; mismos tramos que la llamada a walk_forward
+    n_train, n_test = 504, 126
+    vueltas = (n_dias - n_train) // n_test
+    fig, ax = plt.subplots(figsize=(10, 5.2))
+    for i in range(vueltas):
+        y = vueltas - i + 1
+        ax.barh(y, n_train, left=i * n_test, height=0.7, color=FONDO_PRIMARIO,
+                edgecolor=PRIMARIO, lw=0.8)
+        ax.barh(y, n_test, left=i * n_test + n_train, height=0.7, color=ACENTO)
+    ax.barh(0, n_dias - n_train, left=n_train, height=0.8, color=ACENTO)
+    ax.text(n_train + (n_dias - n_train) / 2, 0, "track record 100% out-of-sample",
+            ha="center", va="center", fontsize=9.5, color="white", fontweight="bold")
+    ax.text(n_train / 2, vueltas + 1, "entrenar", ha="center", va="center",
+            fontsize=8.5, color=PRIMARIO)
+    ax.text(n_train + n_test + 40, vueltas + 1, "operar", va="center", fontsize=8.5,
+            color=ACENTO)
+    ax.set_yticks([0] + list(range(2, vueltas + 2)),
+                  ["concatenado"] + [f"vuelta {vueltas - k}" for k in range(vueltas)],
+                  fontsize=8)
+    ax.set_xlim(0, n_dias)
+    ax.set_xlabel("Día")
+    ax.spines[["top", "right"]].set_visible(False)
+    plt.tight_layout()
+    plt.show()
+
+_esquema()
+```
 
 ```{python}
 #| label: walk-forward
@@ -158,7 +308,7 @@ Dos observaciones valiosas: las **ventanas elegidas saltan erráticamente** de t
 
 ---
 
-# Métricas para juzgar el track record OOS
+## Métricas para juzgar el track record OOS
 
 Con el track record fuera de muestra en la mano, ¿qué mirar? Ninguna métrica sola alcanza; el tablero mínimo:
 
@@ -189,7 +339,8 @@ equity_e, dd_e = reporte(señal_real, "Estrategia con edge real")
 ```
 
 ```{python}
-#| label: equity-curve
+#| label: fig-equity-drawdown
+#| fig-cap: "Arriba: curvas de capital out-of-sample del walk-forward sobre ruido y de la estrategia con edge real. Abajo: el drawdown de cada una, la caída desde el máximo previo."
 fig, axes = plt.subplots(2, 1, figsize=(10, 6), sharex=False,
                           gridspec_kw={"height_ratios": [2, 1]})
 
@@ -213,9 +364,9 @@ plt.tight_layout()
 plt.show()
 ```
 
-Leé siempre la curva de capital junto con la de drawdown: el Sharpe resume, pero la trayectoria muestra si las ganancias vinieron parejas o de un golpe de suerte, y cuánto dolor (drawdown) hubo que aguantar en el camino. Un inversor real abandona la estrategia en el fondo del drawdown — si ese fondo es -40%, el Sharpe final es teoría.
+Como en la @fig-equity-drawdown, leé siempre la curva de capital junto con la de drawdown: el Sharpe resume, pero la trayectoria muestra si las ganancias vinieron parejas o de un golpe de suerte, y cuánto dolor (drawdown) hubo que aguantar en el camino. Un inversor real abandona la estrategia en el fondo del drawdown — si ese fondo es -40%, el Sharpe final es teoría.
 
-## Los costos que el backtest olvida
+### Los costos que el backtest olvida
 
 Antes de creer cualquier número OOS, restale la realidad:
 
@@ -239,7 +390,7 @@ print(f"Sharpe neto de costos: {sharpe(r_neto):.2f}")
 
 ---
 
-# El protocolo, en síntesis
+## El protocolo, en síntesis
 
 Un backtest confiable sigue esta secuencia — y el orden importa:
 
@@ -251,9 +402,28 @@ Un backtest confiable sigue esta secuencia — y el orden importa:
 6. **Inferencia honesta**: t-stat/p-value del track record OOS, corregido por múltiples pruebas.
 7. **El OOS se usa una vez.** Si volvés a diseñar, necesitás datos nuevos (o esperar a que el mercado los genere).
 
+```{mermaid}
+%%| label: fig-protocolo-backtest
+%%| fig-cap: "El protocolo de backtesting. La flecha punteada es la tentación que hay que resistir: volver a diseñar después de mirar el resultado out-of-sample lo convierte en in-sample, y entonces hacen falta datos nuevos."
+flowchart LR
+    H["<b>1 · Hipótesis</b><br/>por qué debería<br/>funcionar"] --> D["<b>2 · Diseño IS</b><br/>pocos parámetros"]
+    D --> C["<b>3 · Contar<br/>intentos</b><br/><i>N variantes</i>"]
+    C --> W["<b>4 · Walk-forward</b><br/>track record OOS"]
+    W --> K["<b>5 · Costos</b><br/>comisiones, slippage,<br/>sesgos de datos"]
+    K --> I["<b>6 · Inferencia</b><br/>t, p-value<br/>corregido por N"]
+    I --> F(["<b>7 · Veredicto</b>"])
+    I -.->|"¿no me gusta?<br/>rediseño…"| D
+    classDef paso fill:#e0e9f4,stroke:#1e3a5f,color:#1f2937
+    classDef clave fill:#fde8dc,stroke:#c2410c,color:#1f2937
+    classDef fin fill:#eef2e3,stroke:#637238,color:#1f2937
+    class H,D,W,K paso
+    class C,I clave
+    class F fin
+```
+
 ---
 
-# Con datos reales
+## Con datos reales
 
 Todo el capítulo trabajó sobre ruido fabricado, donde sabíamos la respuesta de antemano. El examen final es con datos donde **nadie** sabe la respuesta: corremos el walk-forward completo sobre cinco años del SPY, del dataset del libro (`datos/precios.csv`, ver @sec-datos-financieros).
 
@@ -283,7 +453,7 @@ Ah, y esto es *antes* de costos de transacción. La conclusión metodológica �
 
 ---
 
-# Errores comunes
+## Errores comunes
 
 ::: {.callout-warning title="Trampas frecuentes"}
 - **Re-usar el out-of-sample**: la más común y la más letal. Cada iteración de "ajusto y vuelvo a probar" lo degrada a in-sample.
@@ -295,7 +465,7 @@ Ah, y esto es *antes* de costos de transacción. La conclusión metodológica �
 
 ---
 
-# Ejercicios Propuestos
+## Ejercicios Propuestos
 
 ::: {.callout-important title="Ejercicios"}
 1. **La lotería de estrategias**: generá 100 series de ruido, "optimizá" la ventana de momentum en cada una y graficá el histograma de Sharpes in-sample del mejor parámetro. ¿Cuántos superan 1.0?
@@ -323,7 +493,7 @@ import numpy as np
 
 ---
 
-# Referencias
+## Referencias
 
 
 ::: {#refs}

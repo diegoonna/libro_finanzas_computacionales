@@ -36,6 +36,13 @@ np.set_printoptions(precision=4, suppress=True)
 rng = np.random.default_rng(42)
 ```
 
+```{python}
+#| include: false
+import sys; sys.path.insert(0, "..")
+from _esquemas import aplicar_estilo
+aplicar_estilo()
+```
+
 ---
 
 ## El problema en lenguaje matricial
@@ -212,29 +219,30 @@ print(f"  Retorno: {ret_tan:.2%} | Vol: {vol_tan:.2%} | Sharpe: {sharpe_tan:.3f}
 ```
 
 ```{python}
-#| label: grafico-frontera
+#| label: fig-frontera-cml
+#| fig-cap: "La frontera eficiente (línea llena) y su tramo ineficiente (punteado), los cuatro activos, el portafolio de mínima varianza, el tangente y la Capital Market Line que une la tasa libre de riesgo con el tangente."
 fig, ax = plt.subplots(figsize=(10, 6))
 
 # Frontera: por encima del GMV es eficiente; por debajo, ineficiente (punteada)
 corte = np.searchsorted(retornos_objetivo, w_gmv @ mu)
-ax.plot(frontera_vol[corte:] * 100, retornos_objetivo[corte:] * 100, "b-", linewidth=2,
-        label="Frontera eficiente")
-ax.plot(frontera_vol[:corte + 1] * 100, retornos_objetivo[:corte + 1] * 100, "b:",
-        linewidth=1.5, label="Tramo ineficiente")
+ax.plot(frontera_vol[corte:] * 100, retornos_objetivo[corte:] * 100, color="#1e3a5f",
+        linewidth=2, label="Frontera eficiente")
+ax.plot(frontera_vol[:corte + 1] * 100, retornos_objetivo[:corte + 1] * 100, ":",
+        color="#1e3a5f", linewidth=1.5, label="Tramo ineficiente")
 
 # Capital Market Line: recta desde (0, rf) que pasa por el tangente
 x_cml = np.linspace(0, vol_tan * 1.4, 50)
-ax.plot(x_cml * 100, (rf + sharpe_tan * x_cml) * 100, "g--", linewidth=2,
+ax.plot(x_cml * 100, (rf + sharpe_tan * x_cml) * 100, "--", color="#637238", linewidth=2,
         label="Capital Market Line")
 
 # Puntos notables
-ax.scatter(vols * 100, mu * 100, s=90, c="red", zorder=5, label="Activos individuales")
+ax.scatter(vols * 100, mu * 100, s=90, c="#c2410c", zorder=5, label="Activos individuales")
 for a, v, m in zip(activos, vols, mu):
     ax.annotate(a, (v * 100, m * 100), textcoords="offset points",
                 xytext=(8, -4), fontsize=8)
-ax.scatter(res_gmv.fun * 100, (w_gmv @ mu) * 100, s=160, c="orange", marker="D",
+ax.scatter(res_gmv.fun * 100, (w_gmv @ mu) * 100, s=160, c="#b45309", marker="D",
            zorder=6, label="Mínima varianza (GMV)")
-ax.scatter(vol_tan * 100, ret_tan * 100, s=180, c="green", marker="*",
+ax.scatter(vol_tan * 100, ret_tan * 100, s=180, c="#637238", marker="*",
            zorder=6, label="Portafolio tangente")
 ax.scatter(0, rf * 100, s=90, c="black", marker="s", zorder=6,
            label=f"Libre de riesgo ({rf:.0%})")
@@ -248,7 +256,7 @@ plt.tight_layout()
 plt.show()
 ```
 
-La lectura del gráfico es una de las ideas más profundas de las finanzas: **con un activo libre de riesgo disponible, la frontera curva deja de ser el menú óptimo**. Todo inversor racional debería pararse sobre la CML: elegir el portafolio tangente para su plata riesgosa, y regular su nivel de riesgo total moviendo la proporción entre el tangente y el activo libre de riesgo. El conservador pone 30% en el tangente y 70% a tasa; el agresivo, todo en el tangente (o incluso se apalanca). La *composición* de la parte riesgosa es la misma para ambos.
+La lectura de la @fig-frontera-cml es una de las ideas más profundas de las finanzas: **con un activo libre de riesgo disponible, la frontera curva deja de ser el menú óptimo**. Todo inversor racional debería pararse sobre la CML: elegir el portafolio tangente para su plata riesgosa, y regular su nivel de riesgo total moviendo la proporción entre el tangente y el activo libre de riesgo. El conservador pone 30% en el tangente y 70% a tasa; el agresivo, todo en el tangente (o incluso se apalanca). La *composición* de la parte riesgosa es la misma para ambos.
 
 ¿Y qué hay *adentro* de cada punto de la frontera? La @fig-composicion-frontera lo muestra, de izquierda (GMV) a derecha (máximo retorno): el bono domina el extremo conservador, y a medida que se le pide más retorno la cartera va cambiando bono por acciones, hasta terminar 100% en la acción growth. Fijate que la acción defensiva nunca pesa mucho y sale de la cartera a mitad de camino: su combinación de retorno y correlación no compite con la de sus vecinas.
 
@@ -387,7 +395,8 @@ En el modelo de la CML, la renta fija aparece como el activo libre de riesgo de 
 Ya lo hicimos sin decirlo: nuestro cuarto activo es un bono corporativo. Mirá cuánto aporta:
 
 ```{python}
-#| label: bono-aporte
+#| label: fig-aporte-bono
+#| fig-cap: "Frontera eficiente con y sin el bono en el universo. Con el bono, la frontera se corre a la izquierda en la zona de riesgo bajo y medio: mismo retorno, menos volatilidad."
 # Frontera SIN el bono (solo los 3 primeros activos)
 mu3, Sigma3 = mu[:3], Sigma[:3, :3]
 w03 = np.ones(3) / 3
@@ -402,9 +411,9 @@ for r_obj in rets_grid:
     vols_sin_bono.append(res.fun)
 
 fig, ax = plt.subplots(figsize=(9, 5))
-ax.plot(np.array(vols_sin_bono) * 100, rets_grid * 100, "r--", linewidth=2,
+ax.plot(np.array(vols_sin_bono) * 100, rets_grid * 100, "--", color="#c2410c", linewidth=2,
         label="Frontera sin bonos (solo acciones)")
-ax.plot(frontera_vol * 100, retornos_objetivo * 100, "b-", linewidth=2,
+ax.plot(frontera_vol * 100, retornos_objetivo * 100, color="#1e3a5f", linewidth=2,
         label="Frontera con bonos")
 ax.set_xlabel("Volatilidad anual (%)")
 ax.set_ylabel("Retorno esperado anual (%)")
@@ -415,7 +424,7 @@ plt.tight_layout()
 plt.show()
 ```
 
-La frontera con bonos **domina** a la de solo-acciones en toda la zona de riesgo bajo y medio: para los mismos retornos objetivo, menos volatilidad. El bono no está ahí por su retorno (es el más bajo del universo) sino por su **correlación baja**: es el mejor diversificador de la mesa. Esta es la base cuantitativa del clásico portafolio 60/40.
+En la @fig-aporte-bono, la frontera con bonos **domina** a la de solo-acciones en toda la zona de riesgo bajo y medio: para los mismos retornos objetivo, menos volatilidad. El bono no está ahí por su retorno (es el más bajo del universo) sino por su **correlación baja**: es el mejor diversificador de la mesa. Esta es la base cuantitativa del clásico portafolio 60/40.
 
 ### Inflación y horizontes largos: deflactar o engañarse
 

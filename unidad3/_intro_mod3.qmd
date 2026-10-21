@@ -12,6 +12,35 @@ El recorrido avanza en cuatro actos. Primero, la **medición del riesgo** y su c
 
 El tercer acto es la **inferencia**: cómo aprender de los datos con modelos lineales bien especificados —CAPM, multifactor, p-values leídos con honestidad— (Capítulo 15) y cómo modelar series que dependen de su propio pasado con ARIMA y VAR (Capítulo 16). Y el cierre es el acto que le da sentido a todo lo anterior: el **backtesting** (Capítulo 17), la disciplina de separar la señal de la casualidad, que convierte "mi estrategia funcionó en el pasado" en una afirmación estadísticamente defendible... o la desarma.
 
+La @fig-mapa-mod3 resume ese recorrido.
+
+```{mermaid}
+%%| label: fig-mapa-mod3
+%%| fig-cap: "Los cuatro actos del módulo. Medir el riesgo, modelar cómo se mueven los precios, aprender de los datos y, al final, validar con método. Las colas atraviesan los cuatro."
+flowchart LR
+    subgraph A1["<b>1 · Medir</b>"]
+        C11["Cap. 11<br/>VaR y ES"] --> C12["Cap. 12<br/>Regulación<br/>y crisis"]
+    end
+    subgraph A2["<b>2 · Modelar el mundo</b>"]
+        C13["Cap. 13<br/>Monte Carlo<br/>y GBM"] --> C14["Cap. 14<br/>Saltos y<br/>colas gruesas"]
+    end
+    subgraph A3["<b>3 · Inferir</b>"]
+        C15["Cap. 15<br/>Regresión<br/>y factores"] --> C16["Cap. 16<br/>ARIMA y VAR"]
+    end
+    subgraph A4["<b>4 · Validar</b>"]
+        C17["Cap. 17<br/>Backtesting"]
+    end
+    A1 --> A2 --> A3 --> A4
+    COLAS{{"<b>Hilo conductor</b><br/>en las colas<br/>vive el riesgo"}} -.-> A1
+    COLAS -.-> A2
+    classDef cap fill:#e0e9f4,stroke:#1e3a5f,color:#1f2937
+    classDef fin fill:#eef2e3,stroke:#637238,color:#1f2937
+    classDef hilo fill:#fde8dc,stroke:#c2410c,color:#1f2937
+    class C11,C12,C13,C14,C15,C16 cap
+    class C17 fin
+    class COLAS hilo
+```
+
 ::: {.callout-note title="El hilo conductor" appearance="simple"}
 Si tuviéramos que resumir el módulo en una frase, sería esta: **la media y la varianza no cuentan la historia de las colas, y en las colas vive el riesgo**. Cada capítulo ataca una consecuencia distinta de esa frase.
 :::

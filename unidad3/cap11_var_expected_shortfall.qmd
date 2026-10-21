@@ -9,7 +9,7 @@ nocite: |
   @jorion2006, @hull2018risk, @mcneil2015
 ---
 
-# Introducción
+# Introducción {.unnumbered}
 
 El **Value at Risk (VaR)** responde a la pregunta más importante en gestión de riesgo:
 
@@ -21,7 +21,7 @@ Si el VaR diario al 95% de un portafolio es $150,000, significa que **en 19 de c
 
 ---
 
-# Generación de Datos
+## Generación de Datos
 
 Antes de calcular el VaR, necesitamos retornos. Simulamos un año de retornos diarios:
 
@@ -46,9 +46,16 @@ print(f"Media diaria: {mu:.6f} ({mu * 252:.2%} anualizada)")
 print(f"Volatilidad diaria: {sigma:.6f} ({sigma * np.sqrt(252):.2%} anualizada)")
 ```
 
+```{python}
+#| include: false
+import sys; sys.path.insert(0, "..")
+from _esquemas import aplicar_estilo
+aplicar_estilo()
+```
+
 ---
 
-# VaR Paramétrico (Normal)
+## VaR Paramétrico (Normal)
 
 El primer método es el más rápido y el que más supuestos hace: asumir que los retornos siguen una **distribución normal**. Si eso es cierto, la distribución entera queda descripta por dos números que ya estimamos —media $\mu$ y desvío $\sigma$— y el cuantil que define el VaR tiene fórmula cerrada:
 
@@ -80,7 +87,7 @@ Traduzcamos el número a castellano, porque es lo que te van a pedir en cualquie
 
 ---
 
-# VaR Histórico
+## VaR Histórico
 
 El método paramétrico se apoya por completo en el supuesto de normalidad. El **VaR histórico** toma el camino opuesto: no asume *ninguna* distribución — deja que los datos hablen solos. La receta es de una simplicidad brutal: ordenás los retornos observados de peor a mejor y leés el percentil correspondiente. El VaR 95% es, literalmente, "el retorno del día que está en el puesto 5% de los peores".
 
@@ -101,27 +108,70 @@ Con nuestros datos, el histórico da parecido al paramétrico — lógico, porqu
 
 El precio de la flexibilidad del histórico: al 99% con un año de datos (252 observaciones), el percentil 1 se estima con **apenas 2 o 3 observaciones**. Tu medida de riesgo cuelga de un puñado de días — por eso en la práctica se usan ventanas más largas o métodos híbridos.
 
----
-
-# Comparación Visual: Paramétrico vs. Histórico
+La @fig-var-historico-ordenado muestra la receta completa: los 252 días puestos en fila, del peor al mejor. El VaR histórico no es más que leer dónde termina la franja roja.
 
 ```{python}
-#| label: comparacion-var
+#| label: fig-var-historico-ordenado
+#| echo: false
+#| fig-cap: "VaR histórico: los 252 retornos del año ordenados del peor al mejor. Los días en rojo forman la cola del 5%; el VaR 95% es la frontera de esa franja. Al 99%, la cola se reduce a 2 o 3 barras."
+import sys; sys.path.insert(0, "..")
+from _esquemas import *
+import numpy as np
+
+def _esquema():
+    # Usa retornos, percentil_5 y percentil_1 del capítulo
+    orden = np.sort(retornos) * 100
+    en_cola = orden < percentil_5 * 100
+    en_cola_99 = orden < percentil_1 * 100
+    dias = np.arange(1, len(orden) + 1)
+
+    fig, ax = plt.subplots(figsize=(10, 4.2))
+    ax.bar(dias, orden, width=1.0, color=np.where(en_cola, ACENTO, GRIS), linewidth=0)
+    ax.axhline(percentil_5 * 100, color=ACENTO, ls="--", lw=1.2)
+    ax.axhline(0, color=TEXTO, lw=0.8)
+
+    ax.annotate(f"VaR 95% = percentil 5 = {percentil_5:.2%}\n"
+                f"(los {en_cola.sum()} peores días quedan por debajo)",
+                xy=(en_cola.sum(), percentil_5 * 100), xytext=(40, orden.min() * 0.85),
+                fontsize=9, color=ACENTO, arrowprops=dict(arrowstyle="-|>", color=ACENTO))
+    ax.annotate(f"VaR 99%: la cola son\napenas {max(en_cola_99.sum(), 1)} días",
+                xy=(1.5, orden[0]), xytext=(25, orden.min() * 1.05),
+                fontsize=9, color=TEXTO, arrowprops=dict(arrowstyle="-|>", color=TEXTO))
+    ax.set_xlim(0, len(orden) + 1)
+    ax.set_xlabel("Días del año, ordenados del peor al mejor")
+    ax.set_ylabel("Retorno diario (%)")
+    ax.grid(axis="y", alpha=0.3)
+    ax.spines[["top", "right"]].set_visible(False)
+    plt.tight_layout()
+    plt.show()
+
+_esquema()
+```
+
+---
+
+## Comparación Visual: Paramétrico vs. Histórico
+
+La @fig-comparacion-var pone los dos métodos sobre el mismo dibujo: el histograma de los datos, la campana que supone el método paramétrico y el corte del 5% que marca cada uno.
+
+```{python}
+#| label: fig-comparacion-var
+#| fig-cap: "Retornos observados, normal ajustada y las dos líneas de VaR 95%. Con datos simulados de una normal, ambos cortes caen casi en el mismo lugar."
 fig, ax = plt.subplots(figsize=(10, 5))
 
 # Histograma de retornos
-ax.hist(retornos, bins=40, density=True, alpha=0.6, color="#2d6a9f", 
+ax.hist(retornos, bins=40, density=True, alpha=0.6, color="#94a3b8",
         edgecolor="white", label="Retornos observados")
 
 # Curva normal teórica
 x = np.linspace(retornos.min(), retornos.max(), 200)
-ax.plot(x, stats.norm.pdf(x, mu, sigma), color="#1e3a5f", linewidth=2, 
+ax.plot(x, stats.norm.pdf(x, mu, sigma), color="#1e3a5f", linewidth=2,
         label="Normal teórica")
 
 # Líneas de VaR
-ax.axvline(percentil_5, color="#ef4444", linewidth=2, linestyle="--", 
+ax.axvline(percentil_5, color="#c2410c", linewidth=2, linestyle="--",
            label=f"VaR Hist 95% ({percentil_5:.4f})")
-ax.axvline(mu + z * sigma, color="#f59e0b", linewidth=2, linestyle=":", 
+ax.axvline(mu + z * sigma, color="#637238", linewidth=2, linestyle=":",
            label=f"VaR Param 95% ({mu + z * sigma:.4f})")
 
 ax.set_xlabel("Retorno Diario")
@@ -139,7 +189,7 @@ El VaR paramétrico y el histórico **no necesariamente coinciden**. La diferenc
 
 ---
 
-# Expected Shortfall (CVaR): mirar dentro de la cola
+## Expected Shortfall (CVaR): mirar dentro de la cola
 
 El VaR tiene un defecto conceptual serio: te dice *dónde empieza* la zona de desastre, pero **no te dice nada de lo que pasa adentro**. Dos portafolios pueden tener el mismo VaR al 95% y comportamientos totalmente distintos en ese 5% restante: uno pierde apenas un poco más que el VaR, el otro se pulveriza. Para el VaR, son idénticos.
 
@@ -151,7 +201,67 @@ $$ES_\alpha = -E\big[\,r \mid r < -VaR_\alpha\,\big]$$
 
 Es una esperanza **condicional**: promediamos los retornos *dado que* caímos en la cola. Por construcción, el ES siempre es mayor o igual que el VaR — es el "qué tan feo se pone" después de cruzar la frontera.
 
-## Cálculo histórico: promediar la cola
+La @fig-anatomia-var-es muestra las dos medidas sobre la misma cola. A la izquierda, el VaR es una frontera y el ES es el centro de gravedad de lo que queda del otro lado. A la derecha, dos distribuciones con **exactamente el mismo VaR 95%**: para el VaR son idénticas, pero la de colas pesadas esconde pérdidas mucho más profundas, y el ES las ve.
+
+```{python}
+#| label: fig-anatomia-var-es
+#| echo: false
+#| fig-cap: "Izquierda: el VaR marca dónde empieza la cola del 5%; el ES es el promedio de esa cola. Derecha: una normal y una t de Student (3 grados de libertad) calibradas al mismo VaR 95%. El VaR no las distingue; el ES de la t es bastante mayor."
+import sys; sys.path.insert(0, "..")
+from _esquemas import *
+import numpy as np
+from scipy import stats
+
+def _esquema():
+    # Usa mu y sigma del capítulo (retornos diarios)
+    normal = stats.norm(mu, sigma)
+    q = normal.ppf(0.05)
+    es_n = normal.expect(lambda r: r, ub=q, conditional=True)
+
+    # t de Student con colas pesadas, escalada para tener el mismo percentil 5
+    nu = 3
+    t = stats.t(nu, loc=mu, scale=(q - mu) / stats.t.ppf(0.05, nu))
+    es_t = t.expect(lambda r: r, ub=q, conditional=True)
+
+    x = np.linspace(-0.08, 0.06, 800)
+    fig, (izq, der) = plt.subplots(1, 2, figsize=(11, 4.2))
+
+    sombrear_cola(izq, x * 100, normal.pdf(x), q * 100, color=PRIMARIO)
+    izq.axvline(q * 100, color=ACENTO, lw=1.5, ls="--")
+    izq.plot([es_n * 100], [0], marker="^", ms=11, color=ACENTO, clip_on=False, zorder=5)
+    izq.annotate("VaR 95%:\ndónde empieza la cola\n(el 5% peor)", xy=(q * 100, normal.pdf(q) * 1.6),
+                 xytext=(-7.5, normal.pdf(0) * 0.75), fontsize=9, color=ACENTO,
+                 arrowprops=dict(arrowstyle="-|>", color=ACENTO))
+    izq.annotate("ES 95%:\npromedio de la cola", xy=(es_n * 100, normal.pdf(q) * 0.15),
+                 xytext=(-7.5, normal.pdf(0) * 0.35), fontsize=9, color=ACENTO,
+                 arrowprops=dict(arrowstyle="-|>", color=ACENTO))
+    izq.set_title("Qué mide cada una", fontsize=11, color=PRIMARIO, fontweight="bold")
+
+    sombrear_cola(der, x * 100, normal.pdf(x), q * 100, color=PRIMARIO, etiqueta="Normal",
+                  alpha=0.2)
+    sombrear_cola(der, x * 100, t.pdf(x), q * 100, color=ACENTO, etiqueta="t de Student (ν=3)",
+                  alpha=0.2)
+    der.axvline(q * 100, color=TEXTO, lw=1.2, ls="--")
+    der.text(q * 100 + 0.15, t.pdf(0) * 0.95, f"mismo VaR\n{-q:.2%}", fontsize=9, color=TEXTO)
+    for es, color, nombre in [(es_n, PRIMARIO, "ES normal"), (es_t, ACENTO, "ES t")]:
+        der.plot([es * 100], [0], marker="^", ms=11, color=color, clip_on=False, zorder=5)
+    der.text(-7.8, t.pdf(0) * 0.55, f"ES normal: {-es_n:.2%}\nES t:        {-es_t:.2%}",
+             fontsize=9, color=TEXTO, family=MONO)
+    der.legend(frameon=False, fontsize=9, loc="upper right")
+    der.set_title("Mismo VaR, distinto ES", fontsize=11, color=PRIMARIO, fontweight="bold")
+
+    for ax in (izq, der):
+        ax.set_xlabel("Retorno diario (%)")
+        ax.set_yticks([])
+        ax.set_ylim(bottom=0)
+        ax.spines[["top", "right", "left"]].set_visible(False)
+    plt.tight_layout()
+    plt.show()
+
+_esquema()
+```
+
+### Cálculo histórico: promediar la cola
 
 Con el método histórico, el cálculo es de una transparencia total: filtrás los días peores que el VaR y promediás.
 
@@ -171,7 +281,7 @@ print(f"\nEl ES 95% es {cvar_95/var_hist_95:.2f}x el VaR 95%")
 print("→ Cuando el día es malo de verdad, la pérdida promedio supera al VaR en ese factor.")
 ```
 
-## Cálculo paramétrico: fórmula cerrada bajo normalidad
+### Cálculo paramétrico: fórmula cerrada bajo normalidad
 
 Si asumimos retornos normales, el ES también tiene fórmula cerrada. Para nivel de confianza $\alpha$:
 
@@ -191,7 +301,7 @@ print(f"ES histórico   (95%): ${cvar_95:>12,.2f}")
 
 Ambos métodos deberían parecerse con datos ~normales como los nuestros. Con retornos reales (colas pesadas), el histórico suele dar **más alto** — y es el que está diciendo la verdad. También se puede estimar el ES por **Monte Carlo**: simulás miles de retornos del modelo que quieras (con saltos, con t-Student) y promediás la cola simulada; lo haremos en el Capítulo 13.
 
-## Por qué el ES es "coherente" y el VaR no
+### Por qué el ES es "coherente" y el VaR no
 
 Hay un argumento matemático de fondo, y vale la pena entenderlo porque explica por qué **Basilea cambió del VaR al ES** para riesgo de mercado.
 
@@ -231,6 +341,57 @@ Mirá el resultado con atención, porque es contraintuitivo: cada bono individua
 
 Según el VaR, **diversificar empeoró el riesgo** — un absurdo económico. El ES, en cambio, ve el default de cada bono individual (porque promedia toda la cola, no solo mira la frontera) y reporta correctamente que la cartera combinada es menos riesgosa que cada bono solo. Esa es la diferencia entre una medida coherente y una que no lo es.
 
+La @fig-subaditividad muestra de dónde sale la paradoja. Cada barra reparte el 100% de la probabilidad entre los resultados posibles, del peor al mejor, y la línea marca el 5%. El VaR es el resultado sobre el que cae esa línea.
+
+```{python}
+#| label: fig-subaditividad
+#| echo: false
+#| fig-cap: "Distribución de resultados ordenada del peor al mejor (eje recortado al 20% de probabilidad más mala). En el bono solo, el default (3%) queda entero dentro de la cola y la línea del 5% cae en un escenario sin pérdida: VaR ≈ 0. En la cartera, la línea cae en el escenario «un bono en default» (−29%): el VaR salta, aunque el riesgo bajó."
+import sys; sys.path.insert(0, "..")
+from _esquemas import *
+import numpy as np
+
+def _esquema():
+    p, perdida, cupon = 0.03, -0.60, 0.02
+    filas = {
+        "Bono A (solo)": [(p, perdida), (1 - p, cupon)],
+        "Cartera 50/50": [(p**2, perdida), (2 * p * (1 - p), (perdida + cupon) / 2),
+                          ((1 - p)**2, cupon)],
+    }
+    colores = {perdida: ACENTO, (perdida + cupon) / 2: "#f59e0b", cupon: GRIS}
+
+    fig, ax = plt.subplots(figsize=(10, 3.4))
+    for y, (nombre, escenarios) in enumerate(reversed(filas.items())):
+        izq, cola = 0.0, []
+        for prob, res in escenarios:
+            ax.barh(y, prob * 100, left=izq * 100, height=0.55, color=colores[res],
+                    edgecolor="white", linewidth=1.5)
+            if prob * 100 > 1:
+                ax.text((izq + min(prob, 0.2 - izq) / 2) * 100, y,
+                        f"{res:+.0%}\n({prob:.2%})", ha="center", va="center", fontsize=8.5,
+                        color="white" if res < 0 else TEXTO)
+            cola.append((max(0.0, min(prob, 0.05 - izq)), res))
+            izq += prob
+        # VaR: resultado que cae sobre la línea del 5%; ES: promedio de la cola
+        acum = np.cumsum([pr for pr, _ in escenarios])
+        var = -escenarios[int(np.searchsorted(acum, 0.05))][1]
+        es = -sum(pr * res for pr, res in cola) / 0.05
+        ax.text(20.6, y, f"VaR 95%: {var:.0%}\nES 95%:  {es:.0%}", va="center", fontsize=9,
+                family=MONO, color=TEXTO)
+    ax.axvline(5, color=TEXTO, lw=1.5, ls="--")
+    ax.text(5, 1.45, "cola del 5%", ha="center", fontsize=9, color=TEXTO,
+            bbox=dict(facecolor="white", edgecolor="none", pad=1.5))
+    ax.set_yticks([0, 1], list(reversed(filas)))
+    ax.set_xlim(0, 20)
+    ax.set_ylim(-0.5, 1.6)
+    ax.set_xlabel("Probabilidad acumulada, del peor resultado al mejor (%)")
+    ax.spines[["top", "right"]].set_visible(False)
+    plt.tight_layout()
+    plt.show()
+
+_esquema()
+```
+
 ::: {.callout-important title="VaR vs. Expected Shortfall, en síntesis"}
 | Métrica | Pregunta que responde | ¿Subaditiva? | ¿Ve dentro de la cola? |
 |---------|----------------------|:---:|:---:|
@@ -242,7 +403,7 @@ Por estas propiedades, **Basilea III (FRTB)** reemplazó el VaR 99% por el **ES 
 
 ---
 
-# Backtesting de VaR: ¿el modelo dice la verdad?
+## Backtesting de VaR: ¿el modelo dice la verdad?
 
 Calculamos un VaR 95%. ¿Cómo sabemos si es *correcto*? Hay una forma directa de auditarlo, y es la que exigen los reguladores: contar. Si el VaR 95% está bien calibrado, la pérdida real debería superarlo **el 5% de los días** — ni mucho más (el modelo subestima el riesgo) ni mucho menos (lo sobreestima, y estás inmovilizando capital de más). Cada día en que la pérdida supera al VaR se llama una **excepción**.
 
@@ -269,13 +430,52 @@ print("Aprobado" if p_value > 0.05 else "Rechazado: demasiadas excepciones")
 
 Interpretemos el resultado: esperábamos ~12.6 excepciones en 252 días y observamos un número cercano; el p-value alto dice que esa cantidad es perfectamente compatible con un modelo bien calibrado — **no hay evidencia contra el VaR**. Si hubiéramos observado 25 excepciones, el p-value se derrumbaría y el modelo quedaría rechazado. Este es exactamente el mecanismo del "semáforo de Basilea": los reguladores cuentan las excepciones del año y, si son demasiadas, el banco sufre un multiplicador de capital mayor.
 
+La @fig-kupiec-binomial dibuja el test: la binomial dice cuántas excepciones son esperables si el modelo está bien, y la zona roja reúne las cantidades tan altas que serían una sorpresa (menos del 5% de probabilidad).
+
+```{python}
+#| label: fig-kupiec-binomial
+#| echo: false
+#| fig-cap: "Test de Kupiec: distribución del número de excepciones en 252 días si el VaR 95% está bien calibrado, Binomial(252, 5%). Las barras rojas forman la zona de rechazo; la flecha marca las excepciones observadas."
+import sys; sys.path.insert(0, "..")
+from _esquemas import *
+import numpy as np
+from scipy.stats import binom
+
+def _esquema():
+    # Usa retornos, confianza y excepciones del capítulo
+    n, p = len(retornos), 1 - confianza
+    k = np.arange(0, 31)
+    pmf = binom.pmf(k, n, p)
+    # Umbral: menor k tal que P(X >= k) < 5%
+    k_crit = int(k[binom.sf(k - 1, n, p) < 0.05][0])
+
+    fig, ax = plt.subplots(figsize=(9.5, 4))
+    ax.bar(k, pmf * 100, color=np.where(k >= k_crit, ACENTO, PRIMARIO), width=0.8, alpha=0.9)
+    ax.axvline(n * p, color=TEXTO, ls=":", lw=1.2)
+    ax.text(n * p, pmf.max() * 100 * 1.07, f"esperado: {n * p:.1f}", ha="center", fontsize=9)
+    ax.annotate(f"observado: {excepciones}", xy=(excepciones, binom.pmf(excepciones, n, p) * 100),
+                xytext=(excepciones - 9, pmf.max() * 100 * 0.75), fontsize=9.5, color=TEXTO,
+                fontweight="bold", arrowprops=dict(arrowstyle="-|>", color=TEXTO))
+    ax.text(k_crit + 0.5, pmf.max() * 100 * 0.45,
+            f"zona de rechazo\n(≥ {k_crit} excepciones)", fontsize=9, color=ACENTO)
+    ax.set_xlabel("Número de excepciones en el año")
+    ax.set_ylabel("Probabilidad (%)")
+    ax.set_ylim(0, pmf.max() * 100 * 1.18)
+    ax.grid(axis="y", alpha=0.3)
+    ax.spines[["top", "right"]].set_visible(False)
+    plt.tight_layout()
+    plt.show()
+
+_esquema()
+```
+
 ::: {.callout-note title="Lo que Kupiec no ve"}
 El test cuenta *cuántas* excepciones hubo, pero no *cuándo*: diez excepciones repartidas en el año y diez excepciones en dos semanas de crisis dan el mismo veredicto, aunque el segundo caso delata un modelo que no reacciona a los cambios de régimen. Tests más finos (Christoffersen) auditan también la independencia de las excepciones. Y ese defecto nos lleva directo al problema siguiente: la volatilidad **cambia en el tiempo**.
 :::
 
 ---
 
-# EWMA: cuando la volatilidad tiene memoria
+## EWMA: cuando la volatilidad tiene memoria
 
 Todo lo anterior usó **una** volatilidad, estimada con el año entero de datos. Pero mirá cualquier serie financiera real: hay semanas planas y semanas de pánico, y los días agitados vienen **en rachas** (el *volatility clustering* que formalizaremos en el Capítulo 20). Un VaR con volatilidad constante es un promedio entre la calma y la tormenta: sobreestima el riesgo en las épocas tranquilas y —mucho peor— **lo subestima justo cuando la tormenta llega**.
 
@@ -285,8 +485,44 @@ $$\sigma_t^2 = \lambda \sigma_{t-1}^2 + (1-\lambda) r_{t-1}^2$$
 
 El parámetro $\lambda$ (RiskMetrics usa 0.94) controla la memoria: un shock grande de ayer entra con peso $(1-\lambda) = 6\%$ y después se va desvaneciendo geométricamente. Resultado: cuando el mercado se agita, la volatilidad estimada **sube en días, no en meses** — y el VaR con ella.
 
+Desarrollando la recursión, la varianza EWMA resulta ser un promedio de todos los retornos al cuadrado pasados, con pesos $(1-\lambda)\lambda^k$ para el día de hace $k+1$ ruedas. La @fig-pesos-ewma compara esos pesos con los de la volatilidad "de siempre", que le da a cada día del año el mismo peso.
+
 ```{python}
-#| label: ewma
+#| label: fig-pesos-ewma
+#| echo: false
+#| fig-cap: "Cuánto pesa cada día pasado en la estimación de la varianza. La volatilidad constante reparte el peso por igual entre los 252 días; EWMA (λ = 0.94) concentra la mitad del peso en las últimas ~11 ruedas y olvida rápido lo viejo."
+import sys; sys.path.insert(0, "..")
+from _esquemas import *
+import numpy as np
+
+def _esquema():
+    lam, n = 0.94, 252
+    k = np.arange(n)
+    pesos = (1 - lam) * lam**k
+    vida_media = np.log(0.5) / np.log(lam)
+
+    fig, ax = plt.subplots(figsize=(9.5, 3.8))
+    ax.bar(k[:90] + 1, pesos[:90] * 100, width=0.85,
+           color=np.where(k[:90] < round(vida_media), ACENTO, PRIMARIO), label="EWMA (λ = 0.94)")
+    ax.axhline(100 / n, color=SECUNDARIO, lw=2, label="Volatilidad constante: 1/252 cada día")
+    ax.annotate(f"la mitad del peso total está\nen los últimos {vida_media:.0f} días",
+                xy=(vida_media / 2, pesos[5] * 100), xytext=(25, pesos[0] * 100 * 0.8),
+                fontsize=9, color=ACENTO, arrowprops=dict(arrowstyle="-|>", color=ACENTO))
+    ax.set_xlim(0, 90)
+    ax.set_xlabel("Antigüedad del retorno (días hacia atrás)")
+    ax.set_ylabel("Peso en la varianza (%)")
+    ax.legend(frameon=False, fontsize=9)
+    ax.grid(axis="y", alpha=0.3)
+    ax.spines[["top", "right"]].set_visible(False)
+    plt.tight_layout()
+    plt.show()
+
+_esquema()
+```
+
+```{python}
+#| label: fig-ewma-var-dinamico
+#| fig-cap: "Arriba: volatilidad EWMA contra la volatilidad constante del año. Abajo: el VaR 95% que resulta de cada una."
 lambd = 0.94  # Factor de decaimiento (RiskMetrics)
 
 # Calcular varianza EWMA
@@ -305,8 +541,8 @@ fig, axes = plt.subplots(2, 1, figsize=(10, 7), sharex=True)
 
 # Panel superior: volatilidad
 ax = axes[0]
-ax.plot(vol_ewma * np.sqrt(252) * 100, linewidth=1.5, color="#2d6a9f", label="EWMA (λ=0.94)")
-ax.axhline(sigma * np.sqrt(252) * 100, color="#ef4444", linestyle="--", alpha=0.7, label="Vol constante")
+ax.plot(vol_ewma * np.sqrt(252) * 100, linewidth=1.5, color="#1e3a5f", label="EWMA (λ=0.94)")
+ax.axhline(sigma * np.sqrt(252) * 100, color="#c2410c", linestyle="--", alpha=0.7, label="Vol constante")
 ax.set_ylabel("Volatilidad Anualizada (%)")
 ax.set_title("Comparación: Volatilidad Constante vs. EWMA")
 ax.legend()
@@ -314,7 +550,7 @@ ax.grid(True, alpha=0.3)
 
 # Panel inferior: VaR dinámico vs constante
 ax = axes[1]
-ax.fill_between(range(len(var_ewma)), var_ewma, alpha=0.3, color="#ef4444", label="VaR EWMA")
+ax.fill_between(range(len(var_ewma)), var_ewma, alpha=0.3, color="#c2410c", label="VaR EWMA")
 ax.axhline(var_param_95, color="#1e3a5f", linestyle="--", label="VaR constante")
 ax.set_xlabel("Día")
 ax.set_ylabel("VaR ($)")
@@ -326,11 +562,11 @@ plt.tight_layout()
 plt.show()
 ```
 
-Leé los dos paneles juntos. Arriba: la volatilidad EWMA oscila alrededor de la constante (línea roja), con episodios donde se dispara por encima y períodos donde duerme por debajo — la línea roja es el promedio de dos regímenes distintos. Abajo, la consecuencia para el riesgo: el **VaR dinámico se expande en los períodos agitados y se contrae en los tranquilos**, mientras el VaR constante ignora todo. En los picos, el VaR constante está *subestimando* el riesgo del día — y esas son exactamente las excepciones agrupadas que el test de Kupiec no sabe detectar.
+Leé los dos paneles de la @fig-ewma-var-dinamico juntos. Arriba: la volatilidad EWMA oscila alrededor de la constante (línea roja), con episodios donde se dispara por encima y períodos donde duerme por debajo — la línea roja es el promedio de dos regímenes distintos. Abajo, la consecuencia para el riesgo: el **VaR dinámico se expande en los períodos agitados y se contrae en los tranquilos**, mientras el VaR constante ignora todo. En los picos, el VaR constante está *subestimando* el riesgo del día — y esas son exactamente las excepciones agrupadas que el test de Kupiec no sabe detectar.
 
 ---
 
-# Test de Normalidad
+## Test de Normalidad
 
 Cerramos auditando el supuesto sobre el que descansa todo el enfoque paramétrico: ¿los retornos son normales? El **test de Jarque-Bera** lo contrasta midiendo asimetría y curtosis:
 
@@ -365,7 +601,31 @@ Esto hace que el VaR paramétrico normal **subestime** el riesgo verdadero — e
 
 ---
 
-# Resumen de Métricas
+## Resumen de Métricas
+
+Los tres métodos del capítulo (y el que llega en el Capítulo 13) comparten el final: un percentil de la distribución de pérdidas y el promedio de lo que queda más allá. Lo que cambia es cómo se obtiene esa distribución, y la @fig-tres-metodos-var lo resume.
+
+```{mermaid}
+%%| label: fig-tres-metodos-var
+%%| fig-cap: "Tres caminos hacia el VaR y el ES. Difieren en de dónde sale la distribución de pérdidas: una fórmula (normal), el pasado tal cual (histórico) o un modelo simulado (Monte Carlo)."
+flowchart LR
+    R["Retornos<br/>históricos"] --> P1["Estimar μ y σ"]
+    P1 --> P2["Suponer normal<br/>cuantil z"]
+    R --> H1["Ordenar del<br/>peor al mejor"]
+    R --> M1["Calibrar un modelo<br/><i>GBM, saltos, t…</i>"]
+    M1 --> M2["Simular miles<br/>de escenarios<br/><i>Cap. 13</i>"]
+    P2 --> D[["Distribución<br/>de pérdidas"]]
+    H1 --> D
+    M2 --> D
+    D --> V(["VaR = percentil"])
+    D --> E(["ES = promedio<br/>de la cola"])
+    classDef par fill:#e0e9f4,stroke:#1e3a5f,color:#1f2937
+    classDef his fill:#eef2e3,stroke:#637238,color:#1f2937
+    classDef mc fill:#fde8dc,stroke:#c2410c,color:#1f2937
+    class P1,P2 par
+    class H1 his
+    class M1,M2 mc
+```
 
 ```{python}
 #| label: resumen
@@ -390,7 +650,7 @@ print(resumen.to_string(index=False))
 
 ---
 
-# Con datos reales
+## Con datos reales
 
 El capítulo entero descansó sobre retornos simulados de una normal — ideal para aprender los métodos, tramposo para juzgarlos. El veredicto final se lo damos a los datos: cinco años del ETF SPY (el S&P 500), del dataset del libro (`datos/precios.csv`, ver @sec-datos-financieros).
 
@@ -424,7 +684,7 @@ Todo lo que el capítulo anticipó, junto y en un solo resultado. Al 95%, el par
 
 ---
 
-# Errores comunes
+## Errores comunes
 
 ::: {.callout-warning title="Trampas frecuentes"}
 - **El signo del cuantil**: el percentil 5 de los retornos es un número *negativo*; el VaR se reporta *positivo* (es una pérdida). Ese signo menos perdido es el bug más común en implementaciones de VaR — verificá que tu VaR sea positivo.
@@ -436,7 +696,7 @@ Todo lo que el capítulo anticipó, junto y en un solo resultado. Al 95%, el par
 
 ---
 
-# Ejercicios Propuestos
+## Ejercicios Propuestos
 
 ::: {.callout-important title="Ejercicios"}
 1. **VaR a 10 días**: Escalar el VaR diario a 10 días usando la regla de la raíz cuadrada: $VaR_{10d} = VaR_{1d} \times \sqrt{10}$. ¿Es válida esta aproximación? ¿Bajo qué supuestos?
@@ -467,7 +727,7 @@ from scipy import stats
 
 ---
 
-# Referencias
+## Referencias
 
 
 ::: {#refs}

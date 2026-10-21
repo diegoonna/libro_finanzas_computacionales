@@ -28,9 +28,13 @@ Este capítulo recorre esa maquinaria y cierra integrando todo en un caso real d
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
+```
 
-# Configuración estética para los gráficos
-plt.style.use('ggplot')
+```{python}
+#| include: false
+import sys; sys.path.insert(0, "..")
+from _esquemas import aplicar_estilo
+aplicar_estilo()
 ```
 
 ### Series (1D)
@@ -522,10 +526,11 @@ De ahí el idioma que vas a ver en todo el libro — y en todo el código profes
 fig, ax = plt.subplots(figsize=(10, 5))   # un lienzo con un gráfico adentro
 ```
 
-`plt.subplots()` crea las dos piezas juntas, y a partir de ahí **todo se le pide al `ax`**: dibujar (`ax.plot`), etiquetar (`ax.set_xlabel`), etc. Construyamos un gráfico completo paso a paso, con la receta de cinco pasos que repite cada figura del libro:
+`plt.subplots()` crea las dos piezas juntas, y a partir de ahí **todo se le pide al `ax`**: dibujar (`ax.plot`), etiquetar (`ax.set_xlabel`), etc. Construyamos un gráfico completo paso a paso, con la receta de cinco pasos que repite cada figura del libro (el resultado es la @fig-plantilla-grafico):
 
 ```{python}
-#| label: matplotlib-anatomia
+#| label: fig-plantilla-grafico
+#| fig-cap: "El gráfico que produce la plantilla de cinco pasos: precio simulado de 100 días hábiles, con ejes, título, leyenda y grilla."
 # 1. Crear lienzo y gráfico
 fig, ax = plt.subplots(figsize=(10, 4.5))
 
@@ -557,8 +562,9 @@ Con la plantilla fija, cambiar de tipo de gráfico es cambiar una línea. Los tr
 - **Dispersión** (`ax.scatter`): la *relación* entre dos variables — ¿se mueven juntas?
 
 ```{python}
-#| label: matplotlib-tipos
-retornos = df_diario["Ret_Simple"].dropna()
+#| label: fig-tres-tipos
+#| fig-cap: "Dos de los tres tipos de gráfico del libro sobre los mismos retornos diarios: el histograma muestra cómo se distribuyen; la dispersión, si el retorno de ayer anticipa el de hoy."
+retornos =df_diario["Ret_Simple"].dropna()
 
 fig, axes = plt.subplots(1, 2, figsize=(11, 4))
 
@@ -582,14 +588,15 @@ plt.tight_layout()
 plt.show()
 ```
 
-Dos novedades en este bloque. Primero, `plt.subplots(1, 2)` crea **dos gráficos en el mismo lienzo** (1 fila, 2 columnas) y devuelve un array de Axes — dibujás en cada uno por separado. Segundo, leé lo que los gráficos *dicen*: el histograma muestra retornos concentrados alrededor de cero con forma de campana, y la dispersión es una **nube sin patrón** — el retorno de ayer no predice el de hoy, tu primer vistazo a la eficiencia del mercado que formalizaremos en el Capítulo 16.
+Dos novedades en este bloque. Primero, `plt.subplots(1, 2)` crea **dos gráficos en el mismo lienzo** (1 fila, 2 columnas) y devuelve un array de Axes — dibujás en cada uno por separado. Segundo, leé lo que los gráficos de la @fig-tres-tipos *dicen*: el histograma muestra retornos concentrados alrededor de cero con forma de campana, y la dispersión es una **nube sin patrón** — el retorno de ayer no predice el de hoy, tu primer vistazo a la eficiencia del mercado que formalizaremos en el Capítulo 16.
 
 ### El atajo de pandas: `.plot()`
 
 Pandas trae un envoltorio de matplotlib incorporado: toda Serie y DataFrame tiene un método `.plot()` que dibuja usando **el índice como eje x** automáticamente — con fechas, esto es oro. Acepta `ax=` para dirigir el dibujo a un Axes que ya creaste, así que se combina perfecto con la plantilla:
 
 ```{python}
-#| label: plot-complejo
+#| label: fig-panel-doble
+#| fig-cap: "Panel doble con eje de fechas compartido: arriba, el precio y su media móvil de 20 días; abajo, la volatilidad móvil anualizada."
 fig, ax = plt.subplots(2, 1, figsize=(10, 7), sharex=True)
 
 # Panel 1: precio y su media móvil (dos series sobre el MISMO ax)
@@ -601,7 +608,7 @@ ax[0].legend()
 ax[0].grid(True, alpha=0.3)
 
 # Panel 2: la volatilidad móvil, compartiendo el eje de fechas (sharex)
-(df_diario["Vol_20"] * 100).plot(ax=ax[1], color="darkorange", label="Volatilidad 20d")
+(df_diario["Vol_20"] * 100).plot(ax=ax[1], color="#c2410c", label="Volatilidad 20d")
 ax[1].set_ylabel("Vol. anualizada (%)")
 ax[1].set_xlabel("Fecha")
 ax[1].set_title("Volatilidad móvil anualizada")
@@ -612,11 +619,80 @@ plt.tight_layout()
 plt.show()
 ```
 
-Este panel doble es el formato clásico del análisis técnico: precio arriba, indicador abajo, **compartiendo el eje de fechas** (`sharex=True`) para poder leerlos en vertical: fijate cómo los períodos de precio "nervioso" en el panel superior coinciden con los picos de volatilidad en el inferior.
+El panel doble de la @fig-panel-doble es el formato clásico del análisis técnico: precio arriba, indicador abajo, **compartiendo el eje de fechas** (`sharex=True`) para poder leerlos en vertical: fijate cómo los períodos de precio "nervioso" en el panel superior coinciden con los picos de volatilidad en el inferior.
 
 ::: {.callout-tip title="El checklist de todo gráfico"}
 Antes de dar por terminada una figura, cuatro preguntas: ¿los **ejes** tienen etiqueta con unidades? ¿el **título** dice qué estoy mirando? ¿hay **leyenda** si conviven varias series? ¿alguien que no vio el código entiende el gráfico solo? Un gráfico sin etiquetas es un dibujo; con etiquetas, es un argumento.
 :::
+
+---
+
+## Con datos reales: el dataset del libro
+
+Hasta acá trabajamos con una serie simulada de 100 días. Es hora de aplicar todo el capítulo a datos de mercado de verdad: el dataset del libro (`datos/precios.csv`, ver @sec-datos-financieros), con cinco años de precios diarios ajustados de 9 acciones y del ETF SPY (el S&P 500). Es el mismo archivo que van a usar los capítulos siguientes cada vez que veas una sección "Con datos reales".
+
+El primer paso es el de la sección de I/O: leer con la columna de fechas como índice. Y enseguida, el reflejo de la Exploración Inicial: mirar qué cargamos.
+
+```{python}
+#| label: datos-reales-carga
+precios = pd.read_csv("../datos/precios.csv", index_col="Date", parse_dates=True)
+
+print(f"Dimensiones: {precios.shape}  (ruedas × activos)")
+print(f"Desde {precios.index.min():%Y-%m-%d} hasta {precios.index.max():%Y-%m-%d}")
+print(f"Tipo del índice: {precios.index.dtype}   |   Huecos (NaN): {precios.isna().sum().sum()}\n")
+print(precios.iloc[:3, :5])
+```
+
+Tres chequeos aprobados: el índice es de fechas de verdad (`datetime64`, gracias a `parse_dates`), el rango es el esperado y no hay huecos. Con eso, cada herramienta del capítulo se aplica en una línea:
+
+```{python}
+#| label: datos-reales-resumen
+# Retornos diarios: pct_change sobre las 10 columnas a la vez
+retornos_d = precios.pct_change().dropna()
+
+# Retorno anual compuesto y volatilidad anualizada de cada activo
+resumen = pd.DataFrame({
+    "Retorno anual": (1 + retornos_d).prod() ** (252 / len(retornos_d)) - 1,
+    "Vol. anual": retornos_d.std() * np.sqrt(252),
+})
+print(resumen.sort_values("Vol. anual").round(3))
+
+# resample: de diario a mensual, y el mejor y el peor mes del S&P 500
+spy_mensual = precios["SPY"].resample("ME").last().pct_change().dropna()
+print(f"\nSPY — mejor mes: {spy_mensual.idxmax():%Y-%m} ({spy_mensual.max():+.1%}), "
+      f"peor mes: {spy_mensual.idxmin():%Y-%m} ({spy_mensual.min():+.1%})")
+```
+
+Leé la tabla de arriba abajo: las acciones defensivas (KO, JNJ) y el propio índice tienen la menor volatilidad, cerca del 17% anual; NVDA es otro planeta, con más del 50%. Y fijate que más volatilidad no garantiza más retorno: MSFT y DIS están en la mitad de arriba de la tabla de riesgo y rindieron menos que el índice (DIS, de hecho, perdió plata en los cinco años). La relación entre riesgo y retorno esperado es el tema del Módulo 2.
+
+La @fig-datos-reales-base100 junta las dos herramientas de gráfico del capítulo: precios llevados a base 100 (para comparar activos de precios muy distintos en una misma escala) y la volatilidad móvil del índice.
+
+```{python}
+#| label: fig-datos-reales-base100
+#| fig-cap: "Arriba: cinco activos del dataset en base 100 (julio de 2021 = 100). Abajo: volatilidad móvil de 60 ruedas del S&P 500, anualizada; los picos coinciden con las caídas del panel de arriba."
+seleccion = ["NVDA", "WMT", "SPY", "KO", "DIS"]
+base_100 = precios[seleccion] / precios[seleccion].iloc[0] * 100
+vol_spy = retornos_d["SPY"].rolling(60).std() * np.sqrt(252) * 100
+
+fig, ax = plt.subplots(2, 1, figsize=(10, 7), sharex=True,
+                       gridspec_kw={"height_ratios": [2, 1]})
+base_100.plot(ax=ax[0], logy=True)        # escala log: subas iguales en % se ven iguales
+ax[0].axhline(100, color="#94a3b8", linewidth=1)
+ax[0].set_ylabel("Base 100 (escala log)")
+ax[0].set_title("Cinco años de mercado, en una misma escala")
+ax[0].grid(True, alpha=0.3)
+
+vol_spy.plot(ax=ax[1], color="#c2410c", label="Vol. 60 ruedas del SPY")
+ax[1].set_ylabel("Vol. anualizada (%)")
+ax[1].set_xlabel("Fecha")
+ax[1].legend()
+ax[1].grid(True, alpha=0.3)
+
+plt.tight_layout()
+plt.show()
+```
+
+Dos detalles de código que vale la pena copiar. La división `precios / precios.iloc[0]` funciona columna por columna gracias a la alineación por etiquetas: cada activo se divide por *su* primer precio. Y `logy=True` usa escala logarítmica, la correcta para precios en el largo plazo: en ella, una suba del 100% mide lo mismo arranque desde 50 o desde 500, así que NVDA no aplasta al resto del gráfico.
 
 ---
 
@@ -711,8 +787,11 @@ Cuando las forward están **por encima** de las spot, el mercado espera que las 
 
 Nuestra curva tiene puntos solo en 1, 2, 3, 4 y 5 años, pero en la práctica necesitamos descontar flujos que caen en cualquier fecha (por ejemplo, a 2,5 años). Para eso **interpolamos**. Pandas trae `interpolate()`, que rellena los huecos de un índice: reindexamos la curva a una grilla más fina y dejamos que complete linealmente.
 
+La @fig-curva-interpolada compara los cinco puntos que salieron del bootstrapping con la curva interpolada cada seis meses.
+
 ```{python}
-#| label: interpolacion-curva
+#| label: fig-curva-interpolada
+#| fig-cap: "Curva de rendimientos: las tasas spot obtenidas por bootstrapping (puntos grandes) y la interpolación lineal cada medio año entre ellas."
 # Grilla de plazos cada medio año, de 1 a 5
 grilla = np.arange(1.0, 5.5, 0.5)
 

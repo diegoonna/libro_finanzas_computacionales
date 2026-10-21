@@ -127,6 +127,10 @@ div.csl-indent {
   }
 }</script>
 <style>html{ scroll-behavior: smooth; }</style>
+<meta name="mermaid-theme" content="neutral">
+<script src="../site_libs/quarto-diagram/mermaid.min.js"></script>
+<script src="../site_libs/quarto-diagram/mermaid-init.js"></script>
+<link href="../site_libs/quarto-diagram/mermaid.css" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/monaco-editor@0.46.0/min/vs/editor/editor.main.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer">
   
@@ -782,24 +786,27 @@ window.Quarto = {
     <h2 id="toc-title">En esta página</h2>
    
   <ul>
-  <li><a href="#introducción" id="toc-introducción" class="nav-link active" data-scroll-target="#introducción"><span class="header-section-number">17</span> Introducción</a></li>
-  <li><a href="#estacionariedad-la-condición-de-entrada" id="toc-estacionariedad-la-condición-de-entrada" class="nav-link" data-scroll-target="#estacionariedad-la-condición-de-entrada"><span class="header-section-number">18</span> Estacionariedad: la condición de entrada</a>
+  <li><a href="#introducción" id="toc-introducción" class="nav-link active" data-scroll-target="#introducción">Introducción</a>
   <ul class="collapse">
-  <li><a href="#por-qué-importa" id="toc-por-qué-importa" class="nav-link" data-scroll-target="#por-qué-importa"><span class="header-section-number">18.1</span> Por qué importa</a></li>
-  <li><a href="#diagnóstico-formal-el-test-adf" id="toc-diagnóstico-formal-el-test-adf" class="nav-link" data-scroll-target="#diagnóstico-formal-el-test-adf"><span class="header-section-number">18.2</span> Diagnóstico formal: el test ADF</a></li>
-  </ul></li>
-  <li><a href="#modelos-arma-la-gramática-de-una-serie-estacionaria" id="toc-modelos-arma-la-gramática-de-una-serie-estacionaria" class="nav-link" data-scroll-target="#modelos-arma-la-gramática-de-una-serie-estacionaria"><span class="header-section-number">19</span> Modelos ARMA: la gramática de una serie estacionaria</a>
+  <li><a href="#estacionariedad-la-condición-de-entrada" id="toc-estacionariedad-la-condición-de-entrada" class="nav-link" data-scroll-target="#estacionariedad-la-condición-de-entrada"><span class="header-section-number">16.1</span> Estacionariedad: la condición de entrada</a>
   <ul class="collapse">
-  <li><a href="#identificación-leer-la-acf-y-la-pacf" id="toc-identificación-leer-la-acf-y-la-pacf" class="nav-link" data-scroll-target="#identificación-leer-la-acf-y-la-pacf"><span class="header-section-number">19.1</span> Identificación: leer la ACF y la PACF</a></li>
+  <li><a href="#por-qué-importa" id="toc-por-qué-importa" class="nav-link" data-scroll-target="#por-qué-importa"><span class="header-section-number">16.1.1</span> Por qué importa</a></li>
+  <li><a href="#diagnóstico-formal-el-test-adf" id="toc-diagnóstico-formal-el-test-adf" class="nav-link" data-scroll-target="#diagnóstico-formal-el-test-adf"><span class="header-section-number">16.1.2</span> Diagnóstico formal: el test ADF</a></li>
   </ul></li>
-  <li><a href="#arima-en-acción-modelar-y-pronosticar-la-inflación" id="toc-arima-en-acción-modelar-y-pronosticar-la-inflación" class="nav-link" data-scroll-target="#arima-en-acción-modelar-y-pronosticar-la-inflación"><span class="header-section-number">20</span> ARIMA en acción: modelar y pronosticar la inflación</a></li>
-  <li><a href="#var-varias-series-que-se-influyen-mutuamente" id="toc-var-varias-series-que-se-influyen-mutuamente" class="nav-link" data-scroll-target="#var-varias-series-que-se-influyen-mutuamente"><span class="header-section-number">21</span> VAR: varias series que se influyen mutuamente</a>
+  <li><a href="#modelos-arma-la-gramática-de-una-serie-estacionaria" id="toc-modelos-arma-la-gramática-de-una-serie-estacionaria" class="nav-link" data-scroll-target="#modelos-arma-la-gramática-de-una-serie-estacionaria"><span class="header-section-number">16.2</span> Modelos ARMA: la gramática de una serie estacionaria</a>
   <ul class="collapse">
-  <li><a href="#función-de-impulso-respuesta-irf" id="toc-función-de-impulso-respuesta-irf" class="nav-link" data-scroll-target="#función-de-impulso-respuesta-irf"><span class="header-section-number">21.1</span> Función de impulso-respuesta (IRF)</a></li>
+  <li><a href="#identificación-leer-la-acf-y-la-pacf" id="toc-identificación-leer-la-acf-y-la-pacf" class="nav-link" data-scroll-target="#identificación-leer-la-acf-y-la-pacf"><span class="header-section-number">16.2.1</span> Identificación: leer la ACF y la PACF</a></li>
   </ul></li>
-  <li><a href="#errores-comunes" id="toc-errores-comunes" class="nav-link" data-scroll-target="#errores-comunes"><span class="header-section-number">22</span> Errores comunes</a></li>
-  <li><a href="#ejercicios-propuestos" id="toc-ejercicios-propuestos" class="nav-link" data-scroll-target="#ejercicios-propuestos"><span class="header-section-number">23</span> Ejercicios Propuestos</a></li>
-  <li><a href="#referencias" id="toc-referencias" class="nav-link" data-scroll-target="#referencias"><span class="header-section-number">24</span> Referencias</a></li>
+  <li><a href="#arima-en-acción-modelar-y-pronosticar-la-inflación" id="toc-arima-en-acción-modelar-y-pronosticar-la-inflación" class="nav-link" data-scroll-target="#arima-en-acción-modelar-y-pronosticar-la-inflación"><span class="header-section-number">16.3</span> ARIMA en acción: modelar y pronosticar la inflación</a></li>
+  <li><a href="#var-varias-series-que-se-influyen-mutuamente" id="toc-var-varias-series-que-se-influyen-mutuamente" class="nav-link" data-scroll-target="#var-varias-series-que-se-influyen-mutuamente"><span class="header-section-number">16.4</span> VAR: varias series que se influyen mutuamente</a>
+  <ul class="collapse">
+  <li><a href="#función-de-impulso-respuesta-irf" id="toc-función-de-impulso-respuesta-irf" class="nav-link" data-scroll-target="#función-de-impulso-respuesta-irf"><span class="header-section-number">16.4.1</span> Función de impulso-respuesta (IRF)</a></li>
+  </ul></li>
+  <li><a href="#con-datos-reales-retornos-sin-memoria-volatilidad-con-memoria" id="toc-con-datos-reales-retornos-sin-memoria-volatilidad-con-memoria" class="nav-link" data-scroll-target="#con-datos-reales-retornos-sin-memoria-volatilidad-con-memoria"><span class="header-section-number">16.5</span> Con datos reales: retornos sin memoria, volatilidad con memoria</a></li>
+  <li><a href="#errores-comunes" id="toc-errores-comunes" class="nav-link" data-scroll-target="#errores-comunes"><span class="header-section-number">16.6</span> Errores comunes</a></li>
+  <li><a href="#ejercicios-propuestos" id="toc-ejercicios-propuestos" class="nav-link" data-scroll-target="#ejercicios-propuestos"><span class="header-section-number">16.7</span> Ejercicios Propuestos</a></li>
+  <li><a href="#referencias" id="toc-referencias" class="nav-link" data-scroll-target="#referencias"><span class="header-section-number">16.8</span> Referencias</a></li>
+  </ul></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/diegoonna/libro_finanzas_computacionales/edit/main/unidad3/cap16_series_temporales_macro.qmd" class="toc-action"><i class="bi bi-github"></i>Editar esta página</a></li><li><a href="https://github.com/diegoonna/libro_finanzas_computacionales/issues/new" class="toc-action"><i class="bi empty"></i>Informar sobre problema</a></li></ul></div></nav>
     </div>
@@ -842,8 +849,8 @@ window.Quarto = {
 </header>
 
 
-<section id="introducción" class="level1" data-number="17">
-<h1 data-number="17"><span class="header-section-number">17</span> Introducción</h1>
+<section id="introducción" class="level1 unnumbered">
+<h1 class="unnumbered">Introducción</h1>
 <p>En el Capítulo 15 explicamos el retorno de un activo con el retorno del mercado: una variable explicada por <em>otras</em>. Los modelos de <strong>series de tiempo</strong> cambian el ángulo: explican una variable con <strong>su propio pasado</strong>. La pregunta ya no es “¿cómo se mueve <span class="math inline">\(y\)</span> con <span class="math inline">\(x\)</span>?” sino <em>“¿qué dice la historia de esta serie sobre su próximo valor?”</em></p>
 <p>En finanzas y macro, esta caja de herramientas es la estándar para pronosticar inflación, actividad, tasas de interés o volatilidad, y para responder preguntas de política: <em>si sube la tasa, ¿qué le pasa a la inflación en los próximos trimestres?</em></p>
 <p>Este capítulo retoma la manipulación de series del Capítulo 6 (fechas, resampleo, retornos con Pandas) y le agrega los modelos: <strong>ARIMA</strong> para una serie, <strong>VAR</strong> para varias a la vez.</p>
@@ -859,14 +866,13 @@ window.Quarto = {
 <span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>rng <span class="op">=</span> np.random.default_rng(<span class="dv">42</span>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <hr>
-</section>
-<section id="estacionariedad-la-condición-de-entrada" class="level1" data-number="18">
-<h1 data-number="18"><span class="header-section-number">18</span> Estacionariedad: la condición de entrada</h1>
-<section id="por-qué-importa" class="level2" data-number="18.1">
-<h2 data-number="18.1" class="anchored" data-anchor-id="por-qué-importa"><span class="header-section-number">18.1</span> Por qué importa</h2>
+<section id="estacionariedad-la-condición-de-entrada" class="level2" data-number="16.1">
+<h2 data-number="16.1" class="anchored" data-anchor-id="estacionariedad-la-condición-de-entrada"><span class="header-section-number">16.1</span> Estacionariedad: la condición de entrada</h2>
+<section id="por-qué-importa" class="level3" data-number="16.1.1">
+<h3 data-number="16.1.1" class="anchored" data-anchor-id="por-qué-importa"><span class="header-section-number">16.1.1</span> Por qué importa</h3>
 <p>Todo pronóstico basado en el pasado descansa en un supuesto: que <strong>las reglas del juego no cambian</strong>. Formalmente, una serie es <strong>estacionaria</strong> (en sentido débil) si su media, su varianza y sus autocovarianzas no dependen del tiempo. Si la serie tiene tendencia, o su varianza explota, el pasado ya no es una guía del futuro y los modelos que veremos dan resultados sin sentido.</p>
 <p>El peligro concreto se llama <strong>regresión espuria</strong>: dos series con tendencia, sin ninguna relación real, muestran correlaciones altísimas y p-values espectaculares. Veámoslo — es el error más caro de la econometría aplicada:</p>
-<div id="espuria" class="cell" data-execution_count="2">
+<div id="espuria" class="cell" data-execution_count="3">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> statsmodels.api <span class="im">as</span> sm</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Dos paseos aleatorios TOTALMENTE independientes</span></span>
@@ -889,11 +895,26 @@ window.Quarto = {
 </div>
 </div>
 <p>Las series en <strong>niveles</strong> (los paseos) no son estacionarias y la regresión “encuentra” una relación fuerte que no existe. Las mismas series en <strong>diferencias</strong> (sus incrementos, que sí son estacionarios) revelan la verdad. Moraleja operativa que ya usamos en todo el libro sin justificarla: <strong>por eso trabajamos con retornos y no con precios</strong>.</p>
+<p>La <a href="#fig-regresion-espuria" class="quarto-xref">Figura&nbsp;<span>16.1</span></a> muestra el engaño. Dos paseos aleatorios independientes, por pura casualidad, derivan en direcciones parecidas durante tramos largos; en niveles, la nube de puntos se inclina y la regresión la declara “significativa” con un p-value minúsculo. En diferencias, la ilusión desaparece.</p>
+<div id="cell-fig-regresion-espuria" class="cell" data-execution_count="4">
+<div class="cell-output cell-output-display">
+<div id="fig-regresion-espuria" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-regresion-espuria-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="cap16_series_temporales_macro_files/figure-html/fig-regresion-espuria-output-1.png" width="1142" height="353" class="figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-regresion-espuria-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figura&nbsp;16.1: Regresión espuria. Izquierda: dos paseos aleatorios generados de forma independiente. Centro: en niveles, la regresión encuentra una pendiente «significativa» que no existe; los puntos no son independientes entre sí, y el test lo ignora. Derecha: los mismos datos en diferencias (los incrementos) no muestran ninguna relación.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
 </section>
-<section id="diagnóstico-formal-el-test-adf" class="level2" data-number="18.2">
-<h2 data-number="18.2" class="anchored" data-anchor-id="diagnóstico-formal-el-test-adf"><span class="header-section-number">18.2</span> Diagnóstico formal: el test ADF</h2>
+<section id="diagnóstico-formal-el-test-adf" class="level3" data-number="16.1.2">
+<h3 data-number="16.1.2" class="anchored" data-anchor-id="diagnóstico-formal-el-test-adf"><span class="header-section-number">16.1.2</span> Diagnóstico formal: el test ADF</h3>
 <p>El test de <strong>Dickey-Fuller aumentado (ADF)</strong> formaliza el diagnóstico. Su hipótesis nula es que la serie tiene una <strong>raíz unitaria</strong> (no es estacionaria, tipo paseo aleatorio); un p-value bajo permite rechazarla.</p>
-<div id="adf" class="cell" data-execution_count="3">
+<div id="adf" class="cell" data-execution_count="5">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>series_prueba <span class="op">=</span> {</span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Paseo aleatorio (precio)"</span>: np.cumsum(rng.normal(<span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">500</span>)),</span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Diferencias (retorno)"</span>: np.diff(np.cumsum(rng.normal(<span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">500</span>))),</span>
@@ -919,11 +940,26 @@ AR(1) estacionario               -5.76     0.000   estacionaria</code></pre>
 </div>
 </div>
 <p>Regla de trabajo: <strong>testeá antes de modelar</strong>. Si la serie no es estacionaria, diferenciala (una vez suele bastar: precios → retornos, PIB → crecimiento) y volvé a testear. El número de diferenciaciones necesarias es la “d” del ARIMA que viene ahora.</p>
+<p>La <a href="#fig-estacionariedad" class="quarto-xref">Figura&nbsp;<span>16.2</span></a> muestra las tres series del test. La pregunta que contesta el ADF se puede mirar a ojo: ¿la media y la dispersión de la serie se quedan quietas, o se desplazan con el tiempo?</p>
+<div id="cell-fig-estacionariedad" class="cell" data-execution_count="6">
+<div class="cell-output cell-output-display">
+<div id="fig-estacionariedad" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-estacionariedad-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="cap16_series_temporales_macro_files/figure-html/fig-estacionariedad-output-1.png" width="1141" height="334" class="figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-estacionariedad-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figura&nbsp;16.2: Las tres series del test ADF, con su media móvil (100 períodos) y una banda de ±2 desvíos móviles. El paseo aleatorio deambula sin volver: su media cambia con el tiempo. Las diferencias y el AR(1) oscilan alrededor de un nivel fijo, con una dispersión estable.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
 <hr>
 </section>
 </section>
-<section id="modelos-arma-la-gramática-de-una-serie-estacionaria" class="level1" data-number="19">
-<h1 data-number="19"><span class="header-section-number">19</span> Modelos ARMA: la gramática de una serie estacionaria</h1>
+<section id="modelos-arma-la-gramática-de-una-serie-estacionaria" class="level2" data-number="16.2">
+<h2 data-number="16.2" class="anchored" data-anchor-id="modelos-arma-la-gramática-de-una-serie-estacionaria"><span class="header-section-number">16.2</span> Modelos ARMA: la gramática de una serie estacionaria</h2>
 <p>Una serie estacionaria se modela combinando dos mecanismos:</p>
 <ul>
 <li><strong>AR(p)</strong> — <em>autorregresivo</em>: el valor de hoy depende de los últimos <span class="math inline">\(p\)</span> valores. “La inflación de este mes se parece a la de los meses anteriores” (inercia, persistencia).</li>
@@ -934,15 +970,31 @@ AR(1) estacionario               -5.76     0.000   estacionaria</code></pre>
 </ul>
 <p><span class="math display">\[y_t = c + \varepsilon_t + \theta_1 \varepsilon_{t-1} + \dots + \theta_q \varepsilon_{t-q}\]</span></p>
 <p><strong>ARMA(p, q)</strong> combina ambos, y <strong>ARIMA(p, d, q)</strong> agrega la “I” de <em>integrated</em>: diferenciar la serie <span class="math inline">\(d\)</span> veces antes de ajustar el ARMA. Así, un ARIMA(1,1,0) sobre un precio es un AR(1) sobre sus retornos.</p>
-<section id="identificación-leer-la-acf-y-la-pacf" class="level2" data-number="19.1">
-<h2 data-number="19.1" class="anchored" data-anchor-id="identificación-leer-la-acf-y-la-pacf"><span class="header-section-number">19.1</span> Identificación: leer la ACF y la PACF</h2>
+<section id="identificación-leer-la-acf-y-la-pacf" class="level3" data-number="16.2.1">
+<h3 data-number="16.2.1" class="anchored" data-anchor-id="identificación-leer-la-acf-y-la-pacf"><span class="header-section-number">16.2.1</span> Identificación: leer la ACF y la PACF</h3>
 <p>¿Cómo elegir <span class="math inline">\(p\)</span> y <span class="math inline">\(q\)</span>? Las dos herramientas clásicas:</p>
 <ul>
 <li><strong>ACF</strong> (autocorrelación): correlación de la serie con sus propios rezagos.</li>
 <li><strong>PACF</strong> (autocorrelación <em>parcial</em>): correlación con el rezago <span class="math inline">\(k\)</span> <strong>descontando</strong> el efecto de los rezagos intermedios.</li>
 </ul>
 <p>Los patrones de manual: un <strong>AR(p)</strong> tiene PACF que se corta en el rezago <span class="math inline">\(p\)</span> y ACF que decae gradualmente; un <strong>MA(q)</strong> es el espejo (ACF se corta en <span class="math inline">\(q\)</span>, PACF decae).</p>
-<div id="cell-acf-pacf" class="cell" data-execution_count="4">
+<p>La <a href="#fig-firmas-acf" class="quarto-xref">Figura&nbsp;<span>16.3</span></a> muestra esos patrones en su versión teórica, sin ruido de muestreo: es la tabla de referencia contra la que se compara la ACF y la PACF de una serie real.</p>
+<div id="cell-fig-firmas-acf" class="cell" data-execution_count="7">
+<div class="cell-output cell-output-display">
+<div id="fig-firmas-acf" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-firmas-acf-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="cap16_series_temporales_macro_files/figure-html/fig-firmas-acf-output-1.png" width="950" height="488" class="figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-firmas-acf-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figura&nbsp;16.3: Firmas teóricas para identificar el modelo. Fila superior, AR(2) (φ₁ = 0.5, φ₂ = 0.3): la ACF decae de a poco y la PACF se corta después del rezago 2. Fila inferior, MA(2) (θ₁ = 0.6, θ₂ = 0.3): al revés, la ACF se corta en 2 y la PACF decae.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>Ahora el mismo diagnóstico sobre una serie simulada, con el ruido de muestreo que trae cualquier serie real. La <a href="#fig-acf-pacf-ar2" class="quarto-xref">Figura&nbsp;<span>16.4</span></a> debería parecerse a la fila superior de la figura anterior.</p>
+<div id="cell-fig-acf-pacf-ar2" class="cell" data-execution_count="8">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Generamos un AR(2) conocido y verificamos que las herramientas lo identifican</span></span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>n <span class="op">=</span> <span class="dv">800</span></span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>serie_ar2 <span class="op">=</span> np.zeros(n)</span>
@@ -955,9 +1007,14 @@ AR(1) estacionario               -5.76     0.000   estacionaria</code></pre>
 <span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
 <span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="cap16_series_temporales_macro_files/figure-html/acf-pacf-output-1.png" id="acf-pacf" width="1049" height="326" class="figure-img"></p>
+<div id="fig-acf-pacf-ar2" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-acf-pacf-ar2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="cap16_series_temporales_macro_files/figure-html/fig-acf-pacf-ar2-output-1.png" width="1046" height="325" class="figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-acf-pacf-ar2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figura&nbsp;16.4: ACF y PACF muestrales de un AR(2) simulado de 800 observaciones. La banda sombreada es el intervalo del 95% bajo la hipótesis de correlación cero: las barras que la superan son significativas.
+</figcaption>
 </figure>
 </div>
 </div>
@@ -966,10 +1023,40 @@ AR(1) estacionario               -5.76     0.000   estacionaria</code></pre>
 <hr>
 </section>
 </section>
-<section id="arima-en-acción-modelar-y-pronosticar-la-inflación" class="level1" data-number="20">
-<h1 data-number="20"><span class="header-section-number">20</span> ARIMA en acción: modelar y pronosticar la inflación</h1>
-<p>Armemos el flujo completo con una serie macro simulada con la persistencia típica de la inflación mensual.</p>
-<div id="arima-ajuste" class="cell" data-execution_count="5">
+<section id="arima-en-acción-modelar-y-pronosticar-la-inflación" class="level2" data-number="16.3">
+<h2 data-number="16.3" class="anchored" data-anchor-id="arima-en-acción-modelar-y-pronosticar-la-inflación"><span class="header-section-number">16.3</span> ARIMA en acción: modelar y pronosticar la inflación</h2>
+<p>Armemos el flujo completo con una serie macro simulada con la persistencia típica de la inflación mensual. El orden de los pasos es la metodología de <strong>Box-Jenkins</strong>, que resume la <a href="#fig-box-jenkins" class="quarto-xref">Figura&nbsp;<span>16.5</span></a>.</p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div id="fig-box-jenkins" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-box-jenkins-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div>
+<pre class="mermaid mermaid-js" data-label="fig-box-jenkins">flowchart LR
+    A{"&lt;b&gt;ADF&lt;/b&gt;&lt;br/&gt;¿estacionaria?"} --&gt;|"no"| D["Diferenciar&lt;br/&gt;&lt;i&gt;d = d + 1&lt;/i&gt;"]
+    D --&gt; A
+    A --&gt;|"sí"| I["&lt;b&gt;Identificar&lt;/b&gt;&lt;br/&gt;ACF / PACF&lt;br/&gt;→ candidatos (p, q)"]
+    I --&gt; E["&lt;b&gt;Estimar&lt;/b&gt;&lt;br/&gt;ARIMA(p, d, q)&lt;br/&gt;elegir por AIC/BIC"]
+    E --&gt; R{"&lt;b&gt;Residuos&lt;/b&gt;&lt;br/&gt;¿ruido blanco?"}
+    R --&gt;|"no: queda&lt;br/&gt;estructura"| I
+    R --&gt;|"sí"| P(["&lt;b&gt;Pronosticar&lt;/b&gt;&lt;br/&gt;con bandas"])
+    classDef test fill:#fde8dc,stroke:#c2410c,color:#1f2937
+    classDef paso fill:#e0e9f4,stroke:#1e3a5f,color:#1f2937
+    classDef fin fill:#eef2e3,stroke:#637238,color:#1f2937
+    class A,R test
+    class D,I,E paso
+    class P fin
+</pre>
+</div>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-box-jenkins-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figura&nbsp;16.5: El ciclo de Box-Jenkins. Primero se decide d (cuántas veces diferenciar), después p y q, y el modelo solo se usa para pronosticar si sus residuos ya no tienen estructura; si la tienen, se vuelve a identificar.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<div id="arima-ajuste" class="cell" data-execution_count="9">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Serie mensual de "inflación" con inercia AR(1) fuerte (phi=0.75)</span></span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>n <span class="op">=</span> <span class="dv">240</span>   <span class="co"># 20 años</span></span>
 <span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>inflacion <span class="op">=</span> np.zeros(n)</span>
@@ -1016,7 +1103,7 @@ dtype: float64</code></pre>
 </div>
 </div>
 <p>El AIC elige el AR(1) —el proceso generador verdadero— y el coeficiente estimado ronda el 0.75 real. Ahora, el pronóstico:</p>
-<div id="cell-arima-pronostico" class="cell" data-execution_count="6">
+<div id="cell-fig-pronostico-arima" class="cell" data-execution_count="10">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>horizonte <span class="op">=</span> <span class="dv">24</span></span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>pron <span class="op">=</span> modelo.get_forecast(steps<span class="op">=</span>horizonte)</span>
 <span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>media <span class="op">=</span> pron.predicted_mean</span>
@@ -1024,9 +1111,9 @@ dtype: float64</code></pre>
 <span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>fig, ax <span class="op">=</span> plt.subplots(figsize<span class="op">=</span>(<span class="dv">10</span>, <span class="fl">4.5</span>))</span>
 <span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>ax.plot(serie.iloc[<span class="op">-</span><span class="dv">72</span>:], label<span class="op">=</span><span class="st">"Inflación observada"</span>)</span>
-<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>ax.plot(media, <span class="st">"r-"</span>, linewidth<span class="op">=</span><span class="dv">2</span>, label<span class="op">=</span><span class="st">"Pronóstico ARIMA"</span>)</span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>ax.plot(media, color<span class="op">=</span><span class="st">"#c2410c"</span>, linewidth<span class="op">=</span><span class="dv">2</span>, label<span class="op">=</span><span class="st">"Pronóstico ARIMA"</span>)</span>
 <span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>ax.fill_between(banda.index, banda.iloc[:, <span class="dv">0</span>], banda.iloc[:, <span class="dv">1</span>],</span>
-<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>                alpha<span class="op">=</span><span class="fl">0.2</span>, color<span class="op">=</span><span class="st">"red"</span>, label<span class="op">=</span><span class="st">"IC 95%"</span>)</span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>                alpha<span class="op">=</span><span class="fl">0.2</span>, color<span class="op">=</span><span class="st">"#c2410c"</span>, label<span class="op">=</span><span class="st">"IC 95%"</span>)</span>
 <span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>ax.set_ylabel(<span class="st">"Inflación mensual (%)"</span>)</span>
 <span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a>ax.set_title(<span class="st">"Pronóstico a 24 meses con intervalos de confianza"</span>)</span>
 <span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a>ax.legend()</span>
@@ -1034,14 +1121,19 @@ dtype: float64</code></pre>
 <span id="cb9-15"><a href="#cb9-15" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
 <span id="cb9-16"><a href="#cb9-16" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="cap16_series_temporales_macro_files/figure-html/arima-pronostico-output-1.png" id="arima-pronostico" width="952" height="422" class="figure-img"></p>
+<div id="fig-pronostico-arima" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-pronostico-arima-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="cap16_series_temporales_macro_files/figure-html/fig-pronostico-arima-output-1.png" width="949" height="421" class="figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-pronostico-arima-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figura&nbsp;16.6: Últimos seis años de la serie y pronóstico a 24 meses del ARIMA elegido. El pronóstico converge a la media de largo plazo y la banda del 95% se abre con el horizonte.
+</figcaption>
 </figure>
 </div>
 </div>
 </div>
-<p>Dos rasgos para leer en el gráfico, típicos de todo pronóstico ARIMA: la predicción <strong>converge a la media de largo plazo</strong> de la serie (la inercia se agota), y las bandas <strong>se abren con el horizonte</strong> hasta estabilizarse — el modelo es honesto sobre lo poco que sabe del futuro lejano.</p>
+<p>Dos rasgos para leer en la <a href="#fig-pronostico-arima" class="quarto-xref">Figura&nbsp;<span>16.6</span></a>, típicos de todo pronóstico ARIMA: la predicción <strong>converge a la media de largo plazo</strong> de la serie (la inercia se agota), y las bandas <strong>se abren con el horizonte</strong> hasta estabilizarse — el modelo es honesto sobre lo poco que sabe del futuro lejano.</p>
 <div class="callout callout-style-simple callout-warning callout-titled" title="¿Y pronosticar retornos de acciones?">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -1057,13 +1149,39 @@ dtype: float64</code></pre>
 </div>
 <hr>
 </section>
-<section id="var-varias-series-que-se-influyen-mutuamente" class="level1" data-number="21">
-<h1 data-number="21"><span class="header-section-number">21</span> VAR: varias series que se influyen mutuamente</h1>
+<section id="var-varias-series-que-se-influyen-mutuamente" class="level2" data-number="16.4">
+<h2 data-number="16.4" class="anchored" data-anchor-id="var-varias-series-que-se-influyen-mutuamente"><span class="header-section-number">16.4</span> VAR: varias series que se influyen mutuamente</h2>
 <p>La macro rara vez es univariada: la inflación depende de la tasa de interés, la tasa responde a la inflación, y la actividad interactúa con ambas. El modelo <strong>VAR</strong> (<em>Vector Autoregression</em>) generaliza el AR a un <strong>sistema</strong>: cada variable se regresa sobre los rezagos de <strong>todas</strong> las variables.</p>
 <p>Para dos variables y un rezago:</p>
 <p><span class="math display">\[\begin{aligned} y_{1,t} &amp;= c_1 + \phi_{11}\, y_{1,t-1} + \phi_{12}\, y_{2,t-1} + \varepsilon_{1,t} \\ y_{2,t} &amp;= c_2 + \phi_{21}\, y_{1,t-1} + \phi_{22}\, y_{2,t-1} + \varepsilon_{2,t} \end{aligned}\]</span></p>
 <p>Los coeficientes cruzados (<span class="math inline">\(\phi_{12}, \phi_{21}\)</span>) son la novedad: capturan cómo una variable <strong>anticipa</strong> a la otra.</p>
-<div id="var-datos" class="cell" data-execution_count="7">
+<p>La <a href="#fig-sistema-var" class="quarto-xref">Figura&nbsp;<span>16.7</span></a> dibuja el sistema que vamos a simular: cada flecha es un coeficiente, y cada variable recibe una flecha de su propio pasado y otra del pasado de la otra.</p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div id="fig-sistema-var" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-sistema-var-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div>
+<pre class="mermaid mermaid-js" data-label="fig-sistema-var">flowchart LR
+    I1["Inflación&lt;br/&gt;&lt;i&gt;t − 1&lt;/i&gt;"] --&gt;|"φ₁₁ = +0.60&lt;br/&gt;inercia"| I2["Inflación&lt;br/&gt;&lt;i&gt;t&lt;/i&gt;"]
+    T1["Tasa&lt;br/&gt;&lt;i&gt;t − 1&lt;/i&gt;"] --&gt;|"φ₂₂ = +0.70&lt;br/&gt;inercia"| T2["Tasa&lt;br/&gt;&lt;i&gt;t&lt;/i&gt;"]
+    I1 --&gt;|"φ₂₁ = +0.25&lt;br/&gt;la tasa reacciona"| T2
+    T1 --&gt;|"φ₁₂ = −0.20&lt;br/&gt;la política enfría"| I2
+    classDef inf fill:#fde8dc,stroke:#c2410c,color:#1f2937
+    classDef tasa fill:#e0e9f4,stroke:#1e3a5f,color:#1f2937
+    class I1,I2 inf
+    class T1,T2 tasa
+</pre>
+</div>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-sistema-var-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figura&nbsp;16.7: El VAR(1) simulado como diagrama. Las flechas horizontales son la inercia de cada variable (φ₁₁, φ₂₂); las cruzadas son la política monetaria: la tasa reacciona a la inflación pasada (φ₂₁ = +0.25) y la inflación cae cuando la tasa pasada fue alta (φ₁₂ = −0.20).
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<div id="var-datos" class="cell" data-execution_count="11">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Sistema simulado con estructura conocida:</span></span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="co">#   - la tasa sube cuando la inflación pasada fue alta (regla de política)</span></span>
 <span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="co">#   - la inflación baja cuando la tasa pasada fue alta (efecto de la política)</span></span>
@@ -1097,24 +1215,29 @@ Name: inflacion, dtype: float64</code></pre>
 </div>
 </div>
 <p>Los coeficientes recuperan la estructura que sembramos: la inflación depende positivamente de su pasado y <strong>negativamente de la tasa pasada</strong>. Pero la forma más útil de leer un VAR no es la tabla de coeficientes sino la…</p>
-<section id="función-de-impulso-respuesta-irf" class="level2" data-number="21.1">
-<h2 data-number="21.1" class="anchored" data-anchor-id="función-de-impulso-respuesta-irf"><span class="header-section-number">21.1</span> Función de impulso-respuesta (IRF)</h2>
+<section id="función-de-impulso-respuesta-irf" class="level3" data-number="16.4.1">
+<h3 data-number="16.4.1" class="anchored" data-anchor-id="función-de-impulso-respuesta-irf"><span class="header-section-number">16.4.1</span> Función de impulso-respuesta (IRF)</h3>
 <p>La IRF responde la pregunta de política: <em>si hoy golpeo al sistema con un shock de una unidad en una variable, ¿cómo evolucionan todas las variables en los meses siguientes?</em> Es el experimento contrafáctico que el VAR permite trazar.</p>
-<div id="cell-var-irf" class="cell" data-execution_count="8">
+<div id="cell-fig-irf" class="cell" data-execution_count="12">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>irf <span class="op">=</span> resultado.irf(<span class="dv">24</span>)</span>
 <span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>irf.plot(orth<span class="op">=</span><span class="va">False</span>, figsize<span class="op">=</span>(<span class="dv">10</span>, <span class="dv">7</span>))</span>
 <span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>plt.suptitle(<span class="st">"Funciones de impulso-respuesta (24 meses)"</span>, y<span class="op">=</span><span class="fl">1.02</span>)</span>
 <span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
 <span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="cap16_series_temporales_macro_files/figure-html/var-irf-output-1.png" id="var-irf" width="952" height="690" class="figure-img"></p>
+<div id="fig-irf" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-irf-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="cap16_series_temporales_macro_files/figure-html/fig-irf-output-1.png" width="950" height="689" class="figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-irf-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figura&nbsp;16.8: Funciones de impulso-respuesta del VAR estimado, 24 meses. Cada panel muestra cómo responde la variable de la fila a un shock de una unidad en la variable de la columna, con su banda de confianza.
+</figcaption>
 </figure>
 </div>
 </div>
 </div>
-<p>Mirá el panel “tasa → inflacion”: un shock de tasa deprime la inflación durante varios meses, con el efecto máximo no inmediato sino rezagado — exactamente la dinámica “la política monetaria actúa con rezagos” que los bancos centrales repiten. El panel “inflacion → tasa” muestra la respuesta de política: la tasa sube tras un shock inflacionario y luego decae.</p>
+<p>En la <a href="#fig-irf" class="quarto-xref">Figura&nbsp;<span>16.8</span></a>, mirá el panel “tasa → inflacion”: un shock de tasa deprime la inflación durante varios meses, con el efecto máximo no inmediato sino rezagado — exactamente la dinámica “la política monetaria actúa con rezagos” que los bancos centrales repiten. El panel “inflacion → tasa” muestra la respuesta de política: la tasa sube tras un shock inflacionario y luego decae.</p>
 <div class="callout callout-style-simple callout-note callout-titled" title="Los VAR en la práctica">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -1131,8 +1254,39 @@ Name: inflacion, dtype: float64</code></pre>
 <hr>
 </section>
 </section>
-<section id="errores-comunes" class="level1" data-number="22">
-<h1 data-number="22"><span class="header-section-number">22</span> Errores comunes</h1>
+<section id="con-datos-reales-retornos-sin-memoria-volatilidad-con-memoria" class="level2" data-number="16.5">
+<h2 data-number="16.5" class="anchored" data-anchor-id="con-datos-reales-retornos-sin-memoria-volatilidad-con-memoria"><span class="header-section-number">16.5</span> Con datos reales: retornos sin memoria, volatilidad con memoria</h2>
+<p>El recuadro de la sección ARIMA afirmaba dos cosas sobre los retornos de acciones: que casi no se pueden pronosticar con su propio pasado, y que la <em>volatilidad</em>, en cambio, sí tiene inercia. Las dos se pueden verificar con la herramienta de identificación del capítulo, la ACF, aplicada a cinco años de retornos diarios del S&amp;P 500 del dataset del libro (<code>datos/precios.csv</code>, ver <a href="../apendices/datos_financieros.html" class="quarto-xref"><span>Apéndice B</span></a>).</p>
+<div id="cell-fig-acf-spy" class="cell" data-execution_count="13">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>precios <span class="op">=</span> pd.read_csv(<span class="st">"../datos/precios.csv"</span>, index_col<span class="op">=</span><span class="st">"Date"</span>, parse_dates<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>r_spy <span class="op">=</span> precios[<span class="st">"SPY"</span>].pct_change().dropna()</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>fig, axes <span class="op">=</span> plt.subplots(<span class="dv">1</span>, <span class="dv">2</span>, figsize<span class="op">=</span>(<span class="dv">11</span>, <span class="fl">3.8</span>), sharey<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>plot_acf(r_spy, lags<span class="op">=</span><span class="dv">40</span>, ax<span class="op">=</span>axes[<span class="dv">0</span>], title<span class="op">=</span><span class="st">"Retornos: casi sin memoria"</span>)</span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>plot_acf(r_spy.<span class="bu">abs</span>(), lags<span class="op">=</span><span class="dv">40</span>, ax<span class="op">=</span>axes[<span class="dv">1</span>], title<span class="op">=</span><span class="st">"|Retornos|: memoria larga"</span>)</span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> ax <span class="kw">in</span> axes:</span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>    ax.set_xlabel(<span class="st">"Rezago (días)"</span>)</span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>    ax.set_ylim(<span class="op">-</span><span class="fl">0.15</span>, <span class="fl">0.3</span>)</span>
+<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
+<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display">
+<div id="fig-acf-spy" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-acf-spy-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="cap16_series_temporales_macro_files/figure-html/fig-acf-spy-output-1.png" width="1046" height="353" class="figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-acf-spy-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figura&nbsp;16.9: ACF de los retornos diarios del S&amp;P 500 (izquierda) y de su valor absoluto (derecha), 40 rezagos. Los retornos quedan casi siempre dentro de la banda de no significancia; su tamaño, en cambio, está correlacionado con el de semanas y meses anteriores.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>El contraste de la <a href="#fig-acf-spy" class="quarto-xref">Figura&nbsp;<span>16.9</span></a> es uno de los hechos más robustos de las finanzas empíricas. A la izquierda, las autocorrelaciones de los retornos son minúsculas: unas pocas rozan la banda, apenas por encima de lo que se espera por azar en 40 rezagos, y ninguna supera el 0.07 en valor absoluto. Saber que ayer el mercado subió no dice casi nada sobre hoy: es la eficiencia débil del recuadro, ahora medida. A la derecha, el <strong>valor absoluto</strong> de los retornos (su tamaño, sin el signo) tiene autocorrelaciones positivas en casi todos los rezagos, durante dos meses: un día agitado anticipa días agitados. Es el <em>volatility clustering</em> que modelan la familia GARCH y los modelos de volatilidad estocástica del Capítulo 20.</p>
+<hr>
+</section>
+<section id="errores-comunes" class="level2" data-number="16.6">
+<h2 data-number="16.6" class="anchored" data-anchor-id="errores-comunes"><span class="header-section-number">16.6</span> Errores comunes</h2>
 <div class="callout callout-style-simple callout-warning callout-titled" title="Trampas frecuentes">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -1154,8 +1308,8 @@ Name: inflacion, dtype: float64</code></pre>
 </div>
 <hr>
 </section>
-<section id="ejercicios-propuestos" class="level1" data-number="23">
-<h1 data-number="23"><span class="header-section-number">23</span> Ejercicios Propuestos</h1>
+<section id="ejercicios-propuestos" class="level2" data-number="16.7">
+<h2 data-number="16.7" class="anchored" data-anchor-id="ejercicios-propuestos"><span class="header-section-number">16.7</span> Ejercicios Propuestos</h2>
 <div class="callout callout-style-simple callout-important callout-titled" title="Ejercicios">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -1180,9 +1334,9 @@ Name: inflacion, dtype: float64</code></pre>
 <noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
 <hr>
 </section>
-<section id="referencias" class="level1" data-number="24">
-<h1 data-number="24"><span class="header-section-number">24</span> Referencias</h1>
-<div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list">
+<section id="referencias" class="level2" data-number="16.8">
+<h2 data-number="16.8" class="anchored" data-anchor-id="referencias"><span class="header-section-number">16.8</span> Referencias</h2>
+<div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list" style="display: none">
 <div id="ref-box2015" class="csl-entry" role="listitem">
 Box, George, Gwilym Jenkins, Gregory Reinsel, y Greta Ljung. 2015. <em>Time Series Analysis: Forecasting and Control</em>. 5.ª ed. Wiley.
 </div>
@@ -1200,6 +1354,7 @@ Sims, Christopher. 1980. <span>«Macroeconomics and Reality»</span>. <em>Econom
 
 <!-- -->
 
+</section>
 </section>
 
 </main> <!-- /main -->
@@ -1671,308 +1826,487 @@ Sims, Christopher. 1980. <span>«Macroeconomics and Reality»</span>. <em>Econom
       </a>
   </div>
 </nav><div class="modal fade" id="quarto-embedded-source-code-modal" tabindex="-1" aria-labelledby="quarto-embedded-source-code-modal-label" aria-hidden="true"><div class="modal-dialog modal-dialog-scrollable"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="quarto-embedded-source-code-modal-label">Ejecutar el código</h5><button class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><div class="">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb13" data-shortcodes="false"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
-<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="an">title:</span><span class="co"> "Capítulo 16: Series Temporales — ARIMA y VAR"</span></span>
-<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a><span class="an">subtitle:</span><span class="co"> "Modelar y pronosticar variables macroeconómicas y financieras"</span></span>
-<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a><span class="an">abstract:</span><span class="co"> |</span></span>
-<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a><span class="co">  Los modelos lineales del capítulo anterior explican una variable con otras;</span></span>
-<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a><span class="co">  los modelos de series de tiempo la explican con su propio pasado. Desarrollamos</span></span>
-<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a><span class="co">  el concepto de estacionariedad y cómo diagnosticarla (test ADF), la identificación</span></span>
-<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a><span class="co">  de modelos con ACF/PACF, el ajuste y pronóstico con ARIMA, y los modelos VAR para</span></span>
-<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a><span class="co">  sistemas de varias series macro con sus funciones de impulso-respuesta.</span></span>
-<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a><span class="an">nocite:</span><span class="co"> |</span></span>
-<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a><span class="co">  @box2015, @hamilton1994, @sims1980, @granger1974</span></span>
-<span id="cb13-12"><a href="#cb13-12" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
-<span id="cb13-13"><a href="#cb13-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-14"><a href="#cb13-14" aria-hidden="true" tabindex="-1"></a><span class="fu"># Introducción</span></span>
-<span id="cb13-15"><a href="#cb13-15" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-16"><a href="#cb13-16" aria-hidden="true" tabindex="-1"></a>En el Capítulo 15 explicamos el retorno de un activo con el retorno del mercado: una variable explicada por *otras*. Los modelos de **series de tiempo** cambian el ángulo: explican una variable con **su propio pasado**. La pregunta ya no es "¿cómo se mueve $y$ con $x$?" sino *"¿qué dice la historia de esta serie sobre su próximo valor?"*</span>
-<span id="cb13-17"><a href="#cb13-17" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-18"><a href="#cb13-18" aria-hidden="true" tabindex="-1"></a>En finanzas y macro, esta caja de herramientas es la estándar para pronosticar inflación, actividad, tasas de interés o volatilidad, y para responder preguntas de política: *si sube la tasa, ¿qué le pasa a la inflación en los próximos trimestres?*</span>
-<span id="cb13-19"><a href="#cb13-19" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-20"><a href="#cb13-20" aria-hidden="true" tabindex="-1"></a>Este capítulo retoma la manipulación de series del Capítulo 6 (fechas, resampleo, retornos con Pandas) y le agrega los modelos: **ARIMA** para una serie, **VAR** para varias a la vez.</span>
-<span id="cb13-21"><a href="#cb13-21" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-24"><a href="#cb13-24" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
-<span id="cb13-25"><a href="#cb13-25" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: setup</span></span>
-<span id="cb13-26"><a href="#cb13-26" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
-<span id="cb13-27"><a href="#cb13-27" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
-<span id="cb13-28"><a href="#cb13-28" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
-<span id="cb13-29"><a href="#cb13-29" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> statsmodels.tsa.stattools <span class="im">import</span> adfuller</span>
-<span id="cb13-30"><a href="#cb13-30" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> statsmodels.graphics.tsaplots <span class="im">import</span> plot_acf, plot_pacf</span>
-<span id="cb13-31"><a href="#cb13-31" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> statsmodels.tsa.arima.model <span class="im">import</span> ARIMA</span>
-<span id="cb13-32"><a href="#cb13-32" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> statsmodels.tsa.api <span class="im">import</span> VAR</span>
-<span id="cb13-33"><a href="#cb13-33" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-34"><a href="#cb13-34" aria-hidden="true" tabindex="-1"></a>rng <span class="op">=</span> np.random.default_rng(<span class="dv">42</span>)</span>
-<span id="cb13-35"><a href="#cb13-35" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb13-36"><a href="#cb13-36" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-37"><a href="#cb13-37" aria-hidden="true" tabindex="-1"></a>---</span>
-<span id="cb13-38"><a href="#cb13-38" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-39"><a href="#cb13-39" aria-hidden="true" tabindex="-1"></a><span class="fu"># Estacionariedad: la condición de entrada</span></span>
-<span id="cb13-40"><a href="#cb13-40" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-41"><a href="#cb13-41" aria-hidden="true" tabindex="-1"></a><span class="fu">## Por qué importa</span></span>
-<span id="cb13-42"><a href="#cb13-42" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-43"><a href="#cb13-43" aria-hidden="true" tabindex="-1"></a>Todo pronóstico basado en el pasado descansa en un supuesto: que **las reglas del juego no cambian**. Formalmente, una serie es **estacionaria** (en sentido débil) si su media, su varianza y sus autocovarianzas no dependen del tiempo. Si la serie tiene tendencia, o su varianza explota, el pasado ya no es una guía del futuro y los modelos que veremos dan resultados sin sentido.</span>
-<span id="cb13-44"><a href="#cb13-44" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-45"><a href="#cb13-45" aria-hidden="true" tabindex="-1"></a>El peligro concreto se llama **regresión espuria**: dos series con tendencia, sin ninguna relación real, muestran correlaciones altísimas y p-values espectaculares. Veámoslo — es el error más caro de la econometría aplicada:</span>
-<span id="cb13-46"><a href="#cb13-46" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-49"><a href="#cb13-49" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
-<span id="cb13-50"><a href="#cb13-50" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: espuria</span></span>
-<span id="cb13-51"><a href="#cb13-51" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> statsmodels.api <span class="im">as</span> sm</span>
-<span id="cb13-52"><a href="#cb13-52" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-53"><a href="#cb13-53" aria-hidden="true" tabindex="-1"></a><span class="co"># Dos paseos aleatorios TOTALMENTE independientes</span></span>
-<span id="cb13-54"><a href="#cb13-54" aria-hidden="true" tabindex="-1"></a>n <span class="op">=</span> <span class="dv">500</span></span>
-<span id="cb13-55"><a href="#cb13-55" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> np.cumsum(rng.normal(<span class="dv">0</span>, <span class="dv">1</span>, n))</span>
-<span id="cb13-56"><a href="#cb13-56" aria-hidden="true" tabindex="-1"></a>y <span class="op">=</span> np.cumsum(rng.normal(<span class="dv">0</span>, <span class="dv">1</span>, n))</span>
-<span id="cb13-57"><a href="#cb13-57" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-58"><a href="#cb13-58" aria-hidden="true" tabindex="-1"></a>res_niveles <span class="op">=</span> sm.OLS(y, sm.add_constant(x)).fit()</span>
-<span id="cb13-59"><a href="#cb13-59" aria-hidden="true" tabindex="-1"></a>res_difs <span class="op">=</span> sm.OLS(np.diff(y), sm.add_constant(np.diff(x))).fit()</span>
-<span id="cb13-60"><a href="#cb13-60" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-61"><a href="#cb13-61" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Regresión de y sobre x (dos paseos aleatorios independientes):"</span>)</span>
-<span id="cb13-62"><a href="#cb13-62" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"  En NIVELES:      R² = </span><span class="sc">{</span>res_niveles<span class="sc">.</span>rsquared<span class="sc">:.3f}</span><span class="ss">, "</span></span>
-<span id="cb13-63"><a href="#cb13-63" aria-hidden="true" tabindex="-1"></a>      <span class="ss">f"p-value = </span><span class="sc">{</span>res_niveles<span class="sc">.</span>pvalues[<span class="dv">1</span>]<span class="sc">:.2e}</span><span class="ss">  ← ¡relación 'significativa' FALSA!"</span>)</span>
-<span id="cb13-64"><a href="#cb13-64" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"  En DIFERENCIAS:  R² = </span><span class="sc">{</span>res_difs<span class="sc">.</span>rsquared<span class="sc">:.3f}</span><span class="ss">, "</span></span>
-<span id="cb13-65"><a href="#cb13-65" aria-hidden="true" tabindex="-1"></a>      <span class="ss">f"p-value = </span><span class="sc">{</span>res_difs<span class="sc">.</span>pvalues[<span class="dv">1</span>]<span class="sc">:.3f}</span><span class="ss">  ← la verdad: no hay relación"</span>)</span>
-<span id="cb13-66"><a href="#cb13-66" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb13-67"><a href="#cb13-67" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-68"><a href="#cb13-68" aria-hidden="true" tabindex="-1"></a>Las series en **niveles** (los paseos) no son estacionarias y la regresión "encuentra" una relación fuerte que no existe. Las mismas series en **diferencias** (sus incrementos, que sí son estacionarios) revelan la verdad. Moraleja operativa que ya usamos en todo el libro sin justificarla: **por eso trabajamos con retornos y no con precios**.</span>
-<span id="cb13-69"><a href="#cb13-69" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-70"><a href="#cb13-70" aria-hidden="true" tabindex="-1"></a><span class="fu">## Diagnóstico formal: el test ADF</span></span>
-<span id="cb13-71"><a href="#cb13-71" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-72"><a href="#cb13-72" aria-hidden="true" tabindex="-1"></a>El test de **Dickey-Fuller aumentado (ADF)** formaliza el diagnóstico. Su hipótesis nula es que la serie tiene una **raíz unitaria** (no es estacionaria, tipo paseo aleatorio); un p-value bajo permite rechazarla.</span>
-<span id="cb13-73"><a href="#cb13-73" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-76"><a href="#cb13-76" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
-<span id="cb13-77"><a href="#cb13-77" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: adf</span></span>
-<span id="cb13-78"><a href="#cb13-78" aria-hidden="true" tabindex="-1"></a>series_prueba <span class="op">=</span> {</span>
-<span id="cb13-79"><a href="#cb13-79" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Paseo aleatorio (precio)"</span>: np.cumsum(rng.normal(<span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">500</span>)),</span>
-<span id="cb13-80"><a href="#cb13-80" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Diferencias (retorno)"</span>: np.diff(np.cumsum(rng.normal(<span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">500</span>))),</span>
-<span id="cb13-81"><a href="#cb13-81" aria-hidden="true" tabindex="-1"></a>    <span class="st">"AR(1) estacionario"</span>: <span class="va">None</span>,  <span class="co"># lo generamos abajo</span></span>
-<span id="cb13-82"><a href="#cb13-82" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb13-83"><a href="#cb13-83" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-84"><a href="#cb13-84" aria-hidden="true" tabindex="-1"></a><span class="co"># Un AR(1) con persistencia alta pero &lt; 1: estacionario</span></span>
-<span id="cb13-85"><a href="#cb13-85" aria-hidden="true" tabindex="-1"></a>ar1 <span class="op">=</span> np.zeros(<span class="dv">500</span>)</span>
-<span id="cb13-86"><a href="#cb13-86" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> t <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">1</span>, <span class="dv">500</span>):</span>
-<span id="cb13-87"><a href="#cb13-87" aria-hidden="true" tabindex="-1"></a>    ar1[t] <span class="op">=</span> <span class="fl">0.7</span> <span class="op">*</span> ar1[t<span class="op">-</span><span class="dv">1</span>] <span class="op">+</span> rng.normal()</span>
-<span id="cb13-88"><a href="#cb13-88" aria-hidden="true" tabindex="-1"></a>series_prueba[<span class="st">"AR(1) estacionario"</span>] <span class="op">=</span> ar1</span>
-<span id="cb13-89"><a href="#cb13-89" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-90"><a href="#cb13-90" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span><span class="st">'Serie'</span><span class="sc">:&lt;28}{</span><span class="st">'ADF stat'</span><span class="sc">:&gt;10}{</span><span class="st">'p-value'</span><span class="sc">:&gt;10}</span><span class="ss">   Veredicto"</span>)</span>
-<span id="cb13-91"><a href="#cb13-91" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> nombre, serie <span class="kw">in</span> series_prueba.items():</span>
-<span id="cb13-92"><a href="#cb13-92" aria-hidden="true" tabindex="-1"></a>    stat, pval <span class="op">=</span> adfuller(serie)[:<span class="dv">2</span>]</span>
-<span id="cb13-93"><a href="#cb13-93" aria-hidden="true" tabindex="-1"></a>    veredicto <span class="op">=</span> <span class="st">"estacionaria"</span> <span class="cf">if</span> pval <span class="op">&lt;</span> <span class="fl">0.05</span> <span class="cf">else</span> <span class="st">"NO estacionaria"</span></span>
-<span id="cb13-94"><a href="#cb13-94" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span>nombre<span class="sc">:&lt;28}{</span>stat<span class="sc">:&gt;10.2f}{</span>pval<span class="sc">:&gt;10.3f}</span><span class="ss">   </span><span class="sc">{</span>veredicto<span class="sc">}</span><span class="ss">"</span>)</span>
-<span id="cb13-95"><a href="#cb13-95" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb13-96"><a href="#cb13-96" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-97"><a href="#cb13-97" aria-hidden="true" tabindex="-1"></a>Regla de trabajo: **testeá antes de modelar**. Si la serie no es estacionaria, diferenciala (una vez suele bastar: precios → retornos, PIB → crecimiento) y volvé a testear. El número de diferenciaciones necesarias es la "d" del ARIMA que viene ahora.</span>
-<span id="cb13-98"><a href="#cb13-98" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-99"><a href="#cb13-99" aria-hidden="true" tabindex="-1"></a>---</span>
-<span id="cb13-100"><a href="#cb13-100" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-101"><a href="#cb13-101" aria-hidden="true" tabindex="-1"></a><span class="fu"># Modelos ARMA: la gramática de una serie estacionaria</span></span>
-<span id="cb13-102"><a href="#cb13-102" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-103"><a href="#cb13-103" aria-hidden="true" tabindex="-1"></a>Una serie estacionaria se modela combinando dos mecanismos:</span>
-<span id="cb13-104"><a href="#cb13-104" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-105"><a href="#cb13-105" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**AR(p)** — *autorregresivo*: el valor de hoy depende de los últimos $p$ valores. "La inflación de este mes se parece a la de los meses anteriores" (inercia, persistencia).</span>
-<span id="cb13-106"><a href="#cb13-106" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-107"><a href="#cb13-107" aria-hidden="true" tabindex="-1"></a>$$y_t = c + \phi_1 y_{t-1} + \dots + \phi_p y_{t-p} + \varepsilon_t$$</span>
-<span id="cb13-108"><a href="#cb13-108" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-109"><a href="#cb13-109" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**MA(q)** — *media móvil*: el valor de hoy depende de los últimos $q$ **shocks**. "El error de ayer todavía repercute hoy" (efectos transitorios de las sorpresas).</span>
-<span id="cb13-110"><a href="#cb13-110" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-111"><a href="#cb13-111" aria-hidden="true" tabindex="-1"></a>$$y_t = c + \varepsilon_t + \theta_1 \varepsilon_{t-1} + \dots + \theta_q \varepsilon_{t-q}$$</span>
-<span id="cb13-112"><a href="#cb13-112" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-113"><a href="#cb13-113" aria-hidden="true" tabindex="-1"></a>**ARMA(p, q)** combina ambos, y **ARIMA(p, d, q)** agrega la "I" de *integrated*: diferenciar la serie $d$ veces antes de ajustar el ARMA. Así, un ARIMA(1,1,0) sobre un precio es un AR(1) sobre sus retornos.</span>
-<span id="cb13-114"><a href="#cb13-114" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-115"><a href="#cb13-115" aria-hidden="true" tabindex="-1"></a><span class="fu">## Identificación: leer la ACF y la PACF</span></span>
-<span id="cb13-116"><a href="#cb13-116" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-117"><a href="#cb13-117" aria-hidden="true" tabindex="-1"></a>¿Cómo elegir $p$ y $q$? Las dos herramientas clásicas:</span>
-<span id="cb13-118"><a href="#cb13-118" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-119"><a href="#cb13-119" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**ACF** (autocorrelación): correlación de la serie con sus propios rezagos.</span>
-<span id="cb13-120"><a href="#cb13-120" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**PACF** (autocorrelación *parcial*): correlación con el rezago $k$ **descontando** el efecto de los rezagos intermedios.</span>
-<span id="cb13-121"><a href="#cb13-121" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-122"><a href="#cb13-122" aria-hidden="true" tabindex="-1"></a>Los patrones de manual: un **AR(p)** tiene PACF que se corta en el rezago $p$ y ACF que decae gradualmente; un **MA(q)** es el espejo (ACF se corta en $q$, PACF decae).</span>
-<span id="cb13-123"><a href="#cb13-123" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-126"><a href="#cb13-126" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
-<span id="cb13-127"><a href="#cb13-127" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: acf-pacf</span></span>
-<span id="cb13-128"><a href="#cb13-128" aria-hidden="true" tabindex="-1"></a><span class="co"># Generamos un AR(2) conocido y verificamos que las herramientas lo identifican</span></span>
-<span id="cb13-129"><a href="#cb13-129" aria-hidden="true" tabindex="-1"></a>n <span class="op">=</span> <span class="dv">800</span></span>
-<span id="cb13-130"><a href="#cb13-130" aria-hidden="true" tabindex="-1"></a>serie_ar2 <span class="op">=</span> np.zeros(n)</span>
-<span id="cb13-131"><a href="#cb13-131" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> t <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">2</span>, n):</span>
-<span id="cb13-132"><a href="#cb13-132" aria-hidden="true" tabindex="-1"></a>    serie_ar2[t] <span class="op">=</span> <span class="fl">0.5</span> <span class="op">*</span> serie_ar2[t<span class="op">-</span><span class="dv">1</span>] <span class="op">+</span> <span class="fl">0.3</span> <span class="op">*</span> serie_ar2[t<span class="op">-</span><span class="dv">2</span>] <span class="op">+</span> rng.normal()</span>
-<span id="cb13-133"><a href="#cb13-133" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-134"><a href="#cb13-134" aria-hidden="true" tabindex="-1"></a>fig, axes <span class="op">=</span> plt.subplots(<span class="dv">1</span>, <span class="dv">2</span>, figsize<span class="op">=</span>(<span class="dv">11</span>, <span class="fl">3.5</span>))</span>
-<span id="cb13-135"><a href="#cb13-135" aria-hidden="true" tabindex="-1"></a>plot_acf(serie_ar2, lags<span class="op">=</span><span class="dv">20</span>, ax<span class="op">=</span>axes[<span class="dv">0</span>], title<span class="op">=</span><span class="st">"ACF: decae gradualmente"</span>)</span>
-<span id="cb13-136"><a href="#cb13-136" aria-hidden="true" tabindex="-1"></a>plot_pacf(serie_ar2, lags<span class="op">=</span><span class="dv">20</span>, ax<span class="op">=</span>axes[<span class="dv">1</span>], title<span class="op">=</span><span class="st">"PACF: se corta en el rezago 2 → AR(2)"</span>)</span>
-<span id="cb13-137"><a href="#cb13-137" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
-<span id="cb13-138"><a href="#cb13-138" aria-hidden="true" tabindex="-1"></a>plt.show()</span>
-<span id="cb13-139"><a href="#cb13-139" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb13-140"><a href="#cb13-140" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-141"><a href="#cb13-141" aria-hidden="true" tabindex="-1"></a>La PACF muestra dos barras significativas y luego nada: la firma de un AR(2). En la práctica, la identificación visual se complementa con criterios de información (AIC/BIC): ajustar varios órdenes candidatos y quedarse con el que mejor balancea ajuste y parsimonia.</span>
-<span id="cb13-142"><a href="#cb13-142" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-143"><a href="#cb13-143" aria-hidden="true" tabindex="-1"></a>---</span>
-<span id="cb13-144"><a href="#cb13-144" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-145"><a href="#cb13-145" aria-hidden="true" tabindex="-1"></a><span class="fu"># ARIMA en acción: modelar y pronosticar la inflación</span></span>
-<span id="cb13-146"><a href="#cb13-146" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-147"><a href="#cb13-147" aria-hidden="true" tabindex="-1"></a>Armemos el flujo completo con una serie macro simulada con la persistencia típica de la inflación mensual.</span>
-<span id="cb13-148"><a href="#cb13-148" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-151"><a href="#cb13-151" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
-<span id="cb13-152"><a href="#cb13-152" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: arima-ajuste</span></span>
-<span id="cb13-153"><a href="#cb13-153" aria-hidden="true" tabindex="-1"></a><span class="co"># Serie mensual de "inflación" con inercia AR(1) fuerte (phi=0.75)</span></span>
-<span id="cb13-154"><a href="#cb13-154" aria-hidden="true" tabindex="-1"></a>n <span class="op">=</span> <span class="dv">240</span>   <span class="co"># 20 años</span></span>
-<span id="cb13-155"><a href="#cb13-155" aria-hidden="true" tabindex="-1"></a>inflacion <span class="op">=</span> np.zeros(n)</span>
-<span id="cb13-156"><a href="#cb13-156" aria-hidden="true" tabindex="-1"></a>mu_inf <span class="op">=</span> <span class="fl">2.0</span> <span class="op">/</span> <span class="dv">12</span>  <span class="co"># ~2% anual en mensual</span></span>
-<span id="cb13-157"><a href="#cb13-157" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> t <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">1</span>, n):</span>
-<span id="cb13-158"><a href="#cb13-158" aria-hidden="true" tabindex="-1"></a>    inflacion[t] <span class="op">=</span> mu_inf <span class="op">*</span> <span class="fl">0.25</span> <span class="op">+</span> <span class="fl">0.75</span> <span class="op">*</span> inflacion[t<span class="op">-</span><span class="dv">1</span>] <span class="op">+</span> rng.normal(<span class="dv">0</span>, <span class="fl">0.15</span>)</span>
-<span id="cb13-159"><a href="#cb13-159" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-160"><a href="#cb13-160" aria-hidden="true" tabindex="-1"></a>fechas <span class="op">=</span> pd.date_range(<span class="st">"2006-01-01"</span>, periods<span class="op">=</span>n, freq<span class="op">=</span><span class="st">"MS"</span>)</span>
-<span id="cb13-161"><a href="#cb13-161" aria-hidden="true" tabindex="-1"></a>serie <span class="op">=</span> pd.Series(inflacion, index<span class="op">=</span>fechas, name<span class="op">=</span><span class="st">"inflacion_mensual"</span>)</span>
-<span id="cb13-162"><a href="#cb13-162" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-163"><a href="#cb13-163" aria-hidden="true" tabindex="-1"></a><span class="co"># 1) ¿Estacionaria?</span></span>
-<span id="cb13-164"><a href="#cb13-164" aria-hidden="true" tabindex="-1"></a>stat, pval <span class="op">=</span> adfuller(serie)[:<span class="dv">2</span>]</span>
-<span id="cb13-165"><a href="#cb13-165" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"ADF: stat=</span><span class="sc">{</span>stat<span class="sc">:.2f}</span><span class="ss">, p-value=</span><span class="sc">{</span>pval<span class="sc">:.4f}</span><span class="ss"> → "</span></span>
-<span id="cb13-166"><a href="#cb13-166" aria-hidden="true" tabindex="-1"></a>      <span class="ss">f"</span><span class="sc">{</span><span class="st">'estacionaria, no hace falta diferenciar (d=0)'</span> <span class="cf">if</span> pval <span class="op">&lt;</span> <span class="fl">0.05</span> <span class="cf">else</span> <span class="st">'diferenciar'</span><span class="sc">}</span><span class="ss">"</span>)</span>
-<span id="cb13-167"><a href="#cb13-167" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-168"><a href="#cb13-168" aria-hidden="true" tabindex="-1"></a><span class="co"># 2) Selección de orden por AIC entre algunos candidatos</span></span>
-<span id="cb13-169"><a href="#cb13-169" aria-hidden="true" tabindex="-1"></a>candidatos <span class="op">=</span> [(<span class="dv">1</span>,<span class="dv">0</span>,<span class="dv">0</span>), (<span class="dv">2</span>,<span class="dv">0</span>,<span class="dv">0</span>), (<span class="dv">1</span>,<span class="dv">0</span>,<span class="dv">1</span>), (<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">2</span>)]</span>
-<span id="cb13-170"><a href="#cb13-170" aria-hidden="true" tabindex="-1"></a>aics <span class="op">=</span> {orden: ARIMA(serie, order<span class="op">=</span>orden).fit().aic <span class="cf">for</span> orden <span class="kw">in</span> candidatos}</span>
-<span id="cb13-171"><a href="#cb13-171" aria-hidden="true" tabindex="-1"></a>mejor <span class="op">=</span> <span class="bu">min</span>(aics, key<span class="op">=</span>aics.get)</span>
-<span id="cb13-172"><a href="#cb13-172" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"</span><span class="ch">\n</span><span class="st">AIC por modelo candidato:"</span>)</span>
-<span id="cb13-173"><a href="#cb13-173" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> orden, aic <span class="kw">in</span> aics.items():</span>
-<span id="cb13-174"><a href="#cb13-174" aria-hidden="true" tabindex="-1"></a>    marca <span class="op">=</span> <span class="st">"  ← elegido"</span> <span class="cf">if</span> orden <span class="op">==</span> mejor <span class="cf">else</span> <span class="st">""</span></span>
-<span id="cb13-175"><a href="#cb13-175" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"  ARIMA</span><span class="sc">{</span>orden<span class="sc">}</span><span class="ss">: </span><span class="sc">{</span>aic<span class="sc">:8.1f}{</span>marca<span class="sc">}</span><span class="ss">"</span>)</span>
-<span id="cb13-176"><a href="#cb13-176" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-177"><a href="#cb13-177" aria-hidden="true" tabindex="-1"></a><span class="co"># 3) Ajuste final</span></span>
-<span id="cb13-178"><a href="#cb13-178" aria-hidden="true" tabindex="-1"></a>modelo <span class="op">=</span> ARIMA(serie, order<span class="op">=</span>mejor).fit()</span>
-<span id="cb13-179"><a href="#cb13-179" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"</span><span class="ch">\n</span><span class="ss">Coeficientes del ARIMA</span><span class="sc">{</span>mejor<span class="sc">}</span><span class="ss">:"</span>)</span>
-<span id="cb13-180"><a href="#cb13-180" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(modelo.params.<span class="bu">round</span>(<span class="dv">3</span>))</span>
-<span id="cb13-181"><a href="#cb13-181" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb13-182"><a href="#cb13-182" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-183"><a href="#cb13-183" aria-hidden="true" tabindex="-1"></a>El AIC elige el AR(1) —el proceso generador verdadero— y el coeficiente estimado ronda el 0.75 real. Ahora, el pronóstico:</span>
-<span id="cb13-184"><a href="#cb13-184" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-187"><a href="#cb13-187" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
-<span id="cb13-188"><a href="#cb13-188" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: arima-pronostico</span></span>
-<span id="cb13-189"><a href="#cb13-189" aria-hidden="true" tabindex="-1"></a>horizonte <span class="op">=</span> <span class="dv">24</span></span>
-<span id="cb13-190"><a href="#cb13-190" aria-hidden="true" tabindex="-1"></a>pron <span class="op">=</span> modelo.get_forecast(steps<span class="op">=</span>horizonte)</span>
-<span id="cb13-191"><a href="#cb13-191" aria-hidden="true" tabindex="-1"></a>media <span class="op">=</span> pron.predicted_mean</span>
-<span id="cb13-192"><a href="#cb13-192" aria-hidden="true" tabindex="-1"></a>banda <span class="op">=</span> pron.conf_int(alpha<span class="op">=</span><span class="fl">0.05</span>)</span>
-<span id="cb13-193"><a href="#cb13-193" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-194"><a href="#cb13-194" aria-hidden="true" tabindex="-1"></a>fig, ax <span class="op">=</span> plt.subplots(figsize<span class="op">=</span>(<span class="dv">10</span>, <span class="fl">4.5</span>))</span>
-<span id="cb13-195"><a href="#cb13-195" aria-hidden="true" tabindex="-1"></a>ax.plot(serie.iloc[<span class="op">-</span><span class="dv">72</span>:], label<span class="op">=</span><span class="st">"Inflación observada"</span>)</span>
-<span id="cb13-196"><a href="#cb13-196" aria-hidden="true" tabindex="-1"></a>ax.plot(media, <span class="st">"r-"</span>, linewidth<span class="op">=</span><span class="dv">2</span>, label<span class="op">=</span><span class="st">"Pronóstico ARIMA"</span>)</span>
-<span id="cb13-197"><a href="#cb13-197" aria-hidden="true" tabindex="-1"></a>ax.fill_between(banda.index, banda.iloc[:, <span class="dv">0</span>], banda.iloc[:, <span class="dv">1</span>],</span>
-<span id="cb13-198"><a href="#cb13-198" aria-hidden="true" tabindex="-1"></a>                alpha<span class="op">=</span><span class="fl">0.2</span>, color<span class="op">=</span><span class="st">"red"</span>, label<span class="op">=</span><span class="st">"IC 95%"</span>)</span>
-<span id="cb13-199"><a href="#cb13-199" aria-hidden="true" tabindex="-1"></a>ax.set_ylabel(<span class="st">"Inflación mensual (%)"</span>)</span>
-<span id="cb13-200"><a href="#cb13-200" aria-hidden="true" tabindex="-1"></a>ax.set_title(<span class="st">"Pronóstico a 24 meses con intervalos de confianza"</span>)</span>
-<span id="cb13-201"><a href="#cb13-201" aria-hidden="true" tabindex="-1"></a>ax.legend()</span>
-<span id="cb13-202"><a href="#cb13-202" aria-hidden="true" tabindex="-1"></a>ax.grid(<span class="va">True</span>, alpha<span class="op">=</span><span class="fl">0.3</span>)</span>
-<span id="cb13-203"><a href="#cb13-203" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
-<span id="cb13-204"><a href="#cb13-204" aria-hidden="true" tabindex="-1"></a>plt.show()</span>
-<span id="cb13-205"><a href="#cb13-205" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb13-206"><a href="#cb13-206" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-207"><a href="#cb13-207" aria-hidden="true" tabindex="-1"></a>Dos rasgos para leer en el gráfico, típicos de todo pronóstico ARIMA: la predicción **converge a la media de largo plazo** de la serie (la inercia se agota), y las bandas **se abren con el horizonte** hasta estabilizarse — el modelo es honesto sobre lo poco que sabe del futuro lejano.</span>
-<span id="cb13-208"><a href="#cb13-208" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-209"><a href="#cb13-209" aria-hidden="true" tabindex="-1"></a>::: {.callout-warning title="¿Y pronosticar retornos de acciones?"}</span>
-<span id="cb13-210"><a href="#cb13-210" aria-hidden="true" tabindex="-1"></a>Tentador, pero el ARIMA sobre retornos accionarios suele encontrar... nada ($p = q = 0$): los retornos son casi impredecibles por su propio pasado (eficiencia de mercado en su forma débil). Donde los modelos de series de tiempo brillan es en variables **con inercia estructural**: inflación, tasas, actividad, y —muy especialmente— la *volatilidad* (la familia GARCH, prima hermana de ARMA aplicada a la varianza).</span>
-<span id="cb13-211"><a href="#cb13-211" aria-hidden="true" tabindex="-1"></a>:::</span>
-<span id="cb13-212"><a href="#cb13-212" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-213"><a href="#cb13-213" aria-hidden="true" tabindex="-1"></a>---</span>
-<span id="cb13-214"><a href="#cb13-214" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-215"><a href="#cb13-215" aria-hidden="true" tabindex="-1"></a><span class="fu"># VAR: varias series que se influyen mutuamente</span></span>
-<span id="cb13-216"><a href="#cb13-216" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-217"><a href="#cb13-217" aria-hidden="true" tabindex="-1"></a>La macro rara vez es univariada: la inflación depende de la tasa de interés, la tasa responde a la inflación, y la actividad interactúa con ambas. El modelo **VAR** (*Vector Autoregression*) generaliza el AR a un **sistema**: cada variable se regresa sobre los rezagos de **todas** las variables.</span>
-<span id="cb13-218"><a href="#cb13-218" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-219"><a href="#cb13-219" aria-hidden="true" tabindex="-1"></a>Para dos variables y un rezago:</span>
-<span id="cb13-220"><a href="#cb13-220" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-221"><a href="#cb13-221" aria-hidden="true" tabindex="-1"></a>$$\begin{aligned} y_{1,t} &amp;= c_1 + \phi_{11}\, y_{1,t-1} + \phi_{12}\, y_{2,t-1} + \varepsilon_{1,t} <span class="sc">\\</span> y_{2,t} &amp;= c_2 + \phi_{21}\, y_{1,t-1} + \phi_{22}\, y_{2,t-1} + \varepsilon_{2,t} \end{aligned}$$</span>
-<span id="cb13-222"><a href="#cb13-222" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-223"><a href="#cb13-223" aria-hidden="true" tabindex="-1"></a>Los coeficientes cruzados ($\phi_{12}, \phi_{21}$) son la novedad: capturan cómo una variable **anticipa** a la otra.</span>
-<span id="cb13-224"><a href="#cb13-224" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-227"><a href="#cb13-227" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
-<span id="cb13-228"><a href="#cb13-228" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: var-datos</span></span>
-<span id="cb13-229"><a href="#cb13-229" aria-hidden="true" tabindex="-1"></a><span class="co"># Sistema simulado con estructura conocida:</span></span>
-<span id="cb13-230"><a href="#cb13-230" aria-hidden="true" tabindex="-1"></a><span class="co">#   - la tasa sube cuando la inflación pasada fue alta (regla de política)</span></span>
-<span id="cb13-231"><a href="#cb13-231" aria-hidden="true" tabindex="-1"></a><span class="co">#   - la inflación baja cuando la tasa pasada fue alta (efecto de la política)</span></span>
-<span id="cb13-232"><a href="#cb13-232" aria-hidden="true" tabindex="-1"></a>n <span class="op">=</span> <span class="dv">300</span></span>
-<span id="cb13-233"><a href="#cb13-233" aria-hidden="true" tabindex="-1"></a>inf <span class="op">=</span> np.zeros(n)</span>
-<span id="cb13-234"><a href="#cb13-234" aria-hidden="true" tabindex="-1"></a>tasa <span class="op">=</span> np.zeros(n)</span>
-<span id="cb13-235"><a href="#cb13-235" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> t <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">1</span>, n):</span>
-<span id="cb13-236"><a href="#cb13-236" aria-hidden="true" tabindex="-1"></a>    inf[t] <span class="op">=</span> <span class="fl">0.6</span> <span class="op">*</span> inf[t<span class="op">-</span><span class="dv">1</span>] <span class="op">-</span> <span class="fl">0.20</span> <span class="op">*</span> tasa[t<span class="op">-</span><span class="dv">1</span>] <span class="op">+</span> rng.normal(<span class="dv">0</span>, <span class="fl">0.3</span>)</span>
-<span id="cb13-237"><a href="#cb13-237" aria-hidden="true" tabindex="-1"></a>    tasa[t] <span class="op">=</span> <span class="fl">0.7</span> <span class="op">*</span> tasa[t<span class="op">-</span><span class="dv">1</span>] <span class="op">+</span> <span class="fl">0.25</span> <span class="op">*</span> inf[t<span class="op">-</span><span class="dv">1</span>] <span class="op">+</span> rng.normal(<span class="dv">0</span>, <span class="fl">0.2</span>)</span>
-<span id="cb13-238"><a href="#cb13-238" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-239"><a href="#cb13-239" aria-hidden="true" tabindex="-1"></a>datos <span class="op">=</span> pd.DataFrame({<span class="st">"inflacion"</span>: inf, <span class="st">"tasa"</span>: tasa},</span>
-<span id="cb13-240"><a href="#cb13-240" aria-hidden="true" tabindex="-1"></a>                     index<span class="op">=</span>pd.date_range(<span class="st">"2001-01-01"</span>, periods<span class="op">=</span>n, freq<span class="op">=</span><span class="st">"MS"</span>))</span>
-<span id="cb13-241"><a href="#cb13-241" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-242"><a href="#cb13-242" aria-hidden="true" tabindex="-1"></a><span class="co"># Ajuste del VAR con selección automática del número de rezagos</span></span>
-<span id="cb13-243"><a href="#cb13-243" aria-hidden="true" tabindex="-1"></a>var_modelo <span class="op">=</span> VAR(datos)</span>
-<span id="cb13-244"><a href="#cb13-244" aria-hidden="true" tabindex="-1"></a>seleccion <span class="op">=</span> var_modelo.select_order(maxlags<span class="op">=</span><span class="dv">8</span>)</span>
-<span id="cb13-245"><a href="#cb13-245" aria-hidden="true" tabindex="-1"></a>p_optimo <span class="op">=</span> seleccion.aic</span>
-<span id="cb13-246"><a href="#cb13-246" aria-hidden="true" tabindex="-1"></a>resultado <span class="op">=</span> var_modelo.fit(p_optimo)</span>
-<span id="cb13-247"><a href="#cb13-247" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-248"><a href="#cb13-248" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Rezagos elegidos por AIC: </span><span class="sc">{</span>p_optimo<span class="sc">}</span><span class="ch">\n</span><span class="ss">"</span>)</span>
-<span id="cb13-249"><a href="#cb13-249" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Coeficientes de la ecuación de inflación:"</span>)</span>
-<span id="cb13-250"><a href="#cb13-250" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(resultado.params[<span class="st">"inflacion"</span>].<span class="bu">round</span>(<span class="dv">3</span>))</span>
-<span id="cb13-251"><a href="#cb13-251" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb13-252"><a href="#cb13-252" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-253"><a href="#cb13-253" aria-hidden="true" tabindex="-1"></a>Los coeficientes recuperan la estructura que sembramos: la inflación depende positivamente de su pasado y **negativamente de la tasa pasada**. Pero la forma más útil de leer un VAR no es la tabla de coeficientes sino la...</span>
-<span id="cb13-254"><a href="#cb13-254" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-255"><a href="#cb13-255" aria-hidden="true" tabindex="-1"></a><span class="fu">## Función de impulso-respuesta (IRF)</span></span>
-<span id="cb13-256"><a href="#cb13-256" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-257"><a href="#cb13-257" aria-hidden="true" tabindex="-1"></a>La IRF responde la pregunta de política: *si hoy golpeo al sistema con un shock de una unidad en una variable, ¿cómo evolucionan todas las variables en los meses siguientes?* Es el experimento contrafáctico que el VAR permite trazar.</span>
-<span id="cb13-258"><a href="#cb13-258" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-261"><a href="#cb13-261" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
-<span id="cb13-262"><a href="#cb13-262" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: var-irf</span></span>
-<span id="cb13-263"><a href="#cb13-263" aria-hidden="true" tabindex="-1"></a>irf <span class="op">=</span> resultado.irf(<span class="dv">24</span>)</span>
-<span id="cb13-264"><a href="#cb13-264" aria-hidden="true" tabindex="-1"></a>irf.plot(orth<span class="op">=</span><span class="va">False</span>, figsize<span class="op">=</span>(<span class="dv">10</span>, <span class="dv">7</span>))</span>
-<span id="cb13-265"><a href="#cb13-265" aria-hidden="true" tabindex="-1"></a>plt.suptitle(<span class="st">"Funciones de impulso-respuesta (24 meses)"</span>, y<span class="op">=</span><span class="fl">1.02</span>)</span>
-<span id="cb13-266"><a href="#cb13-266" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
-<span id="cb13-267"><a href="#cb13-267" aria-hidden="true" tabindex="-1"></a>plt.show()</span>
-<span id="cb13-268"><a href="#cb13-268" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb13-269"><a href="#cb13-269" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-270"><a href="#cb13-270" aria-hidden="true" tabindex="-1"></a>Mirá el panel "tasa → inflacion": un shock de tasa deprime la inflación durante varios meses, con el efecto máximo no inmediato sino rezagado — exactamente la dinámica "la política monetaria actúa con rezagos" que los bancos centrales repiten. El panel "inflacion → tasa" muestra la respuesta de política: la tasa sube tras un shock inflacionario y luego decae.</span>
-<span id="cb13-271"><a href="#cb13-271" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-272"><a href="#cb13-272" aria-hidden="true" tabindex="-1"></a>::: {.callout-note title="Los VAR en la práctica"}</span>
-<span id="cb13-273"><a href="#cb13-273" aria-hidden="true" tabindex="-1"></a>Los bancos centrales usan VARs (y variantes: SVAR, BVAR, FAVAR) como caballo de batalla para el análisis de política monetaria desde los trabajos de Sims (Nobel 2011). En finanzas se usan para sistemas tasa-inflación-actividad, para pronóstico macro que alimenta modelos de PPNR y stress testing (Capítulo 12), y para estudiar transmisión entre mercados.</span>
-<span id="cb13-274"><a href="#cb13-274" aria-hidden="true" tabindex="-1"></a>:::</span>
-<span id="cb13-275"><a href="#cb13-275" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-276"><a href="#cb13-276" aria-hidden="true" tabindex="-1"></a>---</span>
-<span id="cb13-277"><a href="#cb13-277" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-278"><a href="#cb13-278" aria-hidden="true" tabindex="-1"></a><span class="fu"># Errores comunes</span></span>
-<span id="cb13-279"><a href="#cb13-279" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-280"><a href="#cb13-280" aria-hidden="true" tabindex="-1"></a>::: {.callout-warning title="Trampas frecuentes"}</span>
-<span id="cb13-281"><a href="#cb13-281" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Modelar en niveles sin testear estacionariedad**: la regresión espuria del inicio. ADF primero, modelo después.</span>
-<span id="cb13-282"><a href="#cb13-282" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Sobrediferenciar**: si la serie ya era estacionaria, diferenciarla "por las dudas" introduce un MA espurio y arruina el pronóstico. La "d" correcta es la mínima necesaria.</span>
-<span id="cb13-283"><a href="#cb13-283" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Elegir p y q maximizando el ajuste dentro de la muestra**: más rezagos siempre ajustan mejor *in-sample*; usá AIC/BIC o validación fuera de muestra (el tema del próximo capítulo).</span>
-<span id="cb13-284"><a href="#cb13-284" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Leer causalidad en un VAR**: que la tasa "anticipe" a la inflación (precedencia temporal, causalidad de Granger) no prueba causalidad económica; puede haber una tercera variable moviendo a ambas.</span>
-<span id="cb13-285"><a href="#cb13-285" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Ignorar los residuos**: un buen modelo deja residuos sin autocorrelación. Si la ACF de los residuos muestra estructura, el modelo se quedó corto.</span>
-<span id="cb13-286"><a href="#cb13-286" aria-hidden="true" tabindex="-1"></a>:::</span>
-<span id="cb13-287"><a href="#cb13-287" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-288"><a href="#cb13-288" aria-hidden="true" tabindex="-1"></a>---</span>
-<span id="cb13-289"><a href="#cb13-289" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-290"><a href="#cb13-290" aria-hidden="true" tabindex="-1"></a><span class="fu"># Ejercicios Propuestos</span></span>
-<span id="cb13-291"><a href="#cb13-291" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-292"><a href="#cb13-292" aria-hidden="true" tabindex="-1"></a>::: {.callout-important title="Ejercicios"}</span>
-<span id="cb13-293"><a href="#cb13-293" aria-hidden="true" tabindex="-1"></a><span class="ss">1. </span>**Identificación**: generá un MA(2) puro y verificá con ACF/PACF que la firma es la esperada (ACF cortada en 2, PACF decayendo).</span>
-<span id="cb13-294"><a href="#cb13-294" aria-hidden="true" tabindex="-1"></a><span class="ss">2. </span>**d correcta**: tomá la serie de "precios" acumulando los retornos del capítulo, ajustale un ARIMA(1,1,0) y compará con ajustar ARIMA(1,0,0) a los retornos. ¿Son el mismo modelo?</span>
-<span id="cb13-295"><a href="#cb13-295" aria-hidden="true" tabindex="-1"></a><span class="ss">3. </span>**Backtest de pronóstico**: dividí la serie de inflación en 80% entrenamiento / 20% prueba, pronosticá el tramo final y calculá el error cuadrático medio contra un pronóstico ingenuo ("mañana = hoy"). ¿El ARIMA le gana?</span>
-<span id="cb13-296"><a href="#cb13-296" aria-hidden="true" tabindex="-1"></a><span class="ss">4. </span>**Causalidad de Granger**: usá <span class="in">`resultado.test_causality`</span> para testear si la tasa "Granger-causa" a la inflación en el VAR del capítulo, y viceversa.</span>
-<span id="cb13-297"><a href="#cb13-297" aria-hidden="true" tabindex="-1"></a><span class="ss">5. </span>**VAR de tres variables**: agregá al sistema una variable de "actividad" que dependa negativamente de la tasa, re-estimá el VAR y analizá las nuevas IRF.</span>
-<span id="cb13-298"><a href="#cb13-298" aria-hidden="true" tabindex="-1"></a>:::</span>
-<span id="cb13-299"><a href="#cb13-299" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-300"><a href="#cb13-300" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-301"><a href="#cb13-301" aria-hidden="true" tabindex="-1"></a>Podés resolver estos ejercicios acá mismo: la celda ejecuta Python **en tu navegador**, sin instalar nada (la primera ejecución tarda unos segundos mientras carga el entorno; los paquetes que importes se instalan solos).</span>
-<span id="cb13-302"><a href="#cb13-302" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-303"><a href="#cb13-303" aria-hidden="true" tabindex="-1"></a><span class="in">```{pyodide-python}</span></span>
-<span id="cb13-304"><a href="#cb13-304" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: practica-navegador</span></span>
-<span id="cb13-305"><a href="#cb13-305" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
-<span id="cb13-306"><a href="#cb13-306" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> statsmodels.api <span class="im">as</span> sm</span>
-<span id="cb13-307"><a href="#cb13-307" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> statsmodels.tsa.arima.model <span class="im">import</span> ARIMA</span>
-<span id="cb13-308"><a href="#cb13-308" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-309"><a href="#cb13-309" aria-hidden="true" tabindex="-1"></a><span class="co"># Tu solución acá...</span></span>
-<span id="cb13-310"><a href="#cb13-310" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb13-311"><a href="#cb13-311" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-312"><a href="#cb13-312" aria-hidden="true" tabindex="-1"></a>---</span>
-<span id="cb13-313"><a href="#cb13-313" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-314"><a href="#cb13-314" aria-hidden="true" tabindex="-1"></a><span class="fu"># Referencias</span></span>
-<span id="cb13-315"><a href="#cb13-315" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-316"><a href="#cb13-316" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-317"><a href="#cb13-317" aria-hidden="true" tabindex="-1"></a>::: {#refs}</span>
-<span id="cb13-318"><a href="#cb13-318" aria-hidden="true" tabindex="-1"></a>:::</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb14" data-shortcodes="false"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="an">title:</span><span class="co"> "Capítulo 16: Series Temporales — ARIMA y VAR"</span></span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a><span class="an">subtitle:</span><span class="co"> "Modelar y pronosticar variables macroeconómicas y financieras"</span></span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a><span class="an">abstract:</span><span class="co"> |</span></span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a><span class="co">  Los modelos lineales del capítulo anterior explican una variable con otras;</span></span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a><span class="co">  los modelos de series de tiempo la explican con su propio pasado. Desarrollamos</span></span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a><span class="co">  el concepto de estacionariedad y cómo diagnosticarla (test ADF), la identificación</span></span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a><span class="co">  de modelos con ACF/PACF, el ajuste y pronóstico con ARIMA, y los modelos VAR para</span></span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a><span class="co">  sistemas de varias series macro con sus funciones de impulso-respuesta.</span></span>
+<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a><span class="an">nocite:</span><span class="co"> |</span></span>
+<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a><span class="co">  @box2015, @hamilton1994, @sims1980, @granger1974</span></span>
+<span id="cb14-12"><a href="#cb14-12" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
+<span id="cb14-13"><a href="#cb14-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-14"><a href="#cb14-14" aria-hidden="true" tabindex="-1"></a><span class="fu"># Introducción {.unnumbered}</span></span>
+<span id="cb14-15"><a href="#cb14-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-16"><a href="#cb14-16" aria-hidden="true" tabindex="-1"></a>En el Capítulo 15 explicamos el retorno de un activo con el retorno del mercado: una variable explicada por *otras*. Los modelos de **series de tiempo** cambian el ángulo: explican una variable con **su propio pasado**. La pregunta ya no es "¿cómo se mueve $y$ con $x$?" sino *"¿qué dice la historia de esta serie sobre su próximo valor?"*</span>
+<span id="cb14-17"><a href="#cb14-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-18"><a href="#cb14-18" aria-hidden="true" tabindex="-1"></a>En finanzas y macro, esta caja de herramientas es la estándar para pronosticar inflación, actividad, tasas de interés o volatilidad, y para responder preguntas de política: *si sube la tasa, ¿qué le pasa a la inflación en los próximos trimestres?*</span>
+<span id="cb14-19"><a href="#cb14-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-20"><a href="#cb14-20" aria-hidden="true" tabindex="-1"></a>Este capítulo retoma la manipulación de series del Capítulo 6 (fechas, resampleo, retornos con Pandas) y le agrega los modelos: **ARIMA** para una serie, **VAR** para varias a la vez.</span>
+<span id="cb14-21"><a href="#cb14-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-24"><a href="#cb14-24" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb14-25"><a href="#cb14-25" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: setup</span></span>
+<span id="cb14-26"><a href="#cb14-26" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb14-27"><a href="#cb14-27" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb14-28"><a href="#cb14-28" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb14-29"><a href="#cb14-29" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> statsmodels.tsa.stattools <span class="im">import</span> adfuller</span>
+<span id="cb14-30"><a href="#cb14-30" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> statsmodels.graphics.tsaplots <span class="im">import</span> plot_acf, plot_pacf</span>
+<span id="cb14-31"><a href="#cb14-31" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> statsmodels.tsa.arima.model <span class="im">import</span> ARIMA</span>
+<span id="cb14-32"><a href="#cb14-32" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> statsmodels.tsa.api <span class="im">import</span> VAR</span>
+<span id="cb14-33"><a href="#cb14-33" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-34"><a href="#cb14-34" aria-hidden="true" tabindex="-1"></a>rng <span class="op">=</span> np.random.default_rng(<span class="dv">42</span>)</span>
+<span id="cb14-35"><a href="#cb14-35" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb14-36"><a href="#cb14-36" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-39"><a href="#cb14-39" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb14-40"><a href="#cb14-40" aria-hidden="true" tabindex="-1"></a><span class="co">#| include: false</span></span>
+<span id="cb14-41"><a href="#cb14-41" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> sys<span class="op">;</span> sys.path.insert(<span class="dv">0</span>, <span class="st">".."</span>)</span>
+<span id="cb14-42"><a href="#cb14-42" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> _esquemas <span class="im">import</span> aplicar_estilo</span>
+<span id="cb14-43"><a href="#cb14-43" aria-hidden="true" tabindex="-1"></a>aplicar_estilo()</span>
+<span id="cb14-44"><a href="#cb14-44" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb14-45"><a href="#cb14-45" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-46"><a href="#cb14-46" aria-hidden="true" tabindex="-1"></a>---</span>
+<span id="cb14-47"><a href="#cb14-47" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-48"><a href="#cb14-48" aria-hidden="true" tabindex="-1"></a><span class="fu">## Estacionariedad: la condición de entrada</span></span>
+<span id="cb14-49"><a href="#cb14-49" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-50"><a href="#cb14-50" aria-hidden="true" tabindex="-1"></a><span class="fu">### Por qué importa</span></span>
+<span id="cb14-51"><a href="#cb14-51" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-52"><a href="#cb14-52" aria-hidden="true" tabindex="-1"></a>Todo pronóstico basado en el pasado descansa en un supuesto: que **las reglas del juego no cambian**. Formalmente, una serie es **estacionaria** (en sentido débil) si su media, su varianza y sus autocovarianzas no dependen del tiempo. Si la serie tiene tendencia, o su varianza explota, el pasado ya no es una guía del futuro y los modelos que veremos dan resultados sin sentido.</span>
+<span id="cb14-53"><a href="#cb14-53" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-54"><a href="#cb14-54" aria-hidden="true" tabindex="-1"></a>El peligro concreto se llama **regresión espuria**: dos series con tendencia, sin ninguna relación real, muestran correlaciones altísimas y p-values espectaculares. Veámoslo — es el error más caro de la econometría aplicada:</span>
+<span id="cb14-55"><a href="#cb14-55" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-58"><a href="#cb14-58" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb14-59"><a href="#cb14-59" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: espuria</span></span>
+<span id="cb14-60"><a href="#cb14-60" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> statsmodels.api <span class="im">as</span> sm</span>
+<span id="cb14-61"><a href="#cb14-61" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-62"><a href="#cb14-62" aria-hidden="true" tabindex="-1"></a><span class="co"># Dos paseos aleatorios TOTALMENTE independientes</span></span>
+<span id="cb14-63"><a href="#cb14-63" aria-hidden="true" tabindex="-1"></a>n <span class="op">=</span> <span class="dv">500</span></span>
+<span id="cb14-64"><a href="#cb14-64" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> np.cumsum(rng.normal(<span class="dv">0</span>, <span class="dv">1</span>, n))</span>
+<span id="cb14-65"><a href="#cb14-65" aria-hidden="true" tabindex="-1"></a>y <span class="op">=</span> np.cumsum(rng.normal(<span class="dv">0</span>, <span class="dv">1</span>, n))</span>
+<span id="cb14-66"><a href="#cb14-66" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-67"><a href="#cb14-67" aria-hidden="true" tabindex="-1"></a>res_niveles <span class="op">=</span> sm.OLS(y, sm.add_constant(x)).fit()</span>
+<span id="cb14-68"><a href="#cb14-68" aria-hidden="true" tabindex="-1"></a>res_difs <span class="op">=</span> sm.OLS(np.diff(y), sm.add_constant(np.diff(x))).fit()</span>
+<span id="cb14-69"><a href="#cb14-69" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-70"><a href="#cb14-70" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Regresión de y sobre x (dos paseos aleatorios independientes):"</span>)</span>
+<span id="cb14-71"><a href="#cb14-71" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"  En NIVELES:      R² = </span><span class="sc">{</span>res_niveles<span class="sc">.</span>rsquared<span class="sc">:.3f}</span><span class="ss">, "</span></span>
+<span id="cb14-72"><a href="#cb14-72" aria-hidden="true" tabindex="-1"></a>      <span class="ss">f"p-value = </span><span class="sc">{</span>res_niveles<span class="sc">.</span>pvalues[<span class="dv">1</span>]<span class="sc">:.2e}</span><span class="ss">  ← ¡relación 'significativa' FALSA!"</span>)</span>
+<span id="cb14-73"><a href="#cb14-73" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"  En DIFERENCIAS:  R² = </span><span class="sc">{</span>res_difs<span class="sc">.</span>rsquared<span class="sc">:.3f}</span><span class="ss">, "</span></span>
+<span id="cb14-74"><a href="#cb14-74" aria-hidden="true" tabindex="-1"></a>      <span class="ss">f"p-value = </span><span class="sc">{</span>res_difs<span class="sc">.</span>pvalues[<span class="dv">1</span>]<span class="sc">:.3f}</span><span class="ss">  ← la verdad: no hay relación"</span>)</span>
+<span id="cb14-75"><a href="#cb14-75" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb14-76"><a href="#cb14-76" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-77"><a href="#cb14-77" aria-hidden="true" tabindex="-1"></a>Las series en **niveles** (los paseos) no son estacionarias y la regresión "encuentra" una relación fuerte que no existe. Las mismas series en **diferencias** (sus incrementos, que sí son estacionarios) revelan la verdad. Moraleja operativa que ya usamos en todo el libro sin justificarla: **por eso trabajamos con retornos y no con precios**.</span>
+<span id="cb14-78"><a href="#cb14-78" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-79"><a href="#cb14-79" aria-hidden="true" tabindex="-1"></a>La @fig-regresion-espuria muestra el engaño. Dos paseos aleatorios independientes, por pura casualidad, derivan en direcciones parecidas durante tramos largos; en niveles, la nube de puntos se inclina y la regresión la declara "significativa" con un p-value minúsculo. En diferencias, la ilusión desaparece.</span>
+<span id="cb14-80"><a href="#cb14-80" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-83"><a href="#cb14-83" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb14-84"><a href="#cb14-84" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: fig-regresion-espuria</span></span>
+<span id="cb14-85"><a href="#cb14-85" aria-hidden="true" tabindex="-1"></a><span class="co">#| echo: false</span></span>
+<span id="cb14-86"><a href="#cb14-86" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-cap: "Regresión espuria. Izquierda: dos paseos aleatorios generados de forma independiente. Centro: en niveles, la regresión encuentra una pendiente «significativa» que no existe; los puntos no son independientes entre sí, y el test lo ignora. Derecha: los mismos datos en diferencias (los incrementos) no muestran ninguna relación."</span></span>
+<span id="cb14-87"><a href="#cb14-87" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> sys<span class="op">;</span> sys.path.insert(<span class="dv">0</span>, <span class="st">".."</span>)</span>
+<span id="cb14-88"><a href="#cb14-88" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> _esquemas <span class="im">import</span> <span class="op">*</span></span>
+<span id="cb14-89"><a href="#cb14-89" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb14-90"><a href="#cb14-90" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-91"><a href="#cb14-91" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> _esquema():</span>
+<span id="cb14-92"><a href="#cb14-92" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Usa x, y, res_niveles y res_difs del capítulo</span></span>
+<span id="cb14-93"><a href="#cb14-93" aria-hidden="true" tabindex="-1"></a>    fig, axes <span class="op">=</span> plt.subplots(<span class="dv">1</span>, <span class="dv">3</span>, figsize<span class="op">=</span>(<span class="dv">12</span>, <span class="fl">3.8</span>))</span>
+<span id="cb14-94"><a href="#cb14-94" aria-hidden="true" tabindex="-1"></a>    axes[<span class="dv">0</span>].plot(x, color<span class="op">=</span>PRIMARIO, lw<span class="op">=</span><span class="fl">1.2</span>, label<span class="op">=</span><span class="st">"x"</span>)</span>
+<span id="cb14-95"><a href="#cb14-95" aria-hidden="true" tabindex="-1"></a>    axes[<span class="dv">0</span>].plot(y, color<span class="op">=</span>ACENTO, lw<span class="op">=</span><span class="fl">1.2</span>, label<span class="op">=</span><span class="st">"y"</span>)</span>
+<span id="cb14-96"><a href="#cb14-96" aria-hidden="true" tabindex="-1"></a>    axes[<span class="dv">0</span>].set_xlabel(<span class="st">"Tiempo"</span>)</span>
+<span id="cb14-97"><a href="#cb14-97" aria-hidden="true" tabindex="-1"></a>    axes[<span class="dv">0</span>].legend(frameon<span class="op">=</span><span class="va">False</span>, fontsize<span class="op">=</span><span class="dv">9</span>)</span>
+<span id="cb14-98"><a href="#cb14-98" aria-hidden="true" tabindex="-1"></a>    axes[<span class="dv">0</span>].set_title(<span class="st">"Dos paseos independientes"</span>, fontsize<span class="op">=</span><span class="fl">10.5</span>, color<span class="op">=</span>PRIMARIO,</span>
+<span id="cb14-99"><a href="#cb14-99" aria-hidden="true" tabindex="-1"></a>                      fontweight<span class="op">=</span><span class="st">"bold"</span>)</span>
+<span id="cb14-100"><a href="#cb14-100" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-101"><a href="#cb14-101" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> ax, (xx, yy, ajuste, titulo) <span class="kw">in</span> <span class="bu">zip</span>(axes[<span class="dv">1</span>:], [</span>
+<span id="cb14-102"><a href="#cb14-102" aria-hidden="true" tabindex="-1"></a>            (x, y, res_niveles, <span class="st">"En niveles"</span>),</span>
+<span id="cb14-103"><a href="#cb14-103" aria-hidden="true" tabindex="-1"></a>            (np.diff(x), np.diff(y), res_difs, <span class="st">"En diferencias"</span>)]):</span>
+<span id="cb14-104"><a href="#cb14-104" aria-hidden="true" tabindex="-1"></a>        ax.scatter(xx, yy, s<span class="op">=</span><span class="dv">6</span>, color<span class="op">=</span>GRIS, alpha<span class="op">=</span><span class="fl">0.7</span>)</span>
+<span id="cb14-105"><a href="#cb14-105" aria-hidden="true" tabindex="-1"></a>        recta <span class="op">=</span> np.linspace(xx.<span class="bu">min</span>(), xx.<span class="bu">max</span>(), <span class="dv">2</span>)</span>
+<span id="cb14-106"><a href="#cb14-106" aria-hidden="true" tabindex="-1"></a>        ax.plot(recta, ajuste.params[<span class="dv">0</span>] <span class="op">+</span> ajuste.params[<span class="dv">1</span>] <span class="op">*</span> recta, color<span class="op">=</span>ACENTO, lw<span class="op">=</span><span class="dv">2</span>)</span>
+<span id="cb14-107"><a href="#cb14-107" aria-hidden="true" tabindex="-1"></a>        ax.set_title(<span class="ss">f"</span><span class="sc">{</span>titulo<span class="sc">}</span><span class="ss">: R² = </span><span class="sc">{</span>ajuste<span class="sc">.</span>rsquared<span class="sc">:.2f}</span><span class="ss">"</span>, fontsize<span class="op">=</span><span class="fl">10.5</span>, color<span class="op">=</span>PRIMARIO,</span>
+<span id="cb14-108"><a href="#cb14-108" aria-hidden="true" tabindex="-1"></a>                     fontweight<span class="op">=</span><span class="st">"bold"</span>)</span>
+<span id="cb14-109"><a href="#cb14-109" aria-hidden="true" tabindex="-1"></a>        ax.set_xlabel(<span class="st">"x"</span>)</span>
+<span id="cb14-110"><a href="#cb14-110" aria-hidden="true" tabindex="-1"></a>        ax.set_ylabel(<span class="st">"y"</span>)</span>
+<span id="cb14-111"><a href="#cb14-111" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> ax <span class="kw">in</span> axes:</span>
+<span id="cb14-112"><a href="#cb14-112" aria-hidden="true" tabindex="-1"></a>        ax.grid(alpha<span class="op">=</span><span class="fl">0.3</span>)</span>
+<span id="cb14-113"><a href="#cb14-113" aria-hidden="true" tabindex="-1"></a>        ax.spines[[<span class="st">"top"</span>, <span class="st">"right"</span>]].set_visible(<span class="va">False</span>)</span>
+<span id="cb14-114"><a href="#cb14-114" aria-hidden="true" tabindex="-1"></a>    plt.tight_layout()</span>
+<span id="cb14-115"><a href="#cb14-115" aria-hidden="true" tabindex="-1"></a>    plt.show()</span>
+<span id="cb14-116"><a href="#cb14-116" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-117"><a href="#cb14-117" aria-hidden="true" tabindex="-1"></a>_esquema()</span>
+<span id="cb14-118"><a href="#cb14-118" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb14-119"><a href="#cb14-119" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-120"><a href="#cb14-120" aria-hidden="true" tabindex="-1"></a><span class="fu">### Diagnóstico formal: el test ADF</span></span>
+<span id="cb14-121"><a href="#cb14-121" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-122"><a href="#cb14-122" aria-hidden="true" tabindex="-1"></a>El test de **Dickey-Fuller aumentado (ADF)** formaliza el diagnóstico. Su hipótesis nula es que la serie tiene una **raíz unitaria** (no es estacionaria, tipo paseo aleatorio); un p-value bajo permite rechazarla.</span>
+<span id="cb14-123"><a href="#cb14-123" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-126"><a href="#cb14-126" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb14-127"><a href="#cb14-127" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: adf</span></span>
+<span id="cb14-128"><a href="#cb14-128" aria-hidden="true" tabindex="-1"></a>series_prueba <span class="op">=</span> {</span>
+<span id="cb14-129"><a href="#cb14-129" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Paseo aleatorio (precio)"</span>: np.cumsum(rng.normal(<span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">500</span>)),</span>
+<span id="cb14-130"><a href="#cb14-130" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Diferencias (retorno)"</span>: np.diff(np.cumsum(rng.normal(<span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">500</span>))),</span>
+<span id="cb14-131"><a href="#cb14-131" aria-hidden="true" tabindex="-1"></a>    <span class="st">"AR(1) estacionario"</span>: <span class="va">None</span>,  <span class="co"># lo generamos abajo</span></span>
+<span id="cb14-132"><a href="#cb14-132" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb14-133"><a href="#cb14-133" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-134"><a href="#cb14-134" aria-hidden="true" tabindex="-1"></a><span class="co"># Un AR(1) con persistencia alta pero &lt; 1: estacionario</span></span>
+<span id="cb14-135"><a href="#cb14-135" aria-hidden="true" tabindex="-1"></a>ar1 <span class="op">=</span> np.zeros(<span class="dv">500</span>)</span>
+<span id="cb14-136"><a href="#cb14-136" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> t <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">1</span>, <span class="dv">500</span>):</span>
+<span id="cb14-137"><a href="#cb14-137" aria-hidden="true" tabindex="-1"></a>    ar1[t] <span class="op">=</span> <span class="fl">0.7</span> <span class="op">*</span> ar1[t<span class="op">-</span><span class="dv">1</span>] <span class="op">+</span> rng.normal()</span>
+<span id="cb14-138"><a href="#cb14-138" aria-hidden="true" tabindex="-1"></a>series_prueba[<span class="st">"AR(1) estacionario"</span>] <span class="op">=</span> ar1</span>
+<span id="cb14-139"><a href="#cb14-139" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-140"><a href="#cb14-140" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span><span class="st">'Serie'</span><span class="sc">:&lt;28}{</span><span class="st">'ADF stat'</span><span class="sc">:&gt;10}{</span><span class="st">'p-value'</span><span class="sc">:&gt;10}</span><span class="ss">   Veredicto"</span>)</span>
+<span id="cb14-141"><a href="#cb14-141" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> nombre, serie <span class="kw">in</span> series_prueba.items():</span>
+<span id="cb14-142"><a href="#cb14-142" aria-hidden="true" tabindex="-1"></a>    stat, pval <span class="op">=</span> adfuller(serie)[:<span class="dv">2</span>]</span>
+<span id="cb14-143"><a href="#cb14-143" aria-hidden="true" tabindex="-1"></a>    veredicto <span class="op">=</span> <span class="st">"estacionaria"</span> <span class="cf">if</span> pval <span class="op">&lt;</span> <span class="fl">0.05</span> <span class="cf">else</span> <span class="st">"NO estacionaria"</span></span>
+<span id="cb14-144"><a href="#cb14-144" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span>nombre<span class="sc">:&lt;28}{</span>stat<span class="sc">:&gt;10.2f}{</span>pval<span class="sc">:&gt;10.3f}</span><span class="ss">   </span><span class="sc">{</span>veredicto<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb14-145"><a href="#cb14-145" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb14-146"><a href="#cb14-146" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-147"><a href="#cb14-147" aria-hidden="true" tabindex="-1"></a>Regla de trabajo: **testeá antes de modelar**. Si la serie no es estacionaria, diferenciala (una vez suele bastar: precios → retornos, PIB → crecimiento) y volvé a testear. El número de diferenciaciones necesarias es la "d" del ARIMA que viene ahora.</span>
+<span id="cb14-148"><a href="#cb14-148" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-149"><a href="#cb14-149" aria-hidden="true" tabindex="-1"></a>La @fig-estacionariedad muestra las tres series del test. La pregunta que contesta el ADF se puede mirar a ojo: ¿la media y la dispersión de la serie se quedan quietas, o se desplazan con el tiempo?</span>
+<span id="cb14-150"><a href="#cb14-150" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-153"><a href="#cb14-153" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb14-154"><a href="#cb14-154" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: fig-estacionariedad</span></span>
+<span id="cb14-155"><a href="#cb14-155" aria-hidden="true" tabindex="-1"></a><span class="co">#| echo: false</span></span>
+<span id="cb14-156"><a href="#cb14-156" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-cap: "Las tres series del test ADF, con su media móvil (100 períodos) y una banda de ±2 desvíos móviles. El paseo aleatorio deambula sin volver: su media cambia con el tiempo. Las diferencias y el AR(1) oscilan alrededor de un nivel fijo, con una dispersión estable."</span></span>
+<span id="cb14-157"><a href="#cb14-157" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> sys<span class="op">;</span> sys.path.insert(<span class="dv">0</span>, <span class="st">".."</span>)</span>
+<span id="cb14-158"><a href="#cb14-158" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> _esquemas <span class="im">import</span> <span class="op">*</span></span>
+<span id="cb14-159"><a href="#cb14-159" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb14-160"><a href="#cb14-160" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-161"><a href="#cb14-161" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> _esquema():</span>
+<span id="cb14-162"><a href="#cb14-162" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Usa series_prueba del capítulo</span></span>
+<span id="cb14-163"><a href="#cb14-163" aria-hidden="true" tabindex="-1"></a>    fig, axes <span class="op">=</span> plt.subplots(<span class="dv">1</span>, <span class="dv">3</span>, figsize<span class="op">=</span>(<span class="dv">12</span>, <span class="fl">3.6</span>))</span>
+<span id="cb14-164"><a href="#cb14-164" aria-hidden="true" tabindex="-1"></a>    colores <span class="op">=</span> [ACENTO, PRIMARIO, SECUNDARIO]</span>
+<span id="cb14-165"><a href="#cb14-165" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> ax, (nombre, serie), color <span class="kw">in</span> <span class="bu">zip</span>(axes, series_prueba.items(), colores):</span>
+<span id="cb14-166"><a href="#cb14-166" aria-hidden="true" tabindex="-1"></a>        s <span class="op">=</span> pd.Series(serie)</span>
+<span id="cb14-167"><a href="#cb14-167" aria-hidden="true" tabindex="-1"></a>        media, desvio <span class="op">=</span> s.rolling(<span class="dv">100</span>).mean(), s.rolling(<span class="dv">100</span>).std()</span>
+<span id="cb14-168"><a href="#cb14-168" aria-hidden="true" tabindex="-1"></a>        ax.plot(s, color<span class="op">=</span>color, lw<span class="op">=</span><span class="fl">0.8</span>, alpha<span class="op">=</span><span class="fl">0.8</span>)</span>
+<span id="cb14-169"><a href="#cb14-169" aria-hidden="true" tabindex="-1"></a>        ax.plot(media, color<span class="op">=</span>TEXTO, lw<span class="op">=</span><span class="fl">1.6</span>)</span>
+<span id="cb14-170"><a href="#cb14-170" aria-hidden="true" tabindex="-1"></a>        ax.fill_between(s.index, media <span class="op">-</span> <span class="dv">2</span> <span class="op">*</span> desvio, media <span class="op">+</span> <span class="dv">2</span> <span class="op">*</span> desvio, color<span class="op">=</span>GRIS, alpha<span class="op">=</span><span class="fl">0.25</span>,</span>
+<span id="cb14-171"><a href="#cb14-171" aria-hidden="true" tabindex="-1"></a>                        lw<span class="op">=</span><span class="dv">0</span>)</span>
+<span id="cb14-172"><a href="#cb14-172" aria-hidden="true" tabindex="-1"></a>        ax.set_title(nombre, fontsize<span class="op">=</span><span class="fl">10.5</span>, color<span class="op">=</span>PRIMARIO, fontweight<span class="op">=</span><span class="st">"bold"</span>)</span>
+<span id="cb14-173"><a href="#cb14-173" aria-hidden="true" tabindex="-1"></a>        ax.set_xlabel(<span class="st">"Tiempo"</span>)</span>
+<span id="cb14-174"><a href="#cb14-174" aria-hidden="true" tabindex="-1"></a>        ax.grid(alpha<span class="op">=</span><span class="fl">0.3</span>)</span>
+<span id="cb14-175"><a href="#cb14-175" aria-hidden="true" tabindex="-1"></a>        ax.spines[[<span class="st">"top"</span>, <span class="st">"right"</span>]].set_visible(<span class="va">False</span>)</span>
+<span id="cb14-176"><a href="#cb14-176" aria-hidden="true" tabindex="-1"></a>    plt.tight_layout()</span>
+<span id="cb14-177"><a href="#cb14-177" aria-hidden="true" tabindex="-1"></a>    plt.show()</span>
+<span id="cb14-178"><a href="#cb14-178" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-179"><a href="#cb14-179" aria-hidden="true" tabindex="-1"></a>_esquema()</span>
+<span id="cb14-180"><a href="#cb14-180" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb14-181"><a href="#cb14-181" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-182"><a href="#cb14-182" aria-hidden="true" tabindex="-1"></a>---</span>
+<span id="cb14-183"><a href="#cb14-183" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-184"><a href="#cb14-184" aria-hidden="true" tabindex="-1"></a><span class="fu">## Modelos ARMA: la gramática de una serie estacionaria</span></span>
+<span id="cb14-185"><a href="#cb14-185" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-186"><a href="#cb14-186" aria-hidden="true" tabindex="-1"></a>Una serie estacionaria se modela combinando dos mecanismos:</span>
+<span id="cb14-187"><a href="#cb14-187" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-188"><a href="#cb14-188" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**AR(p)** — *autorregresivo*: el valor de hoy depende de los últimos $p$ valores. "La inflación de este mes se parece a la de los meses anteriores" (inercia, persistencia).</span>
+<span id="cb14-189"><a href="#cb14-189" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-190"><a href="#cb14-190" aria-hidden="true" tabindex="-1"></a>$$y_t = c + \phi_1 y_{t-1} + \dots + \phi_p y_{t-p} + \varepsilon_t$$</span>
+<span id="cb14-191"><a href="#cb14-191" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-192"><a href="#cb14-192" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**MA(q)** — *media móvil*: el valor de hoy depende de los últimos $q$ **shocks**. "El error de ayer todavía repercute hoy" (efectos transitorios de las sorpresas).</span>
+<span id="cb14-193"><a href="#cb14-193" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-194"><a href="#cb14-194" aria-hidden="true" tabindex="-1"></a>$$y_t = c + \varepsilon_t + \theta_1 \varepsilon_{t-1} + \dots + \theta_q \varepsilon_{t-q}$$</span>
+<span id="cb14-195"><a href="#cb14-195" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-196"><a href="#cb14-196" aria-hidden="true" tabindex="-1"></a>**ARMA(p, q)** combina ambos, y **ARIMA(p, d, q)** agrega la "I" de *integrated*: diferenciar la serie $d$ veces antes de ajustar el ARMA. Así, un ARIMA(1,1,0) sobre un precio es un AR(1) sobre sus retornos.</span>
+<span id="cb14-197"><a href="#cb14-197" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-198"><a href="#cb14-198" aria-hidden="true" tabindex="-1"></a><span class="fu">### Identificación: leer la ACF y la PACF</span></span>
+<span id="cb14-199"><a href="#cb14-199" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-200"><a href="#cb14-200" aria-hidden="true" tabindex="-1"></a>¿Cómo elegir $p$ y $q$? Las dos herramientas clásicas:</span>
+<span id="cb14-201"><a href="#cb14-201" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-202"><a href="#cb14-202" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**ACF** (autocorrelación): correlación de la serie con sus propios rezagos.</span>
+<span id="cb14-203"><a href="#cb14-203" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**PACF** (autocorrelación *parcial*): correlación con el rezago $k$ **descontando** el efecto de los rezagos intermedios.</span>
+<span id="cb14-204"><a href="#cb14-204" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-205"><a href="#cb14-205" aria-hidden="true" tabindex="-1"></a>Los patrones de manual: un **AR(p)** tiene PACF que se corta en el rezago $p$ y ACF que decae gradualmente; un **MA(q)** es el espejo (ACF se corta en $q$, PACF decae).</span>
+<span id="cb14-206"><a href="#cb14-206" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-207"><a href="#cb14-207" aria-hidden="true" tabindex="-1"></a>La @fig-firmas-acf muestra esos patrones en su versión teórica, sin ruido de muestreo: es la tabla de referencia contra la que se compara la ACF y la PACF de una serie real.</span>
+<span id="cb14-208"><a href="#cb14-208" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-211"><a href="#cb14-211" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb14-212"><a href="#cb14-212" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: fig-firmas-acf</span></span>
+<span id="cb14-213"><a href="#cb14-213" aria-hidden="true" tabindex="-1"></a><span class="co">#| echo: false</span></span>
+<span id="cb14-214"><a href="#cb14-214" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-cap: "Firmas teóricas para identificar el modelo. Fila superior, AR(2) (φ₁ = 0.5, φ₂ = 0.3): la ACF decae de a poco y la PACF se corta después del rezago 2. Fila inferior, MA(2) (θ₁ = 0.6, θ₂ = 0.3): al revés, la ACF se corta en 2 y la PACF decae."</span></span>
+<span id="cb14-215"><a href="#cb14-215" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> sys<span class="op">;</span> sys.path.insert(<span class="dv">0</span>, <span class="st">".."</span>)</span>
+<span id="cb14-216"><a href="#cb14-216" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> _esquemas <span class="im">import</span> <span class="op">*</span></span>
+<span id="cb14-217"><a href="#cb14-217" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb14-218"><a href="#cb14-218" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> statsmodels.tsa.arima_process <span class="im">import</span> ArmaProcess</span>
+<span id="cb14-219"><a href="#cb14-219" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-220"><a href="#cb14-220" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> _esquema():</span>
+<span id="cb14-221"><a href="#cb14-221" aria-hidden="true" tabindex="-1"></a>    procesos <span class="op">=</span> {<span class="st">"AR(2)"</span>: ArmaProcess(ar<span class="op">=</span>[<span class="dv">1</span>, <span class="op">-</span><span class="fl">0.5</span>, <span class="op">-</span><span class="fl">0.3</span>]),</span>
+<span id="cb14-222"><a href="#cb14-222" aria-hidden="true" tabindex="-1"></a>                <span class="st">"MA(2)"</span>: ArmaProcess(ma<span class="op">=</span>[<span class="dv">1</span>, <span class="fl">0.6</span>, <span class="fl">0.3</span>])}</span>
+<span id="cb14-223"><a href="#cb14-223" aria-hidden="true" tabindex="-1"></a>    rezagos <span class="op">=</span> np.arange(<span class="dv">1</span>, <span class="dv">13</span>)</span>
+<span id="cb14-224"><a href="#cb14-224" aria-hidden="true" tabindex="-1"></a>    fig, axes <span class="op">=</span> plt.subplots(<span class="dv">2</span>, <span class="dv">2</span>, figsize<span class="op">=</span>(<span class="dv">10</span>, <span class="fl">5.2</span>), sharex<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb14-225"><a href="#cb14-225" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> fila, (nombre, proc) <span class="kw">in</span> <span class="bu">enumerate</span>(procesos.items()):</span>
+<span id="cb14-226"><a href="#cb14-226" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> col, (tipo, valores) <span class="kw">in</span> <span class="bu">enumerate</span>([(<span class="st">"ACF"</span>, proc.acf(<span class="dv">13</span>)[<span class="dv">1</span>:]),</span>
+<span id="cb14-227"><a href="#cb14-227" aria-hidden="true" tabindex="-1"></a>                                               (<span class="st">"PACF"</span>, proc.pacf(<span class="dv">13</span>)[<span class="dv">1</span>:])]):</span>
+<span id="cb14-228"><a href="#cb14-228" aria-hidden="true" tabindex="-1"></a>            ax <span class="op">=</span> axes[fila, col]</span>
+<span id="cb14-229"><a href="#cb14-229" aria-hidden="true" tabindex="-1"></a>            corta <span class="op">=</span> (nombre <span class="op">==</span> <span class="st">"AR(2)"</span>) <span class="op">==</span> (tipo <span class="op">==</span> <span class="st">"PACF"</span>)</span>
+<span id="cb14-230"><a href="#cb14-230" aria-hidden="true" tabindex="-1"></a>            color <span class="op">=</span> ACENTO <span class="cf">if</span> corta <span class="cf">else</span> PRIMARIO</span>
+<span id="cb14-231"><a href="#cb14-231" aria-hidden="true" tabindex="-1"></a>            ax.vlines(rezagos, <span class="dv">0</span>, valores, color<span class="op">=</span>color, lw<span class="op">=</span><span class="dv">3</span>)</span>
+<span id="cb14-232"><a href="#cb14-232" aria-hidden="true" tabindex="-1"></a>            ax.scatter(rezagos, valores, color<span class="op">=</span>color, s<span class="op">=</span><span class="dv">18</span>, zorder<span class="op">=</span><span class="dv">3</span>)</span>
+<span id="cb14-233"><a href="#cb14-233" aria-hidden="true" tabindex="-1"></a>            ax.axhline(<span class="dv">0</span>, color<span class="op">=</span>TEXTO, lw<span class="op">=</span><span class="fl">0.8</span>)</span>
+<span id="cb14-234"><a href="#cb14-234" aria-hidden="true" tabindex="-1"></a>            ax.set_title(<span class="ss">f"</span><span class="sc">{</span>nombre<span class="sc">}</span><span class="ss">: </span><span class="sc">{</span>tipo<span class="sc">}</span><span class="ss"> "</span> <span class="op">+</span> (<span class="st">"se corta en 2"</span> <span class="cf">if</span> corta <span class="cf">else</span> <span class="st">"decae"</span>),</span>
+<span id="cb14-235"><a href="#cb14-235" aria-hidden="true" tabindex="-1"></a>                         fontsize<span class="op">=</span><span class="fl">10.5</span>, color<span class="op">=</span>color, fontweight<span class="op">=</span><span class="st">"bold"</span>)</span>
+<span id="cb14-236"><a href="#cb14-236" aria-hidden="true" tabindex="-1"></a>            ax.set_ylim(<span class="op">-</span><span class="fl">0.6</span>, <span class="dv">1</span>)</span>
+<span id="cb14-237"><a href="#cb14-237" aria-hidden="true" tabindex="-1"></a>            ax.grid(alpha<span class="op">=</span><span class="fl">0.3</span>)</span>
+<span id="cb14-238"><a href="#cb14-238" aria-hidden="true" tabindex="-1"></a>            ax.spines[[<span class="st">"top"</span>, <span class="st">"right"</span>]].set_visible(<span class="va">False</span>)</span>
+<span id="cb14-239"><a href="#cb14-239" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> ax <span class="kw">in</span> axes[<span class="dv">1</span>]:</span>
+<span id="cb14-240"><a href="#cb14-240" aria-hidden="true" tabindex="-1"></a>        ax.set_xlabel(<span class="st">"Rezago"</span>)</span>
+<span id="cb14-241"><a href="#cb14-241" aria-hidden="true" tabindex="-1"></a>    plt.tight_layout()</span>
+<span id="cb14-242"><a href="#cb14-242" aria-hidden="true" tabindex="-1"></a>    plt.show()</span>
+<span id="cb14-243"><a href="#cb14-243" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-244"><a href="#cb14-244" aria-hidden="true" tabindex="-1"></a>_esquema()</span>
+<span id="cb14-245"><a href="#cb14-245" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb14-246"><a href="#cb14-246" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-247"><a href="#cb14-247" aria-hidden="true" tabindex="-1"></a>Ahora el mismo diagnóstico sobre una serie simulada, con el ruido de muestreo que trae cualquier serie real. La @fig-acf-pacf-ar2 debería parecerse a la fila superior de la figura anterior.</span>
+<span id="cb14-248"><a href="#cb14-248" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-251"><a href="#cb14-251" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb14-252"><a href="#cb14-252" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: fig-acf-pacf-ar2</span></span>
+<span id="cb14-253"><a href="#cb14-253" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-cap: "ACF y PACF muestrales de un AR(2) simulado de 800 observaciones. La banda sombreada es el intervalo del 95% bajo la hipótesis de correlación cero: las barras que la superan son significativas."</span></span>
+<span id="cb14-254"><a href="#cb14-254" aria-hidden="true" tabindex="-1"></a><span class="co"># Generamos un AR(2) conocido y verificamos que las herramientas lo identifican</span></span>
+<span id="cb14-255"><a href="#cb14-255" aria-hidden="true" tabindex="-1"></a>n <span class="op">=</span> <span class="dv">800</span></span>
+<span id="cb14-256"><a href="#cb14-256" aria-hidden="true" tabindex="-1"></a>serie_ar2 <span class="op">=</span> np.zeros(n)</span>
+<span id="cb14-257"><a href="#cb14-257" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> t <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">2</span>, n):</span>
+<span id="cb14-258"><a href="#cb14-258" aria-hidden="true" tabindex="-1"></a>    serie_ar2[t] <span class="op">=</span> <span class="fl">0.5</span> <span class="op">*</span> serie_ar2[t<span class="op">-</span><span class="dv">1</span>] <span class="op">+</span> <span class="fl">0.3</span> <span class="op">*</span> serie_ar2[t<span class="op">-</span><span class="dv">2</span>] <span class="op">+</span> rng.normal()</span>
+<span id="cb14-259"><a href="#cb14-259" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-260"><a href="#cb14-260" aria-hidden="true" tabindex="-1"></a>fig, axes <span class="op">=</span> plt.subplots(<span class="dv">1</span>, <span class="dv">2</span>, figsize<span class="op">=</span>(<span class="dv">11</span>, <span class="fl">3.5</span>))</span>
+<span id="cb14-261"><a href="#cb14-261" aria-hidden="true" tabindex="-1"></a>plot_acf(serie_ar2, lags<span class="op">=</span><span class="dv">20</span>, ax<span class="op">=</span>axes[<span class="dv">0</span>], title<span class="op">=</span><span class="st">"ACF: decae gradualmente"</span>)</span>
+<span id="cb14-262"><a href="#cb14-262" aria-hidden="true" tabindex="-1"></a>plot_pacf(serie_ar2, lags<span class="op">=</span><span class="dv">20</span>, ax<span class="op">=</span>axes[<span class="dv">1</span>], title<span class="op">=</span><span class="st">"PACF: se corta en el rezago 2 → AR(2)"</span>)</span>
+<span id="cb14-263"><a href="#cb14-263" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
+<span id="cb14-264"><a href="#cb14-264" aria-hidden="true" tabindex="-1"></a>plt.show()</span>
+<span id="cb14-265"><a href="#cb14-265" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb14-266"><a href="#cb14-266" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-267"><a href="#cb14-267" aria-hidden="true" tabindex="-1"></a>La PACF muestra dos barras significativas y luego nada: la firma de un AR(2). En la práctica, la identificación visual se complementa con criterios de información (AIC/BIC): ajustar varios órdenes candidatos y quedarse con el que mejor balancea ajuste y parsimonia.</span>
+<span id="cb14-268"><a href="#cb14-268" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-269"><a href="#cb14-269" aria-hidden="true" tabindex="-1"></a>---</span>
+<span id="cb14-270"><a href="#cb14-270" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-271"><a href="#cb14-271" aria-hidden="true" tabindex="-1"></a><span class="fu">## ARIMA en acción: modelar y pronosticar la inflación</span></span>
+<span id="cb14-272"><a href="#cb14-272" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-273"><a href="#cb14-273" aria-hidden="true" tabindex="-1"></a>Armemos el flujo completo con una serie macro simulada con la persistencia típica de la inflación mensual. El orden de los pasos es la metodología de **Box-Jenkins**, que resume la @fig-box-jenkins.</span>
+<span id="cb14-274"><a href="#cb14-274" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-277"><a href="#cb14-277" aria-hidden="true" tabindex="-1"></a><span class="in">```{mermaid}</span></span>
+<span id="cb14-278"><a href="#cb14-278" aria-hidden="true" tabindex="-1"></a>%%| label: fig-box-jenkins</span>
+<span id="cb14-279"><a href="#cb14-279" aria-hidden="true" tabindex="-1"></a>%%| fig-cap: <span class="ot">"</span><span class="st">El ciclo de Box-Jenkins. Primero se decide d (cuántas veces diferenciar), después p y q, y el modelo solo se usa para pronosticar si sus residuos ya no tienen estructura; si la tienen, se vuelve a identificar.</span><span class="ot">"</span></span>
+<span id="cb14-280"><a href="#cb14-280" aria-hidden="true" tabindex="-1"></a>flowchart LR</span>
+<span id="cb14-281"><a href="#cb14-281" aria-hidden="true" tabindex="-1"></a>    A{<span class="ot">"</span><span class="st">&lt;b&gt;ADF&lt;/b&gt;&lt;br/&gt;¿estacionaria?</span><span class="ot">"</span>} --&gt;|<span class="ot">"</span><span class="st">no</span><span class="ot">"</span>| D[<span class="ot">"</span><span class="st">Diferenciar&lt;br/&gt;&lt;i&gt;d = d + 1&lt;/i&gt;</span><span class="ot">"</span>]</span>
+<span id="cb14-282"><a href="#cb14-282" aria-hidden="true" tabindex="-1"></a>    D --&gt; A</span>
+<span id="cb14-283"><a href="#cb14-283" aria-hidden="true" tabindex="-1"></a>    A --&gt;|<span class="ot">"</span><span class="st">sí</span><span class="ot">"</span>| I[<span class="ot">"</span><span class="st">&lt;b&gt;Identificar&lt;/b&gt;&lt;br/&gt;ACF / PACF&lt;br/&gt;→ candidatos (p, q)</span><span class="ot">"</span>]</span>
+<span id="cb14-284"><a href="#cb14-284" aria-hidden="true" tabindex="-1"></a>    I --&gt; E[<span class="ot">"</span><span class="st">&lt;b&gt;Estimar&lt;/b&gt;&lt;br/&gt;ARIMA(p, d, q)&lt;br/&gt;elegir por AIC/BIC</span><span class="ot">"</span>]</span>
+<span id="cb14-285"><a href="#cb14-285" aria-hidden="true" tabindex="-1"></a>    E --&gt; R{<span class="ot">"</span><span class="st">&lt;b&gt;Residuos&lt;/b&gt;&lt;br/&gt;¿ruido blanco?</span><span class="ot">"</span>}</span>
+<span id="cb14-286"><a href="#cb14-286" aria-hidden="true" tabindex="-1"></a>    R --&gt;|<span class="ot">"</span><span class="st">no: queda&lt;br/&gt;estructura</span><span class="ot">"</span>| I</span>
+<span id="cb14-287"><a href="#cb14-287" aria-hidden="true" tabindex="-1"></a>    R --&gt;|<span class="ot">"</span><span class="st">sí</span><span class="ot">"</span>| P([<span class="ot">"</span><span class="st">&lt;b&gt;Pronosticar&lt;/b&gt;&lt;br/&gt;con bandas</span><span class="ot">"</span>])</span>
+<span id="cb14-288"><a href="#cb14-288" aria-hidden="true" tabindex="-1"></a>    classDef test fill:<span class="co">#fde8dc,stroke:#c2410c,color:#1f2937</span></span>
+<span id="cb14-289"><a href="#cb14-289" aria-hidden="true" tabindex="-1"></a>    classDef paso fill:<span class="co">#e0e9f4,stroke:#1e3a5f,color:#1f2937</span></span>
+<span id="cb14-290"><a href="#cb14-290" aria-hidden="true" tabindex="-1"></a>    classDef fin fill:<span class="co">#eef2e3,stroke:#637238,color:#1f2937</span></span>
+<span id="cb14-291"><a href="#cb14-291" aria-hidden="true" tabindex="-1"></a>    class A,R test</span>
+<span id="cb14-292"><a href="#cb14-292" aria-hidden="true" tabindex="-1"></a>    class D,I,E paso</span>
+<span id="cb14-293"><a href="#cb14-293" aria-hidden="true" tabindex="-1"></a>    class P fin</span>
+<span id="cb14-294"><a href="#cb14-294" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb14-295"><a href="#cb14-295" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-298"><a href="#cb14-298" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb14-299"><a href="#cb14-299" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: arima-ajuste</span></span>
+<span id="cb14-300"><a href="#cb14-300" aria-hidden="true" tabindex="-1"></a><span class="co"># Serie mensual de "inflación" con inercia AR(1) fuerte (phi=0.75)</span></span>
+<span id="cb14-301"><a href="#cb14-301" aria-hidden="true" tabindex="-1"></a>n <span class="op">=</span> <span class="dv">240</span>   <span class="co"># 20 años</span></span>
+<span id="cb14-302"><a href="#cb14-302" aria-hidden="true" tabindex="-1"></a>inflacion <span class="op">=</span> np.zeros(n)</span>
+<span id="cb14-303"><a href="#cb14-303" aria-hidden="true" tabindex="-1"></a>mu_inf <span class="op">=</span> <span class="fl">2.0</span> <span class="op">/</span> <span class="dv">12</span>  <span class="co"># ~2% anual en mensual</span></span>
+<span id="cb14-304"><a href="#cb14-304" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> t <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">1</span>, n):</span>
+<span id="cb14-305"><a href="#cb14-305" aria-hidden="true" tabindex="-1"></a>    inflacion[t] <span class="op">=</span> mu_inf <span class="op">*</span> <span class="fl">0.25</span> <span class="op">+</span> <span class="fl">0.75</span> <span class="op">*</span> inflacion[t<span class="op">-</span><span class="dv">1</span>] <span class="op">+</span> rng.normal(<span class="dv">0</span>, <span class="fl">0.15</span>)</span>
+<span id="cb14-306"><a href="#cb14-306" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-307"><a href="#cb14-307" aria-hidden="true" tabindex="-1"></a>fechas <span class="op">=</span> pd.date_range(<span class="st">"2006-01-01"</span>, periods<span class="op">=</span>n, freq<span class="op">=</span><span class="st">"MS"</span>)</span>
+<span id="cb14-308"><a href="#cb14-308" aria-hidden="true" tabindex="-1"></a>serie <span class="op">=</span> pd.Series(inflacion, index<span class="op">=</span>fechas, name<span class="op">=</span><span class="st">"inflacion_mensual"</span>)</span>
+<span id="cb14-309"><a href="#cb14-309" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-310"><a href="#cb14-310" aria-hidden="true" tabindex="-1"></a><span class="co"># 1) ¿Estacionaria?</span></span>
+<span id="cb14-311"><a href="#cb14-311" aria-hidden="true" tabindex="-1"></a>stat, pval <span class="op">=</span> adfuller(serie)[:<span class="dv">2</span>]</span>
+<span id="cb14-312"><a href="#cb14-312" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"ADF: stat=</span><span class="sc">{</span>stat<span class="sc">:.2f}</span><span class="ss">, p-value=</span><span class="sc">{</span>pval<span class="sc">:.4f}</span><span class="ss"> → "</span></span>
+<span id="cb14-313"><a href="#cb14-313" aria-hidden="true" tabindex="-1"></a>      <span class="ss">f"</span><span class="sc">{</span><span class="st">'estacionaria, no hace falta diferenciar (d=0)'</span> <span class="cf">if</span> pval <span class="op">&lt;</span> <span class="fl">0.05</span> <span class="cf">else</span> <span class="st">'diferenciar'</span><span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb14-314"><a href="#cb14-314" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-315"><a href="#cb14-315" aria-hidden="true" tabindex="-1"></a><span class="co"># 2) Selección de orden por AIC entre algunos candidatos</span></span>
+<span id="cb14-316"><a href="#cb14-316" aria-hidden="true" tabindex="-1"></a>candidatos <span class="op">=</span> [(<span class="dv">1</span>,<span class="dv">0</span>,<span class="dv">0</span>), (<span class="dv">2</span>,<span class="dv">0</span>,<span class="dv">0</span>), (<span class="dv">1</span>,<span class="dv">0</span>,<span class="dv">1</span>), (<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">2</span>)]</span>
+<span id="cb14-317"><a href="#cb14-317" aria-hidden="true" tabindex="-1"></a>aics <span class="op">=</span> {orden: ARIMA(serie, order<span class="op">=</span>orden).fit().aic <span class="cf">for</span> orden <span class="kw">in</span> candidatos}</span>
+<span id="cb14-318"><a href="#cb14-318" aria-hidden="true" tabindex="-1"></a>mejor <span class="op">=</span> <span class="bu">min</span>(aics, key<span class="op">=</span>aics.get)</span>
+<span id="cb14-319"><a href="#cb14-319" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"</span><span class="ch">\n</span><span class="st">AIC por modelo candidato:"</span>)</span>
+<span id="cb14-320"><a href="#cb14-320" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> orden, aic <span class="kw">in</span> aics.items():</span>
+<span id="cb14-321"><a href="#cb14-321" aria-hidden="true" tabindex="-1"></a>    marca <span class="op">=</span> <span class="st">"  ← elegido"</span> <span class="cf">if</span> orden <span class="op">==</span> mejor <span class="cf">else</span> <span class="st">""</span></span>
+<span id="cb14-322"><a href="#cb14-322" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"  ARIMA</span><span class="sc">{</span>orden<span class="sc">}</span><span class="ss">: </span><span class="sc">{</span>aic<span class="sc">:8.1f}{</span>marca<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb14-323"><a href="#cb14-323" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-324"><a href="#cb14-324" aria-hidden="true" tabindex="-1"></a><span class="co"># 3) Ajuste final</span></span>
+<span id="cb14-325"><a href="#cb14-325" aria-hidden="true" tabindex="-1"></a>modelo <span class="op">=</span> ARIMA(serie, order<span class="op">=</span>mejor).fit()</span>
+<span id="cb14-326"><a href="#cb14-326" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"</span><span class="ch">\n</span><span class="ss">Coeficientes del ARIMA</span><span class="sc">{</span>mejor<span class="sc">}</span><span class="ss">:"</span>)</span>
+<span id="cb14-327"><a href="#cb14-327" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(modelo.params.<span class="bu">round</span>(<span class="dv">3</span>))</span>
+<span id="cb14-328"><a href="#cb14-328" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb14-329"><a href="#cb14-329" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-330"><a href="#cb14-330" aria-hidden="true" tabindex="-1"></a>El AIC elige el AR(1) —el proceso generador verdadero— y el coeficiente estimado ronda el 0.75 real. Ahora, el pronóstico:</span>
+<span id="cb14-331"><a href="#cb14-331" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-334"><a href="#cb14-334" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb14-335"><a href="#cb14-335" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: fig-pronostico-arima</span></span>
+<span id="cb14-336"><a href="#cb14-336" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-cap: "Últimos seis años de la serie y pronóstico a 24 meses del ARIMA elegido. El pronóstico converge a la media de largo plazo y la banda del 95% se abre con el horizonte."</span></span>
+<span id="cb14-337"><a href="#cb14-337" aria-hidden="true" tabindex="-1"></a>horizonte <span class="op">=</span> <span class="dv">24</span></span>
+<span id="cb14-338"><a href="#cb14-338" aria-hidden="true" tabindex="-1"></a>pron <span class="op">=</span> modelo.get_forecast(steps<span class="op">=</span>horizonte)</span>
+<span id="cb14-339"><a href="#cb14-339" aria-hidden="true" tabindex="-1"></a>media <span class="op">=</span> pron.predicted_mean</span>
+<span id="cb14-340"><a href="#cb14-340" aria-hidden="true" tabindex="-1"></a>banda <span class="op">=</span> pron.conf_int(alpha<span class="op">=</span><span class="fl">0.05</span>)</span>
+<span id="cb14-341"><a href="#cb14-341" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-342"><a href="#cb14-342" aria-hidden="true" tabindex="-1"></a>fig, ax <span class="op">=</span> plt.subplots(figsize<span class="op">=</span>(<span class="dv">10</span>, <span class="fl">4.5</span>))</span>
+<span id="cb14-343"><a href="#cb14-343" aria-hidden="true" tabindex="-1"></a>ax.plot(serie.iloc[<span class="op">-</span><span class="dv">72</span>:], label<span class="op">=</span><span class="st">"Inflación observada"</span>)</span>
+<span id="cb14-344"><a href="#cb14-344" aria-hidden="true" tabindex="-1"></a>ax.plot(media, color<span class="op">=</span><span class="st">"#c2410c"</span>, linewidth<span class="op">=</span><span class="dv">2</span>, label<span class="op">=</span><span class="st">"Pronóstico ARIMA"</span>)</span>
+<span id="cb14-345"><a href="#cb14-345" aria-hidden="true" tabindex="-1"></a>ax.fill_between(banda.index, banda.iloc[:, <span class="dv">0</span>], banda.iloc[:, <span class="dv">1</span>],</span>
+<span id="cb14-346"><a href="#cb14-346" aria-hidden="true" tabindex="-1"></a>                alpha<span class="op">=</span><span class="fl">0.2</span>, color<span class="op">=</span><span class="st">"#c2410c"</span>, label<span class="op">=</span><span class="st">"IC 95%"</span>)</span>
+<span id="cb14-347"><a href="#cb14-347" aria-hidden="true" tabindex="-1"></a>ax.set_ylabel(<span class="st">"Inflación mensual (%)"</span>)</span>
+<span id="cb14-348"><a href="#cb14-348" aria-hidden="true" tabindex="-1"></a>ax.set_title(<span class="st">"Pronóstico a 24 meses con intervalos de confianza"</span>)</span>
+<span id="cb14-349"><a href="#cb14-349" aria-hidden="true" tabindex="-1"></a>ax.legend()</span>
+<span id="cb14-350"><a href="#cb14-350" aria-hidden="true" tabindex="-1"></a>ax.grid(<span class="va">True</span>, alpha<span class="op">=</span><span class="fl">0.3</span>)</span>
+<span id="cb14-351"><a href="#cb14-351" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
+<span id="cb14-352"><a href="#cb14-352" aria-hidden="true" tabindex="-1"></a>plt.show()</span>
+<span id="cb14-353"><a href="#cb14-353" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb14-354"><a href="#cb14-354" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-355"><a href="#cb14-355" aria-hidden="true" tabindex="-1"></a>Dos rasgos para leer en la @fig-pronostico-arima, típicos de todo pronóstico ARIMA: la predicción **converge a la media de largo plazo** de la serie (la inercia se agota), y las bandas **se abren con el horizonte** hasta estabilizarse — el modelo es honesto sobre lo poco que sabe del futuro lejano.</span>
+<span id="cb14-356"><a href="#cb14-356" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-357"><a href="#cb14-357" aria-hidden="true" tabindex="-1"></a>::: {.callout-warning title="¿Y pronosticar retornos de acciones?"}</span>
+<span id="cb14-358"><a href="#cb14-358" aria-hidden="true" tabindex="-1"></a>Tentador, pero el ARIMA sobre retornos accionarios suele encontrar... nada ($p = q = 0$): los retornos son casi impredecibles por su propio pasado (eficiencia de mercado en su forma débil). Donde los modelos de series de tiempo brillan es en variables **con inercia estructural**: inflación, tasas, actividad, y —muy especialmente— la *volatilidad* (la familia GARCH, prima hermana de ARMA aplicada a la varianza).</span>
+<span id="cb14-359"><a href="#cb14-359" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb14-360"><a href="#cb14-360" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-361"><a href="#cb14-361" aria-hidden="true" tabindex="-1"></a>---</span>
+<span id="cb14-362"><a href="#cb14-362" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-363"><a href="#cb14-363" aria-hidden="true" tabindex="-1"></a><span class="fu">## VAR: varias series que se influyen mutuamente</span></span>
+<span id="cb14-364"><a href="#cb14-364" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-365"><a href="#cb14-365" aria-hidden="true" tabindex="-1"></a>La macro rara vez es univariada: la inflación depende de la tasa de interés, la tasa responde a la inflación, y la actividad interactúa con ambas. El modelo **VAR** (*Vector Autoregression*) generaliza el AR a un **sistema**: cada variable se regresa sobre los rezagos de **todas** las variables.</span>
+<span id="cb14-366"><a href="#cb14-366" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-367"><a href="#cb14-367" aria-hidden="true" tabindex="-1"></a>Para dos variables y un rezago:</span>
+<span id="cb14-368"><a href="#cb14-368" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-369"><a href="#cb14-369" aria-hidden="true" tabindex="-1"></a>$$\begin{aligned} y_{1,t} &amp;= c_1 + \phi_{11}\, y_{1,t-1} + \phi_{12}\, y_{2,t-1} + \varepsilon_{1,t} <span class="sc">\\</span> y_{2,t} &amp;= c_2 + \phi_{21}\, y_{1,t-1} + \phi_{22}\, y_{2,t-1} + \varepsilon_{2,t} \end{aligned}$$</span>
+<span id="cb14-370"><a href="#cb14-370" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-371"><a href="#cb14-371" aria-hidden="true" tabindex="-1"></a>Los coeficientes cruzados ($\phi_{12}, \phi_{21}$) son la novedad: capturan cómo una variable **anticipa** a la otra.</span>
+<span id="cb14-372"><a href="#cb14-372" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-373"><a href="#cb14-373" aria-hidden="true" tabindex="-1"></a>La @fig-sistema-var dibuja el sistema que vamos a simular: cada flecha es un coeficiente, y cada variable recibe una flecha de su propio pasado y otra del pasado de la otra.</span>
+<span id="cb14-374"><a href="#cb14-374" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-377"><a href="#cb14-377" aria-hidden="true" tabindex="-1"></a><span class="in">```{mermaid}</span></span>
+<span id="cb14-378"><a href="#cb14-378" aria-hidden="true" tabindex="-1"></a>%%| label: fig-sistema-var</span>
+<span id="cb14-379"><a href="#cb14-379" aria-hidden="true" tabindex="-1"></a>%%| fig-cap: <span class="ot">"</span><span class="st">El VAR(1) simulado como diagrama. Las flechas horizontales son la inercia de cada variable (φ₁₁, φ₂₂); las cruzadas son la política monetaria: la tasa reacciona a la inflación pasada (φ₂₁ = +0.25) y la inflación cae cuando la tasa pasada fue alta (φ₁₂ = −0.20).</span><span class="ot">"</span></span>
+<span id="cb14-380"><a href="#cb14-380" aria-hidden="true" tabindex="-1"></a>flowchart LR</span>
+<span id="cb14-381"><a href="#cb14-381" aria-hidden="true" tabindex="-1"></a>    I1[<span class="ot">"</span><span class="st">Inflación&lt;br/&gt;&lt;i&gt;t − 1&lt;/i&gt;</span><span class="ot">"</span>] --&gt;|<span class="ot">"</span><span class="st">φ₁₁ = +0.60&lt;br/&gt;inercia</span><span class="ot">"</span>| I2[<span class="ot">"</span><span class="st">Inflación&lt;br/&gt;&lt;i&gt;t&lt;/i&gt;</span><span class="ot">"</span>]</span>
+<span id="cb14-382"><a href="#cb14-382" aria-hidden="true" tabindex="-1"></a>    T1[<span class="ot">"</span><span class="st">Tasa&lt;br/&gt;&lt;i&gt;t − 1&lt;/i&gt;</span><span class="ot">"</span>] --&gt;|<span class="ot">"</span><span class="st">φ₂₂ = +0.70&lt;br/&gt;inercia</span><span class="ot">"</span>| T2[<span class="ot">"</span><span class="st">Tasa&lt;br/&gt;&lt;i&gt;t&lt;/i&gt;</span><span class="ot">"</span>]</span>
+<span id="cb14-383"><a href="#cb14-383" aria-hidden="true" tabindex="-1"></a>    I1 --&gt;|<span class="ot">"</span><span class="st">φ₂₁ = +0.25&lt;br/&gt;la tasa reacciona</span><span class="ot">"</span>| T2</span>
+<span id="cb14-384"><a href="#cb14-384" aria-hidden="true" tabindex="-1"></a>    T1 --&gt;|<span class="ot">"</span><span class="st">φ₁₂ = −0.20&lt;br/&gt;la política enfría</span><span class="ot">"</span>| I2</span>
+<span id="cb14-385"><a href="#cb14-385" aria-hidden="true" tabindex="-1"></a>    classDef inf fill:<span class="co">#fde8dc,stroke:#c2410c,color:#1f2937</span></span>
+<span id="cb14-386"><a href="#cb14-386" aria-hidden="true" tabindex="-1"></a>    classDef tasa fill:<span class="co">#e0e9f4,stroke:#1e3a5f,color:#1f2937</span></span>
+<span id="cb14-387"><a href="#cb14-387" aria-hidden="true" tabindex="-1"></a>    class I1,I2 inf</span>
+<span id="cb14-388"><a href="#cb14-388" aria-hidden="true" tabindex="-1"></a>    class T1,T2 tasa</span>
+<span id="cb14-389"><a href="#cb14-389" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb14-390"><a href="#cb14-390" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-393"><a href="#cb14-393" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb14-394"><a href="#cb14-394" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: var-datos</span></span>
+<span id="cb14-395"><a href="#cb14-395" aria-hidden="true" tabindex="-1"></a><span class="co"># Sistema simulado con estructura conocida:</span></span>
+<span id="cb14-396"><a href="#cb14-396" aria-hidden="true" tabindex="-1"></a><span class="co">#   - la tasa sube cuando la inflación pasada fue alta (regla de política)</span></span>
+<span id="cb14-397"><a href="#cb14-397" aria-hidden="true" tabindex="-1"></a><span class="co">#   - la inflación baja cuando la tasa pasada fue alta (efecto de la política)</span></span>
+<span id="cb14-398"><a href="#cb14-398" aria-hidden="true" tabindex="-1"></a>n <span class="op">=</span> <span class="dv">300</span></span>
+<span id="cb14-399"><a href="#cb14-399" aria-hidden="true" tabindex="-1"></a>inf <span class="op">=</span> np.zeros(n)</span>
+<span id="cb14-400"><a href="#cb14-400" aria-hidden="true" tabindex="-1"></a>tasa <span class="op">=</span> np.zeros(n)</span>
+<span id="cb14-401"><a href="#cb14-401" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> t <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">1</span>, n):</span>
+<span id="cb14-402"><a href="#cb14-402" aria-hidden="true" tabindex="-1"></a>    inf[t] <span class="op">=</span> <span class="fl">0.6</span> <span class="op">*</span> inf[t<span class="op">-</span><span class="dv">1</span>] <span class="op">-</span> <span class="fl">0.20</span> <span class="op">*</span> tasa[t<span class="op">-</span><span class="dv">1</span>] <span class="op">+</span> rng.normal(<span class="dv">0</span>, <span class="fl">0.3</span>)</span>
+<span id="cb14-403"><a href="#cb14-403" aria-hidden="true" tabindex="-1"></a>    tasa[t] <span class="op">=</span> <span class="fl">0.7</span> <span class="op">*</span> tasa[t<span class="op">-</span><span class="dv">1</span>] <span class="op">+</span> <span class="fl">0.25</span> <span class="op">*</span> inf[t<span class="op">-</span><span class="dv">1</span>] <span class="op">+</span> rng.normal(<span class="dv">0</span>, <span class="fl">0.2</span>)</span>
+<span id="cb14-404"><a href="#cb14-404" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-405"><a href="#cb14-405" aria-hidden="true" tabindex="-1"></a>datos <span class="op">=</span> pd.DataFrame({<span class="st">"inflacion"</span>: inf, <span class="st">"tasa"</span>: tasa},</span>
+<span id="cb14-406"><a href="#cb14-406" aria-hidden="true" tabindex="-1"></a>                     index<span class="op">=</span>pd.date_range(<span class="st">"2001-01-01"</span>, periods<span class="op">=</span>n, freq<span class="op">=</span><span class="st">"MS"</span>))</span>
+<span id="cb14-407"><a href="#cb14-407" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-408"><a href="#cb14-408" aria-hidden="true" tabindex="-1"></a><span class="co"># Ajuste del VAR con selección automática del número de rezagos</span></span>
+<span id="cb14-409"><a href="#cb14-409" aria-hidden="true" tabindex="-1"></a>var_modelo <span class="op">=</span> VAR(datos)</span>
+<span id="cb14-410"><a href="#cb14-410" aria-hidden="true" tabindex="-1"></a>seleccion <span class="op">=</span> var_modelo.select_order(maxlags<span class="op">=</span><span class="dv">8</span>)</span>
+<span id="cb14-411"><a href="#cb14-411" aria-hidden="true" tabindex="-1"></a>p_optimo <span class="op">=</span> seleccion.aic</span>
+<span id="cb14-412"><a href="#cb14-412" aria-hidden="true" tabindex="-1"></a>resultado <span class="op">=</span> var_modelo.fit(p_optimo)</span>
+<span id="cb14-413"><a href="#cb14-413" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-414"><a href="#cb14-414" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Rezagos elegidos por AIC: </span><span class="sc">{</span>p_optimo<span class="sc">}</span><span class="ch">\n</span><span class="ss">"</span>)</span>
+<span id="cb14-415"><a href="#cb14-415" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Coeficientes de la ecuación de inflación:"</span>)</span>
+<span id="cb14-416"><a href="#cb14-416" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(resultado.params[<span class="st">"inflacion"</span>].<span class="bu">round</span>(<span class="dv">3</span>))</span>
+<span id="cb14-417"><a href="#cb14-417" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb14-418"><a href="#cb14-418" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-419"><a href="#cb14-419" aria-hidden="true" tabindex="-1"></a>Los coeficientes recuperan la estructura que sembramos: la inflación depende positivamente de su pasado y **negativamente de la tasa pasada**. Pero la forma más útil de leer un VAR no es la tabla de coeficientes sino la...</span>
+<span id="cb14-420"><a href="#cb14-420" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-421"><a href="#cb14-421" aria-hidden="true" tabindex="-1"></a><span class="fu">### Función de impulso-respuesta (IRF)</span></span>
+<span id="cb14-422"><a href="#cb14-422" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-423"><a href="#cb14-423" aria-hidden="true" tabindex="-1"></a>La IRF responde la pregunta de política: *si hoy golpeo al sistema con un shock de una unidad en una variable, ¿cómo evolucionan todas las variables en los meses siguientes?* Es el experimento contrafáctico que el VAR permite trazar.</span>
+<span id="cb14-424"><a href="#cb14-424" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-427"><a href="#cb14-427" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb14-428"><a href="#cb14-428" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: fig-irf</span></span>
+<span id="cb14-429"><a href="#cb14-429" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-cap: "Funciones de impulso-respuesta del VAR estimado, 24 meses. Cada panel muestra cómo responde la variable de la fila a un shock de una unidad en la variable de la columna, con su banda de confianza."</span></span>
+<span id="cb14-430"><a href="#cb14-430" aria-hidden="true" tabindex="-1"></a>irf <span class="op">=</span> resultado.irf(<span class="dv">24</span>)</span>
+<span id="cb14-431"><a href="#cb14-431" aria-hidden="true" tabindex="-1"></a>irf.plot(orth<span class="op">=</span><span class="va">False</span>, figsize<span class="op">=</span>(<span class="dv">10</span>, <span class="dv">7</span>))</span>
+<span id="cb14-432"><a href="#cb14-432" aria-hidden="true" tabindex="-1"></a>plt.suptitle(<span class="st">"Funciones de impulso-respuesta (24 meses)"</span>, y<span class="op">=</span><span class="fl">1.02</span>)</span>
+<span id="cb14-433"><a href="#cb14-433" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
+<span id="cb14-434"><a href="#cb14-434" aria-hidden="true" tabindex="-1"></a>plt.show()</span>
+<span id="cb14-435"><a href="#cb14-435" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb14-436"><a href="#cb14-436" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-437"><a href="#cb14-437" aria-hidden="true" tabindex="-1"></a>En la @fig-irf, mirá el panel "tasa → inflacion": un shock de tasa deprime la inflación durante varios meses, con el efecto máximo no inmediato sino rezagado — exactamente la dinámica "la política monetaria actúa con rezagos" que los bancos centrales repiten. El panel "inflacion → tasa" muestra la respuesta de política: la tasa sube tras un shock inflacionario y luego decae.</span>
+<span id="cb14-438"><a href="#cb14-438" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-439"><a href="#cb14-439" aria-hidden="true" tabindex="-1"></a>::: {.callout-note title="Los VAR en la práctica"}</span>
+<span id="cb14-440"><a href="#cb14-440" aria-hidden="true" tabindex="-1"></a>Los bancos centrales usan VARs (y variantes: SVAR, BVAR, FAVAR) como caballo de batalla para el análisis de política monetaria desde los trabajos de Sims (Nobel 2011). En finanzas se usan para sistemas tasa-inflación-actividad, para pronóstico macro que alimenta modelos de PPNR y stress testing (Capítulo 12), y para estudiar transmisión entre mercados.</span>
+<span id="cb14-441"><a href="#cb14-441" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb14-442"><a href="#cb14-442" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-443"><a href="#cb14-443" aria-hidden="true" tabindex="-1"></a>---</span>
+<span id="cb14-444"><a href="#cb14-444" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-445"><a href="#cb14-445" aria-hidden="true" tabindex="-1"></a><span class="fu">## Con datos reales: retornos sin memoria, volatilidad con memoria</span></span>
+<span id="cb14-446"><a href="#cb14-446" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-447"><a href="#cb14-447" aria-hidden="true" tabindex="-1"></a>El recuadro de la sección ARIMA afirmaba dos cosas sobre los retornos de acciones: que casi no se pueden pronosticar con su propio pasado, y que la *volatilidad*, en cambio, sí tiene inercia. Las dos se pueden verificar con la herramienta de identificación del capítulo, la ACF, aplicada a cinco años de retornos diarios del S&amp;P 500 del dataset del libro (<span class="in">`datos/precios.csv`</span>, ver @sec-datos-financieros).</span>
+<span id="cb14-448"><a href="#cb14-448" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-451"><a href="#cb14-451" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb14-452"><a href="#cb14-452" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: fig-acf-spy</span></span>
+<span id="cb14-453"><a href="#cb14-453" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-cap: "ACF de los retornos diarios del S&amp;P 500 (izquierda) y de su valor absoluto (derecha), 40 rezagos. Los retornos quedan casi siempre dentro de la banda de no significancia; su tamaño, en cambio, está correlacionado con el de semanas y meses anteriores."</span></span>
+<span id="cb14-454"><a href="#cb14-454" aria-hidden="true" tabindex="-1"></a>precios <span class="op">=</span> pd.read_csv(<span class="st">"../datos/precios.csv"</span>, index_col<span class="op">=</span><span class="st">"Date"</span>, parse_dates<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb14-455"><a href="#cb14-455" aria-hidden="true" tabindex="-1"></a>r_spy <span class="op">=</span> precios[<span class="st">"SPY"</span>].pct_change().dropna()</span>
+<span id="cb14-456"><a href="#cb14-456" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-457"><a href="#cb14-457" aria-hidden="true" tabindex="-1"></a>fig, axes <span class="op">=</span> plt.subplots(<span class="dv">1</span>, <span class="dv">2</span>, figsize<span class="op">=</span>(<span class="dv">11</span>, <span class="fl">3.8</span>), sharey<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb14-458"><a href="#cb14-458" aria-hidden="true" tabindex="-1"></a>plot_acf(r_spy, lags<span class="op">=</span><span class="dv">40</span>, ax<span class="op">=</span>axes[<span class="dv">0</span>], title<span class="op">=</span><span class="st">"Retornos: casi sin memoria"</span>)</span>
+<span id="cb14-459"><a href="#cb14-459" aria-hidden="true" tabindex="-1"></a>plot_acf(r_spy.<span class="bu">abs</span>(), lags<span class="op">=</span><span class="dv">40</span>, ax<span class="op">=</span>axes[<span class="dv">1</span>], title<span class="op">=</span><span class="st">"|Retornos|: memoria larga"</span>)</span>
+<span id="cb14-460"><a href="#cb14-460" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> ax <span class="kw">in</span> axes:</span>
+<span id="cb14-461"><a href="#cb14-461" aria-hidden="true" tabindex="-1"></a>    ax.set_xlabel(<span class="st">"Rezago (días)"</span>)</span>
+<span id="cb14-462"><a href="#cb14-462" aria-hidden="true" tabindex="-1"></a>    ax.set_ylim(<span class="op">-</span><span class="fl">0.15</span>, <span class="fl">0.3</span>)</span>
+<span id="cb14-463"><a href="#cb14-463" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
+<span id="cb14-464"><a href="#cb14-464" aria-hidden="true" tabindex="-1"></a>plt.show()</span>
+<span id="cb14-465"><a href="#cb14-465" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb14-466"><a href="#cb14-466" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-467"><a href="#cb14-467" aria-hidden="true" tabindex="-1"></a>El contraste de la @fig-acf-spy es uno de los hechos más robustos de las finanzas empíricas. A la izquierda, las autocorrelaciones de los retornos son minúsculas: unas pocas rozan la banda, apenas por encima de lo que se espera por azar en 40 rezagos, y ninguna supera el 0.07 en valor absoluto. Saber que ayer el mercado subió no dice casi nada sobre hoy: es la eficiencia débil del recuadro, ahora medida. A la derecha, el **valor absoluto** de los retornos (su tamaño, sin el signo) tiene autocorrelaciones positivas en casi todos los rezagos, durante dos meses: un día agitado anticipa días agitados. Es el *volatility clustering* que modelan la familia GARCH y los modelos de volatilidad estocástica del Capítulo 20.</span>
+<span id="cb14-468"><a href="#cb14-468" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-469"><a href="#cb14-469" aria-hidden="true" tabindex="-1"></a>---</span>
+<span id="cb14-470"><a href="#cb14-470" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-471"><a href="#cb14-471" aria-hidden="true" tabindex="-1"></a><span class="fu">## Errores comunes</span></span>
+<span id="cb14-472"><a href="#cb14-472" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-473"><a href="#cb14-473" aria-hidden="true" tabindex="-1"></a>::: {.callout-warning title="Trampas frecuentes"}</span>
+<span id="cb14-474"><a href="#cb14-474" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Modelar en niveles sin testear estacionariedad**: la regresión espuria del inicio. ADF primero, modelo después.</span>
+<span id="cb14-475"><a href="#cb14-475" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Sobrediferenciar**: si la serie ya era estacionaria, diferenciarla "por las dudas" introduce un MA espurio y arruina el pronóstico. La "d" correcta es la mínima necesaria.</span>
+<span id="cb14-476"><a href="#cb14-476" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Elegir p y q maximizando el ajuste dentro de la muestra**: más rezagos siempre ajustan mejor *in-sample*; usá AIC/BIC o validación fuera de muestra (el tema del próximo capítulo).</span>
+<span id="cb14-477"><a href="#cb14-477" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Leer causalidad en un VAR**: que la tasa "anticipe" a la inflación (precedencia temporal, causalidad de Granger) no prueba causalidad económica; puede haber una tercera variable moviendo a ambas.</span>
+<span id="cb14-478"><a href="#cb14-478" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Ignorar los residuos**: un buen modelo deja residuos sin autocorrelación. Si la ACF de los residuos muestra estructura, el modelo se quedó corto.</span>
+<span id="cb14-479"><a href="#cb14-479" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb14-480"><a href="#cb14-480" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-481"><a href="#cb14-481" aria-hidden="true" tabindex="-1"></a>---</span>
+<span id="cb14-482"><a href="#cb14-482" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-483"><a href="#cb14-483" aria-hidden="true" tabindex="-1"></a><span class="fu">## Ejercicios Propuestos</span></span>
+<span id="cb14-484"><a href="#cb14-484" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-485"><a href="#cb14-485" aria-hidden="true" tabindex="-1"></a>::: {.callout-important title="Ejercicios"}</span>
+<span id="cb14-486"><a href="#cb14-486" aria-hidden="true" tabindex="-1"></a><span class="ss">1. </span>**Identificación**: generá un MA(2) puro y verificá con ACF/PACF que la firma es la esperada (ACF cortada en 2, PACF decayendo).</span>
+<span id="cb14-487"><a href="#cb14-487" aria-hidden="true" tabindex="-1"></a><span class="ss">2. </span>**d correcta**: tomá la serie de "precios" acumulando los retornos del capítulo, ajustale un ARIMA(1,1,0) y compará con ajustar ARIMA(1,0,0) a los retornos. ¿Son el mismo modelo?</span>
+<span id="cb14-488"><a href="#cb14-488" aria-hidden="true" tabindex="-1"></a><span class="ss">3. </span>**Backtest de pronóstico**: dividí la serie de inflación en 80% entrenamiento / 20% prueba, pronosticá el tramo final y calculá el error cuadrático medio contra un pronóstico ingenuo ("mañana = hoy"). ¿El ARIMA le gana?</span>
+<span id="cb14-489"><a href="#cb14-489" aria-hidden="true" tabindex="-1"></a><span class="ss">4. </span>**Causalidad de Granger**: usá <span class="in">`resultado.test_causality`</span> para testear si la tasa "Granger-causa" a la inflación en el VAR del capítulo, y viceversa.</span>
+<span id="cb14-490"><a href="#cb14-490" aria-hidden="true" tabindex="-1"></a><span class="ss">5. </span>**VAR de tres variables**: agregá al sistema una variable de "actividad" que dependa negativamente de la tasa, re-estimá el VAR y analizá las nuevas IRF.</span>
+<span id="cb14-491"><a href="#cb14-491" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb14-492"><a href="#cb14-492" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-493"><a href="#cb14-493" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-494"><a href="#cb14-494" aria-hidden="true" tabindex="-1"></a>Podés resolver estos ejercicios acá mismo: la celda ejecuta Python **en tu navegador**, sin instalar nada (la primera ejecución tarda unos segundos mientras carga el entorno; los paquetes que importes se instalan solos).</span>
+<span id="cb14-495"><a href="#cb14-495" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-496"><a href="#cb14-496" aria-hidden="true" tabindex="-1"></a><span class="in">```{pyodide-python}</span></span>
+<span id="cb14-497"><a href="#cb14-497" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: practica-navegador</span></span>
+<span id="cb14-498"><a href="#cb14-498" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb14-499"><a href="#cb14-499" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> statsmodels.api <span class="im">as</span> sm</span>
+<span id="cb14-500"><a href="#cb14-500" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> statsmodels.tsa.arima.model <span class="im">import</span> ARIMA</span>
+<span id="cb14-501"><a href="#cb14-501" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-502"><a href="#cb14-502" aria-hidden="true" tabindex="-1"></a><span class="co"># Tu solución acá...</span></span>
+<span id="cb14-503"><a href="#cb14-503" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb14-504"><a href="#cb14-504" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-505"><a href="#cb14-505" aria-hidden="true" tabindex="-1"></a>---</span>
+<span id="cb14-506"><a href="#cb14-506" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-507"><a href="#cb14-507" aria-hidden="true" tabindex="-1"></a><span class="fu">## Referencias</span></span>
+<span id="cb14-508"><a href="#cb14-508" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-509"><a href="#cb14-509" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-510"><a href="#cb14-510" aria-hidden="true" tabindex="-1"></a>::: {#refs}</span>
+<span id="cb14-511"><a href="#cb14-511" aria-hidden="true" tabindex="-1"></a>:::</span>
 </code></pre></div><button title="Copiar al portapapeles" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></div>
 </div></div></div></div></div>
 </div> <!-- /content -->
