@@ -370,6 +370,36 @@ print(f"\nValor teórico: {teorico:.3f}")
 
 Con el **mismo costo computacional**, el error estándar del método antitético es visiblemente menor. En simulaciones industriales (pricing de exóticos, XVA), estas técnicas marcan la diferencia entre horas y minutos.
 
+::: {.content-visible when-format="html"}
+::: {.simulador}
+[Simulador · Laboratorio de Monte Carlo]{.simulador-titulo}
+
+Las tres piezas de este capítulo con controles: el abanico de trayectorias y la distribución de $S_T$ de la @fig-caminos-gbm, y la convergencia de la @fig-convergencia-mc. "Nueva muestra" vuelve a tirar los dados; mover los demás controles conserva la misma muestra, así ves cómo se estiran las mismas trayectorias. Arranca con los parámetros del capítulo. Los números no coinciden con los impresos arriba porque el navegador usa otro generador aleatorio, pero los patrones sí.
+
+```{=html}
+<div id="sim-montecarlo"></div>
+<script type="module">
+  import { montar } from "../simuladores/montecarlo.js";
+  montar(document.getElementById("sim-montecarlo"));
+</script>
+```
+
+::: {.probar}
+**Probá esto**
+
+1. Subí $\sigma$ dejando $\mu = 10\%$. La media teórica no se mueve, pero la mediana cae y el histograma se estira hacia la derecha. Con $\sigma = 80\%$, más de la mitad de las trayectorias termina por debajo de \$100 aunque el drift sea positivo: es el $-\sigma^2/2$ del recuadro, a la vista.
+2. Con $N = 100$, apretá "Nueva muestra" varias veces y mirá cuánto salta la media; repetí con $N = 10.000$. El error estándar se divide por 10 cuando $N$ se multiplica por 100: la ley $1/\sqrt{N}$.
+3. Activá las variables antitéticas y compará las dos tarjetas de error estándar. Con $\sigma = 25\%$ el error cae a la cuarta parte; con $\sigma = 80\%$ apenas un 30%, porque la lognormal se vuelve tan asimétrica que $Z$ y $-Z$ ya no se compensan.
+:::
+:::
+:::
+
+::: {.content-visible when-format="pdf"}
+::: {.callout-note title="Simulador interactivo"}
+En la [versión web de este capítulo](https://diegoonna.github.io/libro_finanzas_computacionales/unidad3/cap13_monte_carlo.html) hay un laboratorio donde podés cambiar $\mu$, $\sigma$, el horizonte y el número de simulaciones, y activar las variables antitéticas.
+:::
+:::
+
 ---
 
 ## Puente al Módulo 4: valuar una opción por Monte Carlo

@@ -496,6 +496,37 @@ plt.show()
 
 El gamma de la @fig-perfil-griegas, concentrado alrededor del strike y cada vez más puntiagudo al acercarse el vencimiento, es el protagonista del próximo capítulo: es lo que hace que cubrir una opción **cerca del vencimiento y cerca del strike** sea un deporte de riesgo.
 
+::: {.content-visible when-format="html"}
+::: {.simulador}
+[Simulador · Tablero de Black-Scholes]{.simulador-titulo}
+
+Todos los inputs de la fórmula, a la vez. El gráfico grande junta la @fig-sensibilidad-call y la @fig-taylor-griegas: la curva azul es el valor de la opción hoy, la gris su payoff al vencimiento, y alrededor del precio actual están la recta del delta y la parábola que agrega el gamma. Abajo, los perfiles de la @fig-perfil-griegas. Arranca con el contrato del capítulo.
+
+```{=html}
+<div id="sim-black-scholes"></div>
+<script type="module">
+  import { montar } from "../simuladores/black_scholes.js";
+  montar(document.getElementById("sim-black-scholes"));
+</script>
+```
+
+::: {.probar}
+**Probá esto**
+
+1. Dejá $S = K$ y bajá $T$ hasta 0.01. La curva azul se pega al payoff y el gamma se vuelve un pico angosto sobre el strike: la zona de *pin risk* del próximo capítulo. Mirá también la parábola: se dispara, porque con tanta curvatura concentrada la aproximación local deja de servir apenas el precio se mueve.
+2. Mirá cuánto se separa la recta del delta de la curva a unos \$20 del precio actual: esa brecha es $\tfrac{1}{2}\Gamma(\Delta S)^2$. Subí $\sigma$ a 60%: la curva se aplana, el gamma baja y la recta alcanza para un rango más amplio.
+3. Pasá de call a put sin tocar nada más. El delta cambia de signo (el de la put es el de la call menos 1), pero el gamma y la vega quedan idénticos, y la tarjeta de paridad sigue cerrando: no depende del modelo.
+4. Subí $\sigma$ con todo lo demás fijo: el precio sube siempre. Esa monotonía es la que permitió invertir la fórmula para leer la volatilidad implícita.
+:::
+:::
+:::
+
+::: {.content-visible when-format="pdf"}
+::: {.callout-note title="Simulador interactivo"}
+En la [versión web de este capítulo](https://diegoonna.github.io/libro_finanzas_computacionales/unidad4/cap18_derivados_vol_implicita.html) hay un tablero donde podés mover $S$, $K$, $T$, $\sigma$ y $r$ y ver cómo responden el precio y las griegas.
+:::
+:::
+
 ---
 
 ## Errores comunes

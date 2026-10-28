@@ -57,6 +57,7 @@ El libro mezcla dos tipos de bloques ejecutables, y conviene respetar la diferen
 
 - Bloques `python` (` ```{python} `): se ejecutan en el entorno Python local durante el render, vía `jupyter: python3`.
 - Bloques `pyodide-python` (` ```{pyodide-python} `): se ejecutan en el navegador del lector usando la extensión `coatless-quarto/pyodide`. Son los que permiten que cualquiera experimente con el código sin instalar nada. Además de los ejemplos del módulo 1, **todos los capítulos de los módulos 2–4 cierran con una celda de práctica interactiva** (etiqueta `practica-navegador`) después de los ejercicios; la extensión instala sola los paquetes que la celda importa. En el PDF estas celdas aparecen como código estático.
+- Simuladores interactivos (carpeta `simuladores/`): gráficos con controles que el lector mueve para ver cómo responde un modelo, ubicados junto a la figura estática que generalizan, dentro de un recuadro "Simulador". Cada uno es un módulo ES (`diversificacion.js`, `black_scholes.js`, `montecarlo.js`) que el capítulo monta desde un bloque `{=html}`; no ejecutan Python, así que modificarlos no re-ejecuta el capítulo. `finanzas.js` tiene la matemática compartida (normal, Black-Scholes, GBM), `marco.js` la interfaz común y `librerias.js` fija las versiones de Observable Plot e Inputs. **No usan celdas `{ojs}` a propósito:** el runtime de OJS rompe el editor de las celdas Pyodide de la misma página (ver el comentario en `librerias.js`). Si tocás `finanzas.js`, corré `node simuladores/verificar.mjs`, que la compara contra valores de scipy. En el PDF, cada simulador se reemplaza por un recuadro con el link a la versión web.
 
 ## Dataset del libro
 
@@ -76,6 +77,7 @@ Las referencias viven centralizadas en [`references.bib`](./references.bib). Cad
 - `_extensions/`: extensiones de Quarto que usa el proyecto (incluye `coatless-quarto/pyodide`)
 - `docs/`: salida generada por Quarto (sitio + PDF) — no se edita a mano. Es la **única** salida: si aparecen `.html`, `*_files/` o `site_libs/` junto a las fuentes, son restos de un render sin `output-dir` y el `.gitignore` los ignora.
 - `_tex/doc-class.tex`: ajuste de la plantilla LaTeX del PDF (desactiva las comillas `<<>>` de babel-spanish, que chocan con la clase KOMA-Script del libro)
+- `simuladores/`: los simuladores interactivos de la versión web (ver arriba)
 - `_esquemas.py`: primitivas de dibujo para los esquemas y figuras ocultas de los capítulos (y `aplicar_estilo()`, la paleta del libro para los gráficos con código visible)
 - `_caso_practico_template.qmd`: plantilla para los interludios aplicados (ver abajo)
 

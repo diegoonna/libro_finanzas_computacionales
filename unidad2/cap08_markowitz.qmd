@@ -130,6 +130,35 @@ def _esquema():
 _esquema()
 ```
 
+::: {.content-visible when-format="html"}
+::: {.simulador}
+[Simulador · Diversificación con dos activos]{.simulador-titulo}
+
+La figura muestra cuatro correlaciones fijas; acá podés moverla de forma continua, junto con los pesos y el perfil de cada activo. La curva azul son todas las mezclas posibles con la $\rho$ elegida; la recta gris punteada, las mismas mezclas si los activos se movieran en perfecta sincronía ($\rho = 1$). Arranca con los activos de la figura.
+
+```{=html}
+<div id="sim-diversificacion"></div>
+<script type="module">
+  import { montar } from "../simuladores/diversificacion.js";
+  montar(document.getElementById("sim-diversificacion"));
+</script>
+```
+
+::: {.probar}
+**Probá esto**
+
+1. Dejá los pesos quietos y bajá $\rho$ de 1 a −1. El retorno no cambia ni una décima, pero el punto naranja se corre hacia la izquierda: el ahorro de riesgo sale *solo* de la correlación.
+2. Con $\rho = -1$, mirá el rombo verde: hay una mezcla de volatilidad **cero**, con apenas un 18% en la acción. Dos activos riesgosos combinados en una cartera sin riesgo.
+3. Subí $\rho$ a 0.9. El ahorro casi desaparece: la diversificación rinde poco justo cuando los activos se parecen. En las crisis las correlaciones suben (lo vemos en el Capítulo 12), y el "almuerzo gratis" se achica cuando más se lo necesita.
+:::
+:::
+:::
+
+::: {.content-visible when-format="pdf"}
+::: {.callout-note title="Simulador interactivo"}
+En la [versión web de este capítulo](https://diegoonna.github.io/libro_finanzas_computacionales/unidad2/cap08_markowitz.html) hay un simulador donde podés mover la correlación y los pesos y ver cómo se curva esta línea.
+:::
+:::
 
 ---
 

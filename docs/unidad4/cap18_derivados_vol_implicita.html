@@ -98,7 +98,7 @@ div.csl-indent {
 <link href="../site_libs/quarto-html/quarto-syntax-highlighting-33f28b034f783b36ff4b46fdeb362ebb.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap-fc826eba1f37c81109040fd91fc4bdf7.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-ad02148872e92d3647f50c46783ba542.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -1260,6 +1260,24 @@ Figura&nbsp;18.8: Delta (izquierda) y gamma (derecha) de la call en función del
 </div>
 </div>
 <p>El gamma de la <a href="#fig-perfil-griegas" class="quarto-xref">Figura&nbsp;<span>18.8</span></a>, concentrado alrededor del strike y cada vez más puntiagudo al acercarse el vencimiento, es el protagonista del próximo capítulo: es lo que hace que cubrir una opción <strong>cerca del vencimiento y cerca del strike</strong> sea un deporte de riesgo.</p>
+<div class="simulador">
+<p><span class="simulador-titulo">Simulador · Tablero de Black-Scholes</span></p>
+<p>Todos los inputs de la fórmula, a la vez. El gráfico grande junta la <a href="#fig-sensibilidad-call" class="quarto-xref">Figura&nbsp;<span>18.2</span></a> y la <a href="#fig-taylor-griegas" class="quarto-xref">Figura&nbsp;<span>18.7</span></a>: la curva azul es el valor de la opción hoy, la gris su payoff al vencimiento, y alrededor del precio actual están la recta del delta y la parábola que agrega el gamma. Abajo, los perfiles de la <a href="#fig-perfil-griegas" class="quarto-xref">Figura&nbsp;<span>18.8</span></a>. Arranca con el contrato del capítulo.</p>
+<div id="sim-black-scholes"></div>
+<script type="module">
+  import { montar } from "../simuladores/black_scholes.js";
+  montar(document.getElementById("sim-black-scholes"));
+</script>
+<div class="probar">
+<p><strong>Probá esto</strong></p>
+<ol type="1">
+<li>Dejá <span class="math inline">\(S = K\)</span> y bajá <span class="math inline">\(T\)</span> hasta 0.01. La curva azul se pega al payoff y el gamma se vuelve un pico angosto sobre el strike: la zona de <em>pin risk</em> del próximo capítulo. Mirá también la parábola: se dispara, porque con tanta curvatura concentrada la aproximación local deja de servir apenas el precio se mueve.</li>
+<li>Mirá cuánto se separa la recta del delta de la curva a unos $20 del precio actual: esa brecha es <span class="math inline">\(\tfrac{1}{2}\Gamma(\Delta S)^2\)</span>. Subí <span class="math inline">\(\sigma\)</span> a 60%: la curva se aplana, el gamma baja y la recta alcanza para un rango más amplio.</li>
+<li>Pasá de call a put sin tocar nada más. El delta cambia de signo (el de la put es el de la call menos 1), pero el gamma y la vega quedan idénticos, y la tarjeta de paridad sigue cerrando: no depende del modelo.</li>
+<li>Subí <span class="math inline">\(\sigma\)</span> con todo lo demás fijo: el precio sube siempre. Esa monotonía es la que permitió invertir la fórmula para leer la volatilidad implícita.</li>
+</ol>
+</div>
+</div>
 <hr>
 </section>
 <section id="errores-comunes" class="level2" data-number="18.5">
@@ -2301,48 +2319,79 @@ Merton, Robert C. 1973. <span>«Theory of Rational Option Pricing»</span>. <em>
 <span id="cb11-522"><a href="#cb11-522" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb11-523"><a href="#cb11-523" aria-hidden="true" tabindex="-1"></a>El gamma de la @fig-perfil-griegas, concentrado alrededor del strike y cada vez más puntiagudo al acercarse el vencimiento, es el protagonista del próximo capítulo: es lo que hace que cubrir una opción **cerca del vencimiento y cerca del strike** sea un deporte de riesgo.</span>
 <span id="cb11-524"><a href="#cb11-524" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-525"><a href="#cb11-525" aria-hidden="true" tabindex="-1"></a>---</span>
-<span id="cb11-526"><a href="#cb11-526" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-527"><a href="#cb11-527" aria-hidden="true" tabindex="-1"></a><span class="fu">## Errores comunes</span></span>
+<span id="cb11-525"><a href="#cb11-525" aria-hidden="true" tabindex="-1"></a>::: {.content-visible when-format="html"}</span>
+<span id="cb11-526"><a href="#cb11-526" aria-hidden="true" tabindex="-1"></a>::: {.simulador}</span>
+<span id="cb11-527"><a href="#cb11-527" aria-hidden="true" tabindex="-1"></a><span class="co">[</span><span class="ot">Simulador · Tablero de Black-Scholes</span><span class="co">]</span>{.simulador-titulo}</span>
 <span id="cb11-528"><a href="#cb11-528" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-529"><a href="#cb11-529" aria-hidden="true" tabindex="-1"></a>::: {.callout-warning title="Trampas frecuentes"}</span>
-<span id="cb11-530"><a href="#cb11-530" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Unidades del theta**: la derivada es "por año"; dividí por 365 para el decaimiento diario que se reporta en las pantallas.</span>
-<span id="cb11-531"><a href="#cb11-531" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Newton sin red**: lejos del dinero, el vega es casi cero y Newton-Raphson diverge. Para uso robusto, combiná con bisección (<span class="in">`scipy.optimize.brentq`</span>) que garantiza convergencia.</span>
-<span id="cb11-532"><a href="#cb11-532" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Volatilidad en las unidades equivocadas**: $\sigma$ = 0.25, no 25. Un factor 100 en la vol produce precios absurdos silenciosamente.</span>
-<span id="cb11-533"><a href="#cb11-533" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Aplicar Black-Scholes a opciones americanas**: la fórmula es para ejercicio *europeo* (solo al vencimiento). Para americanas con dividendos, el ejercicio temprano vale y se necesitan árboles o métodos numéricos.</span>
-<span id="cb11-534"><a href="#cb11-534" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Paso de diferencias finitas mal elegido**: $h$ demasiado grande sesga; demasiado chico amplifica el error de redondeo. Los valores del código (dS=0.01) son un buen punto medio para este problema.</span>
-<span id="cb11-535"><a href="#cb11-535" aria-hidden="true" tabindex="-1"></a>:::</span>
-<span id="cb11-536"><a href="#cb11-536" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-537"><a href="#cb11-537" aria-hidden="true" tabindex="-1"></a>---</span>
+<span id="cb11-529"><a href="#cb11-529" aria-hidden="true" tabindex="-1"></a>Todos los inputs de la fórmula, a la vez. El gráfico grande junta la @fig-sensibilidad-call y la @fig-taylor-griegas: la curva azul es el valor de la opción hoy, la gris su payoff al vencimiento, y alrededor del precio actual están la recta del delta y la parábola que agrega el gamma. Abajo, los perfiles de la @fig-perfil-griegas. Arranca con el contrato del capítulo.</span>
+<span id="cb11-530"><a href="#cb11-530" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-531"><a href="#cb11-531" aria-hidden="true" tabindex="-1"></a><span class="in">```{=html}</span></span>
+<span id="cb11-532"><a href="#cb11-532" aria-hidden="true" tabindex="-1"></a><span class="in">&lt;div id="sim-black-scholes"&gt;&lt;/div&gt;</span></span>
+<span id="cb11-533"><a href="#cb11-533" aria-hidden="true" tabindex="-1"></a><span class="in">&lt;script type="module"&gt;</span></span>
+<span id="cb11-534"><a href="#cb11-534" aria-hidden="true" tabindex="-1"></a><span class="in">  import { montar } from "../simuladores/black_scholes.js";</span></span>
+<span id="cb11-535"><a href="#cb11-535" aria-hidden="true" tabindex="-1"></a><span class="in">  montar(document.getElementById("sim-black-scholes"));</span></span>
+<span id="cb11-536"><a href="#cb11-536" aria-hidden="true" tabindex="-1"></a><span class="in">&lt;/script&gt;</span></span>
+<span id="cb11-537"><a href="#cb11-537" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb11-538"><a href="#cb11-538" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-539"><a href="#cb11-539" aria-hidden="true" tabindex="-1"></a><span class="fu">## Ejercicios Propuestos</span></span>
-<span id="cb11-540"><a href="#cb11-540" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-541"><a href="#cb11-541" aria-hidden="true" tabindex="-1"></a>::: {.callout-important title="Ejercicios"}</span>
-<span id="cb11-542"><a href="#cb11-542" aria-hidden="true" tabindex="-1"></a><span class="ss">1. </span>**Griegas analíticas**: implementá el delta ($N(d_1)$), el gamma y el vega con sus fórmulas cerradas y verificá contra diferencias finitas con 6 decimales.</span>
-<span id="cb11-543"><a href="#cb11-543" aria-hidden="true" tabindex="-1"></a><span class="ss">2. </span>**Newton vs. brentq**: compará <span class="in">`implied_vol`</span> con <span class="in">`scipy.optimize.brentq`</span> en precisión y número de iteraciones, para strikes de 80 a 120. ¿Dónde falla Newton?</span>
-<span id="cb11-544"><a href="#cb11-544" aria-hidden="true" tabindex="-1"></a><span class="ss">3. </span>**Vol implícita de puts**: adaptá <span class="in">`implied_vol`</span> para puts y verificá que, por paridad, la vol implícita de una call y una put del mismo strike coinciden.</span>
-<span id="cb11-545"><a href="#cb11-545" aria-hidden="true" tabindex="-1"></a><span class="ss">4. </span>**Superficie de volatilidad**: extendé la sonrisa a varios vencimientos (1, 3, 6, 12 meses) y graficá la superficie 3D con <span class="in">`plot_surface`</span>.</span>
-<span id="cb11-546"><a href="#cb11-546" aria-hidden="true" tabindex="-1"></a><span class="ss">5. </span>**P&amp;L de un día**: para la call del capítulo, calculá la ganancia/pérdida aproximada si mañana $S$ sube 2% y la vol cae 1 punto, usando $\Delta \cdot dS + \frac{1}{2}\Gamma \cdot dS^2 + \text{Vega} \cdot d\sigma + \Theta \cdot dt$. Verificá repreciando con la fórmula exacta.</span>
+<span id="cb11-539"><a href="#cb11-539" aria-hidden="true" tabindex="-1"></a>::: {.probar}</span>
+<span id="cb11-540"><a href="#cb11-540" aria-hidden="true" tabindex="-1"></a>**Probá esto**</span>
+<span id="cb11-541"><a href="#cb11-541" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-542"><a href="#cb11-542" aria-hidden="true" tabindex="-1"></a><span class="ss">1. </span>Dejá $S = K$ y bajá $T$ hasta 0.01. La curva azul se pega al payoff y el gamma se vuelve un pico angosto sobre el strike: la zona de *pin risk* del próximo capítulo. Mirá también la parábola: se dispara, porque con tanta curvatura concentrada la aproximación local deja de servir apenas el precio se mueve.</span>
+<span id="cb11-543"><a href="#cb11-543" aria-hidden="true" tabindex="-1"></a><span class="ss">2. </span>Mirá cuánto se separa la recta del delta de la curva a unos \$20 del precio actual: esa brecha es $\tfrac{1}{2}\Gamma(\Delta S)^2$. Subí $\sigma$ a 60%: la curva se aplana, el gamma baja y la recta alcanza para un rango más amplio.</span>
+<span id="cb11-544"><a href="#cb11-544" aria-hidden="true" tabindex="-1"></a><span class="ss">3. </span>Pasá de call a put sin tocar nada más. El delta cambia de signo (el de la put es el de la call menos 1), pero el gamma y la vega quedan idénticos, y la tarjeta de paridad sigue cerrando: no depende del modelo.</span>
+<span id="cb11-545"><a href="#cb11-545" aria-hidden="true" tabindex="-1"></a><span class="ss">4. </span>Subí $\sigma$ con todo lo demás fijo: el precio sube siempre. Esa monotonía es la que permitió invertir la fórmula para leer la volatilidad implícita.</span>
+<span id="cb11-546"><a href="#cb11-546" aria-hidden="true" tabindex="-1"></a>:::</span>
 <span id="cb11-547"><a href="#cb11-547" aria-hidden="true" tabindex="-1"></a>:::</span>
-<span id="cb11-548"><a href="#cb11-548" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-548"><a href="#cb11-548" aria-hidden="true" tabindex="-1"></a>:::</span>
 <span id="cb11-549"><a href="#cb11-549" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-550"><a href="#cb11-550" aria-hidden="true" tabindex="-1"></a>Podés resolver estos ejercicios acá mismo: la celda ejecuta Python **en tu navegador**, sin instalar nada (la primera ejecución tarda unos segundos mientras carga el entorno; los paquetes que importes se instalan solos).</span>
-<span id="cb11-551"><a href="#cb11-551" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-552"><a href="#cb11-552" aria-hidden="true" tabindex="-1"></a><span class="in">```{pyodide-python}</span></span>
-<span id="cb11-553"><a href="#cb11-553" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: practica-navegador</span></span>
-<span id="cb11-554"><a href="#cb11-554" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
-<span id="cb11-555"><a href="#cb11-555" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> scipy.stats <span class="im">import</span> norm</span>
-<span id="cb11-556"><a href="#cb11-556" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-557"><a href="#cb11-557" aria-hidden="true" tabindex="-1"></a><span class="co"># Tu solución acá...</span></span>
-<span id="cb11-558"><a href="#cb11-558" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb11-550"><a href="#cb11-550" aria-hidden="true" tabindex="-1"></a>::: {.content-visible when-format="pdf"}</span>
+<span id="cb11-551"><a href="#cb11-551" aria-hidden="true" tabindex="-1"></a>::: {.callout-note title="Simulador interactivo"}</span>
+<span id="cb11-552"><a href="#cb11-552" aria-hidden="true" tabindex="-1"></a>En la <span class="co">[</span><span class="ot">versión web de este capítulo</span><span class="co">](https://diegoonna.github.io/libro_finanzas_computacionales/unidad4/cap18_derivados_vol_implicita.html)</span> hay un tablero donde podés mover $S$, $K$, $T$, $\sigma$ y $r$ y ver cómo responden el precio y las griegas.</span>
+<span id="cb11-553"><a href="#cb11-553" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb11-554"><a href="#cb11-554" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb11-555"><a href="#cb11-555" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-556"><a href="#cb11-556" aria-hidden="true" tabindex="-1"></a>---</span>
+<span id="cb11-557"><a href="#cb11-557" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-558"><a href="#cb11-558" aria-hidden="true" tabindex="-1"></a><span class="fu">## Errores comunes</span></span>
 <span id="cb11-559"><a href="#cb11-559" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-560"><a href="#cb11-560" aria-hidden="true" tabindex="-1"></a>---</span>
-<span id="cb11-561"><a href="#cb11-561" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-562"><a href="#cb11-562" aria-hidden="true" tabindex="-1"></a><span class="fu">## Referencias</span></span>
-<span id="cb11-563"><a href="#cb11-563" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-564"><a href="#cb11-564" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-565"><a href="#cb11-565" aria-hidden="true" tabindex="-1"></a>::: {#refs}</span>
+<span id="cb11-560"><a href="#cb11-560" aria-hidden="true" tabindex="-1"></a>::: {.callout-warning title="Trampas frecuentes"}</span>
+<span id="cb11-561"><a href="#cb11-561" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Unidades del theta**: la derivada es "por año"; dividí por 365 para el decaimiento diario que se reporta en las pantallas.</span>
+<span id="cb11-562"><a href="#cb11-562" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Newton sin red**: lejos del dinero, el vega es casi cero y Newton-Raphson diverge. Para uso robusto, combiná con bisección (<span class="in">`scipy.optimize.brentq`</span>) que garantiza convergencia.</span>
+<span id="cb11-563"><a href="#cb11-563" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Volatilidad en las unidades equivocadas**: $\sigma$ = 0.25, no 25. Un factor 100 en la vol produce precios absurdos silenciosamente.</span>
+<span id="cb11-564"><a href="#cb11-564" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Aplicar Black-Scholes a opciones americanas**: la fórmula es para ejercicio *europeo* (solo al vencimiento). Para americanas con dividendos, el ejercicio temprano vale y se necesitan árboles o métodos numéricos.</span>
+<span id="cb11-565"><a href="#cb11-565" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Paso de diferencias finitas mal elegido**: $h$ demasiado grande sesga; demasiado chico amplifica el error de redondeo. Los valores del código (dS=0.01) son un buen punto medio para este problema.</span>
 <span id="cb11-566"><a href="#cb11-566" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb11-567"><a href="#cb11-567" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-568"><a href="#cb11-568" aria-hidden="true" tabindex="-1"></a>---</span>
+<span id="cb11-569"><a href="#cb11-569" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-570"><a href="#cb11-570" aria-hidden="true" tabindex="-1"></a><span class="fu">## Ejercicios Propuestos</span></span>
+<span id="cb11-571"><a href="#cb11-571" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-572"><a href="#cb11-572" aria-hidden="true" tabindex="-1"></a>::: {.callout-important title="Ejercicios"}</span>
+<span id="cb11-573"><a href="#cb11-573" aria-hidden="true" tabindex="-1"></a><span class="ss">1. </span>**Griegas analíticas**: implementá el delta ($N(d_1)$), el gamma y el vega con sus fórmulas cerradas y verificá contra diferencias finitas con 6 decimales.</span>
+<span id="cb11-574"><a href="#cb11-574" aria-hidden="true" tabindex="-1"></a><span class="ss">2. </span>**Newton vs. brentq**: compará <span class="in">`implied_vol`</span> con <span class="in">`scipy.optimize.brentq`</span> en precisión y número de iteraciones, para strikes de 80 a 120. ¿Dónde falla Newton?</span>
+<span id="cb11-575"><a href="#cb11-575" aria-hidden="true" tabindex="-1"></a><span class="ss">3. </span>**Vol implícita de puts**: adaptá <span class="in">`implied_vol`</span> para puts y verificá que, por paridad, la vol implícita de una call y una put del mismo strike coinciden.</span>
+<span id="cb11-576"><a href="#cb11-576" aria-hidden="true" tabindex="-1"></a><span class="ss">4. </span>**Superficie de volatilidad**: extendé la sonrisa a varios vencimientos (1, 3, 6, 12 meses) y graficá la superficie 3D con <span class="in">`plot_surface`</span>.</span>
+<span id="cb11-577"><a href="#cb11-577" aria-hidden="true" tabindex="-1"></a><span class="ss">5. </span>**P&amp;L de un día**: para la call del capítulo, calculá la ganancia/pérdida aproximada si mañana $S$ sube 2% y la vol cae 1 punto, usando $\Delta \cdot dS + \frac{1}{2}\Gamma \cdot dS^2 + \text{Vega} \cdot d\sigma + \Theta \cdot dt$. Verificá repreciando con la fórmula exacta.</span>
+<span id="cb11-578"><a href="#cb11-578" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb11-579"><a href="#cb11-579" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-580"><a href="#cb11-580" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-581"><a href="#cb11-581" aria-hidden="true" tabindex="-1"></a>Podés resolver estos ejercicios acá mismo: la celda ejecuta Python **en tu navegador**, sin instalar nada (la primera ejecución tarda unos segundos mientras carga el entorno; los paquetes que importes se instalan solos).</span>
+<span id="cb11-582"><a href="#cb11-582" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-583"><a href="#cb11-583" aria-hidden="true" tabindex="-1"></a><span class="in">```{pyodide-python}</span></span>
+<span id="cb11-584"><a href="#cb11-584" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: practica-navegador</span></span>
+<span id="cb11-585"><a href="#cb11-585" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb11-586"><a href="#cb11-586" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> scipy.stats <span class="im">import</span> norm</span>
+<span id="cb11-587"><a href="#cb11-587" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-588"><a href="#cb11-588" aria-hidden="true" tabindex="-1"></a><span class="co"># Tu solución acá...</span></span>
+<span id="cb11-589"><a href="#cb11-589" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb11-590"><a href="#cb11-590" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-591"><a href="#cb11-591" aria-hidden="true" tabindex="-1"></a>---</span>
+<span id="cb11-592"><a href="#cb11-592" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-593"><a href="#cb11-593" aria-hidden="true" tabindex="-1"></a><span class="fu">## Referencias</span></span>
+<span id="cb11-594"><a href="#cb11-594" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-595"><a href="#cb11-595" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-596"><a href="#cb11-596" aria-hidden="true" tabindex="-1"></a>::: {#refs}</span>
+<span id="cb11-597"><a href="#cb11-597" aria-hidden="true" tabindex="-1"></a>:::</span>
 </code></pre></div><button title="Copiar al portapapeles" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></div>
 </div></div></div></div></div>
 </div> <!-- /content -->
