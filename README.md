@@ -105,6 +105,12 @@ Si querés otro estilo o imagen, ajustá `cover-image`, `favicon` o el tema en [
 
 Lo que fue cambiando en el libro, de lo más nuevo a lo más viejo. Cada versión junta un hito que se nota al abrir el sitio; los arreglos chicos quedan adentro de la versión en la que entraron.
 
+**v0.10 (octubre 2026)**
+
+- Simuladores interactivos en la versión web: gráficos con controles para mover los parámetros de un modelo y ver cómo responde, cada uno junto a la figura que generaliza y con experimentos guiados ("Probá esto"). Llegan ocho: diversificación y frontera eficiente (capítulo 8), VaR contra ES con colas pesadas (11), el CDO y la correlación (12), Monte Carlo (13), la fábrica de falsos descubrimientos (17), Black-Scholes y sus griegas (18) y la mesa de cobertura (19).
+- En el PDF, cada simulador queda como un recuadro con el link a la versión web.
+- Corrección en los capítulos 18 y 19: el delta de la call decía 0.57; es 0.59 a seis meses y 0.63 a un año.
+
 **v0.9 (octubre 2026)**
 
 - Los módulos 3 y 4 recibieron el mismo trabajo visual que los dos primeros: esquemas y diagramas para las ideas que antes solo estaban explicadas en texto (VaR contra ES, Kupiec, la cascada de un CDO, walk-forward, Newton-Raphson, la cartera cubierta, Heston, entre otras), y mapas al comienzo de cada módulo.
@@ -156,13 +162,13 @@ La regla: **una versión nueva solo cuando el lector notaría la diferencia** �
 El flujo con cada commit:
 
 1. Escribí un mensaje que describa el cambio (`"Agrega caso práctico de cuchillos cayendo"`), no `"commit 14"`. Es lo que después permite armar la fila de la versión sin arqueología.
-2. Si el commit **cierra un hito**, agregá arriba de todo una entrada con la versión siguiente, el mes y unas pocas líneas sobre qué gana el lector (no qué archivos se tocaron). Para repasar qué entró desde la última etiqueta: `git log --oneline v0.9..HEAD`.
+2. Si el commit **cierra un hito**, agregá arriba de todo una entrada con la versión siguiente, el mes y unas pocas líneas sobre qué gana el lector (no qué archivos se tocaron). Para repasar qué entró desde la última etiqueta: `git log --oneline v0.10..HEAD`.
 3. Si es un commit chico, no hagas nada: se sumará al rango de la próxima versión.
 
 Opcional pero recomendado: etiquetá el commit que cierra cada versión, así GitHub las muestra como releases:
 
 ```powershell
-git tag -a v0.9 -m "Resumen del hito"
+git tag -a v0.10 -m "Resumen del hito"
 git push --tags
 ```
 
