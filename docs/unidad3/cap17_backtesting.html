@@ -98,7 +98,7 @@ div.csl-indent {
 <link href="../site_libs/quarto-html/quarto-syntax-highlighting-33f28b034f783b36ff4b46fdeb362ebb.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap-fc826eba1f37c81109040fd91fc4bdf7.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-ad02148872e92d3647f50c46783ba542.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -1005,6 +1005,24 @@ Estrategia con edge real     Sharpe:  1.30 | t:  2.37 | p-value: 0.018</code></p
 </div>
 <div class="callout-body-container callout-body">
 <p>Cuidado: ese p-value asume que evaluaste <strong>una</strong> estrategia. Si probaste 60, la probabilidad de que <em>alguna</em> pase el umbral del 5% por puro azar es enorme (<span class="math inline">\(1 - 0.95^{60} \approx 95\%\)</span>). Las correcciones (Bonferroni: exigir <span class="math inline">\(\alpha/N\)</span>; o el <em>Deflated Sharpe Ratio</em> de López de Prado) suben la vara según cuántas configuraciones miraste. La honestidad estadística empieza por <strong>contar tus intentos</strong>.</p>
+</div>
+</div>
+<div class="simulador">
+<p><span class="simulador-titulo">Simulador · La fábrica de falsos descubrimientos</span></p>
+<p>El experimento del capítulo, con perillas: cuántas ventanas de momentum probás y cuántos años de ruido puro hay (dos tercios para diseñar, uno para evaluar). Arriba, las variantes como en la <a href="#fig-snooping-is-oos" class="quarto-xref">Figura&nbsp;<span>17.2</span></a>; abajo, cómo crece el Sharpe in-sample de la mejor a medida que probás más, y lo que hace esa misma estrategia afuera. La muestra inicial es una en la que el espejismo se ve nítido, como la del capítulo; “Nuevo ruido” genera otras historias (no todas tan llamativas), y el interruptor repite el experimento 100 veces para ver el patrón y no una muestra elegida.</p>
+<div id="sim-falsos-descubrimientos"></div>
+<script type="module">
+  import { montar } from "../simuladores/falsos_descubrimientos.js";
+  montar(document.getElementById("sim-falsos-descubrimientos"));
+</script>
+<div class="probar">
+<p><strong>Probá esto</strong></p>
+<ol type="1">
+<li>Bajá las variantes a 1 y subilas de a poco hasta 200, mirando el gráfico de abajo. La línea naranja (el mejor Sharpe in-sample hasta ahí) solo puede subir: cada intento nuevo es otra chance de que el ruido luzca bien. La azul, su desempeño afuera, se queda dando vueltas alrededor de cero.</li>
+<li>Activá la repetición. Cada punto es una historia de ruido distinta: casi todos caen a la derecha del cero (siempre elegimos la mejor in-sample) y se reparten arriba y abajo sin ningún patrón. El Sharpe in-sample no predice nada del out-of-sample.</li>
+<li>Con la repetición prendida, compará la tarjeta “pasa la vara del 5%” con la de “si fueran independientes”. Con 60 ventanas la fórmula <span class="math inline">\(1 - 0.95^{60}\)</span> promete un 95% de falsos positivos, pero acá pasan bastantes menos: una ventana de 43 días y una de 44 son casi la misma estrategia, así que 60 ventanas no son 60 intentos independientes. El problema no desaparece, pero contar bien los intentos <em>efectivos</em> es parte del oficio (es lo que corrige el <em>Deflated Sharpe Ratio</em>).</li>
+<li>Con la repetición prendida, subí los años de 10 a 30. El Sharpe in-sample medio de la elegida baja (de ~0.4 a ~0.25), porque con más datos el ruido se promedia, pero el porcentaje de muestras que pasa la vara casi no cambia: la significancia aparente de la mejor de <span class="math inline">\(N\)</span> depende de cuántas probaste, no de cuántos datos tenés. Más historia no te protege del data snooping; contar los intentos, sí.</li>
+</ol>
 </div>
 </div>
 <hr>
@@ -2055,276 +2073,307 @@ White, Halbert. 2000. <span>«A Reality Check for Data Snooping»</span>. <em>Ec
 <span id="cb15-242"><a href="#cb15-242" aria-hidden="true" tabindex="-1"></a>Cuidado: ese p-value asume que evaluaste **una** estrategia. Si probaste 60, la probabilidad de que *alguna* pase el umbral del 5% por puro azar es enorme ($1 - 0.95^{60} \approx 95\%$). Las correcciones (Bonferroni: exigir $\alpha/N$; o el *Deflated Sharpe Ratio* de López de Prado) suben la vara según cuántas configuraciones miraste. La honestidad estadística empieza por **contar tus intentos**.</span>
 <span id="cb15-243"><a href="#cb15-243" aria-hidden="true" tabindex="-1"></a>:::</span>
 <span id="cb15-244"><a href="#cb15-244" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-245"><a href="#cb15-245" aria-hidden="true" tabindex="-1"></a>---</span>
-<span id="cb15-246"><a href="#cb15-246" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-247"><a href="#cb15-247" aria-hidden="true" tabindex="-1"></a><span class="fu">## Walk-forward: el estándar profesional</span></span>
+<span id="cb15-245"><a href="#cb15-245" aria-hidden="true" tabindex="-1"></a>::: {.content-visible when-format="html"}</span>
+<span id="cb15-246"><a href="#cb15-246" aria-hidden="true" tabindex="-1"></a>::: {.simulador}</span>
+<span id="cb15-247"><a href="#cb15-247" aria-hidden="true" tabindex="-1"></a><span class="co">[</span><span class="ot">Simulador · La fábrica de falsos descubrimientos</span><span class="co">]</span>{.simulador-titulo}</span>
 <span id="cb15-248"><a href="#cb15-248" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-249"><a href="#cb15-249" aria-hidden="true" tabindex="-1"></a>La partición simple IS/OOS tiene una debilidad: la evaluación depende de *un* corte particular. Además, las estrategias reales se recalibran periódicamente. El **análisis walk-forward** resuelve ambas cosas imitando la operatoria real:</span>
+<span id="cb15-249"><a href="#cb15-249" aria-hidden="true" tabindex="-1"></a>El experimento del capítulo, con perillas: cuántas ventanas de momentum probás y cuántos años de ruido puro hay (dos tercios para diseñar, uno para evaluar). Arriba, las variantes como en la @fig-snooping-is-oos; abajo, cómo crece el Sharpe in-sample de la mejor a medida que probás más, y lo que hace esa misma estrategia afuera. La muestra inicial es una en la que el espejismo se ve nítido, como la del capítulo; "Nuevo ruido" genera otras historias (no todas tan llamativas), y el interruptor repite el experimento 100 veces para ver el patrón y no una muestra elegida.</span>
 <span id="cb15-250"><a href="#cb15-250" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-251"><a href="#cb15-251" aria-hidden="true" tabindex="-1"></a><span class="ss">1. </span>**Entrená** (elegí parámetros) con una ventana de datos.</span>
-<span id="cb15-252"><a href="#cb15-252" aria-hidden="true" tabindex="-1"></a><span class="ss">2. </span>**Operá** con esos parámetros el período siguiente (nunca visto).</span>
-<span id="cb15-253"><a href="#cb15-253" aria-hidden="true" tabindex="-1"></a><span class="ss">3. </span>**Rodá** la ventana hacia adelante y repetí.</span>
-<span id="cb15-254"><a href="#cb15-254" aria-hidden="true" tabindex="-1"></a><span class="ss">4. </span>Concatená todos los tramos operados: eso es tu track record **100% out-of-sample**.</span>
-<span id="cb15-255"><a href="#cb15-255" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-256"><a href="#cb15-256" aria-hidden="true" tabindex="-1"></a>La @fig-walk-forward dibuja el esquema con los números que vamos a usar: dos años para entrenar, medio año para operar, y la ventana que avanza medio año por vez.</span>
-<span id="cb15-257"><a href="#cb15-257" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-260"><a href="#cb15-260" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
-<span id="cb15-261"><a href="#cb15-261" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: fig-walk-forward</span></span>
-<span id="cb15-262"><a href="#cb15-262" aria-hidden="true" tabindex="-1"></a><span class="co">#| echo: false</span></span>
-<span id="cb15-263"><a href="#cb15-263" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-cap: "Walk-forward sobre los 10 años de datos: cada fila es una vuelta, con 504 días de entrenamiento (azul) seguidos de 126 días de operación (rojo). La ventana rueda 126 días por vuelta. La fila de abajo concatena todos los tramos rojos: un track record de 8 años en el que ningún día fue usado para elegir los parámetros con los que se operó."</span></span>
-<span id="cb15-264"><a href="#cb15-264" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> sys<span class="op">;</span> sys.path.insert(<span class="dv">0</span>, <span class="st">".."</span>)</span>
-<span id="cb15-265"><a href="#cb15-265" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> _esquemas <span class="im">import</span> <span class="op">*</span></span>
-<span id="cb15-266"><a href="#cb15-266" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-267"><a href="#cb15-267" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> _esquema():</span>
-<span id="cb15-268"><a href="#cb15-268" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Usa n_dias del capítulo; mismos tramos que la llamada a walk_forward</span></span>
-<span id="cb15-269"><a href="#cb15-269" aria-hidden="true" tabindex="-1"></a>    n_train, n_test <span class="op">=</span> <span class="dv">504</span>, <span class="dv">126</span></span>
-<span id="cb15-270"><a href="#cb15-270" aria-hidden="true" tabindex="-1"></a>    vueltas <span class="op">=</span> (n_dias <span class="op">-</span> n_train) <span class="op">//</span> n_test</span>
-<span id="cb15-271"><a href="#cb15-271" aria-hidden="true" tabindex="-1"></a>    fig, ax <span class="op">=</span> plt.subplots(figsize<span class="op">=</span>(<span class="dv">10</span>, <span class="fl">5.2</span>))</span>
-<span id="cb15-272"><a href="#cb15-272" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(vueltas):</span>
-<span id="cb15-273"><a href="#cb15-273" aria-hidden="true" tabindex="-1"></a>        y <span class="op">=</span> vueltas <span class="op">-</span> i <span class="op">+</span> <span class="dv">1</span></span>
-<span id="cb15-274"><a href="#cb15-274" aria-hidden="true" tabindex="-1"></a>        ax.barh(y, n_train, left<span class="op">=</span>i <span class="op">*</span> n_test, height<span class="op">=</span><span class="fl">0.7</span>, color<span class="op">=</span>FONDO_PRIMARIO,</span>
-<span id="cb15-275"><a href="#cb15-275" aria-hidden="true" tabindex="-1"></a>                edgecolor<span class="op">=</span>PRIMARIO, lw<span class="op">=</span><span class="fl">0.8</span>)</span>
-<span id="cb15-276"><a href="#cb15-276" aria-hidden="true" tabindex="-1"></a>        ax.barh(y, n_test, left<span class="op">=</span>i <span class="op">*</span> n_test <span class="op">+</span> n_train, height<span class="op">=</span><span class="fl">0.7</span>, color<span class="op">=</span>ACENTO)</span>
-<span id="cb15-277"><a href="#cb15-277" aria-hidden="true" tabindex="-1"></a>    ax.barh(<span class="dv">0</span>, n_dias <span class="op">-</span> n_train, left<span class="op">=</span>n_train, height<span class="op">=</span><span class="fl">0.8</span>, color<span class="op">=</span>ACENTO)</span>
-<span id="cb15-278"><a href="#cb15-278" aria-hidden="true" tabindex="-1"></a>    ax.text(n_train <span class="op">+</span> (n_dias <span class="op">-</span> n_train) <span class="op">/</span> <span class="dv">2</span>, <span class="dv">0</span>, <span class="st">"track record 100</span><span class="sc">% o</span><span class="st">ut-of-sample"</span>,</span>
-<span id="cb15-279"><a href="#cb15-279" aria-hidden="true" tabindex="-1"></a>            ha<span class="op">=</span><span class="st">"center"</span>, va<span class="op">=</span><span class="st">"center"</span>, fontsize<span class="op">=</span><span class="fl">9.5</span>, color<span class="op">=</span><span class="st">"white"</span>, fontweight<span class="op">=</span><span class="st">"bold"</span>)</span>
-<span id="cb15-280"><a href="#cb15-280" aria-hidden="true" tabindex="-1"></a>    ax.text(n_train <span class="op">/</span> <span class="dv">2</span>, vueltas <span class="op">+</span> <span class="dv">1</span>, <span class="st">"entrenar"</span>, ha<span class="op">=</span><span class="st">"center"</span>, va<span class="op">=</span><span class="st">"center"</span>,</span>
-<span id="cb15-281"><a href="#cb15-281" aria-hidden="true" tabindex="-1"></a>            fontsize<span class="op">=</span><span class="fl">8.5</span>, color<span class="op">=</span>PRIMARIO)</span>
-<span id="cb15-282"><a href="#cb15-282" aria-hidden="true" tabindex="-1"></a>    ax.text(n_train <span class="op">+</span> n_test <span class="op">+</span> <span class="dv">40</span>, vueltas <span class="op">+</span> <span class="dv">1</span>, <span class="st">"operar"</span>, va<span class="op">=</span><span class="st">"center"</span>, fontsize<span class="op">=</span><span class="fl">8.5</span>,</span>
-<span id="cb15-283"><a href="#cb15-283" aria-hidden="true" tabindex="-1"></a>            color<span class="op">=</span>ACENTO)</span>
-<span id="cb15-284"><a href="#cb15-284" aria-hidden="true" tabindex="-1"></a>    ax.set_yticks([<span class="dv">0</span>] <span class="op">+</span> <span class="bu">list</span>(<span class="bu">range</span>(<span class="dv">2</span>, vueltas <span class="op">+</span> <span class="dv">2</span>)),</span>
-<span id="cb15-285"><a href="#cb15-285" aria-hidden="true" tabindex="-1"></a>                  [<span class="st">"concatenado"</span>] <span class="op">+</span> [<span class="ss">f"vuelta </span><span class="sc">{</span>vueltas <span class="op">-</span> k<span class="sc">}</span><span class="ss">"</span> <span class="cf">for</span> k <span class="kw">in</span> <span class="bu">range</span>(vueltas)],</span>
-<span id="cb15-286"><a href="#cb15-286" aria-hidden="true" tabindex="-1"></a>                  fontsize<span class="op">=</span><span class="dv">8</span>)</span>
-<span id="cb15-287"><a href="#cb15-287" aria-hidden="true" tabindex="-1"></a>    ax.set_xlim(<span class="dv">0</span>, n_dias)</span>
-<span id="cb15-288"><a href="#cb15-288" aria-hidden="true" tabindex="-1"></a>    ax.set_xlabel(<span class="st">"Día"</span>)</span>
-<span id="cb15-289"><a href="#cb15-289" aria-hidden="true" tabindex="-1"></a>    ax.spines[[<span class="st">"top"</span>, <span class="st">"right"</span>]].set_visible(<span class="va">False</span>)</span>
-<span id="cb15-290"><a href="#cb15-290" aria-hidden="true" tabindex="-1"></a>    plt.tight_layout()</span>
-<span id="cb15-291"><a href="#cb15-291" aria-hidden="true" tabindex="-1"></a>    plt.show()</span>
-<span id="cb15-292"><a href="#cb15-292" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-293"><a href="#cb15-293" aria-hidden="true" tabindex="-1"></a>_esquema()</span>
-<span id="cb15-294"><a href="#cb15-294" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb15-295"><a href="#cb15-295" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-298"><a href="#cb15-298" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
-<span id="cb15-299"><a href="#cb15-299" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: walk-forward</span></span>
-<span id="cb15-300"><a href="#cb15-300" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> walk_forward(retornos, n_train, n_test, ventanas):</span>
-<span id="cb15-301"><a href="#cb15-301" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""Reoptimiza la ventana de momentum en cada tramo y opera el siguiente."""</span></span>
-<span id="cb15-302"><a href="#cb15-302" aria-hidden="true" tabindex="-1"></a>    oos, elecciones <span class="op">=</span> [], []</span>
-<span id="cb15-303"><a href="#cb15-303" aria-hidden="true" tabindex="-1"></a>    inicio <span class="op">=</span> <span class="dv">0</span></span>
-<span id="cb15-304"><a href="#cb15-304" aria-hidden="true" tabindex="-1"></a>    <span class="cf">while</span> inicio <span class="op">+</span> n_train <span class="op">+</span> n_test <span class="op">&lt;=</span> <span class="bu">len</span>(retornos):</span>
-<span id="cb15-305"><a href="#cb15-305" aria-hidden="true" tabindex="-1"></a>        tramo_train <span class="op">=</span> retornos[inicio : inicio <span class="op">+</span> n_train]</span>
-<span id="cb15-306"><a href="#cb15-306" aria-hidden="true" tabindex="-1"></a>        tramo_test <span class="op">=</span> retornos[inicio <span class="op">+</span> n_train : inicio <span class="op">+</span> n_train <span class="op">+</span> n_test]</span>
-<span id="cb15-307"><a href="#cb15-307" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-308"><a href="#cb15-308" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Optimización SOLO dentro del tramo de entrenamiento</span></span>
-<span id="cb15-309"><a href="#cb15-309" aria-hidden="true" tabindex="-1"></a>        v_opt <span class="op">=</span> <span class="bu">max</span>(ventanas, key<span class="op">=</span><span class="kw">lambda</span> v: sharpe(estrategia_momentum(tramo_train, v)))</span>
-<span id="cb15-310"><a href="#cb15-310" aria-hidden="true" tabindex="-1"></a>        elecciones.append(v_opt)</span>
-<span id="cb15-311"><a href="#cb15-311" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-312"><a href="#cb15-312" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Operamos el tramo siguiente con lo elegido</span></span>
-<span id="cb15-313"><a href="#cb15-313" aria-hidden="true" tabindex="-1"></a>        oos.append(estrategia_momentum(tramo_test, v_opt))</span>
-<span id="cb15-314"><a href="#cb15-314" aria-hidden="true" tabindex="-1"></a>        inicio <span class="op">+=</span> n_test    <span class="co"># la ventana rueda</span></span>
-<span id="cb15-315"><a href="#cb15-315" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-316"><a href="#cb15-316" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> np.concatenate(oos), elecciones</span>
-<span id="cb15-317"><a href="#cb15-317" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-318"><a href="#cb15-318" aria-hidden="true" tabindex="-1"></a><span class="co"># Sobre el ruido puro: el walk-forward no se deja engañar</span></span>
-<span id="cb15-319"><a href="#cb15-319" aria-hidden="true" tabindex="-1"></a>oos_ruido, elecciones <span class="op">=</span> walk_forward(retornos, n_train<span class="op">=</span><span class="dv">504</span>, n_test<span class="op">=</span><span class="dv">126</span>,</span>
-<span id="cb15-320"><a href="#cb15-320" aria-hidden="true" tabindex="-1"></a>                                     ventanas<span class="op">=</span><span class="bu">range</span>(<span class="dv">2</span>, <span class="dv">62</span>))</span>
-<span id="cb15-321"><a href="#cb15-321" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Tramos operados: </span><span class="sc">{</span><span class="bu">len</span>(elecciones)<span class="sc">}</span><span class="ss"> | Ventanas elegidas: </span><span class="sc">{</span>elecciones<span class="sc">}</span><span class="ss">"</span>)</span>
-<span id="cb15-322"><a href="#cb15-322" aria-hidden="true" tabindex="-1"></a>evaluar(oos_ruido, <span class="st">"Walk-forward sobre ruido"</span>)</span>
-<span id="cb15-323"><a href="#cb15-323" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb15-324"><a href="#cb15-324" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-325"><a href="#cb15-325" aria-hidden="true" tabindex="-1"></a>Dos observaciones valiosas: las **ventanas elegidas saltan erráticamente** de tramo en tramo — señal inequívoca de que no hay estructura real que estimar, solo ruido que cambia de disfraz. Y el desempeño concatenado es mediocre, como debe ser. Un walk-forward con parámetros *estables* entre tramos y desempeño OOS consistente es de las mejores señales de que una estrategia es genuina.</span>
+<span id="cb15-251"><a href="#cb15-251" aria-hidden="true" tabindex="-1"></a><span class="in">```{=html}</span></span>
+<span id="cb15-252"><a href="#cb15-252" aria-hidden="true" tabindex="-1"></a><span class="in">&lt;div id="sim-falsos-descubrimientos"&gt;&lt;/div&gt;</span></span>
+<span id="cb15-253"><a href="#cb15-253" aria-hidden="true" tabindex="-1"></a><span class="in">&lt;script type="module"&gt;</span></span>
+<span id="cb15-254"><a href="#cb15-254" aria-hidden="true" tabindex="-1"></a><span class="in">  import { montar } from "../simuladores/falsos_descubrimientos.js";</span></span>
+<span id="cb15-255"><a href="#cb15-255" aria-hidden="true" tabindex="-1"></a><span class="in">  montar(document.getElementById("sim-falsos-descubrimientos"));</span></span>
+<span id="cb15-256"><a href="#cb15-256" aria-hidden="true" tabindex="-1"></a><span class="in">&lt;/script&gt;</span></span>
+<span id="cb15-257"><a href="#cb15-257" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb15-258"><a href="#cb15-258" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-259"><a href="#cb15-259" aria-hidden="true" tabindex="-1"></a>::: {.probar}</span>
+<span id="cb15-260"><a href="#cb15-260" aria-hidden="true" tabindex="-1"></a>**Probá esto**</span>
+<span id="cb15-261"><a href="#cb15-261" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-262"><a href="#cb15-262" aria-hidden="true" tabindex="-1"></a><span class="ss">1. </span>Bajá las variantes a 1 y subilas de a poco hasta 200, mirando el gráfico de abajo. La línea naranja (el mejor Sharpe in-sample hasta ahí) solo puede subir: cada intento nuevo es otra chance de que el ruido luzca bien. La azul, su desempeño afuera, se queda dando vueltas alrededor de cero.</span>
+<span id="cb15-263"><a href="#cb15-263" aria-hidden="true" tabindex="-1"></a><span class="ss">2. </span>Activá la repetición. Cada punto es una historia de ruido distinta: casi todos caen a la derecha del cero (siempre elegimos la mejor in-sample) y se reparten arriba y abajo sin ningún patrón. El Sharpe in-sample no predice nada del out-of-sample.</span>
+<span id="cb15-264"><a href="#cb15-264" aria-hidden="true" tabindex="-1"></a><span class="ss">3. </span>Con la repetición prendida, compará la tarjeta "pasa la vara del 5%" con la de "si fueran independientes". Con 60 ventanas la fórmula $1 - 0.95^{60}$ promete un 95% de falsos positivos, pero acá pasan bastantes menos: una ventana de 43 días y una de 44 son casi la misma estrategia, así que 60 ventanas no son 60 intentos independientes. El problema no desaparece, pero contar bien los intentos *efectivos* es parte del oficio (es lo que corrige el *Deflated Sharpe Ratio*).</span>
+<span id="cb15-265"><a href="#cb15-265" aria-hidden="true" tabindex="-1"></a><span class="ss">4. </span>Con la repetición prendida, subí los años de 10 a 30. El Sharpe in-sample medio de la elegida baja (de ~0.4 a ~0.25), porque con más datos el ruido se promedia, pero el porcentaje de muestras que pasa la vara casi no cambia: la significancia aparente de la mejor de $N$ depende de cuántas probaste, no de cuántos datos tenés. Más historia no te protege del data snooping; contar los intentos, sí.</span>
+<span id="cb15-266"><a href="#cb15-266" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb15-267"><a href="#cb15-267" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb15-268"><a href="#cb15-268" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb15-269"><a href="#cb15-269" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-270"><a href="#cb15-270" aria-hidden="true" tabindex="-1"></a>::: {.content-visible when-format="pdf"}</span>
+<span id="cb15-271"><a href="#cb15-271" aria-hidden="true" tabindex="-1"></a>::: {.callout-note title="Simulador interactivo"}</span>
+<span id="cb15-272"><a href="#cb15-272" aria-hidden="true" tabindex="-1"></a>En la <span class="co">[</span><span class="ot">versión web de este capítulo</span><span class="co">](https://diegoonna.github.io/libro_finanzas_computacionales/unidad3/cap17_backtesting.html)</span> hay un simulador donde podés cambiar cuántas variantes probás y cuántos años de datos tenés, y ver cómo se fabrica un falso descubrimiento.</span>
+<span id="cb15-273"><a href="#cb15-273" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb15-274"><a href="#cb15-274" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb15-275"><a href="#cb15-275" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-276"><a href="#cb15-276" aria-hidden="true" tabindex="-1"></a>---</span>
+<span id="cb15-277"><a href="#cb15-277" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-278"><a href="#cb15-278" aria-hidden="true" tabindex="-1"></a><span class="fu">## Walk-forward: el estándar profesional</span></span>
+<span id="cb15-279"><a href="#cb15-279" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-280"><a href="#cb15-280" aria-hidden="true" tabindex="-1"></a>La partición simple IS/OOS tiene una debilidad: la evaluación depende de *un* corte particular. Además, las estrategias reales se recalibran periódicamente. El **análisis walk-forward** resuelve ambas cosas imitando la operatoria real:</span>
+<span id="cb15-281"><a href="#cb15-281" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-282"><a href="#cb15-282" aria-hidden="true" tabindex="-1"></a><span class="ss">1. </span>**Entrená** (elegí parámetros) con una ventana de datos.</span>
+<span id="cb15-283"><a href="#cb15-283" aria-hidden="true" tabindex="-1"></a><span class="ss">2. </span>**Operá** con esos parámetros el período siguiente (nunca visto).</span>
+<span id="cb15-284"><a href="#cb15-284" aria-hidden="true" tabindex="-1"></a><span class="ss">3. </span>**Rodá** la ventana hacia adelante y repetí.</span>
+<span id="cb15-285"><a href="#cb15-285" aria-hidden="true" tabindex="-1"></a><span class="ss">4. </span>Concatená todos los tramos operados: eso es tu track record **100% out-of-sample**.</span>
+<span id="cb15-286"><a href="#cb15-286" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-287"><a href="#cb15-287" aria-hidden="true" tabindex="-1"></a>La @fig-walk-forward dibuja el esquema con los números que vamos a usar: dos años para entrenar, medio año para operar, y la ventana que avanza medio año por vez.</span>
+<span id="cb15-288"><a href="#cb15-288" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-291"><a href="#cb15-291" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb15-292"><a href="#cb15-292" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: fig-walk-forward</span></span>
+<span id="cb15-293"><a href="#cb15-293" aria-hidden="true" tabindex="-1"></a><span class="co">#| echo: false</span></span>
+<span id="cb15-294"><a href="#cb15-294" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-cap: "Walk-forward sobre los 10 años de datos: cada fila es una vuelta, con 504 días de entrenamiento (azul) seguidos de 126 días de operación (rojo). La ventana rueda 126 días por vuelta. La fila de abajo concatena todos los tramos rojos: un track record de 8 años en el que ningún día fue usado para elegir los parámetros con los que se operó."</span></span>
+<span id="cb15-295"><a href="#cb15-295" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> sys<span class="op">;</span> sys.path.insert(<span class="dv">0</span>, <span class="st">".."</span>)</span>
+<span id="cb15-296"><a href="#cb15-296" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> _esquemas <span class="im">import</span> <span class="op">*</span></span>
+<span id="cb15-297"><a href="#cb15-297" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-298"><a href="#cb15-298" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> _esquema():</span>
+<span id="cb15-299"><a href="#cb15-299" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Usa n_dias del capítulo; mismos tramos que la llamada a walk_forward</span></span>
+<span id="cb15-300"><a href="#cb15-300" aria-hidden="true" tabindex="-1"></a>    n_train, n_test <span class="op">=</span> <span class="dv">504</span>, <span class="dv">126</span></span>
+<span id="cb15-301"><a href="#cb15-301" aria-hidden="true" tabindex="-1"></a>    vueltas <span class="op">=</span> (n_dias <span class="op">-</span> n_train) <span class="op">//</span> n_test</span>
+<span id="cb15-302"><a href="#cb15-302" aria-hidden="true" tabindex="-1"></a>    fig, ax <span class="op">=</span> plt.subplots(figsize<span class="op">=</span>(<span class="dv">10</span>, <span class="fl">5.2</span>))</span>
+<span id="cb15-303"><a href="#cb15-303" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(vueltas):</span>
+<span id="cb15-304"><a href="#cb15-304" aria-hidden="true" tabindex="-1"></a>        y <span class="op">=</span> vueltas <span class="op">-</span> i <span class="op">+</span> <span class="dv">1</span></span>
+<span id="cb15-305"><a href="#cb15-305" aria-hidden="true" tabindex="-1"></a>        ax.barh(y, n_train, left<span class="op">=</span>i <span class="op">*</span> n_test, height<span class="op">=</span><span class="fl">0.7</span>, color<span class="op">=</span>FONDO_PRIMARIO,</span>
+<span id="cb15-306"><a href="#cb15-306" aria-hidden="true" tabindex="-1"></a>                edgecolor<span class="op">=</span>PRIMARIO, lw<span class="op">=</span><span class="fl">0.8</span>)</span>
+<span id="cb15-307"><a href="#cb15-307" aria-hidden="true" tabindex="-1"></a>        ax.barh(y, n_test, left<span class="op">=</span>i <span class="op">*</span> n_test <span class="op">+</span> n_train, height<span class="op">=</span><span class="fl">0.7</span>, color<span class="op">=</span>ACENTO)</span>
+<span id="cb15-308"><a href="#cb15-308" aria-hidden="true" tabindex="-1"></a>    ax.barh(<span class="dv">0</span>, n_dias <span class="op">-</span> n_train, left<span class="op">=</span>n_train, height<span class="op">=</span><span class="fl">0.8</span>, color<span class="op">=</span>ACENTO)</span>
+<span id="cb15-309"><a href="#cb15-309" aria-hidden="true" tabindex="-1"></a>    ax.text(n_train <span class="op">+</span> (n_dias <span class="op">-</span> n_train) <span class="op">/</span> <span class="dv">2</span>, <span class="dv">0</span>, <span class="st">"track record 100</span><span class="sc">% o</span><span class="st">ut-of-sample"</span>,</span>
+<span id="cb15-310"><a href="#cb15-310" aria-hidden="true" tabindex="-1"></a>            ha<span class="op">=</span><span class="st">"center"</span>, va<span class="op">=</span><span class="st">"center"</span>, fontsize<span class="op">=</span><span class="fl">9.5</span>, color<span class="op">=</span><span class="st">"white"</span>, fontweight<span class="op">=</span><span class="st">"bold"</span>)</span>
+<span id="cb15-311"><a href="#cb15-311" aria-hidden="true" tabindex="-1"></a>    ax.text(n_train <span class="op">/</span> <span class="dv">2</span>, vueltas <span class="op">+</span> <span class="dv">1</span>, <span class="st">"entrenar"</span>, ha<span class="op">=</span><span class="st">"center"</span>, va<span class="op">=</span><span class="st">"center"</span>,</span>
+<span id="cb15-312"><a href="#cb15-312" aria-hidden="true" tabindex="-1"></a>            fontsize<span class="op">=</span><span class="fl">8.5</span>, color<span class="op">=</span>PRIMARIO)</span>
+<span id="cb15-313"><a href="#cb15-313" aria-hidden="true" tabindex="-1"></a>    ax.text(n_train <span class="op">+</span> n_test <span class="op">+</span> <span class="dv">40</span>, vueltas <span class="op">+</span> <span class="dv">1</span>, <span class="st">"operar"</span>, va<span class="op">=</span><span class="st">"center"</span>, fontsize<span class="op">=</span><span class="fl">8.5</span>,</span>
+<span id="cb15-314"><a href="#cb15-314" aria-hidden="true" tabindex="-1"></a>            color<span class="op">=</span>ACENTO)</span>
+<span id="cb15-315"><a href="#cb15-315" aria-hidden="true" tabindex="-1"></a>    ax.set_yticks([<span class="dv">0</span>] <span class="op">+</span> <span class="bu">list</span>(<span class="bu">range</span>(<span class="dv">2</span>, vueltas <span class="op">+</span> <span class="dv">2</span>)),</span>
+<span id="cb15-316"><a href="#cb15-316" aria-hidden="true" tabindex="-1"></a>                  [<span class="st">"concatenado"</span>] <span class="op">+</span> [<span class="ss">f"vuelta </span><span class="sc">{</span>vueltas <span class="op">-</span> k<span class="sc">}</span><span class="ss">"</span> <span class="cf">for</span> k <span class="kw">in</span> <span class="bu">range</span>(vueltas)],</span>
+<span id="cb15-317"><a href="#cb15-317" aria-hidden="true" tabindex="-1"></a>                  fontsize<span class="op">=</span><span class="dv">8</span>)</span>
+<span id="cb15-318"><a href="#cb15-318" aria-hidden="true" tabindex="-1"></a>    ax.set_xlim(<span class="dv">0</span>, n_dias)</span>
+<span id="cb15-319"><a href="#cb15-319" aria-hidden="true" tabindex="-1"></a>    ax.set_xlabel(<span class="st">"Día"</span>)</span>
+<span id="cb15-320"><a href="#cb15-320" aria-hidden="true" tabindex="-1"></a>    ax.spines[[<span class="st">"top"</span>, <span class="st">"right"</span>]].set_visible(<span class="va">False</span>)</span>
+<span id="cb15-321"><a href="#cb15-321" aria-hidden="true" tabindex="-1"></a>    plt.tight_layout()</span>
+<span id="cb15-322"><a href="#cb15-322" aria-hidden="true" tabindex="-1"></a>    plt.show()</span>
+<span id="cb15-323"><a href="#cb15-323" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-324"><a href="#cb15-324" aria-hidden="true" tabindex="-1"></a>_esquema()</span>
+<span id="cb15-325"><a href="#cb15-325" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb15-326"><a href="#cb15-326" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-327"><a href="#cb15-327" aria-hidden="true" tabindex="-1"></a>---</span>
-<span id="cb15-328"><a href="#cb15-328" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-329"><a href="#cb15-329" aria-hidden="true" tabindex="-1"></a><span class="fu">## Métricas para juzgar el track record OOS</span></span>
-<span id="cb15-330"><a href="#cb15-330" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-331"><a href="#cb15-331" aria-hidden="true" tabindex="-1"></a>Con el track record fuera de muestra en la mano, ¿qué mirar? Ninguna métrica sola alcanza; el tablero mínimo:</span>
-<span id="cb15-332"><a href="#cb15-332" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-333"><a href="#cb15-333" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Métrica <span class="pp">|</span> Qué mide <span class="pp">|</span> Talón de Aquiles <span class="pp">|</span></span>
-<span id="cb15-334"><a href="#cb15-334" aria-hidden="true" tabindex="-1"></a><span class="pp">|---|---|---|</span></span>
-<span id="cb15-335"><a href="#cb15-335" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> **Sharpe anualizado** <span class="pp">|</span> Retorno en exceso por unidad de riesgo <span class="pp">|</span> Ciego a la asimetría y a las rachas <span class="pp">|</span></span>
-<span id="cb15-336"><a href="#cb15-336" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> **Máximo drawdown** <span class="pp">|</span> La peor caída pico-a-valle <span class="pp">|</span> Una sola observación; muy sensible al período <span class="pp">|</span></span>
-<span id="cb15-337"><a href="#cb15-337" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> **Hit ratio** <span class="pp">|</span> % de períodos ganadores <span class="pp">|</span> Ignora tamaños: podés acertar 60% y quebrar <span class="pp">|</span></span>
-<span id="cb15-338"><a href="#cb15-338" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> **Profit factor** <span class="pp">|</span> Ganancias brutas / pérdidas brutas <span class="pp">|</span> Inestable con pocas operaciones <span class="pp">|</span></span>
-<span id="cb15-339"><a href="#cb15-339" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-342"><a href="#cb15-342" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
-<span id="cb15-343"><a href="#cb15-343" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: metricas</span></span>
-<span id="cb15-344"><a href="#cb15-344" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> reporte(r, nombre):</span>
-<span id="cb15-345"><a href="#cb15-345" aria-hidden="true" tabindex="-1"></a>    equity <span class="op">=</span> np.cumprod(<span class="dv">1</span> <span class="op">+</span> r)</span>
-<span id="cb15-346"><a href="#cb15-346" aria-hidden="true" tabindex="-1"></a>    picos <span class="op">=</span> np.maximum.accumulate(equity)</span>
-<span id="cb15-347"><a href="#cb15-347" aria-hidden="true" tabindex="-1"></a>    drawdown <span class="op">=</span> equity <span class="op">/</span> picos <span class="op">-</span> <span class="dv">1</span></span>
-<span id="cb15-348"><a href="#cb15-348" aria-hidden="true" tabindex="-1"></a>    hit <span class="op">=</span> (r[r <span class="op">!=</span> <span class="dv">0</span>] <span class="op">&gt;</span> <span class="dv">0</span>).mean() <span class="cf">if</span> (r <span class="op">!=</span> <span class="dv">0</span>).<span class="bu">any</span>() <span class="cf">else</span> np.nan</span>
-<span id="cb15-349"><a href="#cb15-349" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"— </span><span class="sc">{</span>nombre<span class="sc">}</span><span class="ss">"</span>)</span>
-<span id="cb15-350"><a href="#cb15-350" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"  Sharpe:        </span><span class="sc">{</span>sharpe(r)<span class="sc">:6.2f}</span><span class="ss">"</span>)</span>
-<span id="cb15-351"><a href="#cb15-351" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"  Retorno anual: </span><span class="sc">{</span>r<span class="sc">.</span>mean() <span class="op">*</span> <span class="dv">252</span><span class="sc">:6.1%}</span><span class="ss">"</span>)</span>
-<span id="cb15-352"><a href="#cb15-352" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"  Máx. drawdown: </span><span class="sc">{</span>drawdown<span class="sc">.</span><span class="bu">min</span>()<span class="sc">:6.1%}</span><span class="ss">"</span>)</span>
-<span id="cb15-353"><a href="#cb15-353" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"  Hit ratio:     </span><span class="sc">{</span>hit<span class="sc">:6.1%}</span><span class="ss">"</span>)</span>
-<span id="cb15-354"><a href="#cb15-354" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> equity, drawdown</span>
+<span id="cb15-329"><a href="#cb15-329" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb15-330"><a href="#cb15-330" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: walk-forward</span></span>
+<span id="cb15-331"><a href="#cb15-331" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> walk_forward(retornos, n_train, n_test, ventanas):</span>
+<span id="cb15-332"><a href="#cb15-332" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""Reoptimiza la ventana de momentum en cada tramo y opera el siguiente."""</span></span>
+<span id="cb15-333"><a href="#cb15-333" aria-hidden="true" tabindex="-1"></a>    oos, elecciones <span class="op">=</span> [], []</span>
+<span id="cb15-334"><a href="#cb15-334" aria-hidden="true" tabindex="-1"></a>    inicio <span class="op">=</span> <span class="dv">0</span></span>
+<span id="cb15-335"><a href="#cb15-335" aria-hidden="true" tabindex="-1"></a>    <span class="cf">while</span> inicio <span class="op">+</span> n_train <span class="op">+</span> n_test <span class="op">&lt;=</span> <span class="bu">len</span>(retornos):</span>
+<span id="cb15-336"><a href="#cb15-336" aria-hidden="true" tabindex="-1"></a>        tramo_train <span class="op">=</span> retornos[inicio : inicio <span class="op">+</span> n_train]</span>
+<span id="cb15-337"><a href="#cb15-337" aria-hidden="true" tabindex="-1"></a>        tramo_test <span class="op">=</span> retornos[inicio <span class="op">+</span> n_train : inicio <span class="op">+</span> n_train <span class="op">+</span> n_test]</span>
+<span id="cb15-338"><a href="#cb15-338" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-339"><a href="#cb15-339" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Optimización SOLO dentro del tramo de entrenamiento</span></span>
+<span id="cb15-340"><a href="#cb15-340" aria-hidden="true" tabindex="-1"></a>        v_opt <span class="op">=</span> <span class="bu">max</span>(ventanas, key<span class="op">=</span><span class="kw">lambda</span> v: sharpe(estrategia_momentum(tramo_train, v)))</span>
+<span id="cb15-341"><a href="#cb15-341" aria-hidden="true" tabindex="-1"></a>        elecciones.append(v_opt)</span>
+<span id="cb15-342"><a href="#cb15-342" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-343"><a href="#cb15-343" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Operamos el tramo siguiente con lo elegido</span></span>
+<span id="cb15-344"><a href="#cb15-344" aria-hidden="true" tabindex="-1"></a>        oos.append(estrategia_momentum(tramo_test, v_opt))</span>
+<span id="cb15-345"><a href="#cb15-345" aria-hidden="true" tabindex="-1"></a>        inicio <span class="op">+=</span> n_test    <span class="co"># la ventana rueda</span></span>
+<span id="cb15-346"><a href="#cb15-346" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-347"><a href="#cb15-347" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> np.concatenate(oos), elecciones</span>
+<span id="cb15-348"><a href="#cb15-348" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-349"><a href="#cb15-349" aria-hidden="true" tabindex="-1"></a><span class="co"># Sobre el ruido puro: el walk-forward no se deja engañar</span></span>
+<span id="cb15-350"><a href="#cb15-350" aria-hidden="true" tabindex="-1"></a>oos_ruido, elecciones <span class="op">=</span> walk_forward(retornos, n_train<span class="op">=</span><span class="dv">504</span>, n_test<span class="op">=</span><span class="dv">126</span>,</span>
+<span id="cb15-351"><a href="#cb15-351" aria-hidden="true" tabindex="-1"></a>                                     ventanas<span class="op">=</span><span class="bu">range</span>(<span class="dv">2</span>, <span class="dv">62</span>))</span>
+<span id="cb15-352"><a href="#cb15-352" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Tramos operados: </span><span class="sc">{</span><span class="bu">len</span>(elecciones)<span class="sc">}</span><span class="ss"> | Ventanas elegidas: </span><span class="sc">{</span>elecciones<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb15-353"><a href="#cb15-353" aria-hidden="true" tabindex="-1"></a>evaluar(oos_ruido, <span class="st">"Walk-forward sobre ruido"</span>)</span>
+<span id="cb15-354"><a href="#cb15-354" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb15-355"><a href="#cb15-355" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-356"><a href="#cb15-356" aria-hidden="true" tabindex="-1"></a>equity_r, dd_r <span class="op">=</span> reporte(oos_ruido, <span class="st">"Walk-forward sobre ruido"</span>)</span>
-<span id="cb15-357"><a href="#cb15-357" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>()</span>
-<span id="cb15-358"><a href="#cb15-358" aria-hidden="true" tabindex="-1"></a>equity_e, dd_e <span class="op">=</span> reporte(señal_real, <span class="st">"Estrategia con edge real"</span>)</span>
-<span id="cb15-359"><a href="#cb15-359" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb15-360"><a href="#cb15-360" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-363"><a href="#cb15-363" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
-<span id="cb15-364"><a href="#cb15-364" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: fig-equity-drawdown</span></span>
-<span id="cb15-365"><a href="#cb15-365" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-cap: "Arriba: curvas de capital out-of-sample del walk-forward sobre ruido y de la estrategia con edge real. Abajo: el drawdown de cada una, la caída desde el máximo previo."</span></span>
-<span id="cb15-366"><a href="#cb15-366" aria-hidden="true" tabindex="-1"></a>fig, axes <span class="op">=</span> plt.subplots(<span class="dv">2</span>, <span class="dv">1</span>, figsize<span class="op">=</span>(<span class="dv">10</span>, <span class="dv">6</span>), sharex<span class="op">=</span><span class="va">False</span>,</span>
-<span id="cb15-367"><a href="#cb15-367" aria-hidden="true" tabindex="-1"></a>                          gridspec_kw<span class="op">=</span>{<span class="st">"height_ratios"</span>: [<span class="dv">2</span>, <span class="dv">1</span>]})</span>
-<span id="cb15-368"><a href="#cb15-368" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-369"><a href="#cb15-369" aria-hidden="true" tabindex="-1"></a>ax <span class="op">=</span> axes[<span class="dv">0</span>]</span>
-<span id="cb15-370"><a href="#cb15-370" aria-hidden="true" tabindex="-1"></a>ax.plot(equity_r, label<span class="op">=</span><span class="st">"Walk-forward sobre ruido"</span>)</span>
-<span id="cb15-371"><a href="#cb15-371" aria-hidden="true" tabindex="-1"></a>ax.plot(equity_e, label<span class="op">=</span><span class="st">"Estrategia con edge real"</span>)</span>
-<span id="cb15-372"><a href="#cb15-372" aria-hidden="true" tabindex="-1"></a>ax.set_ylabel(<span class="st">"Equity (base 1)"</span>)</span>
-<span id="cb15-373"><a href="#cb15-373" aria-hidden="true" tabindex="-1"></a>ax.set_title(<span class="st">"Curvas de capital out-of-sample"</span>)</span>
-<span id="cb15-374"><a href="#cb15-374" aria-hidden="true" tabindex="-1"></a>ax.legend()</span>
-<span id="cb15-375"><a href="#cb15-375" aria-hidden="true" tabindex="-1"></a>ax.grid(<span class="va">True</span>, alpha<span class="op">=</span><span class="fl">0.3</span>)</span>
-<span id="cb15-376"><a href="#cb15-376" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-377"><a href="#cb15-377" aria-hidden="true" tabindex="-1"></a>ax <span class="op">=</span> axes[<span class="dv">1</span>]</span>
-<span id="cb15-378"><a href="#cb15-378" aria-hidden="true" tabindex="-1"></a>ax.fill_between(<span class="bu">range</span>(<span class="bu">len</span>(dd_r)), dd_r <span class="op">*</span> <span class="dv">100</span>, <span class="dv">0</span>, alpha<span class="op">=</span><span class="fl">0.5</span>, label<span class="op">=</span><span class="st">"Ruido"</span>)</span>
-<span id="cb15-379"><a href="#cb15-379" aria-hidden="true" tabindex="-1"></a>ax.fill_between(<span class="bu">range</span>(<span class="bu">len</span>(dd_e)), dd_e <span class="op">*</span> <span class="dv">100</span>, <span class="dv">0</span>, alpha<span class="op">=</span><span class="fl">0.5</span>, label<span class="op">=</span><span class="st">"Edge real"</span>)</span>
-<span id="cb15-380"><a href="#cb15-380" aria-hidden="true" tabindex="-1"></a>ax.set_ylabel(<span class="st">"Drawdown (%)"</span>)</span>
-<span id="cb15-381"><a href="#cb15-381" aria-hidden="true" tabindex="-1"></a>ax.set_xlabel(<span class="st">"Día de operación OOS"</span>)</span>
-<span id="cb15-382"><a href="#cb15-382" aria-hidden="true" tabindex="-1"></a>ax.legend()</span>
-<span id="cb15-383"><a href="#cb15-383" aria-hidden="true" tabindex="-1"></a>ax.grid(<span class="va">True</span>, alpha<span class="op">=</span><span class="fl">0.3</span>)</span>
-<span id="cb15-384"><a href="#cb15-384" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-385"><a href="#cb15-385" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
-<span id="cb15-386"><a href="#cb15-386" aria-hidden="true" tabindex="-1"></a>plt.show()</span>
-<span id="cb15-387"><a href="#cb15-387" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb15-388"><a href="#cb15-388" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-389"><a href="#cb15-389" aria-hidden="true" tabindex="-1"></a>Como en la @fig-equity-drawdown, leé siempre la curva de capital junto con la de drawdown: el Sharpe resume, pero la trayectoria muestra si las ganancias vinieron parejas o de un golpe de suerte, y cuánto dolor (drawdown) hubo que aguantar en el camino. Un inversor real abandona la estrategia en el fondo del drawdown — si ese fondo es -40%, el Sharpe final es teoría.</span>
-<span id="cb15-390"><a href="#cb15-390" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-391"><a href="#cb15-391" aria-hidden="true" tabindex="-1"></a><span class="fu">### Los costos que el backtest olvida</span></span>
-<span id="cb15-392"><a href="#cb15-392" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-393"><a href="#cb15-393" aria-hidden="true" tabindex="-1"></a>Antes de creer cualquier número OOS, restale la realidad:</span>
-<span id="cb15-394"><a href="#cb15-394" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-395"><a href="#cb15-395" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Costos de transacción y slippage**: una estrategia que rota mucho puede morir solo de comisiones. Simulá con costos por operación.</span>
-<span id="cb15-396"><a href="#cb15-396" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Sesgo de supervivencia**: si tu universo actual excluye las empresas que quebraron, el pasado luce mejor de lo que fue.</span>
-<span id="cb15-397"><a href="#cb15-397" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Look-ahead bias**: usar información que no estaba disponible en el momento de la decisión (balances publicados con retraso, precios de cierre para decidir "durante" el día).</span>
-<span id="cb15-398"><a href="#cb15-398" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Capacidad**: el backtest asume que tus órdenes no mueven el precio; a mayor escala, deja de ser cierto.</span>
+<span id="cb15-356"><a href="#cb15-356" aria-hidden="true" tabindex="-1"></a>Dos observaciones valiosas: las **ventanas elegidas saltan erráticamente** de tramo en tramo — señal inequívoca de que no hay estructura real que estimar, solo ruido que cambia de disfraz. Y el desempeño concatenado es mediocre, como debe ser. Un walk-forward con parámetros *estables* entre tramos y desempeño OOS consistente es de las mejores señales de que una estrategia es genuina.</span>
+<span id="cb15-357"><a href="#cb15-357" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-358"><a href="#cb15-358" aria-hidden="true" tabindex="-1"></a>---</span>
+<span id="cb15-359"><a href="#cb15-359" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-360"><a href="#cb15-360" aria-hidden="true" tabindex="-1"></a><span class="fu">## Métricas para juzgar el track record OOS</span></span>
+<span id="cb15-361"><a href="#cb15-361" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-362"><a href="#cb15-362" aria-hidden="true" tabindex="-1"></a>Con el track record fuera de muestra en la mano, ¿qué mirar? Ninguna métrica sola alcanza; el tablero mínimo:</span>
+<span id="cb15-363"><a href="#cb15-363" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-364"><a href="#cb15-364" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Métrica <span class="pp">|</span> Qué mide <span class="pp">|</span> Talón de Aquiles <span class="pp">|</span></span>
+<span id="cb15-365"><a href="#cb15-365" aria-hidden="true" tabindex="-1"></a><span class="pp">|---|---|---|</span></span>
+<span id="cb15-366"><a href="#cb15-366" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> **Sharpe anualizado** <span class="pp">|</span> Retorno en exceso por unidad de riesgo <span class="pp">|</span> Ciego a la asimetría y a las rachas <span class="pp">|</span></span>
+<span id="cb15-367"><a href="#cb15-367" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> **Máximo drawdown** <span class="pp">|</span> La peor caída pico-a-valle <span class="pp">|</span> Una sola observación; muy sensible al período <span class="pp">|</span></span>
+<span id="cb15-368"><a href="#cb15-368" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> **Hit ratio** <span class="pp">|</span> % de períodos ganadores <span class="pp">|</span> Ignora tamaños: podés acertar 60% y quebrar <span class="pp">|</span></span>
+<span id="cb15-369"><a href="#cb15-369" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> **Profit factor** <span class="pp">|</span> Ganancias brutas / pérdidas brutas <span class="pp">|</span> Inestable con pocas operaciones <span class="pp">|</span></span>
+<span id="cb15-370"><a href="#cb15-370" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-373"><a href="#cb15-373" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb15-374"><a href="#cb15-374" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: metricas</span></span>
+<span id="cb15-375"><a href="#cb15-375" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> reporte(r, nombre):</span>
+<span id="cb15-376"><a href="#cb15-376" aria-hidden="true" tabindex="-1"></a>    equity <span class="op">=</span> np.cumprod(<span class="dv">1</span> <span class="op">+</span> r)</span>
+<span id="cb15-377"><a href="#cb15-377" aria-hidden="true" tabindex="-1"></a>    picos <span class="op">=</span> np.maximum.accumulate(equity)</span>
+<span id="cb15-378"><a href="#cb15-378" aria-hidden="true" tabindex="-1"></a>    drawdown <span class="op">=</span> equity <span class="op">/</span> picos <span class="op">-</span> <span class="dv">1</span></span>
+<span id="cb15-379"><a href="#cb15-379" aria-hidden="true" tabindex="-1"></a>    hit <span class="op">=</span> (r[r <span class="op">!=</span> <span class="dv">0</span>] <span class="op">&gt;</span> <span class="dv">0</span>).mean() <span class="cf">if</span> (r <span class="op">!=</span> <span class="dv">0</span>).<span class="bu">any</span>() <span class="cf">else</span> np.nan</span>
+<span id="cb15-380"><a href="#cb15-380" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"— </span><span class="sc">{</span>nombre<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb15-381"><a href="#cb15-381" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"  Sharpe:        </span><span class="sc">{</span>sharpe(r)<span class="sc">:6.2f}</span><span class="ss">"</span>)</span>
+<span id="cb15-382"><a href="#cb15-382" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"  Retorno anual: </span><span class="sc">{</span>r<span class="sc">.</span>mean() <span class="op">*</span> <span class="dv">252</span><span class="sc">:6.1%}</span><span class="ss">"</span>)</span>
+<span id="cb15-383"><a href="#cb15-383" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"  Máx. drawdown: </span><span class="sc">{</span>drawdown<span class="sc">.</span><span class="bu">min</span>()<span class="sc">:6.1%}</span><span class="ss">"</span>)</span>
+<span id="cb15-384"><a href="#cb15-384" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"  Hit ratio:     </span><span class="sc">{</span>hit<span class="sc">:6.1%}</span><span class="ss">"</span>)</span>
+<span id="cb15-385"><a href="#cb15-385" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> equity, drawdown</span>
+<span id="cb15-386"><a href="#cb15-386" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-387"><a href="#cb15-387" aria-hidden="true" tabindex="-1"></a>equity_r, dd_r <span class="op">=</span> reporte(oos_ruido, <span class="st">"Walk-forward sobre ruido"</span>)</span>
+<span id="cb15-388"><a href="#cb15-388" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>()</span>
+<span id="cb15-389"><a href="#cb15-389" aria-hidden="true" tabindex="-1"></a>equity_e, dd_e <span class="op">=</span> reporte(señal_real, <span class="st">"Estrategia con edge real"</span>)</span>
+<span id="cb15-390"><a href="#cb15-390" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb15-391"><a href="#cb15-391" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-394"><a href="#cb15-394" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb15-395"><a href="#cb15-395" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: fig-equity-drawdown</span></span>
+<span id="cb15-396"><a href="#cb15-396" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-cap: "Arriba: curvas de capital out-of-sample del walk-forward sobre ruido y de la estrategia con edge real. Abajo: el drawdown de cada una, la caída desde el máximo previo."</span></span>
+<span id="cb15-397"><a href="#cb15-397" aria-hidden="true" tabindex="-1"></a>fig, axes <span class="op">=</span> plt.subplots(<span class="dv">2</span>, <span class="dv">1</span>, figsize<span class="op">=</span>(<span class="dv">10</span>, <span class="dv">6</span>), sharex<span class="op">=</span><span class="va">False</span>,</span>
+<span id="cb15-398"><a href="#cb15-398" aria-hidden="true" tabindex="-1"></a>                          gridspec_kw<span class="op">=</span>{<span class="st">"height_ratios"</span>: [<span class="dv">2</span>, <span class="dv">1</span>]})</span>
 <span id="cb15-399"><a href="#cb15-399" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-402"><a href="#cb15-402" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
-<span id="cb15-403"><a href="#cb15-403" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: costos</span></span>
-<span id="cb15-404"><a href="#cb15-404" aria-hidden="true" tabindex="-1"></a>costo_por_operacion <span class="op">=</span> <span class="fl">0.0005</span>   <span class="co"># 5 puntos básicos por cambio de posición</span></span>
-<span id="cb15-405"><a href="#cb15-405" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-406"><a href="#cb15-406" aria-hidden="true" tabindex="-1"></a>señal <span class="op">=</span> np.array([test[<span class="bu">max</span>(<span class="dv">0</span>, t<span class="op">-</span>mejor_v):t].mean() <span class="op">&gt;</span> <span class="dv">0</span> <span class="cf">for</span> t <span class="kw">in</span> <span class="bu">range</span>(<span class="bu">len</span>(test))])</span>
-<span id="cb15-407"><a href="#cb15-407" aria-hidden="true" tabindex="-1"></a>cambios <span class="op">=</span> np.<span class="bu">abs</span>(np.diff(señal.astype(<span class="bu">int</span>), prepend<span class="op">=</span><span class="dv">0</span>))</span>
-<span id="cb15-408"><a href="#cb15-408" aria-hidden="true" tabindex="-1"></a>r_neto <span class="op">=</span> np.where(señal, test, <span class="fl">0.0</span>) <span class="op">-</span> cambios <span class="op">*</span> costo_por_operacion</span>
-<span id="cb15-409"><a href="#cb15-409" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-410"><a href="#cb15-410" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Operaciones (cambios de posición): </span><span class="sc">{</span>cambios<span class="sc">.</span><span class="bu">sum</span>()<span class="sc">}</span><span class="ss">"</span>)</span>
-<span id="cb15-411"><a href="#cb15-411" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Sharpe bruto: </span><span class="sc">{</span>sharpe(np.where(señal, test, <span class="fl">0.0</span>))<span class="sc">:.2f}</span><span class="ss">"</span>)</span>
-<span id="cb15-412"><a href="#cb15-412" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Sharpe neto de costos: </span><span class="sc">{</span>sharpe(r_neto)<span class="sc">:.2f}</span><span class="ss">"</span>)</span>
-<span id="cb15-413"><a href="#cb15-413" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb15-414"><a href="#cb15-414" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-415"><a href="#cb15-415" aria-hidden="true" tabindex="-1"></a>---</span>
-<span id="cb15-416"><a href="#cb15-416" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-417"><a href="#cb15-417" aria-hidden="true" tabindex="-1"></a><span class="fu">## El protocolo, en síntesis</span></span>
-<span id="cb15-418"><a href="#cb15-418" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-419"><a href="#cb15-419" aria-hidden="true" tabindex="-1"></a>Un backtest confiable sigue esta secuencia — y el orden importa:</span>
-<span id="cb15-420"><a href="#cb15-420" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-421"><a href="#cb15-421" aria-hidden="true" tabindex="-1"></a><span class="ss">1. </span>**Hipótesis primero**: por qué debería funcionar (fundamento económico), antes de mirar datos.</span>
-<span id="cb15-422"><a href="#cb15-422" aria-hidden="true" tabindex="-1"></a><span class="ss">2. </span>**Diseño in-sample**, con la menor cantidad de parámetros posible.</span>
-<span id="cb15-423"><a href="#cb15-423" aria-hidden="true" tabindex="-1"></a><span class="ss">3. </span>**Contá tus intentos**: cada variante probada infla el umbral de significancia exigible.</span>
-<span id="cb15-424"><a href="#cb15-424" aria-hidden="true" tabindex="-1"></a><span class="ss">4. </span>**Walk-forward** para generar un track record 100% OOS con recalibración realista.</span>
-<span id="cb15-425"><a href="#cb15-425" aria-hidden="true" tabindex="-1"></a><span class="ss">5. </span>**Costos, siempre**: comisiones, slippage, y los sesgos de datos.</span>
-<span id="cb15-426"><a href="#cb15-426" aria-hidden="true" tabindex="-1"></a><span class="ss">6. </span>**Inferencia honesta**: t-stat/p-value del track record OOS, corregido por múltiples pruebas.</span>
-<span id="cb15-427"><a href="#cb15-427" aria-hidden="true" tabindex="-1"></a><span class="ss">7. </span>**El OOS se usa una vez.** Si volvés a diseñar, necesitás datos nuevos (o esperar a que el mercado los genere).</span>
-<span id="cb15-428"><a href="#cb15-428" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-431"><a href="#cb15-431" aria-hidden="true" tabindex="-1"></a><span class="in">```{mermaid}</span></span>
-<span id="cb15-432"><a href="#cb15-432" aria-hidden="true" tabindex="-1"></a>%%| label: fig-protocolo-backtest</span>
-<span id="cb15-433"><a href="#cb15-433" aria-hidden="true" tabindex="-1"></a>%%| fig-cap: <span class="ot">"</span><span class="st">El protocolo de backtesting. La flecha punteada es la tentación que hay que resistir: volver a diseñar después de mirar el resultado out-of-sample lo convierte en in-sample, y entonces hacen falta datos nuevos.</span><span class="ot">"</span></span>
-<span id="cb15-434"><a href="#cb15-434" aria-hidden="true" tabindex="-1"></a>flowchart LR</span>
-<span id="cb15-435"><a href="#cb15-435" aria-hidden="true" tabindex="-1"></a>    H[<span class="ot">"</span><span class="st">&lt;b&gt;1 · Hipótesis&lt;/b&gt;&lt;br/&gt;por qué debería&lt;br/&gt;funcionar</span><span class="ot">"</span>] --&gt; D[<span class="ot">"</span><span class="st">&lt;b&gt;2 · Diseño IS&lt;/b&gt;&lt;br/&gt;pocos parámetros</span><span class="ot">"</span>]</span>
-<span id="cb15-436"><a href="#cb15-436" aria-hidden="true" tabindex="-1"></a>    D --&gt; C[<span class="ot">"</span><span class="st">&lt;b&gt;3 · Contar&lt;br/&gt;intentos&lt;/b&gt;&lt;br/&gt;&lt;i&gt;N variantes&lt;/i&gt;</span><span class="ot">"</span>]</span>
-<span id="cb15-437"><a href="#cb15-437" aria-hidden="true" tabindex="-1"></a>    C --&gt; W[<span class="ot">"</span><span class="st">&lt;b&gt;4 · Walk-forward&lt;/b&gt;&lt;br/&gt;track record OOS</span><span class="ot">"</span>]</span>
-<span id="cb15-438"><a href="#cb15-438" aria-hidden="true" tabindex="-1"></a>    W --&gt; K[<span class="ot">"</span><span class="st">&lt;b&gt;5 · Costos&lt;/b&gt;&lt;br/&gt;comisiones, slippage,&lt;br/&gt;sesgos de datos</span><span class="ot">"</span>]</span>
-<span id="cb15-439"><a href="#cb15-439" aria-hidden="true" tabindex="-1"></a>    K --&gt; I[<span class="ot">"</span><span class="st">&lt;b&gt;6 · Inferencia&lt;/b&gt;&lt;br/&gt;t, p-value&lt;br/&gt;corregido por N</span><span class="ot">"</span>]</span>
-<span id="cb15-440"><a href="#cb15-440" aria-hidden="true" tabindex="-1"></a>    I --&gt; F([<span class="ot">"</span><span class="st">&lt;b&gt;7 · Veredicto&lt;/b&gt;</span><span class="ot">"</span>])</span>
-<span id="cb15-441"><a href="#cb15-441" aria-hidden="true" tabindex="-1"></a>    I -.-&gt;|<span class="ot">"</span><span class="st">¿no me gusta?&lt;br/&gt;rediseño…</span><span class="ot">"</span>| D</span>
-<span id="cb15-442"><a href="#cb15-442" aria-hidden="true" tabindex="-1"></a>    classDef paso fill:<span class="co">#e0e9f4,stroke:#1e3a5f,color:#1f2937</span></span>
-<span id="cb15-443"><a href="#cb15-443" aria-hidden="true" tabindex="-1"></a>    classDef clave fill:<span class="co">#fde8dc,stroke:#c2410c,color:#1f2937</span></span>
-<span id="cb15-444"><a href="#cb15-444" aria-hidden="true" tabindex="-1"></a>    classDef fin fill:<span class="co">#eef2e3,stroke:#637238,color:#1f2937</span></span>
-<span id="cb15-445"><a href="#cb15-445" aria-hidden="true" tabindex="-1"></a>    class H,D,W,K paso</span>
-<span id="cb15-446"><a href="#cb15-446" aria-hidden="true" tabindex="-1"></a>    class C,I clave</span>
-<span id="cb15-447"><a href="#cb15-447" aria-hidden="true" tabindex="-1"></a>    class F fin</span>
-<span id="cb15-448"><a href="#cb15-448" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb15-400"><a href="#cb15-400" aria-hidden="true" tabindex="-1"></a>ax <span class="op">=</span> axes[<span class="dv">0</span>]</span>
+<span id="cb15-401"><a href="#cb15-401" aria-hidden="true" tabindex="-1"></a>ax.plot(equity_r, label<span class="op">=</span><span class="st">"Walk-forward sobre ruido"</span>)</span>
+<span id="cb15-402"><a href="#cb15-402" aria-hidden="true" tabindex="-1"></a>ax.plot(equity_e, label<span class="op">=</span><span class="st">"Estrategia con edge real"</span>)</span>
+<span id="cb15-403"><a href="#cb15-403" aria-hidden="true" tabindex="-1"></a>ax.set_ylabel(<span class="st">"Equity (base 1)"</span>)</span>
+<span id="cb15-404"><a href="#cb15-404" aria-hidden="true" tabindex="-1"></a>ax.set_title(<span class="st">"Curvas de capital out-of-sample"</span>)</span>
+<span id="cb15-405"><a href="#cb15-405" aria-hidden="true" tabindex="-1"></a>ax.legend()</span>
+<span id="cb15-406"><a href="#cb15-406" aria-hidden="true" tabindex="-1"></a>ax.grid(<span class="va">True</span>, alpha<span class="op">=</span><span class="fl">0.3</span>)</span>
+<span id="cb15-407"><a href="#cb15-407" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-408"><a href="#cb15-408" aria-hidden="true" tabindex="-1"></a>ax <span class="op">=</span> axes[<span class="dv">1</span>]</span>
+<span id="cb15-409"><a href="#cb15-409" aria-hidden="true" tabindex="-1"></a>ax.fill_between(<span class="bu">range</span>(<span class="bu">len</span>(dd_r)), dd_r <span class="op">*</span> <span class="dv">100</span>, <span class="dv">0</span>, alpha<span class="op">=</span><span class="fl">0.5</span>, label<span class="op">=</span><span class="st">"Ruido"</span>)</span>
+<span id="cb15-410"><a href="#cb15-410" aria-hidden="true" tabindex="-1"></a>ax.fill_between(<span class="bu">range</span>(<span class="bu">len</span>(dd_e)), dd_e <span class="op">*</span> <span class="dv">100</span>, <span class="dv">0</span>, alpha<span class="op">=</span><span class="fl">0.5</span>, label<span class="op">=</span><span class="st">"Edge real"</span>)</span>
+<span id="cb15-411"><a href="#cb15-411" aria-hidden="true" tabindex="-1"></a>ax.set_ylabel(<span class="st">"Drawdown (%)"</span>)</span>
+<span id="cb15-412"><a href="#cb15-412" aria-hidden="true" tabindex="-1"></a>ax.set_xlabel(<span class="st">"Día de operación OOS"</span>)</span>
+<span id="cb15-413"><a href="#cb15-413" aria-hidden="true" tabindex="-1"></a>ax.legend()</span>
+<span id="cb15-414"><a href="#cb15-414" aria-hidden="true" tabindex="-1"></a>ax.grid(<span class="va">True</span>, alpha<span class="op">=</span><span class="fl">0.3</span>)</span>
+<span id="cb15-415"><a href="#cb15-415" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-416"><a href="#cb15-416" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
+<span id="cb15-417"><a href="#cb15-417" aria-hidden="true" tabindex="-1"></a>plt.show()</span>
+<span id="cb15-418"><a href="#cb15-418" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb15-419"><a href="#cb15-419" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-420"><a href="#cb15-420" aria-hidden="true" tabindex="-1"></a>Como en la @fig-equity-drawdown, leé siempre la curva de capital junto con la de drawdown: el Sharpe resume, pero la trayectoria muestra si las ganancias vinieron parejas o de un golpe de suerte, y cuánto dolor (drawdown) hubo que aguantar en el camino. Un inversor real abandona la estrategia en el fondo del drawdown — si ese fondo es -40%, el Sharpe final es teoría.</span>
+<span id="cb15-421"><a href="#cb15-421" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-422"><a href="#cb15-422" aria-hidden="true" tabindex="-1"></a><span class="fu">### Los costos que el backtest olvida</span></span>
+<span id="cb15-423"><a href="#cb15-423" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-424"><a href="#cb15-424" aria-hidden="true" tabindex="-1"></a>Antes de creer cualquier número OOS, restale la realidad:</span>
+<span id="cb15-425"><a href="#cb15-425" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-426"><a href="#cb15-426" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Costos de transacción y slippage**: una estrategia que rota mucho puede morir solo de comisiones. Simulá con costos por operación.</span>
+<span id="cb15-427"><a href="#cb15-427" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Sesgo de supervivencia**: si tu universo actual excluye las empresas que quebraron, el pasado luce mejor de lo que fue.</span>
+<span id="cb15-428"><a href="#cb15-428" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Look-ahead bias**: usar información que no estaba disponible en el momento de la decisión (balances publicados con retraso, precios de cierre para decidir "durante" el día).</span>
+<span id="cb15-429"><a href="#cb15-429" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Capacidad**: el backtest asume que tus órdenes no mueven el precio; a mayor escala, deja de ser cierto.</span>
+<span id="cb15-430"><a href="#cb15-430" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-433"><a href="#cb15-433" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb15-434"><a href="#cb15-434" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: costos</span></span>
+<span id="cb15-435"><a href="#cb15-435" aria-hidden="true" tabindex="-1"></a>costo_por_operacion <span class="op">=</span> <span class="fl">0.0005</span>   <span class="co"># 5 puntos básicos por cambio de posición</span></span>
+<span id="cb15-436"><a href="#cb15-436" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-437"><a href="#cb15-437" aria-hidden="true" tabindex="-1"></a>señal <span class="op">=</span> np.array([test[<span class="bu">max</span>(<span class="dv">0</span>, t<span class="op">-</span>mejor_v):t].mean() <span class="op">&gt;</span> <span class="dv">0</span> <span class="cf">for</span> t <span class="kw">in</span> <span class="bu">range</span>(<span class="bu">len</span>(test))])</span>
+<span id="cb15-438"><a href="#cb15-438" aria-hidden="true" tabindex="-1"></a>cambios <span class="op">=</span> np.<span class="bu">abs</span>(np.diff(señal.astype(<span class="bu">int</span>), prepend<span class="op">=</span><span class="dv">0</span>))</span>
+<span id="cb15-439"><a href="#cb15-439" aria-hidden="true" tabindex="-1"></a>r_neto <span class="op">=</span> np.where(señal, test, <span class="fl">0.0</span>) <span class="op">-</span> cambios <span class="op">*</span> costo_por_operacion</span>
+<span id="cb15-440"><a href="#cb15-440" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-441"><a href="#cb15-441" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Operaciones (cambios de posición): </span><span class="sc">{</span>cambios<span class="sc">.</span><span class="bu">sum</span>()<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb15-442"><a href="#cb15-442" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Sharpe bruto: </span><span class="sc">{</span>sharpe(np.where(señal, test, <span class="fl">0.0</span>))<span class="sc">:.2f}</span><span class="ss">"</span>)</span>
+<span id="cb15-443"><a href="#cb15-443" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Sharpe neto de costos: </span><span class="sc">{</span>sharpe(r_neto)<span class="sc">:.2f}</span><span class="ss">"</span>)</span>
+<span id="cb15-444"><a href="#cb15-444" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb15-445"><a href="#cb15-445" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-446"><a href="#cb15-446" aria-hidden="true" tabindex="-1"></a>---</span>
+<span id="cb15-447"><a href="#cb15-447" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-448"><a href="#cb15-448" aria-hidden="true" tabindex="-1"></a><span class="fu">## El protocolo, en síntesis</span></span>
 <span id="cb15-449"><a href="#cb15-449" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-450"><a href="#cb15-450" aria-hidden="true" tabindex="-1"></a>---</span>
+<span id="cb15-450"><a href="#cb15-450" aria-hidden="true" tabindex="-1"></a>Un backtest confiable sigue esta secuencia — y el orden importa:</span>
 <span id="cb15-451"><a href="#cb15-451" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-452"><a href="#cb15-452" aria-hidden="true" tabindex="-1"></a><span class="fu">## Con datos reales</span></span>
-<span id="cb15-453"><a href="#cb15-453" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-454"><a href="#cb15-454" aria-hidden="true" tabindex="-1"></a>Todo el capítulo trabajó sobre ruido fabricado, donde sabíamos la respuesta de antemano. El examen final es con datos donde **nadie** sabe la respuesta: corremos el walk-forward completo sobre cinco años del SPY, del dataset del libro (<span class="in">`datos/precios.csv`</span>, ver @sec-datos-financieros).</span>
-<span id="cb15-455"><a href="#cb15-455" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-458"><a href="#cb15-458" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
-<span id="cb15-459"><a href="#cb15-459" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: wf-datos-reales</span></span>
-<span id="cb15-460"><a href="#cb15-460" aria-hidden="true" tabindex="-1"></a>precios <span class="op">=</span> pd.read_csv(<span class="st">"../datos/precios.csv"</span>, index_col<span class="op">=</span><span class="st">"Date"</span>, parse_dates<span class="op">=</span><span class="va">True</span>)</span>
-<span id="cb15-461"><a href="#cb15-461" aria-hidden="true" tabindex="-1"></a>r_spy <span class="op">=</span> precios[<span class="st">"SPY"</span>].pct_change().dropna().values</span>
-<span id="cb15-462"><a href="#cb15-462" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-463"><a href="#cb15-463" aria-hidden="true" tabindex="-1"></a>oos_spy, elec_spy <span class="op">=</span> walk_forward(r_spy, n_train<span class="op">=</span><span class="dv">504</span>, n_test<span class="op">=</span><span class="dv">126</span>, ventanas<span class="op">=</span><span class="bu">range</span>(<span class="dv">2</span>, <span class="dv">62</span>))</span>
-<span id="cb15-464"><a href="#cb15-464" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-465"><a href="#cb15-465" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Tramos operados: </span><span class="sc">{</span><span class="bu">len</span>(elec_spy)<span class="sc">}</span><span class="ss"> | Ventanas elegidas: </span><span class="sc">{</span>elec_spy<span class="sc">}</span><span class="ss">"</span>)</span>
-<span id="cb15-466"><a href="#cb15-466" aria-hidden="true" tabindex="-1"></a>evaluar(oos_spy, <span class="st">"Momentum SPY (walk-forward)"</span>)</span>
-<span id="cb15-467"><a href="#cb15-467" aria-hidden="true" tabindex="-1"></a>evaluar(r_spy[<span class="op">-</span><span class="bu">len</span>(oos_spy):], <span class="st">"Buy &amp; hold SPY (mismo período)"</span>)</span>
-<span id="cb15-468"><a href="#cb15-468" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-469"><a href="#cb15-469" aria-hidden="true" tabindex="-1"></a>_ <span class="op">=</span> reporte(oos_spy, <span class="st">"Momentum SPY (OOS)"</span>)</span>
-<span id="cb15-470"><a href="#cb15-470" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>()</span>
-<span id="cb15-471"><a href="#cb15-471" aria-hidden="true" tabindex="-1"></a>_ <span class="op">=</span> reporte(r_spy[<span class="op">-</span><span class="bu">len</span>(oos_spy):], <span class="st">"Buy &amp; hold SPY"</span>)</span>
-<span id="cb15-472"><a href="#cb15-472" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb15-473"><a href="#cb15-473" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-474"><a href="#cb15-474" aria-hidden="true" tabindex="-1"></a>Este resultado es una clase entera de honestidad estadística, así que leelo despacio:</span>
-<span id="cb15-475"><a href="#cb15-475" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-476"><a href="#cb15-476" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Las ventanas elegidas son estables entre tramos** — nada del salto errático que vimos sobre ruido puro. Eso sugiere que el momentum del índice tiene *algo* de estructura real.</span>
-<span id="cb15-477"><a href="#cb15-477" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>El Sharpe out-of-sample es positivo, pero el **p-value no baja del umbral**: con ~2.5 años de track record OOS, la fórmula $t \approx \text{Sharpe} \times \sqrt{\text{años}}$ hace su trabajo implacable. Un Sharpe cercano a 1 con dos años y medio de datos **no es evidencia suficiente** — verificalo vos mismo con la fórmula.</span>
-<span id="cb15-478"><a href="#cb15-478" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Y la comparación que un backtest siempre debe incluir: en el mismo período, **comprar y no hacer nada rindió más**. El período OOS fue mayormente alcista, y toda estrategia que pasa tiempo en cash paga ese costo. El consuelo del momentum es un drawdown máximo menor — es una estrategia *defensiva*, y su valor aparecería en un bear market largo, no en este tramo. Elegir el benchmark correcto es parte del protocolo.</span>
-<span id="cb15-479"><a href="#cb15-479" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-480"><a href="#cb15-480" aria-hidden="true" tabindex="-1"></a>Ah, y esto es *antes* de costos de transacción. La conclusión metodológica —no sobre el momentum sino sobre el oficio— es que un backtest honesto casi nunca da un veredicto rotundo: da matices, condiciones y un p-value incómodo. Desconfiá de los que no.</span>
-<span id="cb15-481"><a href="#cb15-481" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-482"><a href="#cb15-482" aria-hidden="true" tabindex="-1"></a>---</span>
-<span id="cb15-483"><a href="#cb15-483" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-484"><a href="#cb15-484" aria-hidden="true" tabindex="-1"></a><span class="fu">## Errores comunes</span></span>
-<span id="cb15-485"><a href="#cb15-485" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-486"><a href="#cb15-486" aria-hidden="true" tabindex="-1"></a>::: {.callout-warning title="Trampas frecuentes"}</span>
-<span id="cb15-487"><a href="#cb15-487" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Re-usar el out-of-sample**: la más común y la más letal. Cada iteración de "ajusto y vuelvo a probar" lo degrada a in-sample.</span>
-<span id="cb15-488"><a href="#cb15-488" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Reportar el mejor de N sin decir N**: el Sharpe del mejor de 100 intentos es una estadística de orden, no una medida de habilidad.</span>
-<span id="cb15-489"><a href="#cb15-489" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Ignorar la estabilidad de los parámetros**: si el óptimo salta de 5 a 60 entre tramos del walk-forward, no estás estimando nada real.</span>
-<span id="cb15-490"><a href="#cb15-490" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Backtests demasiado cortos**: recordá $t \approx \text{Sharpe} \times \sqrt{\text{años}}$; con 2 años de datos casi nada es demostrable.</span>
-<span id="cb15-491"><a href="#cb15-491" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Confundir el drawdown máximo del backtest con el peor caso posible**: el futuro no está obligado a repetir el peor pasado; es un piso, no un techo.</span>
-<span id="cb15-492"><a href="#cb15-492" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb15-452"><a href="#cb15-452" aria-hidden="true" tabindex="-1"></a><span class="ss">1. </span>**Hipótesis primero**: por qué debería funcionar (fundamento económico), antes de mirar datos.</span>
+<span id="cb15-453"><a href="#cb15-453" aria-hidden="true" tabindex="-1"></a><span class="ss">2. </span>**Diseño in-sample**, con la menor cantidad de parámetros posible.</span>
+<span id="cb15-454"><a href="#cb15-454" aria-hidden="true" tabindex="-1"></a><span class="ss">3. </span>**Contá tus intentos**: cada variante probada infla el umbral de significancia exigible.</span>
+<span id="cb15-455"><a href="#cb15-455" aria-hidden="true" tabindex="-1"></a><span class="ss">4. </span>**Walk-forward** para generar un track record 100% OOS con recalibración realista.</span>
+<span id="cb15-456"><a href="#cb15-456" aria-hidden="true" tabindex="-1"></a><span class="ss">5. </span>**Costos, siempre**: comisiones, slippage, y los sesgos de datos.</span>
+<span id="cb15-457"><a href="#cb15-457" aria-hidden="true" tabindex="-1"></a><span class="ss">6. </span>**Inferencia honesta**: t-stat/p-value del track record OOS, corregido por múltiples pruebas.</span>
+<span id="cb15-458"><a href="#cb15-458" aria-hidden="true" tabindex="-1"></a><span class="ss">7. </span>**El OOS se usa una vez.** Si volvés a diseñar, necesitás datos nuevos (o esperar a que el mercado los genere).</span>
+<span id="cb15-459"><a href="#cb15-459" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-462"><a href="#cb15-462" aria-hidden="true" tabindex="-1"></a><span class="in">```{mermaid}</span></span>
+<span id="cb15-463"><a href="#cb15-463" aria-hidden="true" tabindex="-1"></a>%%| label: fig-protocolo-backtest</span>
+<span id="cb15-464"><a href="#cb15-464" aria-hidden="true" tabindex="-1"></a>%%| fig-cap: <span class="ot">"</span><span class="st">El protocolo de backtesting. La flecha punteada es la tentación que hay que resistir: volver a diseñar después de mirar el resultado out-of-sample lo convierte en in-sample, y entonces hacen falta datos nuevos.</span><span class="ot">"</span></span>
+<span id="cb15-465"><a href="#cb15-465" aria-hidden="true" tabindex="-1"></a>flowchart LR</span>
+<span id="cb15-466"><a href="#cb15-466" aria-hidden="true" tabindex="-1"></a>    H[<span class="ot">"</span><span class="st">&lt;b&gt;1 · Hipótesis&lt;/b&gt;&lt;br/&gt;por qué debería&lt;br/&gt;funcionar</span><span class="ot">"</span>] --&gt; D[<span class="ot">"</span><span class="st">&lt;b&gt;2 · Diseño IS&lt;/b&gt;&lt;br/&gt;pocos parámetros</span><span class="ot">"</span>]</span>
+<span id="cb15-467"><a href="#cb15-467" aria-hidden="true" tabindex="-1"></a>    D --&gt; C[<span class="ot">"</span><span class="st">&lt;b&gt;3 · Contar&lt;br/&gt;intentos&lt;/b&gt;&lt;br/&gt;&lt;i&gt;N variantes&lt;/i&gt;</span><span class="ot">"</span>]</span>
+<span id="cb15-468"><a href="#cb15-468" aria-hidden="true" tabindex="-1"></a>    C --&gt; W[<span class="ot">"</span><span class="st">&lt;b&gt;4 · Walk-forward&lt;/b&gt;&lt;br/&gt;track record OOS</span><span class="ot">"</span>]</span>
+<span id="cb15-469"><a href="#cb15-469" aria-hidden="true" tabindex="-1"></a>    W --&gt; K[<span class="ot">"</span><span class="st">&lt;b&gt;5 · Costos&lt;/b&gt;&lt;br/&gt;comisiones, slippage,&lt;br/&gt;sesgos de datos</span><span class="ot">"</span>]</span>
+<span id="cb15-470"><a href="#cb15-470" aria-hidden="true" tabindex="-1"></a>    K --&gt; I[<span class="ot">"</span><span class="st">&lt;b&gt;6 · Inferencia&lt;/b&gt;&lt;br/&gt;t, p-value&lt;br/&gt;corregido por N</span><span class="ot">"</span>]</span>
+<span id="cb15-471"><a href="#cb15-471" aria-hidden="true" tabindex="-1"></a>    I --&gt; F([<span class="ot">"</span><span class="st">&lt;b&gt;7 · Veredicto&lt;/b&gt;</span><span class="ot">"</span>])</span>
+<span id="cb15-472"><a href="#cb15-472" aria-hidden="true" tabindex="-1"></a>    I -.-&gt;|<span class="ot">"</span><span class="st">¿no me gusta?&lt;br/&gt;rediseño…</span><span class="ot">"</span>| D</span>
+<span id="cb15-473"><a href="#cb15-473" aria-hidden="true" tabindex="-1"></a>    classDef paso fill:<span class="co">#e0e9f4,stroke:#1e3a5f,color:#1f2937</span></span>
+<span id="cb15-474"><a href="#cb15-474" aria-hidden="true" tabindex="-1"></a>    classDef clave fill:<span class="co">#fde8dc,stroke:#c2410c,color:#1f2937</span></span>
+<span id="cb15-475"><a href="#cb15-475" aria-hidden="true" tabindex="-1"></a>    classDef fin fill:<span class="co">#eef2e3,stroke:#637238,color:#1f2937</span></span>
+<span id="cb15-476"><a href="#cb15-476" aria-hidden="true" tabindex="-1"></a>    class H,D,W,K paso</span>
+<span id="cb15-477"><a href="#cb15-477" aria-hidden="true" tabindex="-1"></a>    class C,I clave</span>
+<span id="cb15-478"><a href="#cb15-478" aria-hidden="true" tabindex="-1"></a>    class F fin</span>
+<span id="cb15-479"><a href="#cb15-479" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb15-480"><a href="#cb15-480" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-481"><a href="#cb15-481" aria-hidden="true" tabindex="-1"></a>---</span>
+<span id="cb15-482"><a href="#cb15-482" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-483"><a href="#cb15-483" aria-hidden="true" tabindex="-1"></a><span class="fu">## Con datos reales</span></span>
+<span id="cb15-484"><a href="#cb15-484" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-485"><a href="#cb15-485" aria-hidden="true" tabindex="-1"></a>Todo el capítulo trabajó sobre ruido fabricado, donde sabíamos la respuesta de antemano. El examen final es con datos donde **nadie** sabe la respuesta: corremos el walk-forward completo sobre cinco años del SPY, del dataset del libro (<span class="in">`datos/precios.csv`</span>, ver @sec-datos-financieros).</span>
+<span id="cb15-486"><a href="#cb15-486" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-489"><a href="#cb15-489" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb15-490"><a href="#cb15-490" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: wf-datos-reales</span></span>
+<span id="cb15-491"><a href="#cb15-491" aria-hidden="true" tabindex="-1"></a>precios <span class="op">=</span> pd.read_csv(<span class="st">"../datos/precios.csv"</span>, index_col<span class="op">=</span><span class="st">"Date"</span>, parse_dates<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb15-492"><a href="#cb15-492" aria-hidden="true" tabindex="-1"></a>r_spy <span class="op">=</span> precios[<span class="st">"SPY"</span>].pct_change().dropna().values</span>
 <span id="cb15-493"><a href="#cb15-493" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-494"><a href="#cb15-494" aria-hidden="true" tabindex="-1"></a>---</span>
+<span id="cb15-494"><a href="#cb15-494" aria-hidden="true" tabindex="-1"></a>oos_spy, elec_spy <span class="op">=</span> walk_forward(r_spy, n_train<span class="op">=</span><span class="dv">504</span>, n_test<span class="op">=</span><span class="dv">126</span>, ventanas<span class="op">=</span><span class="bu">range</span>(<span class="dv">2</span>, <span class="dv">62</span>))</span>
 <span id="cb15-495"><a href="#cb15-495" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-496"><a href="#cb15-496" aria-hidden="true" tabindex="-1"></a><span class="fu">## Ejercicios Propuestos</span></span>
-<span id="cb15-497"><a href="#cb15-497" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-498"><a href="#cb15-498" aria-hidden="true" tabindex="-1"></a>::: {.callout-important title="Ejercicios"}</span>
-<span id="cb15-499"><a href="#cb15-499" aria-hidden="true" tabindex="-1"></a><span class="ss">1. </span>**La lotería de estrategias**: generá 100 series de ruido, "optimizá" la ventana de momentum en cada una y graficá el histograma de Sharpes in-sample del mejor parámetro. ¿Cuántos superan 1.0?</span>
-<span id="cb15-500"><a href="#cb15-500" aria-hidden="true" tabindex="-1"></a><span class="ss">2. </span>**Bonferroni en acción**: con el experimento anterior, aplicá la corrección de Bonferroni ($\alpha/60$) al p-value del mejor Sharpe IS. ¿Sobrevive alguno?</span>
-<span id="cb15-501"><a href="#cb15-501" aria-hidden="true" tabindex="-1"></a><span class="ss">3. </span>**Walk-forward con edge**: sembrá una señal real débil (drift condicional a la señal de momentum) y verificá que el walk-forward la detecta: parámetros estables y Sharpe OOS positivo.</span>
-<span id="cb15-502"><a href="#cb15-502" aria-hidden="true" tabindex="-1"></a><span class="ss">4. </span>**Sensibilidad a costos**: para la estrategia con edge del capítulo, encontrá el costo por operación que lleva su Sharpe neto a cero. ¿Es un costo realista para un inversor minorista?</span>
-<span id="cb15-503"><a href="#cb15-503" aria-hidden="true" tabindex="-1"></a><span class="ss">5. </span>**Tu propio protocolo**: elegí una regla simple (cruce de medias móviles, por ejemplo), escribí la hipótesis económica ANTES de correr nada, y ejecutá el protocolo completo de 7 pasos sobre alguna de las acciones del dataset del libro (<span class="in">`datos/precios.csv`</span>). Documentá cuántas variantes probaste.</span>
-<span id="cb15-504"><a href="#cb15-504" aria-hidden="true" tabindex="-1"></a>:::</span>
-<span id="cb15-505"><a href="#cb15-505" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-496"><a href="#cb15-496" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Tramos operados: </span><span class="sc">{</span><span class="bu">len</span>(elec_spy)<span class="sc">}</span><span class="ss"> | Ventanas elegidas: </span><span class="sc">{</span>elec_spy<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb15-497"><a href="#cb15-497" aria-hidden="true" tabindex="-1"></a>evaluar(oos_spy, <span class="st">"Momentum SPY (walk-forward)"</span>)</span>
+<span id="cb15-498"><a href="#cb15-498" aria-hidden="true" tabindex="-1"></a>evaluar(r_spy[<span class="op">-</span><span class="bu">len</span>(oos_spy):], <span class="st">"Buy &amp; hold SPY (mismo período)"</span>)</span>
+<span id="cb15-499"><a href="#cb15-499" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-500"><a href="#cb15-500" aria-hidden="true" tabindex="-1"></a>_ <span class="op">=</span> reporte(oos_spy, <span class="st">"Momentum SPY (OOS)"</span>)</span>
+<span id="cb15-501"><a href="#cb15-501" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>()</span>
+<span id="cb15-502"><a href="#cb15-502" aria-hidden="true" tabindex="-1"></a>_ <span class="op">=</span> reporte(r_spy[<span class="op">-</span><span class="bu">len</span>(oos_spy):], <span class="st">"Buy &amp; hold SPY"</span>)</span>
+<span id="cb15-503"><a href="#cb15-503" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb15-504"><a href="#cb15-504" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-505"><a href="#cb15-505" aria-hidden="true" tabindex="-1"></a>Este resultado es una clase entera de honestidad estadística, así que leelo despacio:</span>
 <span id="cb15-506"><a href="#cb15-506" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-507"><a href="#cb15-507" aria-hidden="true" tabindex="-1"></a>Podés resolver estos ejercicios acá mismo: la celda ejecuta Python **en tu navegador**, sin instalar nada (la primera ejecución tarda unos segundos mientras carga el entorno; los paquetes que importes se instalan solos).</span>
-<span id="cb15-508"><a href="#cb15-508" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-509"><a href="#cb15-509" aria-hidden="true" tabindex="-1"></a><span class="in">```{pyodide-python}</span></span>
-<span id="cb15-510"><a href="#cb15-510" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: practica-navegador</span></span>
-<span id="cb15-511"><a href="#cb15-511" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb15-507"><a href="#cb15-507" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Las ventanas elegidas son estables entre tramos** — nada del salto errático que vimos sobre ruido puro. Eso sugiere que el momentum del índice tiene *algo* de estructura real.</span>
+<span id="cb15-508"><a href="#cb15-508" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>El Sharpe out-of-sample es positivo, pero el **p-value no baja del umbral**: con ~2.5 años de track record OOS, la fórmula $t \approx \text{Sharpe} \times \sqrt{\text{años}}$ hace su trabajo implacable. Un Sharpe cercano a 1 con dos años y medio de datos **no es evidencia suficiente** — verificalo vos mismo con la fórmula.</span>
+<span id="cb15-509"><a href="#cb15-509" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Y la comparación que un backtest siempre debe incluir: en el mismo período, **comprar y no hacer nada rindió más**. El período OOS fue mayormente alcista, y toda estrategia que pasa tiempo en cash paga ese costo. El consuelo del momentum es un drawdown máximo menor — es una estrategia *defensiva*, y su valor aparecería en un bear market largo, no en este tramo. Elegir el benchmark correcto es parte del protocolo.</span>
+<span id="cb15-510"><a href="#cb15-510" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-511"><a href="#cb15-511" aria-hidden="true" tabindex="-1"></a>Ah, y esto es *antes* de costos de transacción. La conclusión metodológica —no sobre el momentum sino sobre el oficio— es que un backtest honesto casi nunca da un veredicto rotundo: da matices, condiciones y un p-value incómodo. Desconfiá de los que no.</span>
 <span id="cb15-512"><a href="#cb15-512" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-513"><a href="#cb15-513" aria-hidden="true" tabindex="-1"></a><span class="co"># Para usar el dataset real del libro (requiere conexión):</span></span>
-<span id="cb15-514"><a href="#cb15-514" aria-hidden="true" tabindex="-1"></a><span class="co"># import pandas as pd</span></span>
-<span id="cb15-515"><a href="#cb15-515" aria-hidden="true" tabindex="-1"></a><span class="co"># from pyodide.http import open_url</span></span>
-<span id="cb15-516"><a href="#cb15-516" aria-hidden="true" tabindex="-1"></a><span class="co"># url = "https://diegoonna.github.io/libro_finanzas_computacionales/datos/precios.csv"</span></span>
-<span id="cb15-517"><a href="#cb15-517" aria-hidden="true" tabindex="-1"></a><span class="co"># precios = pd.read_csv(open_url(url), index_col="Date", parse_dates=True)</span></span>
-<span id="cb15-518"><a href="#cb15-518" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-519"><a href="#cb15-519" aria-hidden="true" tabindex="-1"></a><span class="co"># Tu solución acá...</span></span>
-<span id="cb15-520"><a href="#cb15-520" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb15-521"><a href="#cb15-521" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-522"><a href="#cb15-522" aria-hidden="true" tabindex="-1"></a>---</span>
-<span id="cb15-523"><a href="#cb15-523" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-524"><a href="#cb15-524" aria-hidden="true" tabindex="-1"></a><span class="fu">## Referencias</span></span>
-<span id="cb15-525"><a href="#cb15-525" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-513"><a href="#cb15-513" aria-hidden="true" tabindex="-1"></a>---</span>
+<span id="cb15-514"><a href="#cb15-514" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-515"><a href="#cb15-515" aria-hidden="true" tabindex="-1"></a><span class="fu">## Errores comunes</span></span>
+<span id="cb15-516"><a href="#cb15-516" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-517"><a href="#cb15-517" aria-hidden="true" tabindex="-1"></a>::: {.callout-warning title="Trampas frecuentes"}</span>
+<span id="cb15-518"><a href="#cb15-518" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Re-usar el out-of-sample**: la más común y la más letal. Cada iteración de "ajusto y vuelvo a probar" lo degrada a in-sample.</span>
+<span id="cb15-519"><a href="#cb15-519" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Reportar el mejor de N sin decir N**: el Sharpe del mejor de 100 intentos es una estadística de orden, no una medida de habilidad.</span>
+<span id="cb15-520"><a href="#cb15-520" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Ignorar la estabilidad de los parámetros**: si el óptimo salta de 5 a 60 entre tramos del walk-forward, no estás estimando nada real.</span>
+<span id="cb15-521"><a href="#cb15-521" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Backtests demasiado cortos**: recordá $t \approx \text{Sharpe} \times \sqrt{\text{años}}$; con 2 años de datos casi nada es demostrable.</span>
+<span id="cb15-522"><a href="#cb15-522" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Confundir el drawdown máximo del backtest con el peor caso posible**: el futuro no está obligado a repetir el peor pasado; es un piso, no un techo.</span>
+<span id="cb15-523"><a href="#cb15-523" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb15-524"><a href="#cb15-524" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-525"><a href="#cb15-525" aria-hidden="true" tabindex="-1"></a>---</span>
 <span id="cb15-526"><a href="#cb15-526" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-527"><a href="#cb15-527" aria-hidden="true" tabindex="-1"></a>::: {#refs}</span>
-<span id="cb15-528"><a href="#cb15-528" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb15-527"><a href="#cb15-527" aria-hidden="true" tabindex="-1"></a><span class="fu">## Ejercicios Propuestos</span></span>
+<span id="cb15-528"><a href="#cb15-528" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-529"><a href="#cb15-529" aria-hidden="true" tabindex="-1"></a>::: {.callout-important title="Ejercicios"}</span>
+<span id="cb15-530"><a href="#cb15-530" aria-hidden="true" tabindex="-1"></a><span class="ss">1. </span>**La lotería de estrategias**: generá 100 series de ruido, "optimizá" la ventana de momentum en cada una y graficá el histograma de Sharpes in-sample del mejor parámetro. ¿Cuántos superan 1.0?</span>
+<span id="cb15-531"><a href="#cb15-531" aria-hidden="true" tabindex="-1"></a><span class="ss">2. </span>**Bonferroni en acción**: con el experimento anterior, aplicá la corrección de Bonferroni ($\alpha/60$) al p-value del mejor Sharpe IS. ¿Sobrevive alguno?</span>
+<span id="cb15-532"><a href="#cb15-532" aria-hidden="true" tabindex="-1"></a><span class="ss">3. </span>**Walk-forward con edge**: sembrá una señal real débil (drift condicional a la señal de momentum) y verificá que el walk-forward la detecta: parámetros estables y Sharpe OOS positivo.</span>
+<span id="cb15-533"><a href="#cb15-533" aria-hidden="true" tabindex="-1"></a><span class="ss">4. </span>**Sensibilidad a costos**: para la estrategia con edge del capítulo, encontrá el costo por operación que lleva su Sharpe neto a cero. ¿Es un costo realista para un inversor minorista?</span>
+<span id="cb15-534"><a href="#cb15-534" aria-hidden="true" tabindex="-1"></a><span class="ss">5. </span>**Tu propio protocolo**: elegí una regla simple (cruce de medias móviles, por ejemplo), escribí la hipótesis económica ANTES de correr nada, y ejecutá el protocolo completo de 7 pasos sobre alguna de las acciones del dataset del libro (<span class="in">`datos/precios.csv`</span>). Documentá cuántas variantes probaste.</span>
+<span id="cb15-535"><a href="#cb15-535" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb15-536"><a href="#cb15-536" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-537"><a href="#cb15-537" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-538"><a href="#cb15-538" aria-hidden="true" tabindex="-1"></a>Podés resolver estos ejercicios acá mismo: la celda ejecuta Python **en tu navegador**, sin instalar nada (la primera ejecución tarda unos segundos mientras carga el entorno; los paquetes que importes se instalan solos).</span>
+<span id="cb15-539"><a href="#cb15-539" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-540"><a href="#cb15-540" aria-hidden="true" tabindex="-1"></a><span class="in">```{pyodide-python}</span></span>
+<span id="cb15-541"><a href="#cb15-541" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: practica-navegador</span></span>
+<span id="cb15-542"><a href="#cb15-542" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb15-543"><a href="#cb15-543" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-544"><a href="#cb15-544" aria-hidden="true" tabindex="-1"></a><span class="co"># Para usar el dataset real del libro (requiere conexión):</span></span>
+<span id="cb15-545"><a href="#cb15-545" aria-hidden="true" tabindex="-1"></a><span class="co"># import pandas as pd</span></span>
+<span id="cb15-546"><a href="#cb15-546" aria-hidden="true" tabindex="-1"></a><span class="co"># from pyodide.http import open_url</span></span>
+<span id="cb15-547"><a href="#cb15-547" aria-hidden="true" tabindex="-1"></a><span class="co"># url = "https://diegoonna.github.io/libro_finanzas_computacionales/datos/precios.csv"</span></span>
+<span id="cb15-548"><a href="#cb15-548" aria-hidden="true" tabindex="-1"></a><span class="co"># precios = pd.read_csv(open_url(url), index_col="Date", parse_dates=True)</span></span>
+<span id="cb15-549"><a href="#cb15-549" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-550"><a href="#cb15-550" aria-hidden="true" tabindex="-1"></a><span class="co"># Tu solución acá...</span></span>
+<span id="cb15-551"><a href="#cb15-551" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb15-552"><a href="#cb15-552" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-553"><a href="#cb15-553" aria-hidden="true" tabindex="-1"></a>---</span>
+<span id="cb15-554"><a href="#cb15-554" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-555"><a href="#cb15-555" aria-hidden="true" tabindex="-1"></a><span class="fu">## Referencias</span></span>
+<span id="cb15-556"><a href="#cb15-556" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-557"><a href="#cb15-557" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-558"><a href="#cb15-558" aria-hidden="true" tabindex="-1"></a>::: {#refs}</span>
+<span id="cb15-559"><a href="#cb15-559" aria-hidden="true" tabindex="-1"></a>:::</span>
 </code></pre></div><button title="Copiar al portapapeles" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></div>
 </div></div></div></div></div>
 </div> <!-- /content -->

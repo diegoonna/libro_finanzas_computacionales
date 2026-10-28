@@ -1184,6 +1184,23 @@ Figura&nbsp;19.6: Seis frecuencias de rebalanceo, 300 escenarios cada una. Izqui
 </div>
 </div>
 </div>
+<div class="simulador">
+<p><span class="simulador-titulo">Simulador · La mesa de cobertura</span></p>
+<p>Vendiste la call del capítulo (al dinero, a un año, vol 25%) y la cubrís. Elegís cada cuánto rebalancear y cuánto cuesta cada operación. Arriba, un escenario: el precio, y la cartera replicante persiguiendo al valor de la opción (como en la <a href="#fig-hedge-cuatro-paneles" class="quarto-xref">Figura&nbsp;<span>19.3</span></a>). En el medio, el error final en 300 escenarios (como en la <a href="#fig-error-frecuencia" class="quarto-xref">Figura&nbsp;<span>19.5</span></a>). Abajo, el balance de la <a href="#fig-frecuencia-costos" class="quarto-xref">Figura&nbsp;<span>19.6</span></a> para todas las frecuencias a la vez: el desvío que deja el gamma, el costo que se paga en comisiones y el error total que combina los dos. Los números no coinciden con los del capítulo porque el navegador usa otro generador aleatorio.</p>
+<div id="sim-cobertura"></div>
+<script type="module">
+  import { montar } from "../simuladores/cobertura.js";
+  montar(document.getElementById("sim-cobertura"));
+</script>
+<div class="probar">
+<p><strong>Probá esto</strong></p>
+<ol type="1">
+<li>Pasá de 252 rebalanceos por año a 12. El histograma se ensancha más de cuatro veces (<span class="math inline">\(\sqrt{252/12} \approx 4.6\)</span>) y la cartera replicante del escenario se vuelve una escalera que alcanza a la opción solo de vez en cuando. El error medio sigue cerca de cero: rebalancear poco no sesga la cobertura, la vuelve más ruidosa.</li>
+<li>Volvé a 252 y subí el costo a 5 pb, el del capítulo: el histograma se corre hacia la izquierda unos 30 centavos, que es el peaje anual. Seguí subiendo y mirá el círculo verde del gráfico de abajo: con unos 20 pb, rebalancear todos los días ya es peor que hacerlo cada dos, y la frecuencia óptima empieza a bajar.</li>
+<li>Apretá “Nueva muestra” varias veces y mirá el error del escenario dibujado. Los peores suelen ser los que terminan cerca del strike: ahí el gamma es más alto y la escalera de rebalanceos se queda más atrás. Es la antesala de la sección que sigue.</li>
+</ol>
+</div>
+</div>
 <hr>
 </section>
 </section>
@@ -2169,82 +2186,112 @@ Taleb, Nassim Nicholas. 1997. <em>Dynamic Hedging: Managing Vanilla and Exotic O
 <span id="cb13-425"><a href="#cb13-425" aria-hidden="true" tabindex="-1"></a>_esquema()</span>
 <span id="cb13-426"><a href="#cb13-426" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb13-427"><a href="#cb13-427" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-428"><a href="#cb13-428" aria-hidden="true" tabindex="-1"></a>---</span>
-<span id="cb13-429"><a href="#cb13-429" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-430"><a href="#cb13-430" aria-hidden="true" tabindex="-1"></a><span class="fu">## Cuando el gamma muerde: cerca del strike, cerca del vencimiento</span></span>
+<span id="cb13-428"><a href="#cb13-428" aria-hidden="true" tabindex="-1"></a>::: {.content-visible when-format="html"}</span>
+<span id="cb13-429"><a href="#cb13-429" aria-hidden="true" tabindex="-1"></a>::: {.simulador}</span>
+<span id="cb13-430"><a href="#cb13-430" aria-hidden="true" tabindex="-1"></a><span class="co">[</span><span class="ot">Simulador · La mesa de cobertura</span><span class="co">]</span>{.simulador-titulo}</span>
 <span id="cb13-431"><a href="#cb13-431" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-432"><a href="#cb13-432" aria-hidden="true" tabindex="-1"></a>El talón de Aquiles de la cobertura delta es la zona donde el gamma explota: **strike cercano y poco tiempo restante** (el pico puntiagudo del capítulo anterior). Ahí el delta salta de casi-0 a casi-1 con movimientos chicos del precio, y ninguna frecuencia razonable de rebalanceo alcanza.</span>
+<span id="cb13-432"><a href="#cb13-432" aria-hidden="true" tabindex="-1"></a>Vendiste la call del capítulo (al dinero, a un año, vol 25%) y la cubrís. Elegís cada cuánto rebalancear y cuánto cuesta cada operación. Arriba, un escenario: el precio, y la cartera replicante persiguiendo al valor de la opción (como en la @fig-hedge-cuatro-paneles). En el medio, el error final en 300 escenarios (como en la @fig-error-frecuencia). Abajo, el balance de la @fig-frecuencia-costos para todas las frecuencias a la vez: el desvío que deja el gamma, el costo que se paga en comisiones y el error total que combina los dos. Los números no coinciden con los del capítulo porque el navegador usa otro generador aleatorio.</span>
 <span id="cb13-433"><a href="#cb13-433" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-436"><a href="#cb13-436" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
-<span id="cb13-437"><a href="#cb13-437" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: fig-pin-risk</span></span>
-<span id="cb13-438"><a href="#cb13-438" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-cap: "Pin risk en los últimos 40 días: el precio oscila alrededor del strike justo antes del vencimiento, y el delta salta entre casi 0 y casi 1 con cada cruce."</span></span>
-<span id="cb13-439"><a href="#cb13-439" aria-hidden="true" tabindex="-1"></a><span class="co"># Un escenario malicioso: el precio termina oscilando alrededor del strike</span></span>
-<span id="cb13-440"><a href="#cb13-440" aria-hidden="true" tabindex="-1"></a>dias_final <span class="op">=</span> <span class="dv">20</span></span>
-<span id="cb13-441"><a href="#cb13-441" aria-hidden="true" tabindex="-1"></a>S_pin <span class="op">=</span> np.concatenate([</span>
-<span id="cb13-442"><a href="#cb13-442" aria-hidden="true" tabindex="-1"></a>    np.linspace(<span class="dv">100</span>, <span class="fl">99.5</span>, n_dias <span class="op">+</span> <span class="dv">1</span> <span class="op">-</span> dias_final),          <span class="co"># tranquilo hasta el final</span></span>
-<span id="cb13-443"><a href="#cb13-443" aria-hidden="true" tabindex="-1"></a>    <span class="dv">100</span> <span class="op">+</span> <span class="fl">1.5</span> <span class="op">*</span> np.sin(np.linspace(<span class="dv">0</span>, <span class="dv">6</span> <span class="op">*</span> np.pi, dias_final)) <span class="co"># y baila sobre el strike</span></span>
-<span id="cb13-444"><a href="#cb13-444" aria-hidden="true" tabindex="-1"></a>])</span>
-<span id="cb13-445"><a href="#cb13-445" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-446"><a href="#cb13-446" aria-hidden="true" tabindex="-1"></a>deltas_pin <span class="op">=</span> [bs_delta(S_pin[t], K, <span class="bu">max</span>(T <span class="op">-</span> t <span class="op">*</span> dt, <span class="fl">1e-9</span>), r, sigma)</span>
-<span id="cb13-447"><a href="#cb13-447" aria-hidden="true" tabindex="-1"></a>              <span class="cf">for</span> t <span class="kw">in</span> <span class="bu">range</span>(n_dias <span class="op">+</span> <span class="dv">1</span>)]</span>
-<span id="cb13-448"><a href="#cb13-448" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-449"><a href="#cb13-449" aria-hidden="true" tabindex="-1"></a>fig, ax <span class="op">=</span> plt.subplots(figsize<span class="op">=</span>(<span class="dv">9</span>, <span class="dv">4</span>))</span>
-<span id="cb13-450"><a href="#cb13-450" aria-hidden="true" tabindex="-1"></a>ax2 <span class="op">=</span> ax.twinx()</span>
-<span id="cb13-451"><a href="#cb13-451" aria-hidden="true" tabindex="-1"></a>ax.plot(S_pin[<span class="op">-</span><span class="dv">40</span>:], color<span class="op">=</span><span class="st">"#1e3a5f"</span>, label<span class="op">=</span><span class="st">"Precio"</span>)</span>
-<span id="cb13-452"><a href="#cb13-452" aria-hidden="true" tabindex="-1"></a>ax.axhline(K, color<span class="op">=</span><span class="st">"#94a3b8"</span>, linestyle<span class="op">=</span><span class="st">"--"</span>)</span>
-<span id="cb13-453"><a href="#cb13-453" aria-hidden="true" tabindex="-1"></a>ax2.plot(deltas_pin[<span class="op">-</span><span class="dv">40</span>:], color<span class="op">=</span><span class="st">"#c2410c"</span>, label<span class="op">=</span><span class="st">"Delta"</span>)</span>
-<span id="cb13-454"><a href="#cb13-454" aria-hidden="true" tabindex="-1"></a>ax.set_xlabel(<span class="st">"Últimos 40 días"</span>)</span>
-<span id="cb13-455"><a href="#cb13-455" aria-hidden="true" tabindex="-1"></a>ax.set_ylabel(<span class="st">"Precio ($)"</span>, color<span class="op">=</span><span class="st">"#1e3a5f"</span>)</span>
-<span id="cb13-456"><a href="#cb13-456" aria-hidden="true" tabindex="-1"></a>ax2.set_ylabel(<span class="st">"Delta"</span>, color<span class="op">=</span><span class="st">"#c2410c"</span>)</span>
-<span id="cb13-457"><a href="#cb13-457" aria-hidden="true" tabindex="-1"></a>ax.set_title(<span class="st">"Pin risk: el delta se vuelve loco cuando el precio baila sobre el strike"</span>)</span>
-<span id="cb13-458"><a href="#cb13-458" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
-<span id="cb13-459"><a href="#cb13-459" aria-hidden="true" tabindex="-1"></a>plt.show()</span>
-<span id="cb13-460"><a href="#cb13-460" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb13-434"><a href="#cb13-434" aria-hidden="true" tabindex="-1"></a><span class="in">```{=html}</span></span>
+<span id="cb13-435"><a href="#cb13-435" aria-hidden="true" tabindex="-1"></a><span class="in">&lt;div id="sim-cobertura"&gt;&lt;/div&gt;</span></span>
+<span id="cb13-436"><a href="#cb13-436" aria-hidden="true" tabindex="-1"></a><span class="in">&lt;script type="module"&gt;</span></span>
+<span id="cb13-437"><a href="#cb13-437" aria-hidden="true" tabindex="-1"></a><span class="in">  import { montar } from "../simuladores/cobertura.js";</span></span>
+<span id="cb13-438"><a href="#cb13-438" aria-hidden="true" tabindex="-1"></a><span class="in">  montar(document.getElementById("sim-cobertura"));</span></span>
+<span id="cb13-439"><a href="#cb13-439" aria-hidden="true" tabindex="-1"></a><span class="in">&lt;/script&gt;</span></span>
+<span id="cb13-440"><a href="#cb13-440" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb13-441"><a href="#cb13-441" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-442"><a href="#cb13-442" aria-hidden="true" tabindex="-1"></a>::: {.probar}</span>
+<span id="cb13-443"><a href="#cb13-443" aria-hidden="true" tabindex="-1"></a>**Probá esto**</span>
+<span id="cb13-444"><a href="#cb13-444" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-445"><a href="#cb13-445" aria-hidden="true" tabindex="-1"></a><span class="ss">1. </span>Pasá de 252 rebalanceos por año a 12. El histograma se ensancha más de cuatro veces ($\sqrt{252/12} \approx 4.6$) y la cartera replicante del escenario se vuelve una escalera que alcanza a la opción solo de vez en cuando. El error medio sigue cerca de cero: rebalancear poco no sesga la cobertura, la vuelve más ruidosa.</span>
+<span id="cb13-446"><a href="#cb13-446" aria-hidden="true" tabindex="-1"></a><span class="ss">2. </span>Volvé a 252 y subí el costo a 5 pb, el del capítulo: el histograma se corre hacia la izquierda unos 30 centavos, que es el peaje anual. Seguí subiendo y mirá el círculo verde del gráfico de abajo: con unos 20 pb, rebalancear todos los días ya es peor que hacerlo cada dos, y la frecuencia óptima empieza a bajar.</span>
+<span id="cb13-447"><a href="#cb13-447" aria-hidden="true" tabindex="-1"></a><span class="ss">3. </span>Apretá "Nueva muestra" varias veces y mirá el error del escenario dibujado. Los peores suelen ser los que terminan cerca del strike: ahí el gamma es más alto y la escalera de rebalanceos se queda más atrás. Es la antesala de la sección que sigue.</span>
+<span id="cb13-448"><a href="#cb13-448" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb13-449"><a href="#cb13-449" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb13-450"><a href="#cb13-450" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb13-451"><a href="#cb13-451" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-452"><a href="#cb13-452" aria-hidden="true" tabindex="-1"></a>::: {.content-visible when-format="pdf"}</span>
+<span id="cb13-453"><a href="#cb13-453" aria-hidden="true" tabindex="-1"></a>::: {.callout-note title="Simulador interactivo"}</span>
+<span id="cb13-454"><a href="#cb13-454" aria-hidden="true" tabindex="-1"></a>En la <span class="co">[</span><span class="ot">versión web de este capítulo</span><span class="co">](https://diegoonna.github.io/libro_finanzas_computacionales/unidad4/cap19_delta_hedging.html)</span> hay un simulador donde podés elegir la frecuencia de rebalanceo y el costo de cada operación, y ver el error de cobertura en 300 escenarios.</span>
+<span id="cb13-455"><a href="#cb13-455" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb13-456"><a href="#cb13-456" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb13-457"><a href="#cb13-457" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-458"><a href="#cb13-458" aria-hidden="true" tabindex="-1"></a>---</span>
+<span id="cb13-459"><a href="#cb13-459" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-460"><a href="#cb13-460" aria-hidden="true" tabindex="-1"></a><span class="fu">## Cuando el gamma muerde: cerca del strike, cerca del vencimiento</span></span>
 <span id="cb13-461"><a href="#cb13-461" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-462"><a href="#cb13-462" aria-hidden="true" tabindex="-1"></a>En esos últimos días de la @fig-pin-risk, el trader compra arriba y vende abajo una y otra vez, sangrando en cada vuelta — el famoso **pin risk**. La respuesta profesional es cubrir también la curvatura: el **delta-gamma hedging** agrega *otra opción* a la cartera para neutralizar el gamma (las acciones solas no pueden: su gamma es cero). Queda como ejercicio, y es la puerta de entrada a la gestión de books de opciones reales.</span>
+<span id="cb13-462"><a href="#cb13-462" aria-hidden="true" tabindex="-1"></a>El talón de Aquiles de la cobertura delta es la zona donde el gamma explota: **strike cercano y poco tiempo restante** (el pico puntiagudo del capítulo anterior). Ahí el delta salta de casi-0 a casi-1 con movimientos chicos del precio, y ninguna frecuencia razonable de rebalanceo alcanza.</span>
 <span id="cb13-463"><a href="#cb13-463" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-464"><a href="#cb13-464" aria-hidden="true" tabindex="-1"></a>---</span>
-<span id="cb13-465"><a href="#cb13-465" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-466"><a href="#cb13-466" aria-hidden="true" tabindex="-1"></a><span class="fu">## Errores comunes</span></span>
-<span id="cb13-467"><a href="#cb13-467" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-468"><a href="#cb13-468" aria-hidden="true" tabindex="-1"></a>::: {.callout-warning title="Trampas frecuentes"}</span>
-<span id="cb13-469"><a href="#cb13-469" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Olvidar el interés del cash**: en horizontes largos, el carry del cash es parte material del resultado; omitirlo sesga el error de cobertura.</span>
-<span id="cb13-470"><a href="#cb13-470" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Rebalancear con el delta de ayer**: el delta debe calcularse con el precio y el tiempo *de hoy*, antes de operar. Desfasar un día introduce un error sistemático.</span>
-<span id="cb13-471"><a href="#cb13-471" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Confundir el P&amp;L del hedge con ganancia de trading**: el objetivo del cubridor es error ~0; un P&amp;L grande (a favor o en contra) significa que la cobertura falló o que la vol realizada difirió de la cotizada.</span>
-<span id="cb13-472"><a href="#cb13-472" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Ignorar el caso T→0 en las funciones**: <span class="in">`bs_delta`</span> con <span class="in">`T=0`</span> divide por cero si no se maneja aparte; en el vencimiento el delta es un escalón.</span>
-<span id="cb13-473"><a href="#cb13-473" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Simular con drift μ para valuar**: la réplica funciona con cualquier drift (esa es la magia), pero el mark-to-market usa el precio Black-Scholes, que vive en el mundo neutral al riesgo.</span>
-<span id="cb13-474"><a href="#cb13-474" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb13-466"><a href="#cb13-466" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb13-467"><a href="#cb13-467" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: fig-pin-risk</span></span>
+<span id="cb13-468"><a href="#cb13-468" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-cap: "Pin risk en los últimos 40 días: el precio oscila alrededor del strike justo antes del vencimiento, y el delta salta entre casi 0 y casi 1 con cada cruce."</span></span>
+<span id="cb13-469"><a href="#cb13-469" aria-hidden="true" tabindex="-1"></a><span class="co"># Un escenario malicioso: el precio termina oscilando alrededor del strike</span></span>
+<span id="cb13-470"><a href="#cb13-470" aria-hidden="true" tabindex="-1"></a>dias_final <span class="op">=</span> <span class="dv">20</span></span>
+<span id="cb13-471"><a href="#cb13-471" aria-hidden="true" tabindex="-1"></a>S_pin <span class="op">=</span> np.concatenate([</span>
+<span id="cb13-472"><a href="#cb13-472" aria-hidden="true" tabindex="-1"></a>    np.linspace(<span class="dv">100</span>, <span class="fl">99.5</span>, n_dias <span class="op">+</span> <span class="dv">1</span> <span class="op">-</span> dias_final),          <span class="co"># tranquilo hasta el final</span></span>
+<span id="cb13-473"><a href="#cb13-473" aria-hidden="true" tabindex="-1"></a>    <span class="dv">100</span> <span class="op">+</span> <span class="fl">1.5</span> <span class="op">*</span> np.sin(np.linspace(<span class="dv">0</span>, <span class="dv">6</span> <span class="op">*</span> np.pi, dias_final)) <span class="co"># y baila sobre el strike</span></span>
+<span id="cb13-474"><a href="#cb13-474" aria-hidden="true" tabindex="-1"></a>])</span>
 <span id="cb13-475"><a href="#cb13-475" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-476"><a href="#cb13-476" aria-hidden="true" tabindex="-1"></a>---</span>
-<span id="cb13-477"><a href="#cb13-477" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-478"><a href="#cb13-478" aria-hidden="true" tabindex="-1"></a><span class="fu">## Ejercicios Propuestos</span></span>
-<span id="cb13-479"><a href="#cb13-479" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-480"><a href="#cb13-480" aria-hidden="true" tabindex="-1"></a>::: {.callout-important title="Ejercicios"}</span>
-<span id="cb13-481"><a href="#cb13-481" aria-hidden="true" tabindex="-1"></a><span class="ss">1. </span>**Vol realizada vs. cotizada**: simulá el mercado con $\sigma_{real} = 30\%$ pero cubrí usando $\sigma = 25\%$ en las fórmulas. ¿El error medio sigue siendo cero? ¿Quién gana, el comprador o el vendedor de la opción?</span>
-<span id="cb13-482"><a href="#cb13-482" aria-hidden="true" tabindex="-1"></a><span class="ss">2. </span>**Bandas de rebalanceo**: implementá la regla "rebalancear solo si $|\delta_{hoy} - \text{acciones}| &gt; 0.05$" y comparala con el rebalanceo diario en error y en número de operaciones (con costos de 5 bps).</span>
-<span id="cb13-483"><a href="#cb13-483" aria-hidden="true" tabindex="-1"></a><span class="ss">3. </span>**Delta-gamma hedging**: agregá una segunda call (strike 110) a la cartera para anular el gamma además del delta, y verificá que el error en el escenario de pin risk se reduce.</span>
-<span id="cb13-484"><a href="#cb13-484" aria-hidden="true" tabindex="-1"></a><span class="ss">4. </span>**Put vendida**: repetí la simulación completa para una put. ¿Cambia el signo de los rebalanceos? ¿Y la exposición al gamma?</span>
-<span id="cb13-485"><a href="#cb13-485" aria-hidden="true" tabindex="-1"></a><span class="ss">5. </span>**Salto sorpresa**: introducí un salto de −10% en un día aleatorio del escenario (Capítulo 14) y medí el error de cobertura. ¿Por qué el delta hedging no puede protegerte de un salto?</span>
-<span id="cb13-486"><a href="#cb13-486" aria-hidden="true" tabindex="-1"></a>:::</span>
-<span id="cb13-487"><a href="#cb13-487" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-488"><a href="#cb13-488" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-489"><a href="#cb13-489" aria-hidden="true" tabindex="-1"></a>Podés resolver estos ejercicios acá mismo: la celda ejecuta Python **en tu navegador**, sin instalar nada (la primera ejecución tarda unos segundos mientras carga el entorno; los paquetes que importes se instalan solos).</span>
-<span id="cb13-490"><a href="#cb13-490" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-491"><a href="#cb13-491" aria-hidden="true" tabindex="-1"></a><span class="in">```{pyodide-python}</span></span>
-<span id="cb13-492"><a href="#cb13-492" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: practica-navegador</span></span>
-<span id="cb13-493"><a href="#cb13-493" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
-<span id="cb13-494"><a href="#cb13-494" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> scipy.stats <span class="im">import</span> norm</span>
+<span id="cb13-476"><a href="#cb13-476" aria-hidden="true" tabindex="-1"></a>deltas_pin <span class="op">=</span> [bs_delta(S_pin[t], K, <span class="bu">max</span>(T <span class="op">-</span> t <span class="op">*</span> dt, <span class="fl">1e-9</span>), r, sigma)</span>
+<span id="cb13-477"><a href="#cb13-477" aria-hidden="true" tabindex="-1"></a>              <span class="cf">for</span> t <span class="kw">in</span> <span class="bu">range</span>(n_dias <span class="op">+</span> <span class="dv">1</span>)]</span>
+<span id="cb13-478"><a href="#cb13-478" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-479"><a href="#cb13-479" aria-hidden="true" tabindex="-1"></a>fig, ax <span class="op">=</span> plt.subplots(figsize<span class="op">=</span>(<span class="dv">9</span>, <span class="dv">4</span>))</span>
+<span id="cb13-480"><a href="#cb13-480" aria-hidden="true" tabindex="-1"></a>ax2 <span class="op">=</span> ax.twinx()</span>
+<span id="cb13-481"><a href="#cb13-481" aria-hidden="true" tabindex="-1"></a>ax.plot(S_pin[<span class="op">-</span><span class="dv">40</span>:], color<span class="op">=</span><span class="st">"#1e3a5f"</span>, label<span class="op">=</span><span class="st">"Precio"</span>)</span>
+<span id="cb13-482"><a href="#cb13-482" aria-hidden="true" tabindex="-1"></a>ax.axhline(K, color<span class="op">=</span><span class="st">"#94a3b8"</span>, linestyle<span class="op">=</span><span class="st">"--"</span>)</span>
+<span id="cb13-483"><a href="#cb13-483" aria-hidden="true" tabindex="-1"></a>ax2.plot(deltas_pin[<span class="op">-</span><span class="dv">40</span>:], color<span class="op">=</span><span class="st">"#c2410c"</span>, label<span class="op">=</span><span class="st">"Delta"</span>)</span>
+<span id="cb13-484"><a href="#cb13-484" aria-hidden="true" tabindex="-1"></a>ax.set_xlabel(<span class="st">"Últimos 40 días"</span>)</span>
+<span id="cb13-485"><a href="#cb13-485" aria-hidden="true" tabindex="-1"></a>ax.set_ylabel(<span class="st">"Precio ($)"</span>, color<span class="op">=</span><span class="st">"#1e3a5f"</span>)</span>
+<span id="cb13-486"><a href="#cb13-486" aria-hidden="true" tabindex="-1"></a>ax2.set_ylabel(<span class="st">"Delta"</span>, color<span class="op">=</span><span class="st">"#c2410c"</span>)</span>
+<span id="cb13-487"><a href="#cb13-487" aria-hidden="true" tabindex="-1"></a>ax.set_title(<span class="st">"Pin risk: el delta se vuelve loco cuando el precio baila sobre el strike"</span>)</span>
+<span id="cb13-488"><a href="#cb13-488" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
+<span id="cb13-489"><a href="#cb13-489" aria-hidden="true" tabindex="-1"></a>plt.show()</span>
+<span id="cb13-490"><a href="#cb13-490" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb13-491"><a href="#cb13-491" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-492"><a href="#cb13-492" aria-hidden="true" tabindex="-1"></a>En esos últimos días de la @fig-pin-risk, el trader compra arriba y vende abajo una y otra vez, sangrando en cada vuelta — el famoso **pin risk**. La respuesta profesional es cubrir también la curvatura: el **delta-gamma hedging** agrega *otra opción* a la cartera para neutralizar el gamma (las acciones solas no pueden: su gamma es cero). Queda como ejercicio, y es la puerta de entrada a la gestión de books de opciones reales.</span>
+<span id="cb13-493"><a href="#cb13-493" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-494"><a href="#cb13-494" aria-hidden="true" tabindex="-1"></a>---</span>
 <span id="cb13-495"><a href="#cb13-495" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-496"><a href="#cb13-496" aria-hidden="true" tabindex="-1"></a><span class="co"># Tu solución acá...</span></span>
-<span id="cb13-497"><a href="#cb13-497" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb13-498"><a href="#cb13-498" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-499"><a href="#cb13-499" aria-hidden="true" tabindex="-1"></a>---</span>
-<span id="cb13-500"><a href="#cb13-500" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-501"><a href="#cb13-501" aria-hidden="true" tabindex="-1"></a><span class="fu">## Referencias</span></span>
-<span id="cb13-502"><a href="#cb13-502" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-503"><a href="#cb13-503" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-504"><a href="#cb13-504" aria-hidden="true" tabindex="-1"></a>::: {#refs}</span>
-<span id="cb13-505"><a href="#cb13-505" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb13-496"><a href="#cb13-496" aria-hidden="true" tabindex="-1"></a><span class="fu">## Errores comunes</span></span>
+<span id="cb13-497"><a href="#cb13-497" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-498"><a href="#cb13-498" aria-hidden="true" tabindex="-1"></a>::: {.callout-warning title="Trampas frecuentes"}</span>
+<span id="cb13-499"><a href="#cb13-499" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Olvidar el interés del cash**: en horizontes largos, el carry del cash es parte material del resultado; omitirlo sesga el error de cobertura.</span>
+<span id="cb13-500"><a href="#cb13-500" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Rebalancear con el delta de ayer**: el delta debe calcularse con el precio y el tiempo *de hoy*, antes de operar. Desfasar un día introduce un error sistemático.</span>
+<span id="cb13-501"><a href="#cb13-501" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Confundir el P&amp;L del hedge con ganancia de trading**: el objetivo del cubridor es error ~0; un P&amp;L grande (a favor o en contra) significa que la cobertura falló o que la vol realizada difirió de la cotizada.</span>
+<span id="cb13-502"><a href="#cb13-502" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Ignorar el caso T→0 en las funciones**: <span class="in">`bs_delta`</span> con <span class="in">`T=0`</span> divide por cero si no se maneja aparte; en el vencimiento el delta es un escalón.</span>
+<span id="cb13-503"><a href="#cb13-503" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Simular con drift μ para valuar**: la réplica funciona con cualquier drift (esa es la magia), pero el mark-to-market usa el precio Black-Scholes, que vive en el mundo neutral al riesgo.</span>
+<span id="cb13-504"><a href="#cb13-504" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb13-505"><a href="#cb13-505" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-506"><a href="#cb13-506" aria-hidden="true" tabindex="-1"></a>---</span>
+<span id="cb13-507"><a href="#cb13-507" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-508"><a href="#cb13-508" aria-hidden="true" tabindex="-1"></a><span class="fu">## Ejercicios Propuestos</span></span>
+<span id="cb13-509"><a href="#cb13-509" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-510"><a href="#cb13-510" aria-hidden="true" tabindex="-1"></a>::: {.callout-important title="Ejercicios"}</span>
+<span id="cb13-511"><a href="#cb13-511" aria-hidden="true" tabindex="-1"></a><span class="ss">1. </span>**Vol realizada vs. cotizada**: simulá el mercado con $\sigma_{real} = 30\%$ pero cubrí usando $\sigma = 25\%$ en las fórmulas. ¿El error medio sigue siendo cero? ¿Quién gana, el comprador o el vendedor de la opción?</span>
+<span id="cb13-512"><a href="#cb13-512" aria-hidden="true" tabindex="-1"></a><span class="ss">2. </span>**Bandas de rebalanceo**: implementá la regla "rebalancear solo si $|\delta_{hoy} - \text{acciones}| &gt; 0.05$" y comparala con el rebalanceo diario en error y en número de operaciones (con costos de 5 bps).</span>
+<span id="cb13-513"><a href="#cb13-513" aria-hidden="true" tabindex="-1"></a><span class="ss">3. </span>**Delta-gamma hedging**: agregá una segunda call (strike 110) a la cartera para anular el gamma además del delta, y verificá que el error en el escenario de pin risk se reduce.</span>
+<span id="cb13-514"><a href="#cb13-514" aria-hidden="true" tabindex="-1"></a><span class="ss">4. </span>**Put vendida**: repetí la simulación completa para una put. ¿Cambia el signo de los rebalanceos? ¿Y la exposición al gamma?</span>
+<span id="cb13-515"><a href="#cb13-515" aria-hidden="true" tabindex="-1"></a><span class="ss">5. </span>**Salto sorpresa**: introducí un salto de −10% en un día aleatorio del escenario (Capítulo 14) y medí el error de cobertura. ¿Por qué el delta hedging no puede protegerte de un salto?</span>
+<span id="cb13-516"><a href="#cb13-516" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb13-517"><a href="#cb13-517" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-518"><a href="#cb13-518" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-519"><a href="#cb13-519" aria-hidden="true" tabindex="-1"></a>Podés resolver estos ejercicios acá mismo: la celda ejecuta Python **en tu navegador**, sin instalar nada (la primera ejecución tarda unos segundos mientras carga el entorno; los paquetes que importes se instalan solos).</span>
+<span id="cb13-520"><a href="#cb13-520" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-521"><a href="#cb13-521" aria-hidden="true" tabindex="-1"></a><span class="in">```{pyodide-python}</span></span>
+<span id="cb13-522"><a href="#cb13-522" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: practica-navegador</span></span>
+<span id="cb13-523"><a href="#cb13-523" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb13-524"><a href="#cb13-524" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> scipy.stats <span class="im">import</span> norm</span>
+<span id="cb13-525"><a href="#cb13-525" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-526"><a href="#cb13-526" aria-hidden="true" tabindex="-1"></a><span class="co"># Tu solución acá...</span></span>
+<span id="cb13-527"><a href="#cb13-527" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb13-528"><a href="#cb13-528" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-529"><a href="#cb13-529" aria-hidden="true" tabindex="-1"></a>---</span>
+<span id="cb13-530"><a href="#cb13-530" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-531"><a href="#cb13-531" aria-hidden="true" tabindex="-1"></a><span class="fu">## Referencias</span></span>
+<span id="cb13-532"><a href="#cb13-532" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-533"><a href="#cb13-533" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-534"><a href="#cb13-534" aria-hidden="true" tabindex="-1"></a>::: {#refs}</span>
+<span id="cb13-535"><a href="#cb13-535" aria-hidden="true" tabindex="-1"></a>:::</span>
 </code></pre></div><button title="Copiar al portapapeles" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></div>
 </div></div></div></div></div>
 </div> <!-- /content -->

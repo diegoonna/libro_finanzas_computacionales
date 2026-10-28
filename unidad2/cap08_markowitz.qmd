@@ -320,6 +320,35 @@ def _esquema():
 _esquema()
 ```
 
+::: {.content-visible when-format="html"}
+::: {.simulador}
+[Simulador · Frontera eficiente y CML]{.simulador-titulo}
+
+El universo de cuatro activos del capítulo, con sus retornos esperados, la tasa libre de riesgo y la aversión al riesgo $\lambda$ del Capítulo 7 como controles (las volatilidades y correlaciones quedan fijas). "Tu cartera" es el punto de la CML que elige un inversor con esa $\lambda$: pone en el tangente la fracción $y = (E[R_T] - r_f)/(\lambda\,\sigma_T^2)$ y el resto a tasa. Las barras de abajo muestran qué hay adentro de cada cartera. Los pesos son el óptimo exacto: pueden diferir en alguna décima de los que imprime `minimize` con su tolerancia por defecto.
+
+```{=html}
+<div id="sim-frontera"></div>
+<script type="module">
+  import { montar } from "../simuladores/frontera.js";
+  montar(document.getElementById("sim-frontera"));
+</script>
+```
+
+::: {.probar}
+**Probá esto**
+
+1. Mové $\lambda$ de punta a punta. La estrella del tangente no se mueve y su barra tampoco: solo cambia cuánto va al tangente y cuánto a tasa. Con $\lambda$ bajo, la fracción en el tangente supera el 100%: el inversor se endeuda a tasa libre para comprar más tangente. Es la "misma composición para todos" de la @fig-frontera-cml.
+2. Subí el retorno esperado de la Acción Value de 10% a 11%, un solo punto. Su peso en el tangente casi se duplica (de ~8% a ~15%); con 12%, se triplica. Un punto de diferencia en $\boldsymbol{\mu}$ es menos que el error con que se lo estima, y el optimizador lo toma como verdad: es la sección que viene, "Los inputs importan más que el optimizador", y el motivo del Capítulo 9.
+3. Subí la tasa libre de riesgo de 3% a 4.5%. El tangente se corre hacia arriba por la frontera y el bono pasa de pesar ~71% a ~33%: cuando la tasa sin riesgo paga casi lo mismo que el bono, al bono ya no le queda nada que aportar.
+:::
+:::
+:::
+
+::: {.content-visible when-format="pdf"}
+::: {.callout-note title="Simulador interactivo"}
+En la [versión web de este capítulo](https://diegoonna.github.io/libro_finanzas_computacionales/unidad2/cap08_markowitz.html) hay un simulador de la frontera eficiente donde podés cambiar los retornos esperados, la tasa libre de riesgo y la aversión al riesgo, y ver cómo se recompone el tangente.
+:::
+:::
 
 ---
 

@@ -401,6 +401,36 @@ def _esquema():
 _esquema()
 ```
 
+::: {.content-visible when-format="html"}
+::: {.simulador}
+[Simulador · La mesa de cobertura]{.simulador-titulo}
+
+Vendiste la call del capítulo (al dinero, a un año, vol 25%) y la cubrís. Elegís cada cuánto rebalancear y cuánto cuesta cada operación. Arriba, un escenario: el precio, y la cartera replicante persiguiendo al valor de la opción (como en la @fig-hedge-cuatro-paneles). En el medio, el error final en 300 escenarios (como en la @fig-error-frecuencia). Abajo, el balance de la @fig-frecuencia-costos para todas las frecuencias a la vez: el desvío que deja el gamma, el costo que se paga en comisiones y el error total que combina los dos. Los números no coinciden con los del capítulo porque el navegador usa otro generador aleatorio.
+
+```{=html}
+<div id="sim-cobertura"></div>
+<script type="module">
+  import { montar } from "../simuladores/cobertura.js";
+  montar(document.getElementById("sim-cobertura"));
+</script>
+```
+
+::: {.probar}
+**Probá esto**
+
+1. Pasá de 252 rebalanceos por año a 12. El histograma se ensancha más de cuatro veces ($\sqrt{252/12} \approx 4.6$) y la cartera replicante del escenario se vuelve una escalera que alcanza a la opción solo de vez en cuando. El error medio sigue cerca de cero: rebalancear poco no sesga la cobertura, la vuelve más ruidosa.
+2. Volvé a 252 y subí el costo a 5 pb, el del capítulo: el histograma se corre hacia la izquierda unos 30 centavos, que es el peaje anual. Seguí subiendo y mirá el círculo verde del gráfico de abajo: con unos 20 pb, rebalancear todos los días ya es peor que hacerlo cada dos, y la frecuencia óptima empieza a bajar.
+3. Apretá "Nueva muestra" varias veces y mirá el error del escenario dibujado. Los peores suelen ser los que terminan cerca del strike: ahí el gamma es más alto y la escalera de rebalanceos se queda más atrás. Es la antesala de la sección que sigue.
+:::
+:::
+:::
+
+::: {.content-visible when-format="pdf"}
+::: {.callout-note title="Simulador interactivo"}
+En la [versión web de este capítulo](https://diegoonna.github.io/libro_finanzas_computacionales/unidad4/cap19_delta_hedging.html) hay un simulador donde podés elegir la frecuencia de rebalanceo y el costo de cada operación, y ver el error de cobertura en 300 escenarios.
+:::
+:::
+
 ---
 
 ## Cuando el gamma muerde: cerca del strike, cerca del vencimiento

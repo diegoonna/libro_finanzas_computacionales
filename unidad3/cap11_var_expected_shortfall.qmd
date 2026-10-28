@@ -301,6 +301,37 @@ print(f"ES histórico   (95%): ${cvar_95:>12,.2f}")
 
 Ambos métodos deberían parecerse con datos ~normales como los nuestros. Con retornos reales (colas pesadas), el histórico suele dar **más alto** — y es el que está diciendo la verdad. También se puede estimar el ES por **Monte Carlo**: simulás miles de retornos del modelo que quieras (con saltos, con t-Student) y promediás la cola simulada; lo haremos en el Capítulo 13.
 
+::: {.content-visible when-format="html"}
+::: {.simulador}
+[Simulador · VaR contra ES cuando las colas pesan]{.simulador-titulo}
+
+La @fig-anatomia-var-es comparaba una normal con una t de Student. Acá elegís la distribución de los retornos (la normal del capítulo, una t de Student con los grados de libertad que quieras, o la mezcla con "días de crisis" del Capítulo 7) y la comparás con lo que diría un VaR paramétrico: la normal con **la misma media y la misma volatilidad**. Todo se calcula con fórmulas exactas, sin simular. El gráfico de abajo muestra la cola izquierda en escala logarítmica, donde se ven las diferencias que la escala lineal aplasta.
+
+```{=html}
+<div id="sim-var-es"></div>
+<script type="module">
+  import { montar } from "../simuladores/var_es.js";
+  montar(document.getElementById("sim-var-es"));
+</script>
+```
+
+::: {.probar}
+**Probá esto**
+
+1. Arranca con una t de 3 grados de libertad al 95%. El VaR verdadero (2.00%) es **menor** que el de la normal (2.43%): según el VaR, la t es menos riesgosa. El ES dice lo contrario (3.32% contra 3.05%). Con la misma volatilidad, la t concentra más días tranquilos y más desastres: el VaR mira justo donde no se nota y el ES promedia los desastres.
+2. Subí la confianza a 99%. Ahora el VaR de la t sí supera al de la normal, y su ES es 50% mayor (6.0% contra 4.0%). Las colas pesadas aparecen recién lejos del centro, y un VaR al 95% no las ve.
+3. Pasá a "Con días de crisis", la mezcla del Capítulo 7, al 99%. El VaR normal subestima el verdadero un tercio (3.6% contra 5.4%) y el ES casi a la mitad (4.1% contra 7.6%). Subí los días de crisis a 10% y mirá cómo se separan.
+4. Volvé a la t y subí $\nu$ hasta 30: las dos curvas se funden. La normal es el caso límite de la t, y por eso un VaR paramétrico funciona bien solo cuando las colas son livianas.
+:::
+:::
+:::
+
+::: {.content-visible when-format="pdf"}
+::: {.callout-note title="Simulador interactivo"}
+En la [versión web de este capítulo](https://diegoonna.github.io/libro_finanzas_computacionales/unidad3/cap11_var_expected_shortfall.html) hay un simulador donde podés cambiar la forma de la distribución de los retornos y el nivel de confianza, y comparar el VaR y el ES verdaderos con los de una normal de igual volatilidad.
+:::
+:::
+
 ### Por qué el ES es "coherente" y el VaR no
 
 Hay un argumento matemático de fondo, y vale la pena entenderlo porque explica por qué **Basilea cambió del VaR al ES** para riesgo de mercado.

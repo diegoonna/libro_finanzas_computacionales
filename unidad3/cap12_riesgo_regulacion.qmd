@@ -399,6 +399,37 @@ for rho in [0.05, 0.20, 0.60]:
 
 Mirá la tabla: la **pérdida promedio es la misma** en las tres filas (la correlación no cambia cuántas hipotecas caen *en promedio*), pero la probabilidad de que la pérdida atraviese el tramo senior **se multiplica por órdenes de magnitud** al subir $\rho$. Con $\rho$ bajo, las pérdidas siempre rondan el promedio y el AAA es intocable; con $\rho$ alto, la distribución se vuelve bimodal — o no pasa casi nada, **o caen todas juntas**. El mismo instrumento, la misma mora esperada... y calificaciones que pasaron de "prácticamente libre de riesgo" a basura en cuestión de meses de 2007-2008.
 
+::: {.content-visible when-format="html"}
+::: {.simulador}
+[Simulador · El CDO y la correlación]{.simulador-titulo}
+
+La tabla de arriba prueba tres valores de $\rho$ con Monte Carlo. Acá $\rho$ se mueve de forma continua, junto con la mora, la pérdida por default y los puntos donde empieza cada tramo. Las barras son la distribución **exacta** de la pérdida del pool: condicional al factor común, los defaults son independientes y su número sigue una binomial, así que alcanza con integrar esa binomial sobre el factor, sin simular. Por eso las probabilidades pueden diferir en algún decimal de las de la tabla, que traen ruido de muestreo. Arranca con el CDO del capítulo.
+
+```{=html}
+<div id="sim-cdo"></div>
+<script type="module">
+  import { montar } from "../simuladores/cdo.js";
+  montar(document.getElementById("sim-cdo"));
+</script>
+```
+
+::: {.probar}
+**Probá esto**
+
+1. Mové $\rho$ de 0.05 a 0.6 sin perder de vista la línea naranja y la primera tarjeta: la pérdida esperada no se mueve del 4%. Lo que cambia es la forma. Con $\rho$ bajo, las pérdidas se amontonan cerca del promedio; con $\rho$ alto, la distribución se parte en dos: en un 41% de los escenarios no cae **ninguna** hipoteca, y el resto se reparte en una cola larga.
+2. Activá la escala logarítmica y mirá la zona verde. La probabilidad de que el senior AAA pierda algo pasa de ~0.000001% con $\rho = 0.05$ a 0.1% con 0.2 y a 3.5% con 0.6. El "AAA" depende entero de un parámetro que nadie observa.
+3. Mirá las tres pérdidas esperadas por tramo mientras subís $\rho$: el equity **mejora** (de ~40% a ~26%) y el senior empeora. La correlación no crea pérdidas: las pasa de un tramo a otro. Por eso el equity y el senior son apuestas opuestas sobre $\rho$, y por eso un modelo que la subestima infla justo el precio de los tramos senior.
+4. Con $\rho = 0.6$, subí el punto donde empieza el senior hasta que la probabilidad de que pierda vuelva al ~0.1% que tenía con $\rho = 0.2$. Hay que llevarlo cerca de 47%, y como la pérdida máxima posible del pool es 50% (si cayeran todas, con una pérdida de 50% cada una), del tramo senior casi no queda nada. Con correlación alta, no hay estructura de tramos que fabrique un AAA grande a partir de hipotecas mediocres.
+:::
+:::
+:::
+
+::: {.content-visible when-format="pdf"}
+::: {.callout-note title="Simulador interactivo"}
+En la [versión web de este capítulo](https://diegoonna.github.io/libro_finanzas_computacionales/unidad3/cap12_riesgo_regulacion.html) hay un simulador donde podés mover la correlación de los defaults y los tramos del CDO, y ver la distribución exacta de las pérdidas.
+:::
+:::
+
 El resto de la historia se sigue de ahí: los tramos AAA estaban en todos lados (bancos, fondos, aseguradoras como AIG que los aseguraban vía CDS), nadie sabía quién tenía cuánto, el interbancario se congeló, Lehman cayó, y el mundo descubrió la diferencia entre *riesgo* (lo que el modelo mide) e *incertidumbre* (lo que el modelo ni siquiera contempla).
 
 **Las lecciones de 2008** para el modelador:

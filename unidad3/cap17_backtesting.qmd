@@ -228,6 +228,37 @@ evaluar(señal_real, "Estrategia con edge real")
 Cuidado: ese p-value asume que evaluaste **una** estrategia. Si probaste 60, la probabilidad de que *alguna* pase el umbral del 5% por puro azar es enorme ($1 - 0.95^{60} \approx 95\%$). Las correcciones (Bonferroni: exigir $\alpha/N$; o el *Deflated Sharpe Ratio* de López de Prado) suben la vara según cuántas configuraciones miraste. La honestidad estadística empieza por **contar tus intentos**.
 :::
 
+::: {.content-visible when-format="html"}
+::: {.simulador}
+[Simulador · La fábrica de falsos descubrimientos]{.simulador-titulo}
+
+El experimento del capítulo, con perillas: cuántas ventanas de momentum probás y cuántos años de ruido puro hay (dos tercios para diseñar, uno para evaluar). Arriba, las variantes como en la @fig-snooping-is-oos; abajo, cómo crece el Sharpe in-sample de la mejor a medida que probás más, y lo que hace esa misma estrategia afuera. La muestra inicial es una en la que el espejismo se ve nítido, como la del capítulo; "Nuevo ruido" genera otras historias (no todas tan llamativas), y el interruptor repite el experimento 100 veces para ver el patrón y no una muestra elegida.
+
+```{=html}
+<div id="sim-falsos-descubrimientos"></div>
+<script type="module">
+  import { montar } from "../simuladores/falsos_descubrimientos.js";
+  montar(document.getElementById("sim-falsos-descubrimientos"));
+</script>
+```
+
+::: {.probar}
+**Probá esto**
+
+1. Bajá las variantes a 1 y subilas de a poco hasta 200, mirando el gráfico de abajo. La línea naranja (el mejor Sharpe in-sample hasta ahí) solo puede subir: cada intento nuevo es otra chance de que el ruido luzca bien. La azul, su desempeño afuera, se queda dando vueltas alrededor de cero.
+2. Activá la repetición. Cada punto es una historia de ruido distinta: casi todos caen a la derecha del cero (siempre elegimos la mejor in-sample) y se reparten arriba y abajo sin ningún patrón. El Sharpe in-sample no predice nada del out-of-sample.
+3. Con la repetición prendida, compará la tarjeta "pasa la vara del 5%" con la de "si fueran independientes". Con 60 ventanas la fórmula $1 - 0.95^{60}$ promete un 95% de falsos positivos, pero acá pasan bastantes menos: una ventana de 43 días y una de 44 son casi la misma estrategia, así que 60 ventanas no son 60 intentos independientes. El problema no desaparece, pero contar bien los intentos *efectivos* es parte del oficio (es lo que corrige el *Deflated Sharpe Ratio*).
+4. Con la repetición prendida, subí los años de 10 a 30. El Sharpe in-sample medio de la elegida baja (de ~0.4 a ~0.25), porque con más datos el ruido se promedia, pero el porcentaje de muestras que pasa la vara casi no cambia: la significancia aparente de la mejor de $N$ depende de cuántas probaste, no de cuántos datos tenés. Más historia no te protege del data snooping; contar los intentos, sí.
+:::
+:::
+:::
+
+::: {.content-visible when-format="pdf"}
+::: {.callout-note title="Simulador interactivo"}
+En la [versión web de este capítulo](https://diegoonna.github.io/libro_finanzas_computacionales/unidad3/cap17_backtesting.html) hay un simulador donde podés cambiar cuántas variantes probás y cuántos años de datos tenés, y ver cómo se fabrica un falso descubrimiento.
+:::
+:::
+
 ---
 
 ## Walk-forward: el estándar profesional

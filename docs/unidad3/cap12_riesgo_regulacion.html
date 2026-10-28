@@ -98,7 +98,7 @@ div.csl-indent {
 <link href="../site_libs/quarto-html/quarto-syntax-highlighting-33f28b034f783b36ff4b46fdeb362ebb.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap-fc826eba1f37c81109040fd91fc4bdf7.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-ad02148872e92d3647f50c46783ba542.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -1236,6 +1236,24 @@ Figura&nbsp;12.6: La cascada de un CDO. Las pérdidas del pool de hipotecas llen
 </div>
 </div>
 <p>Mirá la tabla: la <strong>pérdida promedio es la misma</strong> en las tres filas (la correlación no cambia cuántas hipotecas caen <em>en promedio</em>), pero la probabilidad de que la pérdida atraviese el tramo senior <strong>se multiplica por órdenes de magnitud</strong> al subir <span class="math inline">\(\rho\)</span>. Con <span class="math inline">\(\rho\)</span> bajo, las pérdidas siempre rondan el promedio y el AAA es intocable; con <span class="math inline">\(\rho\)</span> alto, la distribución se vuelve bimodal — o no pasa casi nada, <strong>o caen todas juntas</strong>. El mismo instrumento, la misma mora esperada… y calificaciones que pasaron de “prácticamente libre de riesgo” a basura en cuestión de meses de 2007-2008.</p>
+<div class="simulador">
+<p><span class="simulador-titulo">Simulador · El CDO y la correlación</span></p>
+<p>La tabla de arriba prueba tres valores de <span class="math inline">\(\rho\)</span> con Monte Carlo. Acá <span class="math inline">\(\rho\)</span> se mueve de forma continua, junto con la mora, la pérdida por default y los puntos donde empieza cada tramo. Las barras son la distribución <strong>exacta</strong> de la pérdida del pool: condicional al factor común, los defaults son independientes y su número sigue una binomial, así que alcanza con integrar esa binomial sobre el factor, sin simular. Por eso las probabilidades pueden diferir en algún decimal de las de la tabla, que traen ruido de muestreo. Arranca con el CDO del capítulo.</p>
+<div id="sim-cdo"></div>
+<script type="module">
+  import { montar } from "../simuladores/cdo.js";
+  montar(document.getElementById("sim-cdo"));
+</script>
+<div class="probar">
+<p><strong>Probá esto</strong></p>
+<ol type="1">
+<li>Mové <span class="math inline">\(\rho\)</span> de 0.05 a 0.6 sin perder de vista la línea naranja y la primera tarjeta: la pérdida esperada no se mueve del 4%. Lo que cambia es la forma. Con <span class="math inline">\(\rho\)</span> bajo, las pérdidas se amontonan cerca del promedio; con <span class="math inline">\(\rho\)</span> alto, la distribución se parte en dos: en un 41% de los escenarios no cae <strong>ninguna</strong> hipoteca, y el resto se reparte en una cola larga.</li>
+<li>Activá la escala logarítmica y mirá la zona verde. La probabilidad de que el senior AAA pierda algo pasa de ~0.000001% con <span class="math inline">\(\rho = 0.05\)</span> a 0.1% con 0.2 y a 3.5% con 0.6. El “AAA” depende entero de un parámetro que nadie observa.</li>
+<li>Mirá las tres pérdidas esperadas por tramo mientras subís <span class="math inline">\(\rho\)</span>: el equity <strong>mejora</strong> (de ~40% a ~26%) y el senior empeora. La correlación no crea pérdidas: las pasa de un tramo a otro. Por eso el equity y el senior son apuestas opuestas sobre <span class="math inline">\(\rho\)</span>, y por eso un modelo que la subestima infla justo el precio de los tramos senior.</li>
+<li>Con <span class="math inline">\(\rho = 0.6\)</span>, subí el punto donde empieza el senior hasta que la probabilidad de que pierda vuelva al ~0.1% que tenía con <span class="math inline">\(\rho = 0.2\)</span>. Hay que llevarlo cerca de 47%, y como la pérdida máxima posible del pool es 50% (si cayeran todas, con una pérdida de 50% cada una), del tramo senior casi no queda nada. Con correlación alta, no hay estructura de tramos que fabrique un AAA grande a partir de hipotecas mediocres.</li>
+</ol>
+</div>
+</div>
 <p>El resto de la historia se sigue de ahí: los tramos AAA estaban en todos lados (bancos, fondos, aseguradoras como AIG que los aseguraban vía CDS), nadie sabía quién tenía cuánto, el interbancario se congeló, Lehman cayó, y el mundo descubrió la diferencia entre <em>riesgo</em> (lo que el modelo mide) e <em>incertidumbre</em> (lo que el modelo ni siquiera contempla).</p>
 <p><strong>Las lecciones de 2008</strong> para el modelador:</p>
 <ol type="1">
@@ -2191,57 +2209,88 @@ Salmon, Felix. 2009. <span>«Recipe for Disaster: The Formula That Killed Wall S
 <span id="cb12-423"><a href="#cb12-423" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb12-424"><a href="#cb12-424" aria-hidden="true" tabindex="-1"></a>Mirá la tabla: la **pérdida promedio es la misma** en las tres filas (la correlación no cambia cuántas hipotecas caen *en promedio*), pero la probabilidad de que la pérdida atraviese el tramo senior **se multiplica por órdenes de magnitud** al subir $\rho$. Con $\rho$ bajo, las pérdidas siempre rondan el promedio y el AAA es intocable; con $\rho$ alto, la distribución se vuelve bimodal — o no pasa casi nada, **o caen todas juntas**. El mismo instrumento, la misma mora esperada... y calificaciones que pasaron de "prácticamente libre de riesgo" a basura en cuestión de meses de 2007-2008.</span>
 <span id="cb12-425"><a href="#cb12-425" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-426"><a href="#cb12-426" aria-hidden="true" tabindex="-1"></a>El resto de la historia se sigue de ahí: los tramos AAA estaban en todos lados (bancos, fondos, aseguradoras como AIG que los aseguraban vía CDS), nadie sabía quién tenía cuánto, el interbancario se congeló, Lehman cayó, y el mundo descubrió la diferencia entre *riesgo* (lo que el modelo mide) e *incertidumbre* (lo que el modelo ni siquiera contempla).</span>
-<span id="cb12-427"><a href="#cb12-427" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-428"><a href="#cb12-428" aria-hidden="true" tabindex="-1"></a>**Las lecciones de 2008** para el modelador:</span>
+<span id="cb12-426"><a href="#cb12-426" aria-hidden="true" tabindex="-1"></a>::: {.content-visible when-format="html"}</span>
+<span id="cb12-427"><a href="#cb12-427" aria-hidden="true" tabindex="-1"></a>::: {.simulador}</span>
+<span id="cb12-428"><a href="#cb12-428" aria-hidden="true" tabindex="-1"></a><span class="co">[</span><span class="ot">Simulador · El CDO y la correlación</span><span class="co">]</span>{.simulador-titulo}</span>
 <span id="cb12-429"><a href="#cb12-429" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-430"><a href="#cb12-430" aria-hidden="true" tabindex="-1"></a><span class="ss">1. </span>**Un parámetro calibrado en tiempos de calma no describe la crisis**: la correlación es *condicional al régimen*, y el régimen que importa es el peor.</span>
-<span id="cb12-431"><a href="#cb12-431" aria-hidden="true" tabindex="-1"></a><span class="ss">2. </span>**La elegancia matemática no valida los supuestos**: la cópula gaussiana era tratable y estándar; su supuesto central era falso.</span>
-<span id="cb12-432"><a href="#cb12-432" aria-hidden="true" tabindex="-1"></a><span class="ss">3. </span>**El riesgo de modelo se industrializa**: un modelo mediocre usado por una mesa es un problema local; usado por toda la industria para calificar billones, es sistémico.</span>
-<span id="cb12-433"><a href="#cb12-433" aria-hidden="true" tabindex="-1"></a><span class="ss">4. </span>**Las colas y la dependencia extrema importan más que el centro**: dos distribuciones con la misma media y varianza pueden tener riesgos de cola radicalmente distintos — el puente perfecto hacia el próximo capítulo.</span>
-<span id="cb12-434"><a href="#cb12-434" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-435"><a href="#cb12-435" aria-hidden="true" tabindex="-1"></a>---</span>
-<span id="cb12-436"><a href="#cb12-436" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-437"><a href="#cb12-437" aria-hidden="true" tabindex="-1"></a><span class="fu">## Errores comunes</span></span>
-<span id="cb12-438"><a href="#cb12-438" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-439"><a href="#cb12-439" aria-hidden="true" tabindex="-1"></a>::: {.callout-warning title="Trampas conceptuales de este capítulo"}</span>
-<span id="cb12-440"><a href="#cb12-440" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Tratar la correlación como constante**: es la trampa que une LTCM y 2008. Estimá correlaciones condicionales a regímenes de estrés, no promedios históricos.</span>
-<span id="cb12-441"><a href="#cb12-441" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Confundir solvencia con liquidez**: podés tener razón en la valuación y quebrar igual si el fondeo desaparece antes de que el precio converja.</span>
-<span id="cb12-442"><a href="#cb12-442" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Leer los stress tests como pronósticos**: un escenario no es una predicción; es una linterna apuntada a una vulnerabilidad.</span>
-<span id="cb12-443"><a href="#cb12-443" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Creer que la regulación elimina el riesgo**: lo redistribuye y lo acota. Cada marco regulatorio genera, además, sus propios incentivos y puntos ciegos (el arbitraje regulatorio de los RWA fue parte del problema en 2008).</span>
-<span id="cb12-444"><a href="#cb12-444" aria-hidden="true" tabindex="-1"></a>:::</span>
-<span id="cb12-445"><a href="#cb12-445" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-446"><a href="#cb12-446" aria-hidden="true" tabindex="-1"></a>---</span>
-<span id="cb12-447"><a href="#cb12-447" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-448"><a href="#cb12-448" aria-hidden="true" tabindex="-1"></a><span class="fu">## Ejercicios Propuestos</span></span>
-<span id="cb12-449"><a href="#cb12-449" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-450"><a href="#cb12-450" aria-hidden="true" tabindex="-1"></a>::: {.callout-important title="Ejercicios"}</span>
-<span id="cb12-451"><a href="#cb12-451" aria-hidden="true" tabindex="-1"></a><span class="ss">1. </span>**Escenario propio**: definí un escenario hipotético para la economía argentina (salto del tipo de cambio, caída de bonos, suba de tasas) y aplicáselo a la cartera del inicio del capítulo. Justificá los shocks elegidos.</span>
-<span id="cb12-452"><a href="#cb12-452" aria-hidden="true" tabindex="-1"></a><span class="ss">2. </span>**Sensibilidad del RWA**: recalculá el ratio CET1 del banco de ejemplo si las hipotecas pasan a ponderar 50% y los préstamos PyME 100%. ¿Cuánto capital adicional necesita para mantener 10.5%?</span>
-<span id="cb12-453"><a href="#cb12-453" aria-hidden="true" tabindex="-1"></a><span class="ss">3. </span>**LTCM paramétrico**: en la simulación de LTCM, barré el apalancamiento de 5:1 a 30:1 y graficá el capital final en cada caso. ¿A partir de qué nivel el fondo no sobrevive a la crisis?</span>
-<span id="cb12-454"><a href="#cb12-454" aria-hidden="true" tabindex="-1"></a><span class="ss">4. </span>**La bimodalidad del CDO**: graficá el histograma de pérdidas de la cartera hipotecaria para $\rho = 0.05$ y $\rho = 0.6$. Describí la diferencia de forma — ahí está toda la crisis de 2008.</span>
-<span id="cb12-455"><a href="#cb12-455" aria-hidden="true" tabindex="-1"></a><span class="ss">5. </span>**Correlación condicional**: con datos reales de dos índices bursátiles, estimá la correlación usando solo los días en que ambos caen más de 1%. Comparala con la correlación incondicional.</span>
-<span id="cb12-456"><a href="#cb12-456" aria-hidden="true" tabindex="-1"></a>:::</span>
-<span id="cb12-457"><a href="#cb12-457" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-430"><a href="#cb12-430" aria-hidden="true" tabindex="-1"></a>La tabla de arriba prueba tres valores de $\rho$ con Monte Carlo. Acá $\rho$ se mueve de forma continua, junto con la mora, la pérdida por default y los puntos donde empieza cada tramo. Las barras son la distribución **exacta** de la pérdida del pool: condicional al factor común, los defaults son independientes y su número sigue una binomial, así que alcanza con integrar esa binomial sobre el factor, sin simular. Por eso las probabilidades pueden diferir en algún decimal de las de la tabla, que traen ruido de muestreo. Arranca con el CDO del capítulo.</span>
+<span id="cb12-431"><a href="#cb12-431" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-432"><a href="#cb12-432" aria-hidden="true" tabindex="-1"></a><span class="in">```{=html}</span></span>
+<span id="cb12-433"><a href="#cb12-433" aria-hidden="true" tabindex="-1"></a><span class="in">&lt;div id="sim-cdo"&gt;&lt;/div&gt;</span></span>
+<span id="cb12-434"><a href="#cb12-434" aria-hidden="true" tabindex="-1"></a><span class="in">&lt;script type="module"&gt;</span></span>
+<span id="cb12-435"><a href="#cb12-435" aria-hidden="true" tabindex="-1"></a><span class="in">  import { montar } from "../simuladores/cdo.js";</span></span>
+<span id="cb12-436"><a href="#cb12-436" aria-hidden="true" tabindex="-1"></a><span class="in">  montar(document.getElementById("sim-cdo"));</span></span>
+<span id="cb12-437"><a href="#cb12-437" aria-hidden="true" tabindex="-1"></a><span class="in">&lt;/script&gt;</span></span>
+<span id="cb12-438"><a href="#cb12-438" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb12-439"><a href="#cb12-439" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-440"><a href="#cb12-440" aria-hidden="true" tabindex="-1"></a>::: {.probar}</span>
+<span id="cb12-441"><a href="#cb12-441" aria-hidden="true" tabindex="-1"></a>**Probá esto**</span>
+<span id="cb12-442"><a href="#cb12-442" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-443"><a href="#cb12-443" aria-hidden="true" tabindex="-1"></a><span class="ss">1. </span>Mové $\rho$ de 0.05 a 0.6 sin perder de vista la línea naranja y la primera tarjeta: la pérdida esperada no se mueve del 4%. Lo que cambia es la forma. Con $\rho$ bajo, las pérdidas se amontonan cerca del promedio; con $\rho$ alto, la distribución se parte en dos: en un 41% de los escenarios no cae **ninguna** hipoteca, y el resto se reparte en una cola larga.</span>
+<span id="cb12-444"><a href="#cb12-444" aria-hidden="true" tabindex="-1"></a><span class="ss">2. </span>Activá la escala logarítmica y mirá la zona verde. La probabilidad de que el senior AAA pierda algo pasa de ~0.000001% con $\rho = 0.05$ a 0.1% con 0.2 y a 3.5% con 0.6. El "AAA" depende entero de un parámetro que nadie observa.</span>
+<span id="cb12-445"><a href="#cb12-445" aria-hidden="true" tabindex="-1"></a><span class="ss">3. </span>Mirá las tres pérdidas esperadas por tramo mientras subís $\rho$: el equity **mejora** (de ~40% a ~26%) y el senior empeora. La correlación no crea pérdidas: las pasa de un tramo a otro. Por eso el equity y el senior son apuestas opuestas sobre $\rho$, y por eso un modelo que la subestima infla justo el precio de los tramos senior.</span>
+<span id="cb12-446"><a href="#cb12-446" aria-hidden="true" tabindex="-1"></a><span class="ss">4. </span>Con $\rho = 0.6$, subí el punto donde empieza el senior hasta que la probabilidad de que pierda vuelva al ~0.1% que tenía con $\rho = 0.2$. Hay que llevarlo cerca de 47%, y como la pérdida máxima posible del pool es 50% (si cayeran todas, con una pérdida de 50% cada una), del tramo senior casi no queda nada. Con correlación alta, no hay estructura de tramos que fabrique un AAA grande a partir de hipotecas mediocres.</span>
+<span id="cb12-447"><a href="#cb12-447" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb12-448"><a href="#cb12-448" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb12-449"><a href="#cb12-449" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb12-450"><a href="#cb12-450" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-451"><a href="#cb12-451" aria-hidden="true" tabindex="-1"></a>::: {.content-visible when-format="pdf"}</span>
+<span id="cb12-452"><a href="#cb12-452" aria-hidden="true" tabindex="-1"></a>::: {.callout-note title="Simulador interactivo"}</span>
+<span id="cb12-453"><a href="#cb12-453" aria-hidden="true" tabindex="-1"></a>En la <span class="co">[</span><span class="ot">versión web de este capítulo</span><span class="co">](https://diegoonna.github.io/libro_finanzas_computacionales/unidad3/cap12_riesgo_regulacion.html)</span> hay un simulador donde podés mover la correlación de los defaults y los tramos del CDO, y ver la distribución exacta de las pérdidas.</span>
+<span id="cb12-454"><a href="#cb12-454" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb12-455"><a href="#cb12-455" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb12-456"><a href="#cb12-456" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-457"><a href="#cb12-457" aria-hidden="true" tabindex="-1"></a>El resto de la historia se sigue de ahí: los tramos AAA estaban en todos lados (bancos, fondos, aseguradoras como AIG que los aseguraban vía CDS), nadie sabía quién tenía cuánto, el interbancario se congeló, Lehman cayó, y el mundo descubrió la diferencia entre *riesgo* (lo que el modelo mide) e *incertidumbre* (lo que el modelo ni siquiera contempla).</span>
 <span id="cb12-458"><a href="#cb12-458" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-459"><a href="#cb12-459" aria-hidden="true" tabindex="-1"></a>Podés resolver estos ejercicios acá mismo: la celda ejecuta Python **en tu navegador**, sin instalar nada (la primera ejecución tarda unos segundos mientras carga el entorno; los paquetes que importes se instalan solos).</span>
+<span id="cb12-459"><a href="#cb12-459" aria-hidden="true" tabindex="-1"></a>**Las lecciones de 2008** para el modelador:</span>
 <span id="cb12-460"><a href="#cb12-460" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-461"><a href="#cb12-461" aria-hidden="true" tabindex="-1"></a><span class="in">```{pyodide-python}</span></span>
-<span id="cb12-462"><a href="#cb12-462" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: practica-navegador</span></span>
-<span id="cb12-463"><a href="#cb12-463" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
-<span id="cb12-464"><a href="#cb12-464" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-465"><a href="#cb12-465" aria-hidden="true" tabindex="-1"></a>rng <span class="op">=</span> np.random.default_rng(<span class="dv">42</span>)</span>
-<span id="cb12-466"><a href="#cb12-466" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-467"><a href="#cb12-467" aria-hidden="true" tabindex="-1"></a><span class="co"># Tu solución acá...</span></span>
-<span id="cb12-468"><a href="#cb12-468" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb12-461"><a href="#cb12-461" aria-hidden="true" tabindex="-1"></a><span class="ss">1. </span>**Un parámetro calibrado en tiempos de calma no describe la crisis**: la correlación es *condicional al régimen*, y el régimen que importa es el peor.</span>
+<span id="cb12-462"><a href="#cb12-462" aria-hidden="true" tabindex="-1"></a><span class="ss">2. </span>**La elegancia matemática no valida los supuestos**: la cópula gaussiana era tratable y estándar; su supuesto central era falso.</span>
+<span id="cb12-463"><a href="#cb12-463" aria-hidden="true" tabindex="-1"></a><span class="ss">3. </span>**El riesgo de modelo se industrializa**: un modelo mediocre usado por una mesa es un problema local; usado por toda la industria para calificar billones, es sistémico.</span>
+<span id="cb12-464"><a href="#cb12-464" aria-hidden="true" tabindex="-1"></a><span class="ss">4. </span>**Las colas y la dependencia extrema importan más que el centro**: dos distribuciones con la misma media y varianza pueden tener riesgos de cola radicalmente distintos — el puente perfecto hacia el próximo capítulo.</span>
+<span id="cb12-465"><a href="#cb12-465" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-466"><a href="#cb12-466" aria-hidden="true" tabindex="-1"></a>---</span>
+<span id="cb12-467"><a href="#cb12-467" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-468"><a href="#cb12-468" aria-hidden="true" tabindex="-1"></a><span class="fu">## Errores comunes</span></span>
 <span id="cb12-469"><a href="#cb12-469" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-470"><a href="#cb12-470" aria-hidden="true" tabindex="-1"></a>---</span>
-<span id="cb12-471"><a href="#cb12-471" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-472"><a href="#cb12-472" aria-hidden="true" tabindex="-1"></a><span class="fu">## Referencias</span></span>
-<span id="cb12-473"><a href="#cb12-473" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-474"><a href="#cb12-474" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-475"><a href="#cb12-475" aria-hidden="true" tabindex="-1"></a>::: {#refs}</span>
-<span id="cb12-476"><a href="#cb12-476" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb12-470"><a href="#cb12-470" aria-hidden="true" tabindex="-1"></a>::: {.callout-warning title="Trampas conceptuales de este capítulo"}</span>
+<span id="cb12-471"><a href="#cb12-471" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Tratar la correlación como constante**: es la trampa que une LTCM y 2008. Estimá correlaciones condicionales a regímenes de estrés, no promedios históricos.</span>
+<span id="cb12-472"><a href="#cb12-472" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Confundir solvencia con liquidez**: podés tener razón en la valuación y quebrar igual si el fondeo desaparece antes de que el precio converja.</span>
+<span id="cb12-473"><a href="#cb12-473" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Leer los stress tests como pronósticos**: un escenario no es una predicción; es una linterna apuntada a una vulnerabilidad.</span>
+<span id="cb12-474"><a href="#cb12-474" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Creer que la regulación elimina el riesgo**: lo redistribuye y lo acota. Cada marco regulatorio genera, además, sus propios incentivos y puntos ciegos (el arbitraje regulatorio de los RWA fue parte del problema en 2008).</span>
+<span id="cb12-475"><a href="#cb12-475" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb12-476"><a href="#cb12-476" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-477"><a href="#cb12-477" aria-hidden="true" tabindex="-1"></a>---</span>
+<span id="cb12-478"><a href="#cb12-478" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-479"><a href="#cb12-479" aria-hidden="true" tabindex="-1"></a><span class="fu">## Ejercicios Propuestos</span></span>
+<span id="cb12-480"><a href="#cb12-480" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-481"><a href="#cb12-481" aria-hidden="true" tabindex="-1"></a>::: {.callout-important title="Ejercicios"}</span>
+<span id="cb12-482"><a href="#cb12-482" aria-hidden="true" tabindex="-1"></a><span class="ss">1. </span>**Escenario propio**: definí un escenario hipotético para la economía argentina (salto del tipo de cambio, caída de bonos, suba de tasas) y aplicáselo a la cartera del inicio del capítulo. Justificá los shocks elegidos.</span>
+<span id="cb12-483"><a href="#cb12-483" aria-hidden="true" tabindex="-1"></a><span class="ss">2. </span>**Sensibilidad del RWA**: recalculá el ratio CET1 del banco de ejemplo si las hipotecas pasan a ponderar 50% y los préstamos PyME 100%. ¿Cuánto capital adicional necesita para mantener 10.5%?</span>
+<span id="cb12-484"><a href="#cb12-484" aria-hidden="true" tabindex="-1"></a><span class="ss">3. </span>**LTCM paramétrico**: en la simulación de LTCM, barré el apalancamiento de 5:1 a 30:1 y graficá el capital final en cada caso. ¿A partir de qué nivel el fondo no sobrevive a la crisis?</span>
+<span id="cb12-485"><a href="#cb12-485" aria-hidden="true" tabindex="-1"></a><span class="ss">4. </span>**La bimodalidad del CDO**: graficá el histograma de pérdidas de la cartera hipotecaria para $\rho = 0.05$ y $\rho = 0.6$. Describí la diferencia de forma — ahí está toda la crisis de 2008.</span>
+<span id="cb12-486"><a href="#cb12-486" aria-hidden="true" tabindex="-1"></a><span class="ss">5. </span>**Correlación condicional**: con datos reales de dos índices bursátiles, estimá la correlación usando solo los días en que ambos caen más de 1%. Comparala con la correlación incondicional.</span>
+<span id="cb12-487"><a href="#cb12-487" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb12-488"><a href="#cb12-488" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-489"><a href="#cb12-489" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-490"><a href="#cb12-490" aria-hidden="true" tabindex="-1"></a>Podés resolver estos ejercicios acá mismo: la celda ejecuta Python **en tu navegador**, sin instalar nada (la primera ejecución tarda unos segundos mientras carga el entorno; los paquetes que importes se instalan solos).</span>
+<span id="cb12-491"><a href="#cb12-491" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-492"><a href="#cb12-492" aria-hidden="true" tabindex="-1"></a><span class="in">```{pyodide-python}</span></span>
+<span id="cb12-493"><a href="#cb12-493" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: practica-navegador</span></span>
+<span id="cb12-494"><a href="#cb12-494" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb12-495"><a href="#cb12-495" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-496"><a href="#cb12-496" aria-hidden="true" tabindex="-1"></a>rng <span class="op">=</span> np.random.default_rng(<span class="dv">42</span>)</span>
+<span id="cb12-497"><a href="#cb12-497" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-498"><a href="#cb12-498" aria-hidden="true" tabindex="-1"></a><span class="co"># Tu solución acá...</span></span>
+<span id="cb12-499"><a href="#cb12-499" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb12-500"><a href="#cb12-500" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-501"><a href="#cb12-501" aria-hidden="true" tabindex="-1"></a>---</span>
+<span id="cb12-502"><a href="#cb12-502" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-503"><a href="#cb12-503" aria-hidden="true" tabindex="-1"></a><span class="fu">## Referencias</span></span>
+<span id="cb12-504"><a href="#cb12-504" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-505"><a href="#cb12-505" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-506"><a href="#cb12-506" aria-hidden="true" tabindex="-1"></a>::: {#refs}</span>
+<span id="cb12-507"><a href="#cb12-507" aria-hidden="true" tabindex="-1"></a>:::</span>
 </code></pre></div><button title="Copiar al portapapeles" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></div>
 </div></div></div></div></div>
 </div> <!-- /content -->
