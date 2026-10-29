@@ -686,6 +686,36 @@ La TIR da cerca del **9.3%**: comprando a $950 un bono que promete cupones del 8
 La búsqueda incremental es el método numérico más simple para resolver ecuaciones que no se pueden despejar. Es lento pero transparente. En el Capítulo 3 vas a empaquetar esta lógica en una función reutilizable, y en el Capítulo 18 vas a conocer a su primo profesional —Newton-Raphson— extrayendo volatilidades implícitas de opciones. La idea es la misma; solo mejora la puntería.
 :::
 
+::: {.content-visible when-format="html"}
+::: {.simulador}
+[Simulador · Precio y TIR de un bono]{.simulador-titulo}
+
+Los dos problemas del caso viven sobre una misma curva: el precio del bono a cada tasa de descuento. El punto naranja es la valuación directa (elegís la tasa, sale el precio); la línea verde punteada es el precio de mercado, y donde corta la curva está su TIR (la búsqueda inversa). Abajo, cada flujo junto a su valor presente. El nominal es siempre $1000; arranca con el bono del capítulo.
+
+```{=html}
+<div id="sim-bono"></div>
+<script type="module">
+  import { montar } from "../simuladores/bono.js";
+  montar(document.getElementById("sim-bono"));
+</script>
+```
+
+::: {.probar}
+**Probá esto**
+
+1. Bajá la tasa de mercado de 10% a 8%, la misma del cupón: el precio llega justo a $1000, **a la par**. Por debajo del 8% el bono cotiza *sobre* la par: paga más de lo que exige el mercado.
+2. Llevá el precio de mercado a $925, casi el precio a tu tasa: el rombo verde se apoya sobre el punto naranja y la TIR da ~10%. Valuar y buscar la TIR son el mismo cálculo leído en los dos sentidos.
+3. Mirá las dos sensibilidades con el plazo en 5 años: −3.79% si la tasa sube 1 pp, +3.99% si baja. Subí el plazo a 30 años: pasan a −8.91% y +10.57%. Los bonos largos son mucho más sensibles a la tasa, y la curva no es una recta: las bajas de tasa suman más de lo que restan las subas.
+:::
+:::
+:::
+
+::: {.content-visible when-format="pdf"}
+::: {.callout-note title="Simulador interactivo"}
+En la [versión web de este capítulo](https://diegoonna.github.io/libro_finanzas_computacionales/unidad1/cap02_iteraciones_estructuras.html) hay un simulador donde podés mover el cupón, el plazo, la tasa y el precio de mercado, y ver cómo cambian el precio y la TIR del bono.
+:::
+:::
+
 ---
 
 ## Errores comunes

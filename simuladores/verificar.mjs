@@ -9,7 +9,7 @@ import {
   normCdf, bsPrecio, bsGriegas, generadorNormal, finalesGBM, media, desvio, mediana,
   normInv, lgamma, tCdf, distNormal, distT, distMezcla, varES,
   covarianza, minimaVarianza, tangente, puntoFrontera, retornoCartera, volCartera,
-  distribucionDefaults, estrategiaMomentum, sharpeAnual, simularCobertura,
+  distribucionDefaults, estrategiaMomentum, sharpeAnual, simularCobertura, precioBono, tirBono,
 } from "./finanzas.js";
 
 let fallas = 0;
@@ -118,6 +118,17 @@ for (const [rho, refSenior, refCero] of [[0.05, 1.3150452995215755e-08, 0.005885
   chequear(`CDO ρ=${rho} P(0 defaults)`, p[0], refCero, 1e-9);
   chequear(`CDO ρ=${rho} pérdida esperada`, p.reduce((s, v, k) => s + v * k / 100 * 0.5, 0), 0.04, 1e-9);
 }
+
+// Bonos de los Capítulos 2 y 3, contra valuacion_bono y scipy.optimize.brentq
+for (const [c, n, r, ref] of [[0.08, 5, 0.10, 924.1842646118308], [0.08, 5, 0, 1400],
+  [0, 30, 0.06, 174.1101309106343], [0.12, 20, 0.04, 2087.2261075974143]]) {
+  chequear(`precio bono c=${c} n=${n} r=${r}`, precioBono(1000, c, n, r), ref, 1e-9);
+}
+for (const [c, n, precio, ref] of [[0.08, 5, 950, 0.09295327539501987], [0, 10, 500, 0.07177346253629312],
+  [0.06, 30, 1300, 0.04218729185186634]]) {
+  chequear(`TIR bono c=${c} n=${n} a $${precio}`, tirBono(1000, c, n, precio), ref, 1e-12);
+}
+chequear("TIR fuera de rango", tirBono(1000, 0.08, 5, 1e6) ?? -1, -1, 0);
 
 // Momentum del Capítulo 17 sobre una serie determinística, contra la versión de numpy
 const serie = Float64Array.from({ length: 300 }, (_, t) => 0.01 * Math.sin(t * 1.7) + 0.003 * Math.cos(t * 0.3) - 0.0005);

@@ -467,6 +467,31 @@ export function perdidaTramo(perdida, desde, hasta) {
   return Math.min(Math.max(perdida - desde, 0), hasta - desde) / (hasta - desde);
 }
 
+// --- Bonos (Capítulos 2 y 3) ---------------------------------------------
+
+// Flujos de un bono bullet con cupón anual: el último año devuelve además el nominal
+export function flujosBono(nominal, tasaCupon, anios) {
+  return Array.from({ length: anios }, (_, i) => nominal * tasaCupon + (i === anios - 1 ? nominal : 0));
+}
+
+// Precio como suma de flujos descontados, como valuacion_bono del Capítulo 3
+export function precioBono(nominal, tasaCupon, anios, tasa) {
+  return flujosBono(nominal, tasaCupon, anios).reduce((p, f, i) => p + f / (1 + tasa) ** (i + 1), 0);
+}
+
+// TIR al precio de mercado. El capítulo la busca de a 0.01%; acá se biseca, porque el
+// precio baja siempre que la tasa sube. Devuelve null si cae fuera de [−50%, 500%].
+export function tirBono(nominal, tasaCupon, anios, precio) {
+  let lo = -0.5, hi = 5;
+  const exceso = (r) => precioBono(nominal, tasaCupon, anios, r) - precio;
+  if (exceso(lo) < 0 || exceso(hi) > 0) return null;
+  for (let i = 0; i < 100; i++) {
+    const m = (lo + hi) / 2;
+    if (exceso(m) > 0) lo = m; else hi = m;
+  }
+  return (lo + hi) / 2;
+}
+
 // --- Backtesting (Capítulo 17) -------------------------------------------
 
 // Momentum del capítulo: el día t se invierte si la media de los `ventana` días previos
