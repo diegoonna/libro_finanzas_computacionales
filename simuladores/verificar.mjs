@@ -10,6 +10,7 @@ import {
   normInv, lgamma, tCdf, distNormal, distT, distMezcla, varES,
   covarianza, minimaVarianza, tangente, puntoFrontera, retornoCartera, volCartera,
   distribucionDefaults, estrategiaMomentum, sharpeAnual, simularCobertura, precioBono, tirBono,
+  covMuestral, ordenJerarquico, pesosHRP,
 } from "./finanzas.js";
 
 let fallas = 0;
@@ -108,6 +109,26 @@ chequear("tangente Sharpe", (retornoCartera(tan, muL) - 0.03) / volCartera(tan, 
 const wf = puntoFrontera(SigmaL, muL, retornoCartera(tan, muL));
 chequear("frontera: retorno objetivo", retornoCartera(wf, muL), retornoCartera(tan, muL), 1e-12);
 chequear("frontera: pasa por el tangente", volCartera(wf, SigmaL), volCartera(tan, SigmaL), 1e-9);
+
+// HRP del Capítulo 9 sobre series determinísticas, contra hierarchy.leaves_list y hrp() del libro
+const serieHRP = (n, k) => Array.from({ length: n }, (_, t) => Array.from({ length: k }, (_, j) =>
+  0.01 * Math.sin(t * (j + 1) * 0.7 + j) + 0.004 * Math.cos(t * 0.37 * (j + 2))
+  + (j < 2 ? 0.012 * Math.sin(t * 1.3) : 0) + (k > 5 && (j === 4 || j === 5) ? 0.009 * Math.cos(t * 0.53) : 0)));
+for (const [n, k, ordenRef, hrpRef, mvRef] of [
+  [300, 5, [2, 0, 1, 3, 4],
+   [0.12605463412184534, 0.12864562322725867, 0.2811029663087184, 0.23253391264901319, 0.2316628636931644],
+   [0.08577810417489888, 0.09792624440406221, 0.30836431328065905, 0.2551803491259743, 0.2527509890144055]],
+  [400, 7, [0, 1, 4, 5, 2, 3, 6],
+   [0.07265621711550609, 0.07119732018474635, 0.21619303195487632, 0.21043587646552261,
+    0.09199798811931965, 0.12791052353941074, 0.20960904262061822],
+   [0.06417262967837586, 0.07142870702682035, 0.224368811012687, 0.22470420124244606,
+    0.0964079382023273, 0.09411413939901983, 0.22480357343832358]]]) {
+  const S = covMuestral(serieHRP(n, k));
+  const orden = ordenJerarquico(S);
+  chequear(`HRP ${k} activos: orden de hojas ${orden}`, orden.join() === ordenRef.join() ? 1 : 0, 1, 0);
+  pesosHRP(S, orden).forEach((w, i) => chequear(`HRP ${k} activos: peso ${i}`, w, hrpRef[i], 1e-12));
+  minimaVarianza(S, true).forEach((w, i) => chequear(`mín. varianza ${k} activos: peso ${i}`, w, mvRef[i], 1e-10));
+}
 
 // CDO del Capítulo 12 (100 hipotecas, PD 8%, LGD 50%): distribución exacta contra scipy.integrate
 for (const [rho, refSenior, refCero] of [[0.05, 1.3150452995215755e-08, 0.005885694299007276],

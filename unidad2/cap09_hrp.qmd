@@ -409,6 +409,36 @@ La @fig-vol-oos tiene un resultado que sorprende a primera vista: las dos distri
 HRP renuncia a usar información que Markowitz sí usa (las correlaciones exactas entre grupos lejanos y los retornos esperados). Si tus estimaciones de $\mu$ y $\Sigma$ fueran perfectas, Markowitz sería imbatible. HRP gana justamente porque en el mundo real **nunca lo son**. La elección depende de cuánto confiás en tus estimaciones — un tema que retomamos en el capítulo siguiente con Black-Litterman, que ataca el mismo problema desde otro ángulo: mejorar las estimaciones en lugar de esquivarlas.
 :::
 
+::: {.content-visible when-format="html"}
+::: {.simulador}
+[Simulador · Markowitz contra HRP]{.simulador-titulo}
+
+La @fig-inestabilidad-pesos comparaba dos muestras de la misma realidad; acá hay cuarenta. Cada punto es el peso de un activo en una muestra: cuanto más desparramados, más inestable el método. Cada muestra se evalúa además en 250 días que el estimador no vio, como en la prueba de la @fig-vol-oos. Podés mover la correlación de los gemelos (sin cambiar su volatilidad) y cuántos días se usan para estimar. Arranca con los gemelos del capítulo y 250 días.
+
+```{=html}
+<div id="sim-hrp"></div>
+<script type="module">
+  import { montar } from "../simuladores/hrp.js";
+  montar(document.getElementById("sim-hrp"));
+</script>
+```
+
+::: {.probar}
+**Probá esto**
+
+1. Subí la correlación de los gemelos a 0.99. El peso del Activo 0 con Markowitz pasa a ir de −38% a 47% según la muestra; con HRP sigue entre 4% y 12%. Pero mirá "Gemelos juntos": Markowitz casi no cambia cuánto pone en el bloque, solo cómo lo reparte entre dos sustitutos. Por eso el riesgo fuera de muestra apenas se mueve.
+2. Volvé a 0.93 y llevá los días a 2000. Los cortos desaparecen y Markowitz le gana a HRP fuera de muestra (8.28% contra 8.43%): con mucha historia, $\Sigma$ se estima bien y la inversa ya no amplifica ruido.
+3. Ahora bajá a 60 días y a una correlación de 0.5: HRP queda con menos riesgo en 28 de las 40 muestras. Su ventaja aparece cuando la estimación es pobre.
+:::
+:::
+:::
+
+::: {.content-visible when-format="pdf"}
+::: {.callout-note title="Simulador interactivo"}
+En la [versión web de este capítulo](https://diegoonna.github.io/libro_finanzas_computacionales/unidad2/cap09_hrp.html) hay un simulador que repite el experimento con cuarenta muestras, donde podés mover la correlación de los gemelos y el largo de la muestra y comparar la estabilidad y el riesgo fuera de muestra de los dos métodos.
+:::
+:::
+
 ---
 
 ## Con datos reales

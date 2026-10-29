@@ -438,6 +438,79 @@ export function puntoFrontera(Sigma, mu, objetivo, cortos = false) {
   }, (w) => -volCartera(w, Sigma));
 }
 
+// --- Hierarchical Risk Parity (Capítulo 9) ---------------------------------
+
+// Covarianza muestral (con n − 1, como np.cov y DataFrame.cov) de filas de retornos
+export function covMuestral(filas) {
+  const n = filas.length;
+  const k = filas[0].length;
+  const m = new Array(k).fill(0);
+  for (const f of filas) for (let j = 0; j < k; j++) m[j] += f[j] / n;
+  const S = Array.from({ length: k }, () => new Array(k).fill(0));
+  for (const f of filas) {
+    for (let i = 0; i < k; i++) {
+      const di = f[i] - m[i];
+      for (let j = i; j < k; j++) S[i][j] += di * (f[j] - m[j]);
+    }
+  }
+  for (let i = 0; i < k; i++) for (let j = i; j < k; j++) S[j][i] = S[i][j] /= n - 1;
+  return S;
+}
+
+// Orden de las hojas del dendrograma: distancia sqrt((1 − ρ)/2), single linkage y el
+// recorrido de hierarchy.leaves_list (cada unión pone primero el grupo de menor número).
+export function ordenJerarquico(Sigma) {
+  const k = Sigma.length;
+  const dist = (i, j) => Math.sqrt(Math.max(0, (1 - Sigma[i][j] / Math.sqrt(Sigma[i][i] * Sigma[j][j])) / 2));
+  let grupos = [...Array(k).keys()].map((i) => ({ id: i, hojas: [i] }));
+  let siguiente = k;
+  while (grupos.length > 1) {
+    let mejor = null;
+    for (let a = 0; a < grupos.length; a++) {
+      for (let b = a + 1; b < grupos.length; b++) {
+        let d = Infinity;
+        for (const i of grupos[a].hojas) for (const j of grupos[b].hojas) d = Math.min(d, dist(i, j));
+        if (!mejor || d < mejor.d) mejor = { a, b, d };
+      }
+    }
+    const [g1, g2] = [grupos[mejor.a], grupos[mejor.b]].sort((x, y) => x.id - y.id);
+    grupos = grupos.filter((_, i) => i !== mejor.a && i !== mejor.b);
+    grupos.push({ id: siguiente++, hojas: [...g1.hojas, ...g2.hojas] });
+  }
+  return grupos[0].hojas;
+}
+
+// Varianza del sub-portafolio inverse-variance de un grupo (solo usa su diagonal para los pesos)
+function varianzaGrupo(Sigma, items) {
+  const iv = items.map((i) => 1 / Sigma[i][i]);
+  const s = sumar(iv);
+  const w = iv.map((x) => x / s);
+  let v = 0;
+  items.forEach((i, a) => items.forEach((j, b) => { v += w[a] * w[b] * Sigma[i][j]; }));
+  return v;
+}
+
+// Bisección recursiva sobre la lista ordenada, como hrp() del capítulo. Pesos en el orden original.
+export function pesosHRP(Sigma, orden) {
+  const w = new Array(Sigma.length).fill(1);
+  let grupos = [orden];
+  while (grupos.length) {
+    const nuevos = [];
+    for (const g of grupos) {
+      if (g.length <= 1) continue;
+      const izq = g.slice(0, Math.floor(g.length / 2));
+      const der = g.slice(Math.floor(g.length / 2));
+      const vIzq = varianzaGrupo(Sigma, izq);
+      const alpha = 1 - vIzq / (vIzq + varianzaGrupo(Sigma, der));
+      for (const i of izq) w[i] *= alpha;
+      for (const i of der) w[i] *= 1 - alpha;
+      nuevos.push(izq, der);
+    }
+    grupos = nuevos;
+  }
+  return w;
+}
+
 // --- Riesgo de crédito: CDO con cópula gaussiana de un factor (Capítulo 12) ---
 
 // Distribución EXACTA del número de defaults en un pool de n créditos. Condicional al
