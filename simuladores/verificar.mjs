@@ -10,7 +10,7 @@ import {
   normInv, lgamma, tCdf, distNormal, distT, distMezcla, varES,
   covarianza, minimaVarianza, tangente, puntoFrontera, retornoCartera, volCartera,
   distribucionDefaults, estrategiaMomentum, sharpeAnual, simularCobertura, precioBono, tirBono,
-  covMuestral, ordenJerarquico, pesosHRP,
+  covMuestral, ordenJerarquico, pesosHRP, blackLitterman,
 } from "./finanzas.js";
 
 let fallas = 0;
@@ -109,6 +109,25 @@ chequear("tangente Sharpe", (retornoCartera(tan, muL) - 0.03) / volCartera(tan, 
 const wf = puntoFrontera(SigmaL, muL, retornoCartera(tan, muL));
 chequear("frontera: retorno objetivo", retornoCartera(wf, muL), retornoCartera(tan, muL), 1e-12);
 chequear("frontera: pasa por el tangente", volCartera(wf, SigmaL), volCartera(tan, SigmaL), 1e-9);
+
+// Black-Litterman del Capítulo 10, contra la fórmula maestra en numpy
+const universoBL = {
+  Sigma: [[0.0225, 0.0075, 0.0010], [0.0075, 0.0196, 0.0012], [0.0010, 0.0012, 0.0036]],
+  wMercado: [0.55, 0.30, 0.15], delta: 2.5, tau: 0.05, P: [[0, 1, 0], [1, 0, -1]],
+};
+[0.0369375, 0.0254625, 0.003625].forEach((ref, i) =>
+  chequear(`BL equilibrio Π ${i}`, blackLitterman({ ...universoBL, Q: [0.12, 0.04], factores: [1, 1] }).Pi[i], ref, 1e-15));
+for (const [Q, factores, muRef, wRef] of [
+  [[0.12, 0.04], [1, 1], [0.05136671611028517, 0.07216343046357615, 0.007022446006217054],
+   [0.4778959318826869, 1.2762565211515067, 0.22210406811731292]],
+  [[0.12, 0.04], [0.1, 10], [0.06828831402115552, 0.11136013260355337, 0.009121493706863411],
+   [0.5181878501007596, 2.063238244172784, 0.18181214989924005]],
+  [[0.05, 0], [31.6227766016838, 0.0316227766016838], [0.008235956127777545, 0.017952090395341805, 0.007204828390515687],
+   [0.00880295297541234, 0.32068252828528687, 0.6911970470245885]]]) {
+  const r = blackLitterman({ ...universoBL, Q, factores });
+  r.mu.forEach((m, i) => chequear(`BL Q=${Q} f=${factores.map((f) => f.toFixed(2))}: μ ${i}`, m, muRef[i], 1e-12));
+  r.w.forEach((w, i) => chequear(`BL Q=${Q} f=${factores.map((f) => f.toFixed(2))}: w ${i}`, w, wRef[i], 1e-10));
+}
 
 // HRP del Capítulo 9 sobre series determinísticas, contra hierarchy.leaves_list y hrp() del libro
 const serieHRP = (n, k) => Array.from({ length: n }, (_, t) => Array.from({ length: k }, (_, j) =>

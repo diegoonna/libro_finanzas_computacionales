@@ -438,6 +438,31 @@ export function puntoFrontera(Sigma, mu, objetivo, cortos = false) {
   }, (w) => -volCartera(w, Sigma));
 }
 
+// --- Black-Litterman (Capítulo 10) ----------------------------------------
+
+const multiplicar = (A, x) => A.map((fila) => fila.reduce((s, a, j) => s + a * x[j], 0));
+
+// Equilibrio Π = δΣw y fórmula maestra, con Ω = diag(P τΣ Pᵀ) como en el capítulo y cada
+// view escalada por su factor (chico = mucha confianza). Devuelve también los pesos sin
+// restricciones w = Σ⁻¹μ / δ.
+export function blackLitterman({ Sigma, wMercado, delta, tau, P, Q, factores }) {
+  const n = Sigma.length;
+  const Pi = multiplicar(Sigma, wMercado).map((x) => delta * x);
+  const tauSigma = Sigma.map((fila) => fila.map((x) => tau * x));
+  // (τΣ)⁻¹ columna por columna
+  const columnas = [...Array(n).keys()].map((j) => resolver(tauSigma, [...Array(n).keys()].map((i) => +(i === j))));
+  const invTauSigma = columnas[0].map((_, i) => columnas.map((c) => c[i]));
+  const precisionView = P.map((fila, k) => 1 / (factores[k] * fila.reduce((s, a, i) =>
+    s + a * fila.reduce((t, b, j) => t + b * tauSigma[i][j], 0), 0)));
+  const A = invTauSigma.map((fila, i) => fila.map((x, j) =>
+    x + P.reduce((s, f, k) => s + f[i] * precisionView[k] * f[j], 0)));
+  const b = multiplicar(invTauSigma, Pi).map((x, i) =>
+    x + P.reduce((s, f, k) => s + f[i] * precisionView[k] * Q[k], 0));
+  const mu = resolver(A, b);
+  const w = resolver(Sigma, mu).map((x) => x / delta);
+  return { Pi, mu, w };
+}
+
 // --- Hierarchical Risk Parity (Capítulo 9) ---------------------------------
 
 // Covarianza muestral (con n − 1, como np.cov y DataFrame.cov) de filas de retornos

@@ -376,6 +376,36 @@ plt.show()
 
 En la @fig-efecto-confianza, a la izquierda (mucha confianza) los retornos se acercan a lo que afirman las views; a la derecha (poca confianza) vuelven a las líneas punteadas del equilibrio. **El modelo nunca te deja "irte" más allá de tus propias views ni ignorar del todo al mercado**: interpola entre ambos de manera controlada.
 
+::: {.content-visible when-format="html"}
+::: {.simulador}
+[Simulador · Black-Litterman y la confianza en las views]{.simulador-titulo}
+
+Acá cada view tiene sus dos perillas: lo que afirma y cuánto confiás en ella. La confianza va de 0 a 100 y recorre la misma escala de $\Omega$ que la @fig-efecto-confianza: 50 deja la $\Omega$ del capítulo; 100 la divide por 31.6 (casi certeza) y 0 la multiplica por 31.6 (casi ignorarla). Arriba, los retornos esperados; abajo, la cartera sin restricciones, como en la @fig-equilibrio-vs-bl. Arranca con las dos views del capítulo.
+
+```{=html}
+<div id="sim-black-litterman"></div>
+<script type="module">
+  import { montar } from "../simuladores/black_litterman.js";
+  montar(document.getElementById("sim-black-litterman"));
+</script>
+```
+
+::: {.probar}
+**Probá esto**
+
+1. Mirá el peso de Acciones USA: la view 2 dice que USA le gana a Bonos por 4%, y sin embargo el peso *baja* del 55% al 47.8%. Llevá la confianza en la view 2 a 0: el spread USA − Bonos sube a 4.83% y USA vuelve a 54.6%. La view 1, a través de las correlaciones, ya empujaba el spread por encima del 4%; frente a eso, la view 2 es una opinión *pesimista* sobre USA.
+2. Llevá la confianza en la view 1 a 100: el retorno de EU se acerca a la marca naranja (11.70%) y su peso trepa a 223%. En 0, vuelve cerca del equilibrio (2.91%). La confianza decide dónde caés entre el mercado y tu opinión.
+3. Bajá la view 1 a 2.5%, casi el 2.55% de equilibrio de EU, y subí su confianza a 100. EU vuelve a 27%, cerca de su 30% de mercado, y el apalancamiento desaparece (los pesos suman 97%): una view que coincide con el mercado casi no mueve nada, por más confianza que le tengas. Lo que queda de desvío en USA y Bonos es la view 2 sola.
+:::
+:::
+:::
+
+::: {.content-visible when-format="pdf"}
+::: {.callout-note title="Simulador interactivo"}
+En la [versión web de este capítulo](https://diegoonna.github.io/libro_finanzas_computacionales/unidad2/cap10_black_litterman.html) hay un simulador donde podés mover cada view y su confianza, y ver cómo cambian los retornos esperados y la cartera de Black-Litterman.
+:::
+:::
+
 ---
 
 ## Recapitulando el flujo
