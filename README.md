@@ -105,6 +105,13 @@ Si querés otro estilo o imagen, ajustá `cover-image`, `favicon` o el tema en [
 
 Lo que fue cambiando en el libro, de lo más nuevo a lo más viejo. Cada versión junta un hito que se nota al abrir el sitio; los arreglos chicos quedan adentro de la versión en la que entraron.
 
+**v0.11 (octubre 2026)**
+
+- Siete simuladores nuevos, y ya son quince: precio y TIR de un bono (capítulo 2), Markowitz contra HRP (9), Black-Litterman y la confianza en las views (10), EWMA y el test de Kupiec (11), cuántos datos hacen falta para ver el alfa (15), la regresión espuria (16) y la sonrisa de SABR (20).
+- El de EWMA y Kupiec es el primero que trabaja con los datos reales del libro: se elige cualquiera de los diez activos del dataset.
+- Se quitaron los ejercicios propuestos de todos los capítulos. En los módulos 2 a 4, la celda para practicar en el navegador sigue, ahora con su propia sección.
+- Corrección en el capítulo 9: el texto decía que HRP le gana a Markowitz fuera de muestra, pero el experimento del propio capítulo da un empate. Ahora explica por qué empatan y cuándo aparece la ventaja de HRP.
+
 **v0.10 (octubre 2026)**
 
 - Simuladores interactivos en la versión web: gráficos con controles para mover los parámetros de un modelo y ver cómo responde, cada uno junto a la figura que generaliza y con experimentos guiados ("Probá esto"). Llegan ocho: diversificación y frontera eficiente (capítulo 8), VaR contra ES con colas pesadas (11), el CDO y la correlación (12), Monte Carlo (13), la fábrica de falsos descubrimientos (17), Black-Scholes y sus griegas (18) y la mesa de cobertura (19).
