@@ -11,6 +11,7 @@ import {
   covarianza, minimaVarianza, tangente, puntoFrontera, retornoCartera, volCartera,
   distribucionDefaults, estrategiaMomentum, sharpeAnual, simularCobertura, precioBono, tirBono,
   covMuestral, ordenJerarquico, pesosHRP, blackLitterman, varianzaEWMA, colaBinomial,
+  regresionSimple, tInv,
 } from "./finanzas.js";
 import { readFileSync } from "node:fs";
 
@@ -137,6 +138,20 @@ for (const [lambda, refs] of [[0.94, [1.6e-05, 5.4868745958017e-05, 5.6298000178
     chequear(`SPY ${conf}: excepciones VaR constante`, r.filter((x) => x < m + z * s).length, refConst, 0);
     chequear(`SPY ${conf}: excepciones VaR EWMA`, r.filter((x, t) => x < m + z * Math.sqrt(v[t])).length, refEWMA, 0);
   }
+}
+
+// Regresión del Capítulo 15 sobre una serie determinística, contra statsmodels; cuantiles t contra scipy
+{
+  const x = Array.from({ length: 60 }, (_, t) => 0.04 * Math.sin(t * 1.3) + 0.005);
+  const y = x.map((xi, t) => 0.002 + 1.3 * xi + 0.03 * Math.cos(t * 2.1 + 0.4));
+  const r = regresionSimple(x, y);
+  chequear("MCO alfa", r.alfa, 0.002222913466325171, 1e-15);
+  chequear("MCO beta", r.beta, 1.2756470938116347, 1e-13);
+  chequear("MCO se(alfa)", r.seAlfa, 0.002844131386021427, 1e-15);
+  chequear("MCO se(beta)", r.seBeta, 0.09874846244343319, 1e-13);
+}
+for (const [nu, ref] of [[10, 2.2281388519649385], [118, 1.9802722492407059], [598, 1.9639388980554935]]) {
+  chequear(`t.ppf(0.975, ${nu})`, tInv(0.975, nu), ref, 1e-9);
 }
 
 // Black-Litterman del Capítulo 10, contra la fórmula maestra en numpy

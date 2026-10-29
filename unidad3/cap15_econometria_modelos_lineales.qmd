@@ -288,6 +288,37 @@ _esquema()
 El p-value **no** es "la probabilidad de que el coeficiente sea cero", ni "la probabilidad de que el modelo esté mal". Es una afirmación sobre los *datos bajo una hipótesis*, no sobre la hipótesis. Y con miles de datos, coeficientes económicamente irrelevantes se vuelven "significativos": **significancia estadística ≠ relevancia económica**. Mirá siempre la magnitud del coeficiente además de su p-value. Esta distinción reaparecerá con fuerza en el Capítulo 17 (backtesting), donde probar muchas estrategias infla los falsos positivos.
 :::
 
+::: {.content-visible when-format="html"}
+::: {.simulador}
+[Simulador · ¿Cuántos datos hacen falta para ver el alfa?]{.simulador-titulo}
+
+La @fig-distribucion-muestral repetía la regresión del CAPM en 2000 muestras de 10 años. Acá podés cambiar cuántos años tiene cada muestra, el alfa verdadero y el ruido propio del activo ($\sigma_\varepsilon$); el beta verdadero sigue en 1.3. En el histograma del alfa, las barras naranjas son las muestras en las que el test t lo declara significativo al 5%: la proporción naranja es la probabilidad de *detectar* el alfa que de verdad existe. Arranca con los valores del capítulo.
+
+```{=html}
+<div id="sim-distribucion-muestral"></div>
+<script type="module">
+  import { montar } from "../simuladores/distribucion_muestral.js";
+  montar(document.getElementById("sim-distribucion-muestral"));
+</script>
+```
+
+::: {.probar}
+**Probá esto**
+
+1. Con los valores del capítulo, el alfa existe (0.2% mensual, 2.4% al año), pero el test lo detecta en apenas ~11% de las muestras, y casi una de cada cuatro da un alfa *negativo*. Mirá la última tarjeta: para detectarlo el 80% de las veces harían falta unos 150 años de datos.
+2. Llevá los años a 50. El beta ya estaba clavado y su desvío baja todavía más (de 0.07 a 0.03); el alfa mejora, pero se sigue detectando en menos de la mitad de las muestras. Más datos ayudan con la raíz cuadrada del tiempo: cuadruplicar la muestra solo divide el error por dos.
+3. Volvé a 10 años y bajá el ruido a 1%: el alfa pasa a detectarse en más de la mitad de las muestras, y alcanzan ~17 años para el 80%. Lo que esconde al alfa no es su tamaño solo, sino su tamaño *comparado con el ruido*.
+4. Poné el alfa en 0: igual ~5% de las muestras sale "significativo". Son falsos descubrimientos, exactamente la tasa de error que acepta un test al 5% (el problema que el Capítulo 17 multiplica por cientos de estrategias).
+:::
+:::
+:::
+
+::: {.content-visible when-format="pdf"}
+::: {.callout-note title="Simulador interactivo"}
+En la [versión web de este capítulo](https://diegoonna.github.io/libro_finanzas_computacionales/unidad3/cap15_econometria_modelos_lineales.html) hay un simulador donde podés cambiar los años de datos, el alfa verdadero y el ruido, y ver cuántas veces la regresión detecta el alfa.
+:::
+:::
+
 ### La versión profesional: statsmodels
 
 Nuestra clase enseña la mecánica; para trabajar en serio usamos `statsmodels`, que reporta toda la inferencia de una vez:

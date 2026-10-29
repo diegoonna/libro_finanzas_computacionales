@@ -350,6 +350,34 @@ export function colaBinomial(k, n, p) {
   return 1 - s;
 }
 
+// --- Regresión lineal (Capítulo 15) ----------------------------------------
+
+// MCO de y sobre x con constante, como sm.OLS(y, add_constant(x)): coeficientes y errores
+// estándar clásicos (varianza de los residuos con n − 2 grados de libertad).
+export function regresionSimple(x, y) {
+  const n = x.length;
+  let mx = 0, my = 0;
+  for (let i = 0; i < n; i++) { mx += x[i] / n; my += y[i] / n; }
+  let sxx = 0, sxy = 0;
+  for (let i = 0; i < n; i++) { sxx += (x[i] - mx) ** 2; sxy += (x[i] - mx) * (y[i] - my); }
+  const beta = sxy / sxx;
+  const alfa = my - beta * mx;
+  let ssr = 0;
+  for (let i = 0; i < n; i++) ssr += (y[i] - alfa - beta * x[i]) ** 2;
+  const s2 = ssr / (n - 2);
+  return { alfa, beta, seAlfa: Math.sqrt(s2 * (1 / n + (mx * mx) / sxx)), seBeta: Math.sqrt(s2 / sxx) };
+}
+
+// Cuantil de la t de Student, como stats.t.ppf, invirtiendo tCdf por bisección
+export function tInv(p, nu) {
+  let lo = -50, hi = 50;
+  for (let i = 0; i < 200; i++) {
+    const m = (lo + hi) / 2;
+    if (tCdf(m, nu) < p) lo = m; else hi = m;
+  }
+  return (lo + hi) / 2;
+}
+
 // --- Álgebra lineal chica y carteras (Capítulos 7-8) ------------------------
 
 // Resuelve A x = b por eliminación gaussiana con pivoteo parcial; null si es singular.
