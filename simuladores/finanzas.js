@@ -324,6 +324,32 @@ export function varES(dist, conf) {
   return { var: -q, es: -dist.colaParcial(q) / alfa, q };
 }
 
+// --- Backtesting de VaR y EWMA (Capítulo 11) -------------------------------
+
+// Varianza EWMA como en el capítulo: σ²₀ = r₀² y σ²ₜ = λσ²ₜ₋₁ + (1 − λ)r²ₜ₋₁
+export function varianzaEWMA(r, lambda) {
+  const v = new Float64Array(r.length);
+  v[0] = r[0] ** 2;
+  for (let t = 1; t < r.length; t++) v[t] = lambda * v[t - 1] + (1 - lambda) * r[t - 1] ** 2;
+  return v;
+}
+
+// P(X ≥ k) con X ~ Binomial(n, p): el p-value del test de Kupiec del capítulo,
+// 1 − binom.cdf(k − 1, n, p). Suma la cola más corta para no perder precisión.
+export function colaBinomial(k, n, p) {
+  if (k <= 0) return 1;
+  if (k > n) return 0;
+  const logComb = lgamma(n + 1);
+  const pmf = (j) => Math.exp(logComb - lgamma(j + 1) - lgamma(n - j + 1) + j * Math.log(p) + (n - j) * Math.log1p(-p));
+  let s = 0;
+  if (k > n * p) {
+    for (let j = k; j <= n; j++) s += pmf(j);
+    return s;
+  }
+  for (let j = 0; j < k; j++) s += pmf(j);
+  return 1 - s;
+}
+
 // --- Álgebra lineal chica y carteras (Capítulos 7-8) ------------------------
 
 // Resuelve A x = b por eliminación gaussiana con pivoteo parcial; null si es singular.

@@ -10,8 +10,9 @@ import {
   normInv, lgamma, tCdf, distNormal, distT, distMezcla, varES,
   covarianza, minimaVarianza, tangente, puntoFrontera, retornoCartera, volCartera,
   distribucionDefaults, estrategiaMomentum, sharpeAnual, simularCobertura, precioBono, tirBono,
-  covMuestral, ordenJerarquico, pesosHRP, blackLitterman,
+  covMuestral, ordenJerarquico, pesosHRP, blackLitterman, varianzaEWMA, colaBinomial,
 } from "./finanzas.js";
+import { readFileSync } from "node:fs";
 
 let fallas = 0;
 function chequear(nombre, obtenido, esperado, tol) {
@@ -109,6 +110,34 @@ chequear("tangente Sharpe", (retornoCartera(tan, muL) - 0.03) / volCartera(tan, 
 const wf = puntoFrontera(SigmaL, muL, retornoCartera(tan, muL));
 chequear("frontera: retorno objetivo", retornoCartera(wf, muL), retornoCartera(tan, muL), 1e-12);
 chequear("frontera: pasa por el tangente", volCartera(wf, SigmaL), volCartera(tan, SigmaL), 1e-9);
+
+// Backtesting del Capítulo 11: p-value de Kupiec contra scipy.stats.binom y EWMA contra numpy
+for (const [k, n, p, ref] of [[55, 1252, 0.05, 0.8538494300134964], [83, 1252, 0.05, 0.006490635922141497],
+  [22, 1252, 0.01, 0.009221176544111587], [24, 1252, 0.01, 0.0023852298428959084], [0, 252, 0.05, 1],
+  [13, 252, 0.05, 0.49405462336201644], [40, 252, 0.05, 1.248317005320132e-10]]) {
+  chequear(`Kupiec ${k} de ${n} al ${p}`, colaBinomial(k, n, p), ref, Math.max(1e-12, ref * 1e-9));
+}
+const serieEWMA = Array.from({ length: 200 }, (_, t) => 0.01 * Math.sin(t * 1.7) + 0.004 * Math.cos(t * 0.3));
+for (const [lambda, refs] of [[0.94, [1.6e-05, 5.4868745958017e-05, 5.6298000178822135e-05]],
+  [0.8, [1.6e-05, 5.361841387113162e-05, 5.346462253871444e-05]]]) {
+  const v = varianzaEWMA(serieEWMA, lambda);
+  [1, 50, 199].forEach((t, i) => chequear(`EWMA λ=${lambda} día ${t}`, v[t], refs[i], 1e-18));
+}
+// De punta a punta con datos/precios.csv: excepciones de SPY, como las cuenta pandas + scipy
+{
+  const filas = readFileSync(new URL("../datos/precios.csv", import.meta.url), "utf8").trim().split(/\r?\n/);
+  const col = filas[0].split(",").indexOf("SPY");
+  const px = filas.slice(1).map((f) => +f.split(",")[col]);
+  const r = px.slice(1).map((x, i) => x / px[i] - 1);
+  const m = media(r);
+  const s = Math.sqrt(r.reduce((a, x) => a + (x - m) ** 2, 0) / r.length);
+  const v = varianzaEWMA(r, 0.94);
+  for (const [conf, refConst, refEWMA] of [[0.95, 55, 83], [0.99, 22, 24]]) {
+    const z = normInv(1 - conf);
+    chequear(`SPY ${conf}: excepciones VaR constante`, r.filter((x) => x < m + z * s).length, refConst, 0);
+    chequear(`SPY ${conf}: excepciones VaR EWMA`, r.filter((x, t) => x < m + z * Math.sqrt(v[t])).length, refEWMA, 0);
+  }
+}
 
 // Black-Litterman del Capítulo 10, contra la fórmula maestra en numpy
 const universoBL = {

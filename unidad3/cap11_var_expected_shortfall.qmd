@@ -595,6 +595,36 @@ plt.show()
 
 Leé los dos paneles de la @fig-ewma-var-dinamico juntos. Arriba: la volatilidad EWMA oscila alrededor de la constante (línea roja), con episodios donde se dispara por encima y períodos donde duerme por debajo — la línea roja es el promedio de dos regímenes distintos. Abajo, la consecuencia para el riesgo: el **VaR dinámico se expande en los períodos agitados y se contrae en los tranquilos**, mientras el VaR constante ignora todo. En los picos, el VaR constante está *subestimando* el riesgo del día — y esas son exactamente las excepciones agrupadas que el test de Kupiec no sabe detectar.
 
+::: {.content-visible when-format="html"}
+::: {.simulador}
+[Simulador · EWMA y Kupiec con datos reales]{.simulador-titulo}
+
+La @fig-ewma-var-dinamico usaba retornos simulados; acá están los cinco años del dataset del libro (`datos/precios.csv`, ver el @sec-datos-financieros). Arriba, cada retorno diario contra los dos VaR: el constante, con la media y el desvío de toda la muestra, y el EWMA, que cada día usa solo el pasado. En el medio, la línea de tiempo de las excepciones: el *cuándo* que Kupiec no mira. Abajo, el test de Kupiec de la @fig-kupiec-binomial con los dos conteos. Arranca con SPY, el $\lambda$ de RiskMetrics y el VaR 95%.
+
+```{=html}
+<div id="sim-ewma-kupiec"></div>
+<script type="module">
+  import { montar } from "../simuladores/ewma_kupiec.js";
+  montar(document.getElementById("sim-ewma-kupiec"));
+</script>
+```
+
+::: {.probar}
+**Probá esto**
+
+1. Con SPY al 95%, el VaR constante aprueba (55 excepciones, p = 0.854) y EWMA queda rechazado (83, p = 0.006). Pero el constante juega con ventaja: su desvío sale de los cinco años completos, incluidos los días que todavía no habían pasado. EWMA solo sabe lo que ya ocurrió, que es la situación real de un banco.
+2. Pasá a 99%. Ahora los dos quedan rechazados (22 y 24 excepciones contra 12.5 esperadas): en la cola extrema la normal se queda corta. Mirá la línea de tiempo: 9 de las 22 excepciones del constante caen en un solo trimestre, el del mercado bajista de 2022; las de EWMA nunca pasan de 4 por trimestre. Para Kupiec los dos fallan parecido; la línea de tiempo muestra que fallan de manera muy distinta.
+3. Volvé a 95% y mové $\lambda$. Con 0.99, EWMA aprueba (73 excepciones, p = 0.102), pero su peor trimestre ya junta 11 excepciones, igual que el constante: más memoria es reaccionar más lento. Con 0.80 reacciona rápido pero se pasa (99 excepciones). No hay $\lambda$ gratis.
+:::
+:::
+:::
+
+::: {.content-visible when-format="pdf"}
+::: {.callout-note title="Simulador interactivo"}
+En la [versión web de este capítulo](https://diegoonna.github.io/libro_finanzas_computacionales/unidad3/cap11_var_expected_shortfall.html) hay un simulador que aplica el VaR constante, el VaR EWMA y el test de Kupiec a los datos reales del libro, donde podés elegir el activo, $\lambda$ y la confianza.
+:::
+:::
+
 ---
 
 ## Test de Normalidad
