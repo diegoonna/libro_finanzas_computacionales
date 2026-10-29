@@ -399,6 +399,37 @@ plt.show()
 
 La @fig-sabr es el manual de instrucciones del modelo: $\nu$ (vol de vol) **curva** la sonrisa, $\rho$ la **inclina**, y $\alpha$ fija el nivel. Un operador de swaptions calibra estos parámetros a las cotizaciones de la mañana y tiene toda la superficie descripta para el resto del día.
 
+::: {.content-visible when-format="html"}
+::: {.simulador}
+[Simulador · La sonrisa de SABR]{.simulador-titulo}
+
+Los tres escenarios de la @fig-sabr, ahora como perillas. El nivel fija la vol ATM aproximada ($\alpha F^{\beta-1}$) en lugar de $\alpha$ a secas: con $\beta < 1$, $\alpha$ cambia de escala, y así mover $\beta$ cambia la forma de la sonrisa y no su altura. Abajo, la densidad neutral al riesgo que implica la sonrisa: la segunda derivada del precio de la call respecto del strike (Breeden-Litzenberger). Una densidad negativa sería una probabilidad negativa, es decir, un arbitraje. Arranca con el primer escenario de la figura.
+
+```{=html}
+<div id="sim-sabr"></div>
+<script type="module">
+  import { montar } from "../simuladores/sabr.js";
+  montar(document.getElementById("sim-sabr"));
+</script>
+```
+
+::: {.probar}
+**Probá esto**
+
+1. Mové $\rho$ de −0.6 a 0 y a +0.6: la diferencia entre la vol del strike 90 y la del 110 pasa de +2.38 pp a casi cero y a −2.42 pp. $\rho$ inclina la sonrisa, como el *leverage* de Heston.
+2. Volvé a $\rho = -0.6$ y bajá $\nu$ a 0: la sonrisa se aplana por completo (20% en todos los strikes). Subila a 1: las alas quedan 2.23 pp por encima del ATM. $\nu$ curva la sonrisa.
+3. Poné $\rho = 0$, $\nu = 0$ y bajá $\beta$ a 0: sin nada de volatilidad estocástica, la sonrisa igual se inclina (2.02 pp entre 90 y 110). Con dinámica normal, el mismo movimiento en pesos es una vol porcentual mayor en los strikes bajos. Como $\beta$ y $\rho$ hacen un trabajo parecido, en la práctica se fija $\beta$ de antemano y se calibra $\rho$.
+4. Con $\rho = -0.6$, llevá $\nu$ a 1 y el plazo a 5 años: la densidad se vuelve negativa entre K = 20 y K = 53. La fórmula de Hagan es una aproximación, y con mucha vol de vol y plazos largos deja de ser libre de arbitraje. Con 2 años todavía no pasa: por eso SABR reina en plazos cortos y medios, y para los largos se usan variantes corregidas.
+:::
+:::
+:::
+
+::: {.content-visible when-format="pdf"}
+::: {.callout-note title="Simulador interactivo"}
+En la [versión web de este capítulo](https://diegoonna.github.io/libro_finanzas_computacionales/unidad4/cap20_volatilidad_estocastica.html) hay un simulador donde podés mover los parámetros de SABR y ver cómo cambian la sonrisa y la densidad que implica, incluido el punto en que la aproximación deja de ser libre de arbitraje.
+:::
+:::
+
 ::: {.callout-note title="¿Heston o SABR? El criterio profesional"}
 No compiten: se usan para cosas distintas. **SABR** es el estándar para *cotizar e interpolar* sonrisas (sobre todo en tasas) por su fórmula instantánea. **Heston** es el caballo de batalla para *simular y valuar* productos dependientes de la trayectoria (exóticos, estructurados) porque tiene una dinámica temporal completa y consistente. Y la familia sigue: local vol (Dupire), modelos local-estocásticos (LSV), rough volatility — la frontera actual de la investigación.
 :::

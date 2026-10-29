@@ -146,6 +146,31 @@ export function bsGriegas(S, K, T, r, sigma, tipo = "call") {
   return { delta: normCdf(d1) - 1, gamma, vega, theta: decaimiento + r * descuento * normCdf(-d2) };
 }
 
+// --- SABR (Capítulo 20) -----------------------------------------------------
+
+// Vol implícita de SABR con la aproximación de Hagan (2002), como sabr_vol del capítulo
+export function sabrVol(K, F, T, alfa, beta, rho, nu) {
+  const FKbeta = (F * K) ** ((1 - beta) / 2);
+  const correccion = 1 + T * ((1 - beta) ** 2 / 24 * alfa ** 2 / (F * K) ** (1 - beta)
+    + (rho * beta * nu * alfa) / (4 * FKbeta) + ((2 - 3 * rho ** 2) / 24) * nu ** 2);
+  const logFK = Math.log(F / K);
+  // Al dinero vale la versión ATM; muy cerca, z/x(z) tiende a 1 y se toma su límite
+  if (Math.abs(logFK) < 1e-12) return (alfa / F ** (1 - beta)) * correccion;
+  const z = (nu / alfa) * FKbeta * logFK;
+  const xz = Math.log((Math.sqrt(1 - 2 * rho * z + z * z) + z - rho) / (1 - rho));
+  const cociente = Math.abs(z) < 1e-12 ? 1 : z / xz;
+  const denominador = FKbeta * (1 + ((1 - beta) ** 2 / 24) * logFK ** 2 + ((1 - beta) ** 4 / 1920) * logFK ** 4);
+  return (alfa / denominador) * cociente * correccion;
+}
+
+// Densidad neutral al riesgo implícita en una sonrisa (Breeden-Litzenberger): la segunda
+// derivada en K del precio de la call de Black sobre el forward, por diferencias finitas.
+// vol(K) es la sonrisa; con tasa cero no hay factor de descuento.
+export function densidadImplicita(vol, F, T, K, h = 0.5) {
+  const call = (k) => bsPrecio(F, k, T, 0, vol(k), "call");
+  return (call(K + h) - 2 * call(K) + call(K - h)) / (h * h);
+}
+
 // --- Movimiento Browniano Geométrico (Capítulo 13) -------------------------
 
 // Trayectorias completas (para dibujar): n_tray caminos de n_pasos pasos.

@@ -12,6 +12,7 @@ import {
   distribucionDefaults, estrategiaMomentum, sharpeAnual, simularCobertura, precioBono, tirBono,
   covMuestral, ordenJerarquico, pesosHRP, blackLitterman, varianzaEWMA, colaBinomial,
   regresionSimple, tInv, pendienteMCO, regresionEspuria,
+  sabrVol, densidadImplicita,
 } from "./finanzas.js";
 import { readFileSync } from "node:fs";
 
@@ -171,6 +172,30 @@ for (const [phi, n, refNiveles, refDifs] of [[1, 500, 0.884, 0.049], [0.95, 500,
   const res = regresionEspuria({ phi, n, pares: 2000, semilla: 16000 });
   chequear(`espuria φ=${phi}: falsos positivos en niveles`, media(res.map((r) => +(r.niveles.pValor < 0.05))), refNiveles, 0.03);
   chequear(`espuria φ=${phi}: falsos positivos en diferencias`, media(res.map((r) => +(r.difs.pValor < 0.05))), refDifs, 0.03);
+}
+
+// SABR del Capítulo 20 contra sabr_vol del libro (numpy), con F = 100
+for (const [K, T, alfa, beta, rho, nu, ref] of [
+  [100, 1, 0.2, 1, -0.6, 0.4, 0.19882666666666668], [80, 1, 0.2, 1, -0.6, 0.4, 0.22747208912140368],
+  [120, 1, 0.2, 1, -0.6, 0.4, 0.17988585157443898], [70, 2, 2.0, 0.5, 0.3, 0.8, 0.25669157611419036],
+  [150, 0.5, 2.0, 0, 0, 0.6, 0.07222722810010135], [90, 1, 0.2, 1, 0, 0.4, 0.20414806270177333]]) {
+  chequear(`SABR K=${K} T=${T} β=${beta} ρ=${rho} ν=${nu}`, sabrVol(K, 100, T, alfa, beta, rho, nu), ref, 1e-14);
+}
+// Cerca del dinero la fórmula general tiene que empalmar con la ATM
+chequear("SABR continuidad en K = F", sabrVol(100 * (1 + 1e-9), 100, 1, 0.2, 1, -0.6, 0.4), 0.19882666666666668, 1e-9);
+
+// Densidad implícita de SABR en la grilla K = 20, 20.5, ..., 250, contra numpy + scipy
+for (const [nivel, beta, rho, nu, T, refMin, refNeg] of [
+  [0.2, 1, -0.6, 0.4, 1, 2.2388195126889394e-08, null], [0.2, 1, -0.6, 1.0, 5, -0.0022307445220803857, [20, 53]],
+  [0.2, 0.5, -0.3, 1.0, 10, -0.01711527203872265, [20, 250]]]) {
+  const alfa = nivel * 100 ** (1 - beta);
+  const grilla = Array.from({ length: 461 }, (_, i) => 20 + i * 0.5);
+  const d = grilla.map((K) => densidadImplicita((k) => sabrVol(k, 100, T, alfa, beta, rho, nu), 100, T, K));
+  const negativos = grilla.filter((_, i) => d[i] < -1e-7);
+  const etiqueta = `densidad SABR β=${beta} ρ=${rho} ν=${nu} T=${T}`;
+  chequear(`${etiqueta}: mínimo`, Math.min(...d), refMin, Math.max(1e-9, Math.abs(refMin) * 1e-6));
+  chequear(`${etiqueta}: tramo negativo`, negativos.length ? `${negativos[0]}-${negativos.at(-1)}` === refNeg.join("-") ? 1 : 0
+    : +(refNeg === null), 1, 0);
 }
 
 // Black-Litterman del Capítulo 10, contra la fórmula maestra en numpy
