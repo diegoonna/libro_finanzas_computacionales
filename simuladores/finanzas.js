@@ -378,6 +378,47 @@ export function tInv(p, nu) {
   return (lo + hi) / 2;
 }
 
+// --- Regresión espuria (Capítulo 16) ---------------------------------------
+
+// p-value bilateral de la pendiente y R² de la regresión de y sobre x con constante, como
+// sm.OLS(...).pvalues[1] y .rsquared. La cola se toma directo de tCdf para no perder precisión.
+export function pendienteMCO(x, y) {
+  const n = x.length;
+  let mx = 0, my = 0;
+  for (let i = 0; i < n; i++) { mx += x[i] / n; my += y[i] / n; }
+  let sxx = 0, sxy = 0, syy = 0;
+  for (let i = 0; i < n; i++) {
+    sxx += (x[i] - mx) ** 2; sxy += (x[i] - mx) * (y[i] - my); syy += (y[i] - my) ** 2;
+  }
+  const beta = sxy / sxx;
+  const ssr = Math.max(syy - beta * sxy, 0);
+  const t = beta / Math.sqrt(ssr / (n - 2) / sxx);
+  return { beta, alfa: my - beta * mx, r2: 1 - ssr / syy, pValor: 2 * tCdf(-Math.abs(t), n - 2) };
+}
+
+// Dos AR(1) independientes, xₜ = φxₜ₋₁ + εₜ con x₀ = ε₀ (con φ = 1, el cumsum del capítulo)
+export function parAR1(phi, n, semilla) {
+  const z = generadorNormal(semilla);
+  const serie = () => {
+    const s = new Float64Array(n);
+    s[0] = z();
+    for (let t = 1; t < n; t++) s[t] = phi * s[t - 1] + z();
+    return s;
+  };
+  const x = serie();
+  return { x, y: serie() };
+}
+
+const diferencias = (s) => s.slice(1).map((v, i) => v - s[i]);
+
+// Regresión en niveles y en diferencias para `pares` pares independientes
+export function regresionEspuria({ phi, n, pares, semilla }) {
+  return Array.from({ length: pares }, (_, k) => {
+    const { x, y } = parAR1(phi, n, semilla + k);
+    return { niveles: pendienteMCO(x, y), difs: pendienteMCO(diferencias(x), diferencias(y)) };
+  });
+}
+
 // --- Álgebra lineal chica y carteras (Capítulos 7-8) ------------------------
 
 // Resuelve A x = b por eliminación gaussiana con pivoteo parcial; null si es singular.

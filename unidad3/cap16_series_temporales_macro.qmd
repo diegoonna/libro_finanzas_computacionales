@@ -109,6 +109,37 @@ def _esquema():
 _esquema()
 ```
 
+::: {.content-visible when-format="html"}
+::: {.simulador}
+[Simulador · La regresión espuria y la persistencia]{.simulador-titulo}
+
+La @fig-regresion-espuria mostraba un solo par de paseos aleatorios. Acá cada serie es un AR(1), $x_t = \phi\, x_{t-1} + \varepsilon_t$, generada de forma independiente de la otra: con $\phi = 1$ son los paseos del capítulo, y con $\phi < 1$ son series estacionarias. Además del par que se dibuja, el simulador repite la regresión en 1000 pares y cuenta cuántos salen "significativos" al 5%. Como las series son independientes, un test válido debería equivocarse el 5% de las veces. Arranca con los paseos del capítulo.
+
+```{=html}
+<div id="sim-espuria"></div>
+<script type="module">
+  import { montar } from "../simuladores/espuria.js";
+  montar(document.getElementById("sim-espuria"));
+</script>
+```
+
+::: {.probar}
+**Probá esto**
+
+1. Con los paseos aleatorios, el 90% de los pares sale "significativo" en niveles; en diferencias, el 4.9%, lo que corresponde. Pasá al par 4: R² = 0.60 entre dos series que no tienen nada que ver.
+2. Bajá $\phi$ a 0.95. La serie ya es estacionaria, pero dos de cada tres pares (67.5%) siguen engañando; con 0.8, todavía el 35.6%. En una muestra finita, mucha persistencia se comporta casi como una raíz unitaria.
+3. Volvé a $\phi = 1$ y cambiá el largo: con 100 períodos engaña el 75.8%, con 1000 el 92.7%. Más datos no curan la regresión espuria, la empeoran: el test se vuelve cada vez más seguro de una relación que no existe.
+4. Poné $\phi = 0$ (ruido blanco): en niveles da el 5.1% correcto, pero en diferencias sube al 10.1%. Diferenciar una serie que ya era estacionaria fabrica autocorrelación y rompe el test: es el "sobrediferenciar" de los errores comunes.
+:::
+:::
+:::
+
+::: {.content-visible when-format="pdf"}
+::: {.callout-note title="Simulador interactivo"}
+En la [versión web de este capítulo](https://diegoonna.github.io/libro_finanzas_computacionales/unidad3/cap16_series_temporales_macro.html) hay un simulador donde podés cambiar la persistencia y el largo de las series, y ver en cuántos de 1000 pares independientes la regresión encuentra una relación que no existe.
+:::
+:::
+
 ### Diagnóstico formal: el test ADF
 
 El test de **Dickey-Fuller aumentado (ADF)** formaliza el diagnóstico. Su hipótesis nula es que la serie tiene una **raíz unitaria** (no es estacionaria, tipo paseo aleatorio); un p-value bajo permite rechazarla.

@@ -11,7 +11,7 @@ import {
   covarianza, minimaVarianza, tangente, puntoFrontera, retornoCartera, volCartera,
   distribucionDefaults, estrategiaMomentum, sharpeAnual, simularCobertura, precioBono, tirBono,
   covMuestral, ordenJerarquico, pesosHRP, blackLitterman, varianzaEWMA, colaBinomial,
-  regresionSimple, tInv,
+  regresionSimple, tInv, pendienteMCO, regresionEspuria,
 } from "./finanzas.js";
 import { readFileSync } from "node:fs";
 
@@ -152,6 +152,25 @@ for (const [lambda, refs] of [[0.94, [1.6e-05, 5.4868745958017e-05, 5.6298000178
 }
 for (const [nu, ref] of [[10, 2.2281388519649385], [118, 1.9802722492407059], [598, 1.9639388980554935]]) {
   chequear(`t.ppf(0.975, ${nu})`, tInv(0.975, nu), ref, 1e-9);
+}
+
+// Regresión espuria del Capítulo 16: p-value y R² contra statsmodels; las tasas de falsos
+// positivos, contra una simulación de 2000 pares en Python (otro generador: se tolera ±3 puntos)
+{
+  const x = Array.from({ length: 60 }, (_, t) => 0.04 * Math.sin(t * 1.3) + 0.005);
+  const ruido = x.map((_, t) => 0.03 * Math.cos(t * 2.1 + 0.4));
+  const fuerte = pendienteMCO(x, x.map((xi, t) => 0.002 + 1.3 * xi + ruido[t]));
+  chequear("p-value pendiente (fuerte)", fuerte.pValor, 1.0317339278011342e-18, 1e-24);
+  chequear("R² (fuerte)", fuerte.r2, 0.742082954125129, 1e-12);
+  const debil = pendienteMCO(x, x.map((xi, t) => 0.0001 * xi + ruido[t]));
+  chequear("p-value pendiente (débil)", debil.pValor, 0.806856676453568, 1e-9);
+  chequear("R² (débil)", debil.r2, 0.001038932802314707, 1e-12);
+}
+for (const [phi, n, refNiveles, refDifs] of [[1, 500, 0.884, 0.049], [0.95, 500, 0.6595, 0.0525],
+  [0.5, 500, 0.1225, 0.0685], [0, 500, 0.0525, 0.119]]) {
+  const res = regresionEspuria({ phi, n, pares: 2000, semilla: 16000 });
+  chequear(`espuria φ=${phi}: falsos positivos en niveles`, media(res.map((r) => +(r.niveles.pValor < 0.05))), refNiveles, 0.03);
+  chequear(`espuria φ=${phi}: falsos positivos en diferencias`, media(res.map((r) => +(r.difs.pValor < 0.05))), refDifs, 0.03);
 }
 
 // Black-Litterman del Capítulo 10, contra la fórmula maestra en numpy
