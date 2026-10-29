@@ -146,6 +146,31 @@ export function bsGriegas(S, K, T, r, sigma, tipo = "call") {
   return { delta: normCdf(d1) - 1, gamma, vega, theta: decaimiento + r * descuento * normCdf(-d2) };
 }
 
+// --- SABR (Capítulo 20) -----------------------------------------------------
+
+// Vol implícita de SABR con la aproximación de Hagan (2002), como sabr_vol del capítulo
+export function sabrVol(K, F, T, alfa, beta, rho, nu) {
+  const FKbeta = (F * K) ** ((1 - beta) / 2);
+  const correccion = 1 + T * ((1 - beta) ** 2 / 24 * alfa ** 2 / (F * K) ** (1 - beta)
+    + (rho * beta * nu * alfa) / (4 * FKbeta) + ((2 - 3 * rho ** 2) / 24) * nu ** 2);
+  const logFK = Math.log(F / K);
+  // Al dinero vale la versión ATM; muy cerca, z/x(z) tiende a 1 y se toma su límite
+  if (Math.abs(logFK) < 1e-12) return (alfa / F ** (1 - beta)) * correccion;
+  const z = (nu / alfa) * FKbeta * logFK;
+  const xz = Math.log((Math.sqrt(1 - 2 * rho * z + z * z) + z - rho) / (1 - rho));
+  const cociente = Math.abs(z) < 1e-12 ? 1 : z / xz;
+  const denominador = FKbeta * (1 + ((1 - beta) ** 2 / 24) * logFK ** 2 + ((1 - beta) ** 4 / 1920) * logFK ** 4);
+  return (alfa / denominador) * cociente * correccion;
+}
+
+// Densidad neutral al riesgo implícita en una sonrisa (Breeden-Litzenberger): la segunda
+// derivada en K del precio de la call de Black sobre el forward, por diferencias finitas.
+// vol(K) es la sonrisa; con tasa cero no hay factor de descuento.
+export function densidadImplicita(vol, F, T, K, h = 0.5) {
+  const call = (k) => bsPrecio(F, k, T, 0, vol(k), "call");
+  return (call(K + h) - 2 * call(K) + call(K - h)) / (h * h);
+}
+
 // --- Movimiento Browniano Geométrico (Capítulo 13) -------------------------
 
 // Trayectorias completas (para dibujar): n_tray caminos de n_pasos pasos.
@@ -324,6 +349,101 @@ export function varES(dist, conf) {
   return { var: -q, es: -dist.colaParcial(q) / alfa, q };
 }
 
+// --- Backtesting de VaR y EWMA (Capítulo 11) -------------------------------
+
+// Varianza EWMA como en el capítulo: σ²₀ = r₀² y σ²ₜ = λσ²ₜ₋₁ + (1 − λ)r²ₜ₋₁
+export function varianzaEWMA(r, lambda) {
+  const v = new Float64Array(r.length);
+  v[0] = r[0] ** 2;
+  for (let t = 1; t < r.length; t++) v[t] = lambda * v[t - 1] + (1 - lambda) * r[t - 1] ** 2;
+  return v;
+}
+
+// P(X ≥ k) con X ~ Binomial(n, p): el p-value del test de Kupiec del capítulo,
+// 1 − binom.cdf(k − 1, n, p). Suma la cola más corta para no perder precisión.
+export function colaBinomial(k, n, p) {
+  if (k <= 0) return 1;
+  if (k > n) return 0;
+  const logComb = lgamma(n + 1);
+  const pmf = (j) => Math.exp(logComb - lgamma(j + 1) - lgamma(n - j + 1) + j * Math.log(p) + (n - j) * Math.log1p(-p));
+  let s = 0;
+  if (k > n * p) {
+    for (let j = k; j <= n; j++) s += pmf(j);
+    return s;
+  }
+  for (let j = 0; j < k; j++) s += pmf(j);
+  return 1 - s;
+}
+
+// --- Regresión lineal (Capítulo 15) ----------------------------------------
+
+// MCO de y sobre x con constante, como sm.OLS(y, add_constant(x)): coeficientes y errores
+// estándar clásicos (varianza de los residuos con n − 2 grados de libertad).
+export function regresionSimple(x, y) {
+  const n = x.length;
+  let mx = 0, my = 0;
+  for (let i = 0; i < n; i++) { mx += x[i] / n; my += y[i] / n; }
+  let sxx = 0, sxy = 0;
+  for (let i = 0; i < n; i++) { sxx += (x[i] - mx) ** 2; sxy += (x[i] - mx) * (y[i] - my); }
+  const beta = sxy / sxx;
+  const alfa = my - beta * mx;
+  let ssr = 0;
+  for (let i = 0; i < n; i++) ssr += (y[i] - alfa - beta * x[i]) ** 2;
+  const s2 = ssr / (n - 2);
+  return { alfa, beta, seAlfa: Math.sqrt(s2 * (1 / n + (mx * mx) / sxx)), seBeta: Math.sqrt(s2 / sxx) };
+}
+
+// Cuantil de la t de Student, como stats.t.ppf, invirtiendo tCdf por bisección
+export function tInv(p, nu) {
+  let lo = -50, hi = 50;
+  for (let i = 0; i < 200; i++) {
+    const m = (lo + hi) / 2;
+    if (tCdf(m, nu) < p) lo = m; else hi = m;
+  }
+  return (lo + hi) / 2;
+}
+
+// --- Regresión espuria (Capítulo 16) ---------------------------------------
+
+// p-value bilateral de la pendiente y R² de la regresión de y sobre x con constante, como
+// sm.OLS(...).pvalues[1] y .rsquared. La cola se toma directo de tCdf para no perder precisión.
+export function pendienteMCO(x, y) {
+  const n = x.length;
+  let mx = 0, my = 0;
+  for (let i = 0; i < n; i++) { mx += x[i] / n; my += y[i] / n; }
+  let sxx = 0, sxy = 0, syy = 0;
+  for (let i = 0; i < n; i++) {
+    sxx += (x[i] - mx) ** 2; sxy += (x[i] - mx) * (y[i] - my); syy += (y[i] - my) ** 2;
+  }
+  const beta = sxy / sxx;
+  const ssr = Math.max(syy - beta * sxy, 0);
+  const t = beta / Math.sqrt(ssr / (n - 2) / sxx);
+  return { beta, alfa: my - beta * mx, r2: 1 - ssr / syy, pValor: 2 * tCdf(-Math.abs(t), n - 2) };
+}
+
+// Dos AR(1) independientes, xₜ = φxₜ₋₁ + εₜ con x₀ = ε₀ (con φ = 1, el cumsum del capítulo)
+export function parAR1(phi, n, semilla) {
+  const z = generadorNormal(semilla);
+  const serie = () => {
+    const s = new Float64Array(n);
+    s[0] = z();
+    for (let t = 1; t < n; t++) s[t] = phi * s[t - 1] + z();
+    return s;
+  };
+  const x = serie();
+  return { x, y: serie() };
+}
+
+const diferencias = (s) => s.slice(1).map((v, i) => v - s[i]);
+
+// Regresión en niveles y en diferencias para `pares` pares independientes
+export function regresionEspuria({ phi, n, pares, semilla }) {
+  return Array.from({ length: pares }, (_, k) => {
+    const { x, y } = parAR1(phi, n, semilla + k);
+    return { niveles: pendienteMCO(x, y), difs: pendienteMCO(diferencias(x), diferencias(y)) };
+  });
+}
+
 // --- Álgebra lineal chica y carteras (Capítulos 7-8) ------------------------
 
 // Resuelve A x = b por eliminación gaussiana con pivoteo parcial; null si es singular.
@@ -438,6 +558,104 @@ export function puntoFrontera(Sigma, mu, objetivo, cortos = false) {
   }, (w) => -volCartera(w, Sigma));
 }
 
+// --- Black-Litterman (Capítulo 10) ----------------------------------------
+
+const multiplicar = (A, x) => A.map((fila) => fila.reduce((s, a, j) => s + a * x[j], 0));
+
+// Equilibrio Π = δΣw y fórmula maestra, con Ω = diag(P τΣ Pᵀ) como en el capítulo y cada
+// view escalada por su factor (chico = mucha confianza). Devuelve también los pesos sin
+// restricciones w = Σ⁻¹μ / δ.
+export function blackLitterman({ Sigma, wMercado, delta, tau, P, Q, factores }) {
+  const n = Sigma.length;
+  const Pi = multiplicar(Sigma, wMercado).map((x) => delta * x);
+  const tauSigma = Sigma.map((fila) => fila.map((x) => tau * x));
+  // (τΣ)⁻¹ columna por columna
+  const columnas = [...Array(n).keys()].map((j) => resolver(tauSigma, [...Array(n).keys()].map((i) => +(i === j))));
+  const invTauSigma = columnas[0].map((_, i) => columnas.map((c) => c[i]));
+  const precisionView = P.map((fila, k) => 1 / (factores[k] * fila.reduce((s, a, i) =>
+    s + a * fila.reduce((t, b, j) => t + b * tauSigma[i][j], 0), 0)));
+  const A = invTauSigma.map((fila, i) => fila.map((x, j) =>
+    x + P.reduce((s, f, k) => s + f[i] * precisionView[k] * f[j], 0)));
+  const b = multiplicar(invTauSigma, Pi).map((x, i) =>
+    x + P.reduce((s, f, k) => s + f[i] * precisionView[k] * Q[k], 0));
+  const mu = resolver(A, b);
+  const w = resolver(Sigma, mu).map((x) => x / delta);
+  return { Pi, mu, w };
+}
+
+// --- Hierarchical Risk Parity (Capítulo 9) ---------------------------------
+
+// Covarianza muestral (con n − 1, como np.cov y DataFrame.cov) de filas de retornos
+export function covMuestral(filas) {
+  const n = filas.length;
+  const k = filas[0].length;
+  const m = new Array(k).fill(0);
+  for (const f of filas) for (let j = 0; j < k; j++) m[j] += f[j] / n;
+  const S = Array.from({ length: k }, () => new Array(k).fill(0));
+  for (const f of filas) {
+    for (let i = 0; i < k; i++) {
+      const di = f[i] - m[i];
+      for (let j = i; j < k; j++) S[i][j] += di * (f[j] - m[j]);
+    }
+  }
+  for (let i = 0; i < k; i++) for (let j = i; j < k; j++) S[j][i] = S[i][j] /= n - 1;
+  return S;
+}
+
+// Orden de las hojas del dendrograma: distancia sqrt((1 − ρ)/2), single linkage y el
+// recorrido de hierarchy.leaves_list (cada unión pone primero el grupo de menor número).
+export function ordenJerarquico(Sigma) {
+  const k = Sigma.length;
+  const dist = (i, j) => Math.sqrt(Math.max(0, (1 - Sigma[i][j] / Math.sqrt(Sigma[i][i] * Sigma[j][j])) / 2));
+  let grupos = [...Array(k).keys()].map((i) => ({ id: i, hojas: [i] }));
+  let siguiente = k;
+  while (grupos.length > 1) {
+    let mejor = null;
+    for (let a = 0; a < grupos.length; a++) {
+      for (let b = a + 1; b < grupos.length; b++) {
+        let d = Infinity;
+        for (const i of grupos[a].hojas) for (const j of grupos[b].hojas) d = Math.min(d, dist(i, j));
+        if (!mejor || d < mejor.d) mejor = { a, b, d };
+      }
+    }
+    const [g1, g2] = [grupos[mejor.a], grupos[mejor.b]].sort((x, y) => x.id - y.id);
+    grupos = grupos.filter((_, i) => i !== mejor.a && i !== mejor.b);
+    grupos.push({ id: siguiente++, hojas: [...g1.hojas, ...g2.hojas] });
+  }
+  return grupos[0].hojas;
+}
+
+// Varianza del sub-portafolio inverse-variance de un grupo (solo usa su diagonal para los pesos)
+function varianzaGrupo(Sigma, items) {
+  const iv = items.map((i) => 1 / Sigma[i][i]);
+  const s = sumar(iv);
+  const w = iv.map((x) => x / s);
+  let v = 0;
+  items.forEach((i, a) => items.forEach((j, b) => { v += w[a] * w[b] * Sigma[i][j]; }));
+  return v;
+}
+
+// Bisección recursiva sobre la lista ordenada, como hrp() del capítulo. Pesos en el orden original.
+export function pesosHRP(Sigma, orden) {
+  const w = new Array(Sigma.length).fill(1);
+  let grupos = [orden];
+  while (grupos.length) {
+    const nuevos = [];
+    for (const g of grupos) {
+      if (g.length <= 1) continue;
+      const izq = g.slice(0, Math.floor(g.length / 2));
+      const der = g.slice(Math.floor(g.length / 2));
+      const vIzq = varianzaGrupo(Sigma, izq);
+      const alpha = 1 - vIzq / (vIzq + varianzaGrupo(Sigma, der));
+      for (const i of izq) w[i] *= alpha;
+      for (const i of der) w[i] *= 1 - alpha;
+      nuevos.push(izq, der);
+    }
+    grupos = nuevos;
+  }
+  return w;
+}
+
 // --- Riesgo de crédito: CDO con cópula gaussiana de un factor (Capítulo 12) ---
 
 // Distribución EXACTA del número de defaults en un pool de n créditos. Condicional al
@@ -465,6 +683,31 @@ export function distribucionDefaults(n, pd, rho, nodos = 801) {
 // Pérdida de un tramo [desde, hasta] (fracciones del pool), como fracción del tramo
 export function perdidaTramo(perdida, desde, hasta) {
   return Math.min(Math.max(perdida - desde, 0), hasta - desde) / (hasta - desde);
+}
+
+// --- Bonos (Capítulos 2 y 3) ---------------------------------------------
+
+// Flujos de un bono bullet con cupón anual: el último año devuelve además el nominal
+export function flujosBono(nominal, tasaCupon, anios) {
+  return Array.from({ length: anios }, (_, i) => nominal * tasaCupon + (i === anios - 1 ? nominal : 0));
+}
+
+// Precio como suma de flujos descontados, como valuacion_bono del Capítulo 3
+export function precioBono(nominal, tasaCupon, anios, tasa) {
+  return flujosBono(nominal, tasaCupon, anios).reduce((p, f, i) => p + f / (1 + tasa) ** (i + 1), 0);
+}
+
+// TIR al precio de mercado. El capítulo la busca de a 0.01%; acá se biseca, porque el
+// precio baja siempre que la tasa sube. Devuelve null si cae fuera de [−50%, 500%].
+export function tirBono(nominal, tasaCupon, anios, precio) {
+  let lo = -0.5, hi = 5;
+  const exceso = (r) => precioBono(nominal, tasaCupon, anios, r) - precio;
+  if (exceso(lo) < 0 || exceso(hi) > 0) return null;
+  for (let i = 0; i < 100; i++) {
+    const m = (lo + hi) / 2;
+    if (exceso(m) > 0) lo = m; else hi = m;
+  }
+  return (lo + hi) / 2;
 }
 
 // --- Backtesting (Capítulo 17) -------------------------------------------

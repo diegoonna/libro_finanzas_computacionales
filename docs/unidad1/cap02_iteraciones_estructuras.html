@@ -806,8 +806,7 @@ window.Quarto = {
   </ul></li>
   <li><a href="#caso-integrador-valuar-un-bono-y-encontrar-su-tir" id="toc-caso-integrador-valuar-un-bono-y-encontrar-su-tir" class="nav-link" data-scroll-target="#caso-integrador-valuar-un-bono-y-encontrar-su-tir"><span class="header-section-number">2.6</span> Caso integrador: valuar un bono y encontrar su TIR</a></li>
   <li><a href="#errores-comunes" id="toc-errores-comunes" class="nav-link" data-scroll-target="#errores-comunes"><span class="header-section-number">2.7</span> Errores comunes</a></li>
-  <li><a href="#ejercicios-propuestos" id="toc-ejercicios-propuestos" class="nav-link" data-scroll-target="#ejercicios-propuestos"><span class="header-section-number">2.8</span> Ejercicios Propuestos</a></li>
-  <li><a href="#referencias" id="toc-referencias" class="nav-link" data-scroll-target="#referencias"><span class="header-section-number">2.9</span> Referencias</a></li>
+  <li><a href="#referencias" id="toc-referencias" class="nav-link" data-scroll-target="#referencias"><span class="header-section-number">2.8</span> Referencias</a></li>
   </ul></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/diegoonna/libro_finanzas_computacionales/edit/main/unidad1/cap02_iteraciones_estructuras.qmd" class="toc-action"><i class="bi bi-github"></i>Editar esta página</a></li><li><a href="https://github.com/diegoonna/libro_finanzas_computacionales/issues/new" class="toc-action"><i class="bi empty"></i>Informar sobre problema</a></li></ul></div></nav>
@@ -1118,7 +1117,7 @@ Figura&nbsp;2.2: Etiquetas y objetos. ① <code>b = a</code> no copia: pega una 
 <div id="fig-flujos-bono" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-flujos-bono-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="cap02_iteraciones_estructuras_files/figure-html/fig-flujos-bono-output-1.png" width="757" height="392" class="figure-img">
+<img src="cap02_iteraciones_estructuras_files/figure-html/fig-flujos-bono-output-1.png" width="758" height="394" class="figure-img">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-flujos-bono-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Figura&nbsp;2.3: Valuación del bono como suma de flujos descontados: a la derecha, los flujos que paga en cada año; en t = 0, el valor presente de cada uno apilado. La altura total de la pila es el precio.
@@ -1175,6 +1174,23 @@ Figura&nbsp;2.4: Búsqueda incremental de la TIR: el <code>while</code> externo 
 <p>La búsqueda incremental es el método numérico más simple para resolver ecuaciones que no se pueden despejar. Es lento pero transparente. En el Capítulo 3 vas a empaquetar esta lógica en una función reutilizable, y en el Capítulo 18 vas a conocer a su primo profesional —Newton-Raphson— extrayendo volatilidades implícitas de opciones. La idea es la misma; solo mejora la puntería.</p>
 </div>
 </div>
+<div class="simulador">
+<p><span class="simulador-titulo">Simulador · Precio y TIR de un bono</span></p>
+<p>Los dos problemas del caso viven sobre una misma curva: el precio del bono a cada tasa de descuento. El punto naranja es la valuación directa (elegís la tasa, sale el precio); la línea verde punteada es el precio de mercado, y donde corta la curva está su TIR (la búsqueda inversa). Abajo, cada flujo junto a su valor presente. El nominal es siempre $1000; arranca con el bono del capítulo.</p>
+<div id="sim-bono"></div>
+<script type="module">
+  import { montar } from "../simuladores/bono.js";
+  montar(document.getElementById("sim-bono"));
+</script>
+<div class="probar">
+<p><strong>Probá esto</strong></p>
+<ol type="1">
+<li>Bajá la tasa de mercado de 10% a 8%, la misma del cupón: el precio llega justo a $1000, <strong>a la par</strong>. Por debajo del 8% el bono cotiza <em>sobre</em> la par: paga más de lo que exige el mercado.</li>
+<li>Llevá el precio de mercado a $925, casi el precio a tu tasa: el rombo verde se apoya sobre el punto naranja y la TIR da ~10%. Valuar y buscar la TIR son el mismo cálculo leído en los dos sentidos.</li>
+<li>Mirá las dos sensibilidades con el plazo en 5 años: −3.79% si la tasa sube 1 pp, +3.99% si baja. Subí el plazo a 30 años: pasan a −8.91% y +10.57%. Los bonos largos son mucho más sensibles a la tasa, y la curva no es una recta: las bajas de tasa suman más de lo que restan las subas.</li>
+</ol>
+</div>
+</div>
 <hr>
 </section>
 <section id="errores-comunes" class="level2" data-number="2.7">
@@ -1201,31 +1217,8 @@ Figura&nbsp;2.4: Búsqueda incremental de la TIR: el <code>while</code> externo 
 </div>
 <hr>
 </section>
-<section id="ejercicios-propuestos" class="level2" data-number="2.8">
-<h2 data-number="2.8" class="anchored" data-anchor-id="ejercicios-propuestos"><span class="header-section-number">2.8</span> Ejercicios Propuestos</h2>
-<div class="callout callout-style-simple callout-important callout-titled" title="Ejercicios">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Importante</span>Ejercicios
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<ol type="1">
-<li><strong>Interés compuesto con <code>while</code></strong>: ¿cuántos años tarda una inversión de $1000 al 7% anual compuesto en duplicarse? Resolvelo con un <code>while</code> y comparalo con la “regla del 72” (72/7 ≈ 10.3 años).</li>
-<li><strong>Retornos porcentuales</strong>: adaptá el ejemplo de variaciones absolutas para calcular retornos porcentuales (<span class="math inline">\(R_t = P_t/P_{t-1} - 1\)</span>) y contá cuántos días fueron positivos usando un contador.</li>
-<li><strong>Cartera como lista de diccionarios</strong>: representá una cartera de 4 activos como una lista donde cada elemento es un diccionario con claves <code>ticker</code>, <code>cantidad</code> y <code>precio</code>. Recorrela para calcular el valor total y el activo de mayor peso.</li>
-<li><strong>Bono bajo/sobre la par</strong>: usando el código del caso integrador, valuá el mismo bono con tasas de descuento del 6%, 8% y 10%. ¿Qué relación observás entre la tasa de descuento, el cupón y que el precio esté sobre, a, o bajo la par?</li>
-<li><strong>TIR más precisa</strong>: la búsqueda incremental del capítulo avanza siempre “hacia arriba” con paso fijo. Mejorala: cuando el VP cruce el precio, retrocedé un paso y volvé a avanzar con un paso 10 veces más chico. Repetí hasta lograr precisión de 0.0001%.</li>
-</ol>
-</div>
-</div>
-<hr>
-</section>
-<section id="referencias" class="level2" data-number="2.9">
-<h2 data-number="2.9" class="anchored" data-anchor-id="referencias"><span class="header-section-number">2.9</span> Referencias</h2>
+<section id="referencias" class="level2" data-number="2.8">
+<h2 data-number="2.8" class="anchored" data-anchor-id="referencias"><span class="header-section-number">2.8</span> Referencias</h2>
 <div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list" style="display: none">
 <div id="ref-downey2015" class="csl-entry" role="listitem">
 Downey, Allen. 2015. <em>Think Python: How to Think Like a Computer Scientist</em>. 2.ª ed. O’Reilly Media.
@@ -2401,38 +2394,56 @@ Lutz, Mark. 2013. <em>Learning Python</em>. 5.ª ed. O’Reilly Media.
 <span id="cb1-694"><a href="#cb1-694" aria-hidden="true" tabindex="-1"></a>La búsqueda incremental es el método numérico más simple para resolver ecuaciones que no se pueden despejar. Es lento pero transparente. En el Capítulo 3 vas a empaquetar esta lógica en una función reutilizable, y en el Capítulo 18 vas a conocer a su primo profesional —Newton-Raphson— extrayendo volatilidades implícitas de opciones. La idea es la misma; solo mejora la puntería.</span>
 <span id="cb1-695"><a href="#cb1-695" aria-hidden="true" tabindex="-1"></a>:::</span>
 <span id="cb1-696"><a href="#cb1-696" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-697"><a href="#cb1-697" aria-hidden="true" tabindex="-1"></a>---</span>
-<span id="cb1-698"><a href="#cb1-698" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-699"><a href="#cb1-699" aria-hidden="true" tabindex="-1"></a><span class="fu">## Errores comunes</span></span>
+<span id="cb1-697"><a href="#cb1-697" aria-hidden="true" tabindex="-1"></a>::: {.content-visible when-format="html"}</span>
+<span id="cb1-698"><a href="#cb1-698" aria-hidden="true" tabindex="-1"></a>::: {.simulador}</span>
+<span id="cb1-699"><a href="#cb1-699" aria-hidden="true" tabindex="-1"></a><span class="co">[</span><span class="ot">Simulador · Precio y TIR de un bono</span><span class="co">]</span>{.simulador-titulo}</span>
 <span id="cb1-700"><a href="#cb1-700" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-701"><a href="#cb1-701" aria-hidden="true" tabindex="-1"></a>::: {.callout-warning title="Trampas frecuentes"}</span>
-<span id="cb1-702"><a href="#cb1-702" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**El bucle infinito**: un <span class="in">`while`</span> cuya condición nunca se vuelve falsa (típicamente porque olvidaste actualizar el contador o lo actualizás después de un <span class="in">`continue`</span>). Si tu programa "se cuelga", sospechá de esto primero.</span>
-<span id="cb1-703"><a href="#cb1-703" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**`IndexError` por off-by-one**: pedir <span class="in">`lista[len(lista)]`</span> no existe — el último índice válido es <span class="in">`len(lista) - 1`</span>. Aparece muchísimo al comparar elementos consecutivos; por eso el <span class="in">`range(len(precios) - 1)`</span> en el ejemplo de variaciones.</span>
-<span id="cb1-704"><a href="#cb1-704" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**`KeyError` en diccionarios**: acceder a una clave que no existe (<span class="in">`conteo['Alto']`</span> antes de crearla) rompe el programa. Usá <span class="in">`.get(clave, defecto)`</span> o verificá con <span class="in">`if clave in diccionario`</span>.</span>
-<span id="cb1-705"><a href="#cb1-705" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Modificar una lista mientras la recorrés**: hacer `lista.remove(x)` adentro de un `for` sobre esa misma lista saltea elementos de forma impredecible. El patrón seguro es construir una lista **nueva** con lo que querés conservar (como en el ejemplo de filtrado).</span>
-<span id="cb1-706"><a href="#cb1-706" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Creer que `b = a` copia la lista**: solo agrega una etiqueta al mismo objeto — modificás <span class="in">`b`</span> y "cambia" <span class="in">`a`</span>. Copia real: <span class="in">`a.copy()`</span>; con estructuras anidadas, <span class="in">`copy.deepcopy(a)`</span> (la sección "Copiar no es lo mismo que apuntar").</span>
-<span id="cb1-707"><a href="#cb1-707" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Dividir por el contador equivocado**: al promediar datos filtrados, dividí por la cantidad de datos *válidos*, no por el total de la lista (el error silencioso del ejemplo de <span class="in">`continue`</span>).</span>
-<span id="cb1-708"><a href="#cb1-708" aria-hidden="true" tabindex="-1"></a>:::</span>
-<span id="cb1-709"><a href="#cb1-709" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-710"><a href="#cb1-710" aria-hidden="true" tabindex="-1"></a>---</span>
-<span id="cb1-711"><a href="#cb1-711" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-712"><a href="#cb1-712" aria-hidden="true" tabindex="-1"></a><span class="fu">## Ejercicios Propuestos</span></span>
+<span id="cb1-701"><a href="#cb1-701" aria-hidden="true" tabindex="-1"></a>Los dos problemas del caso viven sobre una misma curva: el precio del bono a cada tasa de descuento. El punto naranja es la valuación directa (elegís la tasa, sale el precio); la línea verde punteada es el precio de mercado, y donde corta la curva está su TIR (la búsqueda inversa). Abajo, cada flujo junto a su valor presente. El nominal es siempre $1000; arranca con el bono del capítulo.</span>
+<span id="cb1-702"><a href="#cb1-702" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-703"><a href="#cb1-703" aria-hidden="true" tabindex="-1"></a><span class="in">```{=html}</span></span>
+<span id="cb1-704"><a href="#cb1-704" aria-hidden="true" tabindex="-1"></a><span class="in">&lt;div id="sim-bono"&gt;&lt;/div&gt;</span></span>
+<span id="cb1-705"><a href="#cb1-705" aria-hidden="true" tabindex="-1"></a><span class="in">&lt;script type="module"&gt;</span></span>
+<span id="cb1-706"><a href="#cb1-706" aria-hidden="true" tabindex="-1"></a><span class="in">  import { montar } from "../simuladores/bono.js";</span></span>
+<span id="cb1-707"><a href="#cb1-707" aria-hidden="true" tabindex="-1"></a><span class="in">  montar(document.getElementById("sim-bono"));</span></span>
+<span id="cb1-708"><a href="#cb1-708" aria-hidden="true" tabindex="-1"></a><span class="in">&lt;/script&gt;</span></span>
+<span id="cb1-709"><a href="#cb1-709" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb1-710"><a href="#cb1-710" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-711"><a href="#cb1-711" aria-hidden="true" tabindex="-1"></a>::: {.probar}</span>
+<span id="cb1-712"><a href="#cb1-712" aria-hidden="true" tabindex="-1"></a>**Probá esto**</span>
 <span id="cb1-713"><a href="#cb1-713" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-714"><a href="#cb1-714" aria-hidden="true" tabindex="-1"></a>::: {.callout-important title="Ejercicios"}</span>
-<span id="cb1-715"><a href="#cb1-715" aria-hidden="true" tabindex="-1"></a><span class="ss">1. </span>**Interés compuesto con `while`**: ¿cuántos años tarda una inversión de $1000 al 7% anual compuesto en duplicarse? Resolvelo con un <span class="in">`while`</span> y comparalo con la "regla del 72" (72/7 ≈ 10.3 años).</span>
-<span id="cb1-716"><a href="#cb1-716" aria-hidden="true" tabindex="-1"></a><span class="ss">2. </span>**Retornos porcentuales**: adaptá el ejemplo de variaciones absolutas para calcular retornos porcentuales ($R_t = P_t/P_{t-1} - 1$) y contá cuántos días fueron positivos usando un contador.</span>
-<span id="cb1-717"><a href="#cb1-717" aria-hidden="true" tabindex="-1"></a><span class="ss">3. </span>**Cartera como lista de diccionarios**: representá una cartera de 4 activos como una lista donde cada elemento es un diccionario con claves <span class="in">`ticker`</span>, <span class="in">`cantidad`</span> y <span class="in">`precio`</span>. Recorrela para calcular el valor total y el activo de mayor peso.</span>
-<span id="cb1-718"><a href="#cb1-718" aria-hidden="true" tabindex="-1"></a><span class="ss">4. </span>**Bono bajo/sobre la par**: usando el código del caso integrador, valuá el mismo bono con tasas de descuento del 6%, 8% y 10%. ¿Qué relación observás entre la tasa de descuento, el cupón y que el precio esté sobre, a, o bajo la par?</span>
-<span id="cb1-719"><a href="#cb1-719" aria-hidden="true" tabindex="-1"></a><span class="ss">5. </span>**TIR más precisa**: la búsqueda incremental del capítulo avanza siempre "hacia arriba" con paso fijo. Mejorala: cuando el VP cruce el precio, retrocedé un paso y volvé a avanzar con un paso 10 veces más chico. Repetí hasta lograr precisión de 0.0001%.</span>
-<span id="cb1-720"><a href="#cb1-720" aria-hidden="true" tabindex="-1"></a>:::</span>
-<span id="cb1-721"><a href="#cb1-721" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-722"><a href="#cb1-722" aria-hidden="true" tabindex="-1"></a>---</span>
-<span id="cb1-723"><a href="#cb1-723" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-724"><a href="#cb1-724" aria-hidden="true" tabindex="-1"></a><span class="fu">## Referencias</span></span>
-<span id="cb1-725"><a href="#cb1-725" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-714"><a href="#cb1-714" aria-hidden="true" tabindex="-1"></a><span class="ss">1. </span>Bajá la tasa de mercado de 10% a 8%, la misma del cupón: el precio llega justo a $1000, **a la par**. Por debajo del 8% el bono cotiza *sobre* la par: paga más de lo que exige el mercado.</span>
+<span id="cb1-715"><a href="#cb1-715" aria-hidden="true" tabindex="-1"></a><span class="ss">2. </span>Llevá el precio de mercado a $925, casi el precio a tu tasa: el rombo verde se apoya sobre el punto naranja y la TIR da ~10%. Valuar y buscar la TIR son el mismo cálculo leído en los dos sentidos.</span>
+<span id="cb1-716"><a href="#cb1-716" aria-hidden="true" tabindex="-1"></a><span class="ss">3. </span>Mirá las dos sensibilidades con el plazo en 5 años: −3.79% si la tasa sube 1 pp, +3.99% si baja. Subí el plazo a 30 años: pasan a −8.91% y +10.57%. Los bonos largos son mucho más sensibles a la tasa, y la curva no es una recta: las bajas de tasa suman más de lo que restan las subas.</span>
+<span id="cb1-717"><a href="#cb1-717" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb1-718"><a href="#cb1-718" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb1-719"><a href="#cb1-719" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb1-720"><a href="#cb1-720" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-721"><a href="#cb1-721" aria-hidden="true" tabindex="-1"></a>::: {.content-visible when-format="pdf"}</span>
+<span id="cb1-722"><a href="#cb1-722" aria-hidden="true" tabindex="-1"></a>::: {.callout-note title="Simulador interactivo"}</span>
+<span id="cb1-723"><a href="#cb1-723" aria-hidden="true" tabindex="-1"></a>En la <span class="co">[</span><span class="ot">versión web de este capítulo</span><span class="co">](https://diegoonna.github.io/libro_finanzas_computacionales/unidad1/cap02_iteraciones_estructuras.html)</span> hay un simulador donde podés mover el cupón, el plazo, la tasa y el precio de mercado, y ver cómo cambian el precio y la TIR del bono.</span>
+<span id="cb1-724"><a href="#cb1-724" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb1-725"><a href="#cb1-725" aria-hidden="true" tabindex="-1"></a>:::</span>
 <span id="cb1-726"><a href="#cb1-726" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-727"><a href="#cb1-727" aria-hidden="true" tabindex="-1"></a>::: {#refs}</span>
-<span id="cb1-728"><a href="#cb1-728" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb1-727"><a href="#cb1-727" aria-hidden="true" tabindex="-1"></a>---</span>
+<span id="cb1-728"><a href="#cb1-728" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-729"><a href="#cb1-729" aria-hidden="true" tabindex="-1"></a><span class="fu">## Errores comunes</span></span>
+<span id="cb1-730"><a href="#cb1-730" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-731"><a href="#cb1-731" aria-hidden="true" tabindex="-1"></a>::: {.callout-warning title="Trampas frecuentes"}</span>
+<span id="cb1-732"><a href="#cb1-732" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**El bucle infinito**: un <span class="in">`while`</span> cuya condición nunca se vuelve falsa (típicamente porque olvidaste actualizar el contador o lo actualizás después de un <span class="in">`continue`</span>). Si tu programa "se cuelga", sospechá de esto primero.</span>
+<span id="cb1-733"><a href="#cb1-733" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**`IndexError` por off-by-one**: pedir <span class="in">`lista[len(lista)]`</span> no existe — el último índice válido es <span class="in">`len(lista) - 1`</span>. Aparece muchísimo al comparar elementos consecutivos; por eso el <span class="in">`range(len(precios) - 1)`</span> en el ejemplo de variaciones.</span>
+<span id="cb1-734"><a href="#cb1-734" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**`KeyError` en diccionarios**: acceder a una clave que no existe (<span class="in">`conteo['Alto']`</span> antes de crearla) rompe el programa. Usá <span class="in">`.get(clave, defecto)`</span> o verificá con <span class="in">`if clave in diccionario`</span>.</span>
+<span id="cb1-735"><a href="#cb1-735" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Modificar una lista mientras la recorrés**: hacer `lista.remove(x)` adentro de un `for` sobre esa misma lista saltea elementos de forma impredecible. El patrón seguro es construir una lista **nueva** con lo que querés conservar (como en el ejemplo de filtrado).</span>
+<span id="cb1-736"><a href="#cb1-736" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Creer que `b = a` copia la lista**: solo agrega una etiqueta al mismo objeto — modificás <span class="in">`b`</span> y "cambia" <span class="in">`a`</span>. Copia real: <span class="in">`a.copy()`</span>; con estructuras anidadas, <span class="in">`copy.deepcopy(a)`</span> (la sección "Copiar no es lo mismo que apuntar").</span>
+<span id="cb1-737"><a href="#cb1-737" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Dividir por el contador equivocado**: al promediar datos filtrados, dividí por la cantidad de datos *válidos*, no por el total de la lista (el error silencioso del ejemplo de <span class="in">`continue`</span>).</span>
+<span id="cb1-738"><a href="#cb1-738" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb1-739"><a href="#cb1-739" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-740"><a href="#cb1-740" aria-hidden="true" tabindex="-1"></a>---</span>
+<span id="cb1-741"><a href="#cb1-741" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-742"><a href="#cb1-742" aria-hidden="true" tabindex="-1"></a><span class="fu">## Referencias</span></span>
+<span id="cb1-743"><a href="#cb1-743" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-744"><a href="#cb1-744" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-745"><a href="#cb1-745" aria-hidden="true" tabindex="-1"></a>::: {#refs}</span>
+<span id="cb1-746"><a href="#cb1-746" aria-hidden="true" tabindex="-1"></a>:::</span>
 </code></pre></div><button title="Copiar al portapapeles" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></div>
 </div></div></div></div></div>
 </div> <!-- /content -->

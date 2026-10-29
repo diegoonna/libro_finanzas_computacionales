@@ -424,8 +424,7 @@ div.csl-indent {
   </ul></li>
   <li><a href="#buenas-prácticas-de-diseño" id="toc-buenas-prácticas-de-diseño" class="nav-link" data-scroll-target="#buenas-prácticas-de-diseño"><span class="header-section-number">4.5</span> Buenas prácticas de diseño</a></li>
   <li><a href="#errores-comunes" id="toc-errores-comunes" class="nav-link" data-scroll-target="#errores-comunes"><span class="header-section-number">4.6</span> Errores comunes</a></li>
-  <li><a href="#ejercicios-propuestos" id="toc-ejercicios-propuestos" class="nav-link" data-scroll-target="#ejercicios-propuestos"><span class="header-section-number">4.7</span> Ejercicios Propuestos</a></li>
-  <li><a href="#referencias" id="toc-referencias" class="nav-link" data-scroll-target="#referencias"><span class="header-section-number">4.8</span> Referencias</a></li>
+  <li><a href="#referencias" id="toc-referencias" class="nav-link" data-scroll-target="#referencias"><span class="header-section-number">4.7</span> Referencias</a></li>
   </ul></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/diegoonna/libro_finanzas_computacionales/edit/main/unidad1/cap04_poo.qmd" class="toc-action"><i class="bi bi-github"></i>Editar esta página</a></li><li><a href="https://github.com/diegoonna/libro_finanzas_computacionales/issues/new" class="toc-action"><i class="bi empty"></i>Informar sobre problema</a></li></ul></div></nav>
@@ -859,7 +858,7 @@ Valor amortizable al 10%: $951.63</code></pre>
 <div id="fig-bullet-vs-amortizable" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-bullet-vs-amortizable-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="cap04_poo_files/figure-html/fig-bullet-vs-amortizable-output-1.png" width="949" height="354" class="figure-img">
+<img src="cap04_poo_files/figure-html/fig-bullet-vs-amortizable-output-1.png" width="950" height="354" class="figure-img">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-bullet-vs-amortizable-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Figura&nbsp;4.5: Cronogramas de flujos del bono bullet y del amortizable (nominal 1000, cupón 8%, 5 años). El bullet concentra el capital al final; el amortizable lo devuelve en cuotas, y sus intereses bajan porque se calculan sobre un saldo que decrece.
@@ -959,31 +958,8 @@ YPF29       BonoCorporativo     $      968.30</code></pre>
 </div>
 <hr>
 </section>
-<section id="ejercicios-propuestos" class="level2" data-number="4.7">
-<h2 data-number="4.7" class="anchored" data-anchor-id="ejercicios-propuestos"><span class="header-section-number">4.7</span> Ejercicios Propuestos</h2>
-<div class="callout callout-style-simple callout-important callout-titled" title="Desafíos de diseño">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Importante</span>Desafíos de diseño
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<ol type="1">
-<li><strong>Fondo común con composición</strong>: creá una clase <code>FondoComun</code> que gestione una lista de objetos <code>Accion</code>, con métodos para agregar posiciones y calcular el valor total del fondo. ¿Por qué composición y no herencia?</li>
-<li><strong>Bono cupón cero</strong>: implementá <code>BonoCuponCero(Bono)</code> que solo paga el nominal al vencimiento (redefiní <code>flujos()</code>). Verificá que <code>valuar()</code> heredado funciona sin cambios, y comparalo con el bullet a la misma tasa.</li>
-<li><strong>TIR como método</strong>: agregale a la clase <code>Bono</code> un método <code>tir(self, precio_mercado)</code> que encuentre la TIR por búsqueda incremental (la lógica del Capítulo 2, ahora viviendo donde corresponde).</li>
-<li><strong>Property con validación</strong>: convertí <code>precio</code> de la clase <code>Accion</code> en una property con <em>setter</em> que rechace precios negativos (<code>@precio.setter</code>). Probá que asignar un precio inválido lanza <code>ValueError</code>.</li>
-<li><strong>Simulador de mercado</strong>: creá una clase <code>Mercado</code> que contenga una lista de instrumentos variados y un método <code>simular_rueda()</code> que actualice todos los precios aleatoriamente. ¿Dónde está el polimorfismo en tu diseño?</li>
-</ol>
-</div>
-</div>
-<hr>
-</section>
-<section id="referencias" class="level2" data-number="4.8">
-<h2 data-number="4.8" class="anchored" data-anchor-id="referencias"><span class="header-section-number">4.8</span> Referencias</h2>
+<section id="referencias" class="level2" data-number="4.7">
+<h2 data-number="4.7" class="anchored" data-anchor-id="referencias"><span class="header-section-number">4.7</span> Referencias</h2>
 <div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list" style="display: none">
 <div id="ref-martin2009" class="csl-entry" role="listitem">
 Martin, Robert C. 2009. <em>Clean Code: A Handbook of Agile Software Craftsmanship</em>. Prentice Hall.
@@ -1912,23 +1888,11 @@ Ramalho, Luciano. 2022. <em>Fluent Python</em>. 2.ª ed. O’Reilly Media.
 <span id="cb18-462"><a href="#cb18-462" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb18-463"><a href="#cb18-463" aria-hidden="true" tabindex="-1"></a>---</span>
 <span id="cb18-464"><a href="#cb18-464" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb18-465"><a href="#cb18-465" aria-hidden="true" tabindex="-1"></a><span class="fu">## Ejercicios Propuestos</span></span>
+<span id="cb18-465"><a href="#cb18-465" aria-hidden="true" tabindex="-1"></a><span class="fu">## Referencias</span></span>
 <span id="cb18-466"><a href="#cb18-466" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb18-467"><a href="#cb18-467" aria-hidden="true" tabindex="-1"></a>::: {.callout-important title="Desafíos de diseño"}</span>
-<span id="cb18-468"><a href="#cb18-468" aria-hidden="true" tabindex="-1"></a><span class="ss">1.  </span>**Fondo común con composición**: creá una clase <span class="in">`FondoComun`</span> que gestione una lista de objetos <span class="in">`Accion`</span>, con métodos para agregar posiciones y calcular el valor total del fondo. ¿Por qué composición y no herencia?</span>
-<span id="cb18-469"><a href="#cb18-469" aria-hidden="true" tabindex="-1"></a><span class="ss">2.  </span>**Bono cupón cero**: implementá <span class="in">`BonoCuponCero(Bono)`</span> que solo paga el nominal al vencimiento (redefiní <span class="in">`flujos()`</span>). Verificá que <span class="in">`valuar()`</span> heredado funciona sin cambios, y comparalo con el bullet a la misma tasa.</span>
-<span id="cb18-470"><a href="#cb18-470" aria-hidden="true" tabindex="-1"></a><span class="ss">3.  </span>**TIR como método**: agregale a la clase <span class="in">`Bono`</span> un método <span class="in">`tir(self, precio_mercado)`</span> que encuentre la TIR por búsqueda incremental (la lógica del Capítulo 2, ahora viviendo donde corresponde).</span>
-<span id="cb18-471"><a href="#cb18-471" aria-hidden="true" tabindex="-1"></a><span class="ss">4.  </span>**Property con validación**: convertí <span class="in">`precio`</span> de la clase <span class="in">`Accion`</span> en una property con *setter* que rechace precios negativos (<span class="in">`@precio.setter`</span>). Probá que asignar un precio inválido lanza <span class="in">`ValueError`</span>.</span>
-<span id="cb18-472"><a href="#cb18-472" aria-hidden="true" tabindex="-1"></a><span class="ss">5.  </span>**Simulador de mercado**: creá una clase <span class="in">`Mercado`</span> que contenga una lista de instrumentos variados y un método <span class="in">`simular_rueda()`</span> que actualice todos los precios aleatoriamente. ¿Dónde está el polimorfismo en tu diseño?</span>
-<span id="cb18-473"><a href="#cb18-473" aria-hidden="true" tabindex="-1"></a>:::</span>
-<span id="cb18-474"><a href="#cb18-474" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb18-475"><a href="#cb18-475" aria-hidden="true" tabindex="-1"></a>---</span>
-<span id="cb18-476"><a href="#cb18-476" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb18-477"><a href="#cb18-477" aria-hidden="true" tabindex="-1"></a><span class="fu">## Referencias</span></span>
-<span id="cb18-478"><a href="#cb18-478" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb18-479"><a href="#cb18-479" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb18-480"><a href="#cb18-480" aria-hidden="true" tabindex="-1"></a>::: {#refs}</span>
-<span id="cb18-481"><a href="#cb18-481" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb18-467"><a href="#cb18-467" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-468"><a href="#cb18-468" aria-hidden="true" tabindex="-1"></a>::: {#refs}</span>
+<span id="cb18-469"><a href="#cb18-469" aria-hidden="true" tabindex="-1"></a>:::</span>
 </code></pre></div><button title="Copiar al portapapeles" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></div>
 </div></div></div></div></div>
 </div> <!-- /content -->

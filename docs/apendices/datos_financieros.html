@@ -435,8 +435,7 @@ window.Quarto = {
   <li><a href="#fred-datos-macroeconómicos-gratis" id="toc-fred-datos-macroeconómicos-gratis" class="nav-link" data-scroll-target="#fred-datos-macroeconómicos-gratis"><span class="header-section-number">B.4</span> FRED: datos macroeconómicos, gratis</a></li>
   <li><a href="#bloomberg-el-estándar-institucional" id="toc-bloomberg-el-estándar-institucional" class="nav-link" data-scroll-target="#bloomberg-el-estándar-institucional"><span class="header-section-number">B.5</span> Bloomberg: el estándar institucional</a></li>
   <li><a href="#cuál-usar-comparación-y-mapa-de-uso" id="toc-cuál-usar-comparación-y-mapa-de-uso" class="nav-link" data-scroll-target="#cuál-usar-comparación-y-mapa-de-uso"><span class="header-section-number">B.6</span> ¿Cuál usar? Comparación y mapa de uso</a></li>
-  <li><a href="#ejercicios-propuestos" id="toc-ejercicios-propuestos" class="nav-link" data-scroll-target="#ejercicios-propuestos"><span class="header-section-number">B.7</span> Ejercicios Propuestos</a></li>
-  <li><a href="#referencias" id="toc-referencias" class="nav-link" data-scroll-target="#referencias"><span class="header-section-number">B.8</span> Referencias</a></li>
+  <li><a href="#referencias" id="toc-referencias" class="nav-link" data-scroll-target="#referencias"><span class="header-section-number">B.7</span> Referencias</a></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/diegoonna/libro_finanzas_computacionales/edit/main/apendices/datos_financieros.qmd" class="toc-action"><i class="bi bi-github"></i>Editar esta página</a></li><li><a href="https://github.com/diegoonna/libro_finanzas_computacionales/issues/new" class="toc-action"><i class="bi empty"></i>Informar sobre problema</a></li></ul></div></nav>
     </div>
@@ -483,7 +482,7 @@ window.Quarto = {
 <li><strong>Script de descarga</strong>: pide los datos y los guarda en disco (CSV o Parquet).</li>
 <li><strong>Análisis</strong>: lee siempre del archivo local (<code>pd.read_csv</code>, como en el Capítulo 6).</li>
 </ol>
-<div id="fa0a4b03" class="cell" data-execution_count="1">
+<div id="7de16de8" class="cell" data-execution_count="1">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># --- 1) descargar_datos.py: se corre UNA vez (o cuando querés actualizar) ---</span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> yfinance <span class="im">as</span> yf</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -506,7 +505,7 @@ window.Quarto = {
 <li><strong>10 tickers</strong> elegidos para cubrir sectores bien distintos: tecnología (AAPL, MSFT, NVDA), financiero (JPM), energía (XOM), consumo defensivo (KO, JNJ, WMT), medios (DIS), más el ETF <strong>SPY</strong> como proxy del mercado.</li>
 </ul>
 <p>Para cargarlo, desde cualquier capítulo del libro (o desde tu clon del repositorio):</p>
-<div id="69a5da7f" class="cell" data-execution_count="2">
+<div id="fa9f887b" class="cell" data-execution_count="2">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>precios <span class="op">=</span> pd.read_csv(<span class="st">"datos/precios.csv"</span>, index_col<span class="op">=</span><span class="st">"Date"</span>, parse_dates<span class="op">=</span><span class="va">True</span>)</span>
@@ -517,7 +516,7 @@ window.Quarto = {
 <section id="yfinance-precios-de-mercado-gratis" class="level2" data-number="B.3">
 <h2 data-number="B.3" class="anchored" data-anchor-id="yfinance-precios-de-mercado-gratis"><span class="header-section-number">B.3</span> yfinance: precios de mercado, gratis</h2>
 <p><a href="https://github.com/ranaroussi/yfinance"><code>yfinance</code></a> descarga datos de Yahoo Finance: acciones, ETFs, índices, monedas y cripto de casi cualquier mercado del mundo. Se instala con <code>pip install yfinance</code>.</p>
-<div id="d1e4c7ce" class="cell" data-execution_count="3">
+<div id="2d3e41f4" class="cell" data-execution_count="3">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> yfinance <span class="im">as</span> yf</span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Un ticker: precios diarios ajustados</span></span>
@@ -562,7 +561,7 @@ window.Quarto = {
 <h2 data-number="B.4" class="anchored" data-anchor-id="fred-datos-macroeconómicos-gratis"><span class="header-section-number">B.4</span> FRED: datos macroeconómicos, gratis</h2>
 <p><strong>FRED</strong> (<em>Federal Reserve Economic Data</em>, de la Fed de St.&nbsp;Louis) es la referencia mundial de series macro: inflación, tasas, PIB, desempleo, spreads — más de 800.000 series. Es la fuente natural para alimentar los modelos ARIMA y VAR del Capítulo 16.</p>
 <p>La vía clásica es <a href="https://pandas-datareader.readthedocs.io"><code>pandas-datareader</code></a> (<code>pip install pandas-datareader</code>), que también documenta el acceso a otras fuentes públicas:</p>
-<div id="8af9f90b" class="cell" data-execution_count="4">
+<div id="9d65825f" class="cell" data-execution_count="4">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas_datareader.data <span class="im">as</span> web</span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> datetime <span class="im">import</span> datetime</span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -578,7 +577,7 @@ window.Quarto = {
 <span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(macro.tail(<span class="dv">3</span>))</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>La alternativa moderna es <a href="https://github.com/mortada/fredapi"><code>fredapi</code></a>, que usa la API oficial con una <strong>clave gratuita</strong> (se pide en el sitio de FRED en dos minutos):</p>
-<div id="6934f661" class="cell" data-execution_count="5">
+<div id="7dbf418b" class="cell" data-execution_count="5">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> fredapi <span class="im">import</span> Fred</span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>fred <span class="op">=</span> Fred(api_key<span class="op">=</span><span class="st">"TU_CLAVE_GRATUITA"</span>)</span>
@@ -597,7 +596,7 @@ window.Quarto = {
 <li>La <strong>Desktop API</strong> (<code>blpapi</code>, la librería oficial de Bloomberg) permite pedir datos desde Python <strong>solo si la Terminal está corriendo y logueada en la misma máquina</strong> — la licencia es por usuario, y la API respeta eso. No hay versión gratuita ni “clave de prueba”.</li>
 <li>Sobre <code>blpapi</code> (que es verbosa) la comunidad construyó wrappers pythónicos: <a href="https://github.com/alpha-xone/xbbg"><code>xbbg</code></a> es el más usado hoy. Sus funciones replican las que ya conocés de Excel: <code>bdh</code> (histórico), <code>bdp</code> (dato puntual), <code>bds</code> (bulk).</li>
 </ul>
-<div id="39fbf4e3" class="cell" data-execution_count="6">
+<div id="b165a4b8" class="cell" data-execution_count="6">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Requiere: Terminal Bloomberg abierta + pip install blpapi xbbg</span></span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> xbbg <span class="im">import</span> blp</span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -661,38 +660,16 @@ window.Quarto = {
 </tr>
 <tr class="odd">
 <td><strong>Uso en este libro</strong></td>
-<td>Ejercicios de los Caps. 6–9, 15, 17</td>
-<td>Caps. 15–16 (ARIMA/VAR con macro real)</td>
+<td>El dataset <code>datos/precios.csv</code> (secciones “Con datos reales”)</td>
+<td>Llevar el ARIMA/VAR del Cap. 16 a datos reales</td>
 <td>El mundo profesional que te espera</td>
 </tr>
 </tbody>
 </table>
 <p>La regla práctica: <strong>yfinance para aprender y prototipar, FRED para macro, Bloomberg cuando alguien más paga la licencia</strong>. Y sea cual sea la fuente: descargá una vez, guardá a disco, y analizá en local.</p>
 </section>
-<section id="ejercicios-propuestos" class="level2" data-number="B.7">
-<h2 data-number="B.7" class="anchored" data-anchor-id="ejercicios-propuestos"><span class="header-section-number">B.7</span> Ejercicios Propuestos</h2>
-<div class="callout callout-style-simple callout-important callout-titled" title="Ejercicios">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Importante</span>Ejercicios
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<ol type="1">
-<li><strong>Primer pipeline</strong>: escribí <code>descargar_datos.py</code> que baje 5 años de un ETF (p.ej. SPY) con <code>auto_adjust=True</code> y lo guarde en <code>datos/spy.csv</code>. Después rehacé el análisis de retornos y volatilidad móvil del Capítulo 6 leyendo ese archivo.</li>
-<li><strong>El efecto del ajuste</strong>: descargá el mismo ticker con <code>auto_adjust=True</code> y <code>False</code>, calculá el retorno acumulado de 5 años con cada versión y medí la diferencia. ¿Coincide con el dividend yield acumulado?</li>
-<li><strong>Markowitz real</strong>: bajá 5 acciones de sectores distintos + un ETF de bonos, guardá los cierres ajustados, y corré la frontera eficiente del Capítulo 8 con retornos mensuales reales.</li>
-<li><strong>Inflación real</strong>: descargá el CPI de FRED, convertilo a inflación interanual y ajustale el ARIMA del Capítulo 16. ¿Qué orden elige el AIC con datos reales?</li>
-<li><strong>Supervivencia</strong>: buscá qué pasó con los tickers “ENRNQ” (Enron) o “LEHMQ” (Lehman) en yfinance. ¿Qué te dice el resultado sobre armar backtests con el listado de tickers actual?</li>
-</ol>
-</div>
-</div>
-</section>
-<section id="referencias" class="level2" data-number="B.8">
-<h2 data-number="B.8" class="anchored" data-anchor-id="referencias"><span class="header-section-number">B.8</span> Referencias</h2>
+<section id="referencias" class="level2" data-number="B.7">
+<h2 data-number="B.7" class="anchored" data-anchor-id="referencias"><span class="header-section-number">B.7</span> Referencias</h2>
 <div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list" style="display: none">
 <div id="ref-xbbg" class="csl-entry" role="listitem">
 alpha-xone. s.&nbsp;f. <span>«xbbg — An Intuitive <span>Bloomberg</span> <span>API</span> Wrapper for <span>Python</span>»</span>. Accedido 13 de julio de 2026. <a href="https://github.com/alpha-xone/xbbg">https://github.com/alpha-xone/xbbg</a>.
@@ -1350,24 +1327,14 @@ Federal Reserve Bank of St. Louis. s.&nbsp;f. <span>«<span>FRED</span> — Fede
 <span id="cb7-181"><a href="#cb7-181" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> **Cobertura** <span class="pp">|</span> Acciones, ETFs, FX, cripto <span class="pp">|</span> Macro (EEUUU y global) <span class="pp">|</span> Todo, incl. renta fija y OTC <span class="pp">|</span></span>
 <span id="cb7-182"><a href="#cb7-182" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> **Calidad** <span class="pp">|</span> Buena para análisis personal <span class="pp">|</span> Oficial (la Fed) <span class="pp">|</span> Auditada, estándar de la industria <span class="pp">|</span></span>
 <span id="cb7-183"><a href="#cb7-183" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> **Confiabilidad de API** <span class="pp">|</span> No oficial, puede romperse <span class="pp">|</span> Estable <span class="pp">|</span> Estable (con Terminal) <span class="pp">|</span></span>
-<span id="cb7-184"><a href="#cb7-184" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> **Uso en este libro** <span class="pp">|</span> Ejercicios de los Caps. 6–9, 15, 17 <span class="pp">|</span> Caps. 15–16 (ARIMA/VAR con macro real) <span class="pp">|</span> El mundo profesional que te espera <span class="pp">|</span></span>
+<span id="cb7-184"><a href="#cb7-184" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> **Uso en este libro** <span class="pp">|</span> El dataset <span class="in">`datos/precios.csv`</span> (secciones "Con datos reales") <span class="pp">|</span> Llevar el ARIMA/VAR del Cap. 16 a datos reales <span class="pp">|</span> El mundo profesional que te espera <span class="pp">|</span></span>
 <span id="cb7-185"><a href="#cb7-185" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb7-186"><a href="#cb7-186" aria-hidden="true" tabindex="-1"></a>La regla práctica: **yfinance para aprender y prototipar, FRED para macro, Bloomberg cuando alguien más paga la licencia**. Y sea cual sea la fuente: descargá una vez, guardá a disco, y analizá en local.</span>
 <span id="cb7-187"><a href="#cb7-187" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-188"><a href="#cb7-188" aria-hidden="true" tabindex="-1"></a><span class="fu">## Ejercicios Propuestos</span></span>
+<span id="cb7-188"><a href="#cb7-188" aria-hidden="true" tabindex="-1"></a><span class="fu">## Referencias</span></span>
 <span id="cb7-189"><a href="#cb7-189" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-190"><a href="#cb7-190" aria-hidden="true" tabindex="-1"></a>::: {.callout-important title="Ejercicios"}</span>
-<span id="cb7-191"><a href="#cb7-191" aria-hidden="true" tabindex="-1"></a><span class="ss">1. </span>**Primer pipeline**: escribí <span class="in">`descargar_datos.py`</span> que baje 5 años de un ETF (p.ej. SPY) con <span class="in">`auto_adjust=True`</span> y lo guarde en <span class="in">`datos/spy.csv`</span>. Después rehacé el análisis de retornos y volatilidad móvil del Capítulo 6 leyendo ese archivo.</span>
-<span id="cb7-192"><a href="#cb7-192" aria-hidden="true" tabindex="-1"></a><span class="ss">2. </span>**El efecto del ajuste**: descargá el mismo ticker con <span class="in">`auto_adjust=True`</span> y <span class="in">`False`</span>, calculá el retorno acumulado de 5 años con cada versión y medí la diferencia. ¿Coincide con el dividend yield acumulado?</span>
-<span id="cb7-193"><a href="#cb7-193" aria-hidden="true" tabindex="-1"></a><span class="ss">3. </span>**Markowitz real**: bajá 5 acciones de sectores distintos + un ETF de bonos, guardá los cierres ajustados, y corré la frontera eficiente del Capítulo 8 con retornos mensuales reales.</span>
-<span id="cb7-194"><a href="#cb7-194" aria-hidden="true" tabindex="-1"></a><span class="ss">4. </span>**Inflación real**: descargá el CPI de FRED, convertilo a inflación interanual y ajustale el ARIMA del Capítulo 16. ¿Qué orden elige el AIC con datos reales?</span>
-<span id="cb7-195"><a href="#cb7-195" aria-hidden="true" tabindex="-1"></a><span class="ss">5. </span>**Supervivencia**: buscá qué pasó con los tickers "ENRNQ" (Enron) o "LEHMQ" (Lehman) en yfinance. ¿Qué te dice el resultado sobre armar backtests con el listado de tickers actual?</span>
-<span id="cb7-196"><a href="#cb7-196" aria-hidden="true" tabindex="-1"></a>:::</span>
-<span id="cb7-197"><a href="#cb7-197" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-198"><a href="#cb7-198" aria-hidden="true" tabindex="-1"></a><span class="fu">## Referencias</span></span>
-<span id="cb7-199"><a href="#cb7-199" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-200"><a href="#cb7-200" aria-hidden="true" tabindex="-1"></a>::: {#refs}</span>
-<span id="cb7-201"><a href="#cb7-201" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb7-190"><a href="#cb7-190" aria-hidden="true" tabindex="-1"></a>::: {#refs}</span>
+<span id="cb7-191"><a href="#cb7-191" aria-hidden="true" tabindex="-1"></a>:::</span>
 </code></pre></div><button title="Copiar al portapapeles" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></div>
 </div></div></div></div></div>
 </div> <!-- /content -->

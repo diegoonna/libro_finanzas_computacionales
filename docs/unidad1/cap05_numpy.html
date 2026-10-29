@@ -456,8 +456,7 @@ window.Quarto = {
   <li><a href="#álgebra-lineal-la-antesala-de-markowitz" id="toc-álgebra-lineal-la-antesala-de-markowitz" class="nav-link" data-scroll-target="#álgebra-lineal-la-antesala-de-markowitz"><span class="header-section-number">5.8</span> Álgebra lineal: la antesala de Markowitz</a></li>
   <li><a href="#de-numpy-a-pandas" id="toc-de-numpy-a-pandas" class="nav-link" data-scroll-target="#de-numpy-a-pandas"><span class="header-section-number">5.9</span> De NumPy a Pandas</a></li>
   <li><a href="#errores-comunes" id="toc-errores-comunes" class="nav-link" data-scroll-target="#errores-comunes"><span class="header-section-number">5.10</span> Errores comunes</a></li>
-  <li><a href="#ejercicios-propuestos" id="toc-ejercicios-propuestos" class="nav-link" data-scroll-target="#ejercicios-propuestos"><span class="header-section-number">5.11</span> Ejercicios Propuestos</a></li>
-  <li><a href="#referencias" id="toc-referencias" class="nav-link" data-scroll-target="#referencias"><span class="header-section-number">5.12</span> Referencias</a></li>
+  <li><a href="#referencias" id="toc-referencias" class="nav-link" data-scroll-target="#referencias"><span class="header-section-number">5.11</span> Referencias</a></li>
   </ul></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/diegoonna/libro_finanzas_computacionales/edit/main/unidad1/cap05_numpy.qmd" class="toc-action"><i class="bi bi-github"></i>Editar esta página</a></li><li><a href="https://github.com/diegoonna/libro_finanzas_computacionales/issues/new" class="toc-action"><i class="bi empty"></i>Informar sobre problema</a></li></ul></div></nav>
@@ -815,9 +814,9 @@ Tasas mensuales equivalentes: [0.0284 0.0253 0.0344 0.0314]</code></pre>
 <span id="cb20-18"><a href="#cb20-18" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"NumPy:         </span><span class="sc">{</span>t_numpy<span class="op">*</span><span class="dv">1000</span><span class="sc">:7.1f}</span><span class="ss"> ms"</span>)</span>
 <span id="cb20-19"><a href="#cb20-19" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"NumPy es ~</span><span class="sc">{</span>t_bucle<span class="op">/</span>t_numpy<span class="sc">:.0f}</span><span class="ss">x más rápido"</span>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Bucle Python:    493.8 ms
-NumPy:             3.3 ms
-NumPy es ~148x más rápido</code></pre>
+<pre><code>Bucle Python:    181.8 ms
+NumPy:             1.9 ms
+NumPy es ~98x más rápido</code></pre>
 </div>
 </div>
 <p>Sobre un millón de datos la diferencia es de uno a dos órdenes de magnitud. En una simulación de Monte Carlo con millones de trayectorias (Capítulo 13), esto es la diferencia entre que tu código termine en segundos o en horas.</p>
@@ -1087,31 +1086,8 @@ Autovalores:  [4.61803399 2.38196601]</code></pre>
 </div>
 <hr>
 </section>
-<section id="ejercicios-propuestos" class="level2" data-number="5.11">
-<h2 data-number="5.11" class="anchored" data-anchor-id="ejercicios-propuestos"><span class="header-section-number">5.11</span> Ejercicios Propuestos</h2>
-<div class="callout callout-style-simple callout-important callout-titled" title="Ejercicios">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Importante</span>Ejercicios
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<ol type="1">
-<li><strong>Retornos y volatilidad</strong>: dado un array de 252 precios simulados, calculá el vector de retornos logarítmicos, su media anualizada (<span class="math inline">\(\times 252\)</span>) y su volatilidad anualizada (<span class="math inline">\(\times \sqrt{252}\)</span>), todo sin usar bucles.</li>
-<li><strong>Máximo drawdown vectorizado</strong>: a partir de un vector de precios, calculá el máximo acumulado con <code>np.maximum.accumulate</code> y usalo para obtener la peor caída desde un pico (el <em>drawdown</em> máximo). <em>Pista</em>: el drawdown en cada instante es <code>precio / pico_hasta_ahora - 1</code>.</li>
-<li><strong>Panel de activos</strong>: generá con <code>rng.normal</code> un panel de retornos de 5 activos por 500 días. Calculá el retorno medio y la volatilidad de cada activo con <code>axis</code>, y estandarizá el panel con broadcasting.</li>
-<li><strong>Portafolio equiponderado</strong>: con el panel del ejercicio 3 y pesos iguales (<span class="math inline">\(w_i = 1/5\)</span>), calculá la serie de retornos del portafolio (<code>R @ w</code>) y comparala con el promedio simple por fecha.</li>
-<li><strong>Covarianza y riesgo</strong>: calculá la matriz de covarianzas del panel y la volatilidad de un portafolio con pesos <code>[0.3, 0.3, 0.2, 0.1, 0.1]</code> usando la forma cuadrática <span class="math inline">\(\mathbf{w}^T\Sigma\mathbf{w}\)</span>. ¿Es menor que el promedio de las volatilidades individuales? ¿Por qué?</li>
-</ol>
-</div>
-</div>
-<hr>
-</section>
-<section id="referencias" class="level2" data-number="5.12">
-<h2 data-number="5.12" class="anchored" data-anchor-id="referencias"><span class="header-section-number">5.12</span> Referencias</h2>
+<section id="referencias" class="level2" data-number="5.11">
+<h2 data-number="5.11" class="anchored" data-anchor-id="referencias"><span class="header-section-number">5.11</span> Referencias</h2>
 <div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list" style="display: none">
 <div id="ref-harris2020" class="csl-entry" role="listitem">
 Harris, Charles R., K. Jarrod Millman, Stéfan J. van der Walt, et&nbsp;al. 2020. <span>«Array Programming with <span>NumPy</span>»</span>. <em>Nature</em> 585: 357-62. <a href="https://doi.org/10.1038/s41586-020-2649-2">https://doi.org/10.1038/s41586-020-2649-2</a>.
@@ -2230,23 +2206,11 @@ VanderPlas, Jake. 2016. <em>Python Data Science Handbook</em>. O’Reilly Media.
 <span id="cb36-670"><a href="#cb36-670" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb36-671"><a href="#cb36-671" aria-hidden="true" tabindex="-1"></a>---</span>
 <span id="cb36-672"><a href="#cb36-672" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb36-673"><a href="#cb36-673" aria-hidden="true" tabindex="-1"></a><span class="fu">## Ejercicios Propuestos</span></span>
+<span id="cb36-673"><a href="#cb36-673" aria-hidden="true" tabindex="-1"></a><span class="fu">## Referencias</span></span>
 <span id="cb36-674"><a href="#cb36-674" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb36-675"><a href="#cb36-675" aria-hidden="true" tabindex="-1"></a>::: {.callout-important title="Ejercicios"}</span>
-<span id="cb36-676"><a href="#cb36-676" aria-hidden="true" tabindex="-1"></a><span class="ss">1. </span>**Retornos y volatilidad**: dado un array de 252 precios simulados, calculá el vector de retornos logarítmicos, su media anualizada ($\times 252$) y su volatilidad anualizada ($\times \sqrt{252}$), todo sin usar bucles.</span>
-<span id="cb36-677"><a href="#cb36-677" aria-hidden="true" tabindex="-1"></a><span class="ss">2. </span>**Máximo drawdown vectorizado**: a partir de un vector de precios, calculá el máximo acumulado con <span class="in">`np.maximum.accumulate`</span> y usalo para obtener la peor caída desde un pico (el *drawdown* máximo). *Pista*: el drawdown en cada instante es <span class="in">`precio / pico_hasta_ahora - 1`</span>.</span>
-<span id="cb36-678"><a href="#cb36-678" aria-hidden="true" tabindex="-1"></a><span class="ss">3. </span>**Panel de activos**: generá con <span class="in">`rng.normal`</span> un panel de retornos de 5 activos por 500 días. Calculá el retorno medio y la volatilidad de cada activo con <span class="in">`axis`</span>, y estandarizá el panel con broadcasting.</span>
-<span id="cb36-679"><a href="#cb36-679" aria-hidden="true" tabindex="-1"></a><span class="ss">4. </span>**Portafolio equiponderado**: con el panel del ejercicio 3 y pesos iguales ($w_i = 1/5$), calculá la serie de retornos del portafolio (<span class="in">`R @ w`</span>) y comparala con el promedio simple por fecha.</span>
-<span id="cb36-680"><a href="#cb36-680" aria-hidden="true" tabindex="-1"></a><span class="ss">5. </span>**Covarianza y riesgo**: calculá la matriz de covarianzas del panel y la volatilidad de un portafolio con pesos <span class="in">`[0.3, 0.3, 0.2, 0.1, 0.1]`</span> usando la forma cuadrática $\mathbf{w}^T\Sigma\mathbf{w}$. ¿Es menor que el promedio de las volatilidades individuales? ¿Por qué?</span>
-<span id="cb36-681"><a href="#cb36-681" aria-hidden="true" tabindex="-1"></a>:::</span>
-<span id="cb36-682"><a href="#cb36-682" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb36-683"><a href="#cb36-683" aria-hidden="true" tabindex="-1"></a>---</span>
-<span id="cb36-684"><a href="#cb36-684" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb36-685"><a href="#cb36-685" aria-hidden="true" tabindex="-1"></a><span class="fu">## Referencias</span></span>
-<span id="cb36-686"><a href="#cb36-686" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb36-687"><a href="#cb36-687" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb36-688"><a href="#cb36-688" aria-hidden="true" tabindex="-1"></a>::: {#refs}</span>
-<span id="cb36-689"><a href="#cb36-689" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb36-675"><a href="#cb36-675" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-676"><a href="#cb36-676" aria-hidden="true" tabindex="-1"></a>::: {#refs}</span>
+<span id="cb36-677"><a href="#cb36-677" aria-hidden="true" tabindex="-1"></a>:::</span>
 </code></pre></div><button title="Copiar al portapapeles" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></div>
 </div></div></div></div></div>
 </div> <!-- /content -->

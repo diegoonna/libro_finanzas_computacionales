@@ -293,7 +293,7 @@ globalThis.qpyodideCustomizedPyodideOptions = {
 }
 
 // Store cell data
-globalThis.qpyodideCellDetails = [{"code":"import numpy as np\n\nrng = np.random.default_rng(42)\n\n# Tu solución acá...","id":1,"options":{"autorun":"","classes":"","comment":"","context":"interactive","dpi":72,"fig-cap":"","fig-height":5,"fig-width":7,"label":"practica-navegador","message":"true","out-height":"","out-width":"700px","output":"true","read-only":"false","results":"markup","warning":"true"}}];
+globalThis.qpyodideCellDetails = [{"code":"import numpy as np\n\nrng = np.random.default_rng(42)\n\n# Tu código acá...","id":1,"options":{"autorun":"","classes":"","comment":"","context":"interactive","dpi":72,"fig-cap":"","fig-height":5,"fig-width":7,"label":"practica-navegador","message":"true","out-height":"","out-width":"700px","output":"true","read-only":"false","results":"markup","warning":"true"}}];
 
 
 </script>
@@ -797,7 +797,7 @@ window.Quarto = {
   <li><a href="#procesos-de-lévy-la-familia-general" id="toc-procesos-de-lévy-la-familia-general" class="nav-link" data-scroll-target="#procesos-de-lévy-la-familia-general"><span class="header-section-number">14.3</span> Procesos de Lévy: la familia general</a></li>
   <li><a href="#qué-modelo-usar-un-mapa" id="toc-qué-modelo-usar-un-mapa" class="nav-link" data-scroll-target="#qué-modelo-usar-un-mapa"><span class="header-section-number">14.4</span> ¿Qué modelo usar? Un mapa</a></li>
   <li><a href="#errores-comunes" id="toc-errores-comunes" class="nav-link" data-scroll-target="#errores-comunes"><span class="header-section-number">14.5</span> Errores comunes</a></li>
-  <li><a href="#ejercicios-propuestos" id="toc-ejercicios-propuestos" class="nav-link" data-scroll-target="#ejercicios-propuestos"><span class="header-section-number">14.6</span> Ejercicios Propuestos</a></li>
+  <li><a href="#practicá-en-el-navegador" id="toc-practicá-en-el-navegador" class="nav-link" data-scroll-target="#practicá-en-el-navegador"><span class="header-section-number">14.6</span> Practicá en el navegador</a></li>
   <li><a href="#referencias" id="toc-referencias" class="nav-link" data-scroll-target="#referencias"><span class="header-section-number">14.7</span> Referencias</a></li>
   </ul></li>
   </ul>
@@ -889,13 +889,13 @@ Peor día                  -4.34%       -10.68%</code></pre>
 </div>
 </div>
 <p>Misma volatilidad total, pero el “mercado real” tiene curtosis alta, asimetría negativa y días mucho peores. Un gestor de riesgo que use el GBM para estimar el VaR de esta serie va a <strong>subestimar sistemáticamente las colas</strong> — el pecado capital del Capítulo 11.</p>
-<p>Las tablas de momentos resumen, pero la herramienta visual clásica para diagnosticar colas es el <strong>gráfico Q-Q</strong> (el del ejercicio del Capítulo 7): enfrenta cada cuantil observado con el que tendría una normal. Si los datos son normales, los puntos caen sobre la recta; si tienen colas pesadas, los extremos se despegan. La <a href="#fig-qq-colas" class="quarto-xref">Figura&nbsp;<span>14.1</span></a> lo aplica a las dos series.</p>
+<p>Las tablas de momentos resumen, pero la herramienta visual clásica para diagnosticar colas es el <strong>gráfico Q-Q</strong>: enfrenta cada cuantil observado con el que tendría una normal. Si los datos son normales, los puntos caen sobre la recta; si tienen colas pesadas, los extremos se despegan. La <a href="#fig-qq-colas" class="quarto-xref">Figura&nbsp;<span>14.1</span></a> lo aplica a las dos series.</p>
 <div id="cell-fig-qq-colas" class="cell" data-execution_count="4">
 <div class="cell-output cell-output-display">
 <div id="fig-qq-colas" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-qq-colas-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="cap14_procesos_estocasticos_activos_files/figure-html/fig-qq-colas-output-1.png" width="949" height="392" class="figure-img">
+<img src="cap14_procesos_estocasticos_activos_files/figure-html/fig-qq-colas-output-1.png" width="950" height="393" class="figure-img">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-qq-colas-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Figura&nbsp;14.1: Gráficos Q-Q contra la normal. Los retornos del GBM caen sobre la recta en toda su extensión. Los del «mercado real» se despegan en los extremos, sobre todo en la cola izquierda: los peores días son mucho peores de lo que la normal admite.
@@ -935,7 +935,7 @@ Figura&nbsp;14.1: Gráficos Q-Q contra la normal. Los retornos del GBM caen sobr
 <div id="fig-anatomia-merton" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-anatomia-merton-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="cap14_procesos_estocasticos_activos_files/figure-html/fig-anatomia-merton-output-1.png" width="947" height="621" class="figure-img">
+<img src="cap14_procesos_estocasticos_activos_files/figure-html/fig-anatomia-merton-output-1.png" width="950" height="624" class="figure-img">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-anatomia-merton-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Figura&nbsp;14.2: Anatomía de una trayectoria de Merton (log-precio, un año). Arriba: la difusión continua del GBM. Al medio: el proceso de saltos; el contador N_t sube de a uno cada vez que suena el timbre de Poisson, y cada salto tiene un tamaño aleatorio. Abajo: la suma, que avanza suave y de pronto escalona.
@@ -1014,7 +1014,7 @@ Vol. total (ambos modelos):     19.0%</code></pre>
 <div id="fig-merton-trayectorias" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-merton-trayectorias-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="cap14_procesos_estocasticos_activos_files/figure-html/fig-merton-trayectorias-output-1.png" width="1141" height="420" class="figure-img">
+<img src="cap14_procesos_estocasticos_activos_files/figure-html/fig-merton-trayectorias-output-1.png" width="1142" height="422" class="figure-img">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-merton-trayectorias-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Figura&nbsp;14.3: Ocho trayectorias de cada modelo, con la misma volatilidad total. Las del GBM se mueven de a pasitos; las de Merton tienen escalones.
@@ -1048,7 +1048,7 @@ Figura&nbsp;14.3: Ocho trayectorias de cada modelo, con la misma volatilidad tot
 <div id="fig-merton-colas" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-merton-colas-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="cap14_procesos_estocasticos_activos_files/figure-html/fig-merton-colas-output-1.png" width="852" height="469" class="figure-img">
+<img src="cap14_procesos_estocasticos_activos_files/figure-html/fig-merton-colas-output-1.png" width="853" height="471" class="figure-img">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-merton-colas-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Figura&nbsp;14.4: Distribución de los retornos a un año, con el eje vertical en escala logarítmica para que se vean las colas. Misma varianza, pero la cola izquierda de Merton llega mucho más lejos.
@@ -1113,7 +1113,7 @@ Curtosis (exceso)            -0.09      1.43</code></pre>
 <div id="fig-reloj-vg" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-reloj-vg-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="cap14_procesos_estocasticos_activos_files/figure-html/fig-reloj-vg-output-1.png" width="1045" height="392" class="figure-img">
+<img src="cap14_procesos_estocasticos_activos_files/figure-html/fig-reloj-vg-output-1.png" width="1046" height="393" class="figure-img">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-reloj-vg-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Figura&nbsp;14.5: Variance Gamma por subordinación. Izquierda: el «tiempo de mercado» G_t (incrementos Gamma) contra el tiempo calendario; en promedio coinciden, pero G_t avanza a saltos. Derecha: un Browniano evaluado en ese reloj. Los tramos donde el reloj corre son los días agitados; donde se frena, el precio casi no se mueve.
@@ -1247,28 +1247,9 @@ Figura&nbsp;14.6: Los modelos del capítulo como combinaciones de los tres ingre
 </div>
 <hr>
 </section>
-<section id="ejercicios-propuestos" class="level2" data-number="14.6">
-<h2 data-number="14.6" class="anchored" data-anchor-id="ejercicios-propuestos"><span class="header-section-number">14.6</span> Ejercicios Propuestos</h2>
-<div class="callout callout-style-simple callout-important callout-titled" title="Ejercicios">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Importante</span>Ejercicios
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<ol type="1">
-<li><strong>ES bajo saltos</strong>: calculá el Expected Shortfall al 99% a 1 año bajo GBM y bajo Merton (misma varianza total). ¿Qué error porcentual comete el GBM?</li>
-<li><strong>Sensibilidad a λ</strong>: barré <span class="math inline">\(\lambda \in \{1, 4, 12\}\)</span> (manteniendo la varianza total constante ajustando <span class="math inline">\(\sigma\)</span>) y graficá la curtosis de los retornos resultantes.</li>
-<li><strong>Detección de saltos</strong>: con los retornos diarios simulados de Merton, proponé una regla simple para detectar los días de salto (p.&nbsp;ej., <span class="math inline">\(|r| &gt; 4\sigma_{\text{difusión}}\)</span>) y medí su tasa de aciertos contra los saltos verdaderos.</li>
-<li><strong>Datos reales</strong>: bajá 10 años de retornos diarios de un índice, calculá asimetría, curtosis y el peor día, y compará contra lo que produce un GBM calibrado a su media y varianza. ¿Cuántos “días imposibles” (&gt;4σ) encontrás?</li>
-<li><strong>VG vs.&nbsp;Merton</strong>: superponé los histogramas (en escala log) de retornos a 1 año de VG y Merton calibrados a la misma varianza. ¿En qué se diferencian sus colas?</li>
-</ol>
-</div>
-</div>
-<p>Podés resolver estos ejercicios acá mismo: la celda ejecuta Python <strong>en tu navegador</strong>, sin instalar nada (la primera ejecución tarda unos segundos mientras carga el entorno; los paquetes que importes se instalan solos).</p>
+<section id="practicá-en-el-navegador" class="level2" data-number="14.6">
+<h2 data-number="14.6" class="anchored" data-anchor-id="practicá-en-el-navegador"><span class="header-section-number">14.6</span> Practicá en el navegador</h2>
+<p>Podés experimentar con el código del capítulo acá mismo: la celda ejecuta Python <strong>en tu navegador</strong>, sin instalar nada (la primera ejecución tarda unos segundos mientras carga el entorno; los paquetes que importes se instalan solos).</p>
 <div id="qpyodide-insertion-location-1"></div>
 <noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
 <hr>
@@ -1835,7 +1816,7 @@ Merton, Robert C. 1976. <span>«Option Pricing when Underlying Stock Returns Are
 <span id="cb12-74"><a href="#cb12-74" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb12-75"><a href="#cb12-75" aria-hidden="true" tabindex="-1"></a>Misma volatilidad total, pero el "mercado real" tiene curtosis alta, asimetría negativa y días mucho peores. Un gestor de riesgo que use el GBM para estimar el VaR de esta serie va a **subestimar sistemáticamente las colas** — el pecado capital del Capítulo 11.</span>
 <span id="cb12-76"><a href="#cb12-76" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-77"><a href="#cb12-77" aria-hidden="true" tabindex="-1"></a>Las tablas de momentos resumen, pero la herramienta visual clásica para diagnosticar colas es el **gráfico Q-Q** (el del ejercicio del Capítulo 7): enfrenta cada cuantil observado con el que tendría una normal. Si los datos son normales, los puntos caen sobre la recta; si tienen colas pesadas, los extremos se despegan. La @fig-qq-colas lo aplica a las dos series.</span>
+<span id="cb12-77"><a href="#cb12-77" aria-hidden="true" tabindex="-1"></a>Las tablas de momentos resumen, pero la herramienta visual clásica para diagnosticar colas es el **gráfico Q-Q**: enfrenta cada cuantil observado con el que tendría una normal. Si los datos son normales, los puntos caen sobre la recta; si tienen colas pesadas, los extremos se despegan. La @fig-qq-colas lo aplica a las dos series.</span>
 <span id="cb12-78"><a href="#cb12-78" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb12-81"><a href="#cb12-81" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
 <span id="cb12-82"><a href="#cb12-82" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: fig-qq-colas</span></span>
@@ -2169,35 +2150,26 @@ Merton, Robert C. 1976. <span>«Option Pricing when Underlying Stock Returns Are
 <span id="cb12-426"><a href="#cb12-426" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb12-427"><a href="#cb12-427" aria-hidden="true" tabindex="-1"></a>---</span>
 <span id="cb12-428"><a href="#cb12-428" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-429"><a href="#cb12-429" aria-hidden="true" tabindex="-1"></a><span class="fu">## Ejercicios Propuestos</span></span>
+<span id="cb12-429"><a href="#cb12-429" aria-hidden="true" tabindex="-1"></a><span class="fu">## Practicá en el navegador</span></span>
 <span id="cb12-430"><a href="#cb12-430" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-431"><a href="#cb12-431" aria-hidden="true" tabindex="-1"></a>::: {.callout-important title="Ejercicios"}</span>
-<span id="cb12-432"><a href="#cb12-432" aria-hidden="true" tabindex="-1"></a><span class="ss">1. </span>**ES bajo saltos**: calculá el Expected Shortfall al 99% a 1 año bajo GBM y bajo Merton (misma varianza total). ¿Qué error porcentual comete el GBM?</span>
-<span id="cb12-433"><a href="#cb12-433" aria-hidden="true" tabindex="-1"></a><span class="ss">2. </span>**Sensibilidad a λ**: barré $\lambda \in <span class="sc">\{</span>1, 4, 12<span class="sc">\}</span>$ (manteniendo la varianza total constante ajustando $\sigma$) y graficá la curtosis de los retornos resultantes.</span>
-<span id="cb12-434"><a href="#cb12-434" aria-hidden="true" tabindex="-1"></a><span class="ss">3. </span>**Detección de saltos**: con los retornos diarios simulados de Merton, proponé una regla simple para detectar los días de salto (p. ej., $|r| &gt; 4\sigma_{\text{difusión}}$) y medí su tasa de aciertos contra los saltos verdaderos.</span>
-<span id="cb12-435"><a href="#cb12-435" aria-hidden="true" tabindex="-1"></a><span class="ss">4. </span>**Datos reales**: bajá 10 años de retornos diarios de un índice, calculá asimetría, curtosis y el peor día, y compará contra lo que produce un GBM calibrado a su media y varianza. ¿Cuántos "días imposibles" (&gt;4σ) encontrás?</span>
-<span id="cb12-436"><a href="#cb12-436" aria-hidden="true" tabindex="-1"></a><span class="ss">5. </span>**VG vs. Merton**: superponé los histogramas (en escala log) de retornos a 1 año de VG y Merton calibrados a la misma varianza. ¿En qué se diferencian sus colas?</span>
-<span id="cb12-437"><a href="#cb12-437" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb12-431"><a href="#cb12-431" aria-hidden="true" tabindex="-1"></a>Podés experimentar con el código del capítulo acá mismo: la celda ejecuta Python **en tu navegador**, sin instalar nada (la primera ejecución tarda unos segundos mientras carga el entorno; los paquetes que importes se instalan solos).</span>
+<span id="cb12-432"><a href="#cb12-432" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-433"><a href="#cb12-433" aria-hidden="true" tabindex="-1"></a><span class="in">```{pyodide-python}</span></span>
+<span id="cb12-434"><a href="#cb12-434" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: practica-navegador</span></span>
+<span id="cb12-435"><a href="#cb12-435" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb12-436"><a href="#cb12-436" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-437"><a href="#cb12-437" aria-hidden="true" tabindex="-1"></a>rng <span class="op">=</span> np.random.default_rng(<span class="dv">42</span>)</span>
 <span id="cb12-438"><a href="#cb12-438" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-439"><a href="#cb12-439" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-440"><a href="#cb12-440" aria-hidden="true" tabindex="-1"></a>Podés resolver estos ejercicios acá mismo: la celda ejecuta Python **en tu navegador**, sin instalar nada (la primera ejecución tarda unos segundos mientras carga el entorno; los paquetes que importes se instalan solos).</span>
+<span id="cb12-439"><a href="#cb12-439" aria-hidden="true" tabindex="-1"></a><span class="co"># Tu código acá...</span></span>
+<span id="cb12-440"><a href="#cb12-440" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb12-441"><a href="#cb12-441" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-442"><a href="#cb12-442" aria-hidden="true" tabindex="-1"></a><span class="in">```{pyodide-python}</span></span>
-<span id="cb12-443"><a href="#cb12-443" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: practica-navegador</span></span>
-<span id="cb12-444"><a href="#cb12-444" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb12-442"><a href="#cb12-442" aria-hidden="true" tabindex="-1"></a>---</span>
+<span id="cb12-443"><a href="#cb12-443" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-444"><a href="#cb12-444" aria-hidden="true" tabindex="-1"></a><span class="fu">## Referencias</span></span>
 <span id="cb12-445"><a href="#cb12-445" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-446"><a href="#cb12-446" aria-hidden="true" tabindex="-1"></a>rng <span class="op">=</span> np.random.default_rng(<span class="dv">42</span>)</span>
-<span id="cb12-447"><a href="#cb12-447" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-448"><a href="#cb12-448" aria-hidden="true" tabindex="-1"></a><span class="co"># Tu solución acá...</span></span>
-<span id="cb12-449"><a href="#cb12-449" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb12-450"><a href="#cb12-450" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-451"><a href="#cb12-451" aria-hidden="true" tabindex="-1"></a>---</span>
-<span id="cb12-452"><a href="#cb12-452" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-453"><a href="#cb12-453" aria-hidden="true" tabindex="-1"></a><span class="fu">## Referencias</span></span>
-<span id="cb12-454"><a href="#cb12-454" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-455"><a href="#cb12-455" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-456"><a href="#cb12-456" aria-hidden="true" tabindex="-1"></a>::: {#refs}</span>
-<span id="cb12-457"><a href="#cb12-457" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb12-446"><a href="#cb12-446" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-447"><a href="#cb12-447" aria-hidden="true" tabindex="-1"></a>::: {#refs}</span>
+<span id="cb12-448"><a href="#cb12-448" aria-hidden="true" tabindex="-1"></a>:::</span>
 </code></pre></div><button title="Copiar al portapapeles" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></div>
 </div></div></div></div></div>
 </div> <!-- /content -->
