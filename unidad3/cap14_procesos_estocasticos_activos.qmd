@@ -68,7 +68,7 @@ print(f"{'Peor día':<22}{ret_gbm.min():>10.2%}{ret_real.min():>14.2%}")
 
 Misma volatilidad total, pero el "mercado real" tiene curtosis alta, asimetría negativa y días mucho peores. Un gestor de riesgo que use el GBM para estimar el VaR de esta serie va a **subestimar sistemáticamente las colas** — el pecado capital del Capítulo 11.
 
-Las tablas de momentos resumen, pero la herramienta visual clásica para diagnosticar colas es el **gráfico Q-Q** (el del ejercicio del Capítulo 7): enfrenta cada cuantil observado con el que tendría una normal. Si los datos son normales, los puntos caen sobre la recta; si tienen colas pesadas, los extremos se despegan. La @fig-qq-colas lo aplica a las dos series.
+Las tablas de momentos resumen, pero la herramienta visual clásica para diagnosticar colas es el **gráfico Q-Q**: enfrenta cada cuantil observado con el que tendría una normal. Si los datos son normales, los puntos caen sobre la recta; si tienen colas pesadas, los extremos se despegan. La @fig-qq-colas lo aplica a las dos series.
 
 ```{python}
 #| label: fig-qq-colas
@@ -402,18 +402,9 @@ La regla general del oficio: **el modelo correcto depende de la pregunta**. Para
 
 ---
 
-## Ejercicios Propuestos
+## Practicá en el navegador
 
-::: {.callout-important title="Ejercicios"}
-1. **ES bajo saltos**: calculá el Expected Shortfall al 99% a 1 año bajo GBM y bajo Merton (misma varianza total). ¿Qué error porcentual comete el GBM?
-2. **Sensibilidad a λ**: barré $\lambda \in \{1, 4, 12\}$ (manteniendo la varianza total constante ajustando $\sigma$) y graficá la curtosis de los retornos resultantes.
-3. **Detección de saltos**: con los retornos diarios simulados de Merton, proponé una regla simple para detectar los días de salto (p. ej., $|r| > 4\sigma_{\text{difusión}}$) y medí su tasa de aciertos contra los saltos verdaderos.
-4. **Datos reales**: bajá 10 años de retornos diarios de un índice, calculá asimetría, curtosis y el peor día, y compará contra lo que produce un GBM calibrado a su media y varianza. ¿Cuántos "días imposibles" (>4σ) encontrás?
-5. **VG vs. Merton**: superponé los histogramas (en escala log) de retornos a 1 año de VG y Merton calibrados a la misma varianza. ¿En qué se diferencian sus colas?
-:::
-
-
-Podés resolver estos ejercicios acá mismo: la celda ejecuta Python **en tu navegador**, sin instalar nada (la primera ejecución tarda unos segundos mientras carga el entorno; los paquetes que importes se instalan solos).
+Podés experimentar con el código del capítulo acá mismo: la celda ejecuta Python **en tu navegador**, sin instalar nada (la primera ejecución tarda unos segundos mientras carga el entorno; los paquetes que importes se instalan solos).
 
 ```{pyodide-python}
 #| label: practica-navegador
@@ -421,7 +412,7 @@ import numpy as np
 
 rng = np.random.default_rng(42)
 
-# Tu solución acá...
+# Tu código acá...
 ```
 
 ---

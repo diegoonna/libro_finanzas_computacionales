@@ -169,19 +169,9 @@ Notá la sintaxis de tickers de Bloomberg: `"AAPL US Equity"`, `"GD30 Corp"` —
 | **Cobertura** | Acciones, ETFs, FX, cripto | Macro (EEUUU y global) | Todo, incl. renta fija y OTC |
 | **Calidad** | Buena para análisis personal | Oficial (la Fed) | Auditada, estándar de la industria |
 | **Confiabilidad de API** | No oficial, puede romperse | Estable | Estable (con Terminal) |
-| **Uso en este libro** | Ejercicios de los Caps. 6–9, 15, 17 | Caps. 15–16 (ARIMA/VAR con macro real) | El mundo profesional que te espera |
+| **Uso en este libro** | El dataset `datos/precios.csv` (secciones "Con datos reales") | Llevar el ARIMA/VAR del Cap. 16 a datos reales | El mundo profesional que te espera |
 
 La regla práctica: **yfinance para aprender y prototipar, FRED para macro, Bloomberg cuando alguien más paga la licencia**. Y sea cual sea la fuente: descargá una vez, guardá a disco, y analizá en local.
-
-## Ejercicios Propuestos
-
-::: {.callout-important title="Ejercicios"}
-1. **Primer pipeline**: escribí `descargar_datos.py` que baje 5 años de un ETF (p.ej. SPY) con `auto_adjust=True` y lo guarde en `datos/spy.csv`. Después rehacé el análisis de retornos y volatilidad móvil del Capítulo 6 leyendo ese archivo.
-2. **El efecto del ajuste**: descargá el mismo ticker con `auto_adjust=True` y `False`, calculá el retorno acumulado de 5 años con cada versión y medí la diferencia. ¿Coincide con el dividend yield acumulado?
-3. **Markowitz real**: bajá 5 acciones de sectores distintos + un ETF de bonos, guardá los cierres ajustados, y corré la frontera eficiente del Capítulo 8 con retornos mensuales reales.
-4. **Inflación real**: descargá el CPI de FRED, convertilo a inflación interanual y ajustale el ARIMA del Capítulo 16. ¿Qué orden elige el AIC con datos reales?
-5. **Supervivencia**: buscá qué pasó con los tickers "ENRNQ" (Enron) o "LEHMQ" (Lehman) en yfinance. ¿Qué te dice el resultado sobre armar backtests con el listado de tickers actual?
-:::
 
 ## Referencias
 

@@ -463,7 +463,7 @@ plt.tight_layout()
 plt.show()
 ```
 
-En esos últimos días de la @fig-pin-risk, el trader compra arriba y vende abajo una y otra vez, sangrando en cada vuelta — el famoso **pin risk**. La respuesta profesional es cubrir también la curvatura: el **delta-gamma hedging** agrega *otra opción* a la cartera para neutralizar el gamma (las acciones solas no pueden: su gamma es cero). Queda como ejercicio, y es la puerta de entrada a la gestión de books de opciones reales.
+En esos últimos días de la @fig-pin-risk, el trader compra arriba y vende abajo una y otra vez, sangrando en cada vuelta — el famoso **pin risk**. La respuesta profesional es cubrir también la curvatura: el **delta-gamma hedging** agrega *otra opción* a la cartera para neutralizar el gamma (las acciones solas no pueden: su gamma es cero). Es la puerta de entrada a la gestión de books de opciones reales.
 
 ---
 
@@ -479,25 +479,16 @@ En esos últimos días de la @fig-pin-risk, el trader compra arriba y vende abaj
 
 ---
 
-## Ejercicios Propuestos
+## Practicá en el navegador
 
-::: {.callout-important title="Ejercicios"}
-1. **Vol realizada vs. cotizada**: simulá el mercado con $\sigma_{real} = 30\%$ pero cubrí usando $\sigma = 25\%$ en las fórmulas. ¿El error medio sigue siendo cero? ¿Quién gana, el comprador o el vendedor de la opción?
-2. **Bandas de rebalanceo**: implementá la regla "rebalancear solo si $|\delta_{hoy} - \text{acciones}| > 0.05$" y comparala con el rebalanceo diario en error y en número de operaciones (con costos de 5 bps).
-3. **Delta-gamma hedging**: agregá una segunda call (strike 110) a la cartera para anular el gamma además del delta, y verificá que el error en el escenario de pin risk se reduce.
-4. **Put vendida**: repetí la simulación completa para una put. ¿Cambia el signo de los rebalanceos? ¿Y la exposición al gamma?
-5. **Salto sorpresa**: introducí un salto de −10% en un día aleatorio del escenario (Capítulo 14) y medí el error de cobertura. ¿Por qué el delta hedging no puede protegerte de un salto?
-:::
-
-
-Podés resolver estos ejercicios acá mismo: la celda ejecuta Python **en tu navegador**, sin instalar nada (la primera ejecución tarda unos segundos mientras carga el entorno; los paquetes que importes se instalan solos).
+Podés experimentar con el código del capítulo acá mismo: la celda ejecuta Python **en tu navegador**, sin instalar nada (la primera ejecución tarda unos segundos mientras carga el entorno; los paquetes que importes se instalan solos).
 
 ```{pyodide-python}
 #| label: practica-navegador
 import numpy as np
 from scipy.stats import norm
 
-# Tu solución acá...
+# Tu código acá...
 ```
 
 ---

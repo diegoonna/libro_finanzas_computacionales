@@ -2,9 +2,6 @@
 // Junta fig-hedge-cuatro-paneles (un escenario), fig-error-frecuencia (la distribución del
 // error) y fig-frecuencia-costos (el balance entre gamma y costos), con la frecuencia de
 // rebalanceo y el costo por operación como controles.
-//
-// A propósito NO tiene un control de volatilidad realizada distinta de la cotizada: es el
-// ejercicio 1 del capítulo, y el simulador no debería resolverlo.
 
 import { Plot, Inputs, d3 } from "./librerias.js";
 import { COLOR, simularCobertura, media, desvio } from "./finanzas.js";
