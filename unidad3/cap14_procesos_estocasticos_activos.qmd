@@ -16,13 +16,13 @@ nocite: |
 
 En el capítulo anterior simulamos precios con el Movimiento Browniano Geométrico y todo funcionó de maravilla. Ahora toca la pregunta incómoda: **¿el GBM describe bien los precios reales?**
 
-La respuesta corta es *no en las colas*. Los retornos reales exhiben tres características —los *hechos estilizados* que ya asomaron en el Capítulo 7— que el GBM no puede producir:
+La respuesta corta es *no en las colas*. Los retornos reales exhiben tres características —los *hechos estilizados* que ya asomaron en el [Capítulo 7](../unidad2/cap07_estadistica_optimizacion.qmd)— que el GBM no puede producir:
 
 1. **Colas pesadas**: los movimientos extremos ocurren muchísimo más seguido de lo que predice la normal. El crash de 1987 (−20% en un día) tiene, bajo normalidad, una probabilidad tan pequeña que no debería haber ocurrido ni una vez en la edad del universo. Ocurrió un martes.
 2. **Saltos**: los precios no se mueven solo en pasitos continuos; a veces **saltan** — un resultado electoral, un default, un anuncio de la Fed. El GBM, por construcción, tiene trayectorias continuas.
 3. **Asimetría**: las caídas violentas son más frecuentes y más grandes que las subas violentas.
 
-Este capítulo construye modelos que sí capturan esto, quedándonos en el terreno de **modelar el precio del activo** (la volatilidad estocástica, que ataca otro hecho estilizado, llega en el Capítulo 20 con Heston y SABR).
+Este capítulo construye modelos que sí capturan esto, quedándonos en el terreno de **modelar el precio del activo** (la volatilidad estocástica, que ataca otro hecho estilizado, llega en el [Capítulo 20](../unidad4/cap20_volatilidad_estocastica.qmd) con Heston y SABR).
 
 ```{python}
 #| label: setup
@@ -66,7 +66,7 @@ print(f"{'Curtosis (exceso)':<22}{stats.kurtosis(ret_gbm):>10.2f}{stats.kurtosis
 print(f"{'Peor día':<22}{ret_gbm.min():>10.2%}{ret_real.min():>14.2%}")
 ```
 
-Misma volatilidad total, pero el "mercado real" tiene curtosis alta, asimetría negativa y días mucho peores. Un gestor de riesgo que use el GBM para estimar el VaR de esta serie va a **subestimar sistemáticamente las colas** — el pecado capital del Capítulo 11.
+Misma volatilidad total, pero el "mercado real" tiene curtosis alta, asimetría negativa y días mucho peores. Un gestor de riesgo que use el GBM para estimar el VaR de esta serie va a **subestimar sistemáticamente las colas** — el pecado capital del [Capítulo 11](../unidad3/cap11_var_expected_shortfall.qmd).
 
 Las tablas de momentos resumen, pero la herramienta visual clásica para diagnosticar colas es el **gráfico Q-Q**: enfrenta cada cuantil observado con el que tendría una normal. Si los datos son normales, los puntos caen sobre la recta; si tienen colas pesadas, los extremos se despegan. La @fig-qq-colas lo aplica a las dos series.
 
@@ -348,7 +348,7 @@ _esquema()
 ```
 
 ::: {.callout-note title="¿Por qué molestarse con estos modelos?"}
-Porque el uso profesional los exige en dos frentes. **Riesgo**: un VaR/ES calculado con colas realistas (Capítulo 11 + este) es la diferencia entre estar preparado o no. **Derivados**: las opciones fuera del dinero cotizan "caras" respecto de Black-Scholes precisamente porque el mercado *sí* les pone precio a los saltos; los modelos de Lévy reproducen ese patrón (la *sonrisa* de volatilidad, que formalizamos en el Módulo 4).
+Porque el uso profesional los exige en dos frentes. **Riesgo**: un VaR/ES calculado con colas realistas ([Capítulo 11](../unidad3/cap11_var_expected_shortfall.qmd) + este) es la diferencia entre estar preparado o no. **Derivados**: las opciones fuera del dinero cotizan "caras" respecto de Black-Scholes precisamente porque el mercado *sí* les pone precio a los saltos; los modelos de Lévy reproducen ese patrón (la *sonrisa* de volatilidad, que formalizamos en el Módulo 4).
 :::
 
 ---
@@ -385,7 +385,7 @@ flowchart LR
 | **GBM** | Finas (normal) | No | Trivial | Primer boceto; horizontes largos donde el promedio manda |
 | **Merton** | Pesadas | Sí, raros y grandes | Bajo | Riesgo de eventos; activos expuestos a anuncios/default |
 | **Variance Gamma / NIG** | Pesadas, control fino | Infinitos, pequeños | Medio | Calibración fina a opciones; alta frecuencia |
-| **Heston / SABR** (Cap. 20) | Pesadas vía vol estocástica | Opcional | Medio-alto | Superficies de volatilidad; pricing de exóticos |
+| **Heston / SABR** ([Cap. 20](../unidad4/cap20_volatilidad_estocastica.qmd)) | Pesadas vía vol estocástica | Opcional | Medio-alto | Superficies de volatilidad; pricing de exóticos |
 
 La regla general del oficio: **el modelo correcto depende de la pregunta**. Para proyectar la jubilación a 30 años, el GBM alcanza. Para calcular el ES al 99% de un book de opciones vendidas, usar GBM es negligencia.
 

@@ -446,6 +446,19 @@ print(f"equivale a ${valor_presente:,.2f} hoy (al {tasa:.0%})")
 
 ---
 
+## Errores comunes
+
+::: {.callout-warning title="Trampas frecuentes"}
+- **Comparar floats con `==`**: `0.1 + 0.2 == 0.3` da `False`. Para preguntar si dos montos calculados son iguales, usá `math.isclose()`; para contabilidad al centavo, `Decimal`.
+- **Usar `^` para potencias**: en Python, `1.08 ^ 5` no eleva a la quinta (es una operación sobre bits, y con floats directamente da error). La potencia es `**`: `1.08 ** 5`.
+- **La tasa en "puntos" en lugar de en decimal**: escribir `tasa = 8` cuando querías 8% hace que `(1 + tasa) ** 5` multiplique el capital por 59049 en vez de por 1.47. Las tasas van en decimal (`0.08`), y el formato `:.2%` se encarga de mostrarlas como porcentaje.
+- **Sumar un `str` que parece número**: lo que llega de `input()` o de un archivo es texto, y `"100" + "50"` da `"10050"`. Convertí con `float()` o `int()` antes de operar.
+- **Mezclar TNA y TEA**: una TNA del 48% con capitalización mensual no rinde 48% en el año, rinde más. Antes de comparar dos tasas o de usarlas en $(1+r)^n$, llevalas a la misma forma (la @fig-conversion-tasas).
+- **`=` en lugar de `==` en un `if`**: `=` asigna y `==` compara. Python rechaza `if tasa = 0.05:` con un `SyntaxError`, que por lo menos avisa; leé el mensaje antes de tocar otra cosa.
+:::
+
+---
+
 ## Referencias
 
 

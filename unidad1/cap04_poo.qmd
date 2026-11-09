@@ -14,7 +14,7 @@ nocite: |
 
 # Introducción {.unnumbered}
 
-Miremos el punto exacto donde quedamos al final del Capítulo 3. Para trabajar con un bono, teníamos **dos piezas separadas**: un diccionario con sus datos...
+Miremos el punto exacto donde quedamos al final del [Capítulo 3](../unidad1/cap03_funciones_modularizacion.qmd). Para trabajar con un bono, teníamos **dos piezas separadas**: un diccionario con sus datos...
 
 ```python
 bono = {"ticker": "GD30", "valor_nominal": 1000, "tasa_cupon": 0.08, "anios": 5}
@@ -28,8 +28,8 @@ La **Programación Orientada a Objetos** propone otra organización: juntar en u
 
 Un **paradigma de programación** es un estilo general de estructurar el código. No hay uno "correcto"; hay herramientas para problemas distintos, y en este libro los vas a usar todos:
 
-1. **Imperativo**: secuencias de instrucciones que modifican el estado paso a paso — los bucles y acumuladores del Capítulo 2.
-2. **Funcional**: organizar el código en funciones reutilizables con entradas y salidas claras — el Capítulo 3.
+1. **Imperativo**: secuencias de instrucciones que modifican el estado paso a paso — los bucles y acumuladores del [Capítulo 2](../unidad1/cap02_iteraciones_estructuras.qmd).
+2. **Funcional**: organizar el código en funciones reutilizables con entradas y salidas claras — el [Capítulo 3](../unidad1/cap03_funciones_modularizacion.qmd).
 3. **Orientado a Objetos**: modelar entidades que agrupan datos y comportamiento — este capítulo.
 
 La POO no reemplaza a los anteriores: se apoya en ellos. Adentro de cada método vas a seguir escribiendo bucles y llamando funciones.
@@ -106,7 +106,7 @@ Esto no es una metáfora: un string, un entero o una lista son instancias de las
 
 ## La clase `Bono`: datos + comportamiento en un solo lugar
 
-Vamos al objeto estrella del módulo. Un bono *bullet* tiene datos (ticker, valor nominal, tasa de cupón, plazo) y comportamientos (generar sus flujos, valuarse a una tasa dada). En el Capítulo 2 escribiste esa lógica con bucles; en el 3 la encapsulaste en funciones; ahora los datos y la lógica se mudan juntos a una clase.
+Vamos al objeto estrella del módulo. Un bono *bullet* tiene datos (ticker, valor nominal, tasa de cupón, plazo) y comportamientos (generar sus flujos, valuarse a una tasa dada). En el [Capítulo 2](../unidad1/cap02_iteraciones_estructuras.qmd) escribiste esa lógica con bucles; en el 3 la encapsulaste en funciones; ahora los datos y la lógica se mudan juntos a una clase.
 
 ```{python}
 #| label: clase-bono
@@ -153,7 +153,7 @@ print(f"Valor al 8%:  ${gd30.valuar(0.08):,.2f}")
 print(f"Valor al 6%:  ${gd30.valuar(0.06):,.2f}")
 ```
 
-Leé los tres precios del final: al 10% el bono vale menos que el nominal (bajo la par), al 8% vale exactamente $1000 (a la par — la tasa de descuento coincide con el cupón), y al 6% vale más (sobre la par). Es la relación inversa precio-tasa del Capítulo 2, pero ahora **el bono se valúa solo**: `gd30.valuar(0.10)` en lugar de acordarte qué función suelta aplicarle a qué diccionario.
+Leé los tres precios del final: al 10% el bono vale menos que el nominal (bajo la par), al 8% vale exactamente $1000 (a la par — la tasa de descuento coincide con el cupón), y al 6% vale más (sobre la par). Es la relación inversa precio-tasa del [Capítulo 2](../unidad1/cap02_iteraciones_estructuras.qmd), pero ahora **el bono se valúa solo**: `gd30.valuar(0.10)` en lugar de acordarte qué función suelta aplicarle a qué diccionario.
 
 Tres detalles de diseño en esta clase que son marca de calidad:
 

@@ -13,11 +13,11 @@ nocite: |
 
 # Introducción {.unnumbered}
 
-En el Capítulo 15 explicamos el retorno de un activo con el retorno del mercado: una variable explicada por *otras*. Los modelos de **series de tiempo** cambian el ángulo: explican una variable con **su propio pasado**. La pregunta ya no es "¿cómo se mueve $y$ con $x$?" sino *"¿qué dice la historia de esta serie sobre su próximo valor?"*
+En el [Capítulo 15](../unidad3/cap15_econometria_modelos_lineales.qmd) explicamos el retorno de un activo con el retorno del mercado: una variable explicada por *otras*. Los modelos de **series de tiempo** cambian el ángulo: explican una variable con **su propio pasado**. La pregunta ya no es "¿cómo se mueve $y$ con $x$?" sino *"¿qué dice la historia de esta serie sobre su próximo valor?"*
 
 En finanzas y macro, esta caja de herramientas es la estándar para pronosticar inflación, actividad, tasas de interés o volatilidad, y para responder preguntas de política: *si sube la tasa, ¿qué le pasa a la inflación en los próximos trimestres?*
 
-Este capítulo retoma la manipulación de series del Capítulo 6 (fechas, resampleo, retornos con Pandas) y le agrega los modelos: **ARIMA** para una serie, **VAR** para varias a la vez.
+Este capítulo retoma la manipulación de series del [Capítulo 6](../unidad1/cap06_series_tiempo_pandas.qmd) (fechas, resampleo, retornos con Pandas) y le agrega los modelos: **ARIMA** para una serie, **VAR** para varias a la vez.
 
 ```{python}
 #| label: setup
@@ -440,7 +440,7 @@ plt.show()
 En la @fig-irf, mirá el panel "tasa → inflacion": un shock de tasa deprime la inflación durante varios meses, con el efecto máximo no inmediato sino rezagado — exactamente la dinámica "la política monetaria actúa con rezagos" que los bancos centrales repiten. El panel "inflacion → tasa" muestra la respuesta de política: la tasa sube tras un shock inflacionario y luego decae.
 
 ::: {.callout-note title="Los VAR en la práctica"}
-Los bancos centrales usan VARs (y variantes: SVAR, BVAR, FAVAR) como caballo de batalla para el análisis de política monetaria desde los trabajos de Sims (Nobel 2011). En finanzas se usan para sistemas tasa-inflación-actividad, para pronóstico macro que alimenta modelos de PPNR y stress testing (Capítulo 12), y para estudiar transmisión entre mercados.
+Los bancos centrales usan VARs (y variantes: SVAR, BVAR, FAVAR) como caballo de batalla para el análisis de política monetaria desde los trabajos de Sims (Nobel 2011). En finanzas se usan para sistemas tasa-inflación-actividad, para pronóstico macro que alimenta modelos de PPNR y stress testing ([Capítulo 12](../unidad3/cap12_riesgo_regulacion.qmd)), y para estudiar transmisión entre mercados.
 :::
 
 ---
@@ -465,7 +465,7 @@ plt.tight_layout()
 plt.show()
 ```
 
-El contraste de la @fig-acf-spy es uno de los hechos más robustos de las finanzas empíricas. A la izquierda, las autocorrelaciones de los retornos son minúsculas: unas pocas rozan la banda, apenas por encima de lo que se espera por azar en 40 rezagos, y ninguna supera el 0.07 en valor absoluto. Saber que ayer el mercado subió no dice casi nada sobre hoy: es la eficiencia débil del recuadro, ahora medida. A la derecha, el **valor absoluto** de los retornos (su tamaño, sin el signo) tiene autocorrelaciones positivas en casi todos los rezagos, durante dos meses: un día agitado anticipa días agitados. Es el *volatility clustering* que modelan la familia GARCH y los modelos de volatilidad estocástica del Capítulo 20.
+El contraste de la @fig-acf-spy es uno de los hechos más robustos de las finanzas empíricas. A la izquierda, las autocorrelaciones de los retornos son minúsculas: unas pocas rozan la banda, apenas por encima de lo que se espera por azar en 40 rezagos, y ninguna supera el 0.07 en valor absoluto. Saber que ayer el mercado subió no dice casi nada sobre hoy: es la eficiencia débil del recuadro, ahora medida. A la derecha, el **valor absoluto** de los retornos (su tamaño, sin el signo) tiene autocorrelaciones positivas en casi todos los rezagos, durante dos meses: un día agitado anticipa días agitados. Es el *volatility clustering* que modelan la familia GARCH y los modelos de volatilidad estocástica del [Capítulo 20](../unidad4/cap20_volatilidad_estocastica.qmd).
 
 ---
 

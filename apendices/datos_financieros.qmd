@@ -16,7 +16,7 @@ A diferencia del resto del libro, el código de este apéndice está marcado com
 Antes de las herramientas, el hábito. El error típico del principiante es poner la descarga **adentro** del análisis: cada corrida vuelve a pedir los datos a la API — lento, frágil (la API puede fallar o cambiar) e **irreproducible** (los datos de hoy no son los de ayer si el proveedor corrige algo). El patrón correcto separa las dos etapas:
 
 1. **Script de descarga**: pide los datos y los guarda en disco (CSV o Parquet).
-2. **Análisis**: lee siempre del archivo local (`pd.read_csv`, como en el Capítulo 6).
+2. **Análisis**: lee siempre del archivo local (`pd.read_csv`, como en el [Capítulo 6](../unidad1/cap06_series_tiempo_pandas.qmd)).
 
 ```{python}
 #| eval: false
@@ -35,11 +35,11 @@ Beneficios: tus resultados son reproducibles (el archivo no cambia), el análisi
 
 ## El dataset del libro: `datos/precios.csv`
 
-El libro practica lo que predica: aplicamos este patrón una vez y **congelamos el resultado en el repositorio**, en [`datos/precios.csv`](https://github.com/diegoonna/libro_finanzas_computacionales/blob/main/datos/precios.csv). Es el archivo que usan las secciones "Con datos reales" de los capítulos 8, 9, 11 y 17 — todas trabajan sobre los mismos datos, y cualquiera puede reproducirlas sin claves de API ni conexión.
+El libro practica lo que predica: aplicamos este patrón una vez y **congelamos el resultado en el repositorio**, en [`datos/precios.csv`](https://github.com/diegoonna/libro_finanzas_computacionales/blob/main/datos/precios.csv). Es el archivo que usan las secciones "Con datos reales" de los capítulos [6](../unidad1/cap06_series_tiempo_pandas.qmd), [7](../unidad2/cap07_estadistica_optimizacion.qmd), [8](../unidad2/cap08_markowitz.qmd), [9](../unidad2/cap09_hrp.qmd), [11](../unidad3/cap11_var_expected_shortfall.qmd), [15](../unidad3/cap15_econometria_modelos_lineales.qmd), [16](../unidad3/cap16_series_temporales_macro.qmd) y [17](../unidad3/cap17_backtesting.qmd) — todas trabajan sobre los mismos datos, y cualquiera puede reproducirlas sin claves de API ni conexión.
 
 Qué contiene:
 
-- **Precios diarios ajustados** (dividendos y splits incluidos — el retorno total del que habla el Capítulo 8), redondeados a 4 decimales.
+- **Precios diarios ajustados** (dividendos y splits incluidos — el retorno total del que habla el [Capítulo 8](../unidad2/cap08_markowitz.qmd)), redondeados a 4 decimales.
 - **Período**: julio 2021 a junio 2026 (~1250 ruedas). Incluye el bear market de 2022, el ciclo de suba de tasas y el boom de la IA — cinco años con de todo.
 - **10 tickers** elegidos para cubrir sectores bien distintos: tecnología (AAPL, MSFT, NVDA), financiero (JPM), energía (XOM), consumo defensivo (KO, JNJ, WMT), medios (DIS), más el ETF **SPY** como proxy del mercado.
 
@@ -84,17 +84,17 @@ print(ticker.splits)
 
 Tres puntos que importan:
 
-- **`auto_adjust=True`** te da precios ajustados por dividendos y splits — el *retorno total* que el Capítulo 8 mostró que es el correcto para estimar $\mu$. Sin ajustar, subestimás sistemáticamente el retorno de los activos de alto dividendo.
+- **`auto_adjust=True`** te da precios ajustados por dividendos y splits — el *retorno total* que el [Capítulo 8](../unidad2/cap08_markowitz.qmd) mostró que es el correcto para estimar $\mu$. Sin ajustar, subestimás sistemáticamente el retorno de los activos de alto dividendo.
 - El parámetro `interval` permite otras frecuencias: `"1wk"`, `"1mo"`, e intradiario (`"1h"`, `"5m"`) con historia limitada.
 - Para **tickers argentinos** en BYMA se usa el sufijo `.BA`: `"GGAL.BA"`, `"YPFD.BA"` (pesos); los ADRs (`"GGAL"`, `"YPF"`) cotizan en dólares de NY — no los mezcles sin pensar en qué moneda estás.
 
 ::: {.callout-warning title="Las limitaciones de lo gratuito"}
-yfinance usa una API **no oficial** de Yahoo: puede romperse tras cambios del sitio (actualizá la librería si deja de funcionar), tiene *rate limits* (descargas masivas → bloqueos temporales), y la calidad es de "análisis personal", no de auditoría: hay huecos y correcciones ocasionales. Además, ojo con el **sesgo de supervivencia** (Capítulo 17): si armás tu universo con los tickers *de hoy*, las empresas que quebraron no están — el pasado se ve mejor de lo que fue.
+yfinance usa una API **no oficial** de Yahoo: puede romperse tras cambios del sitio (actualizá la librería si deja de funcionar), tiene *rate limits* (descargas masivas → bloqueos temporales), y la calidad es de "análisis personal", no de auditoría: hay huecos y correcciones ocasionales. Además, ojo con el **sesgo de supervivencia** ([Capítulo 17](../unidad3/cap17_backtesting.qmd)): si armás tu universo con los tickers *de hoy*, las empresas que quebraron no están — el pasado se ve mejor de lo que fue.
 :::
 
 ## FRED: datos macroeconómicos, gratis
 
-**FRED** (*Federal Reserve Economic Data*, de la Fed de St. Louis) es la referencia mundial de series macro: inflación, tasas, PIB, desempleo, spreads — más de 800.000 series. Es la fuente natural para alimentar los modelos ARIMA y VAR del Capítulo 16.
+**FRED** (*Federal Reserve Economic Data*, de la Fed de St. Louis) es la referencia mundial de series macro: inflación, tasas, PIB, desempleo, spreads — más de 800.000 series. Es la fuente natural para alimentar los modelos ARIMA y VAR del [Capítulo 16](../unidad3/cap16_series_temporales_macro.qmd).
 
 La vía clásica es [`pandas-datareader`](https://pandas-datareader.readthedocs.io) (`pip install pandas-datareader`), que también documenta el acceso a otras fuentes públicas:
 
@@ -128,7 +128,7 @@ inflacion = fred.get_series("CPIAUCSL")
 # variable de entorno y leela con os.environ["FRED_API_KEY"]
 ```
 
-El flujo típico para el Capítulo 16: descargar el CPI, convertirlo a inflación interanual (`cpi.pct_change(12)`), guardarlo a CSV, y ajustarle un ARIMA — ahora con datos reales.
+El flujo típico para el [Capítulo 16](../unidad3/cap16_series_temporales_macro.qmd): descargar el CPI, convertirlo a inflación interanual (`cpi.pct_change(12)`), guardarlo a CSV, y ajustarle un ARIMA — ahora con datos reales.
 
 ## Bloomberg: el estándar institucional
 
@@ -166,10 +166,10 @@ Notá la sintaxis de tickers de Bloomberg: `"AAPL US Equity"`, `"GD30 Corp"` —
 | | **yfinance** | **FRED** | **Bloomberg** |
 |---|---|---|---|
 | **Costo** | Gratis | Gratis (clave gratuita) | ~USD 25k/año |
-| **Cobertura** | Acciones, ETFs, FX, cripto | Macro (EEUUU y global) | Todo, incl. renta fija y OTC |
+| **Cobertura** | Acciones, ETFs, FX, cripto | Macro (EE. UU. y global) | Todo, incl. renta fija y OTC |
 | **Calidad** | Buena para análisis personal | Oficial (la Fed) | Auditada, estándar de la industria |
 | **Confiabilidad de API** | No oficial, puede romperse | Estable | Estable (con Terminal) |
-| **Uso en este libro** | El dataset `datos/precios.csv` (secciones "Con datos reales") | Llevar el ARIMA/VAR del Cap. 16 a datos reales | El mundo profesional que te espera |
+| **Uso en este libro** | El dataset `datos/precios.csv` (secciones "Con datos reales") | Llevar el ARIMA/VAR del [Cap. 16](../unidad3/cap16_series_temporales_macro.qmd) a datos reales | El mundo profesional que te espera |
 
 La regla práctica: **yfinance para aprender y prototipar, FRED para macro, Bloomberg cuando alguien más paga la licencia**. Y sea cual sea la fuente: descargá una vez, guardá a disco, y analizá en local.
 

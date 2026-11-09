@@ -8,9 +8,9 @@ number-sections: false
 
 Los derivados tienen fama de ser el tema más difícil de las finanzas, y es una fama merecida — pero no porque las ideas sean oscuras, sino porque **usan todo a la vez**: probabilidad, simulación, métodos numéricos, optimización y estructura de mercado, operando juntos en un mismo instrumento. Por eso este módulo va al final: es el examen integrador de todo lo que construiste en los tres anteriores.
 
-La historia arranca con la pregunta más elegante de las finanzas del siglo XX: *¿cuánto vale el derecho de comprar algo en el futuro?* La respuesta de **Black-Scholes** (Capítulo 18) es sorprendente: no depende de lo que nadie opine sobre el mercado, porque la opción se puede *replicar* operando el activo subyacente. Implementamos la fórmula, la damos vuelta para extraer la **volatilidad implícita** de los precios reales, y nos topamos con el descubrimiento que cambió la industria: la **sonrisa de volatilidad**, la evidencia de que el mercado no le cree del todo al modelo.
+La historia arranca con la pregunta más elegante de las finanzas del siglo XX: *¿cuánto vale el derecho de comprar algo en el futuro?* La respuesta de **Black-Scholes** ([Capítulo 18](../unidad4/cap18_derivados_vol_implicita.qmd)) es sorprendente: no depende de lo que nadie opine sobre el mercado, porque la opción se puede *replicar* operando el activo subyacente. Implementamos la fórmula, la damos vuelta para extraer la **volatilidad implícita** de los precios reales, y nos topamos con el descubrimiento que cambió la industria: la **sonrisa de volatilidad**, la evidencia de que el mercado no le cree del todo al modelo.
 
-Después bajamos al llano: el **delta hedging** (Capítulo 19) es la réplica puesta en práctica, simulada día a día como la viviría un trader — con su error de cobertura, sus costos y el gamma mordiendo cerca del vencimiento. Es, en el fondo, la demostración experimental de Black-Scholes. Y el cierre (Capítulo 20) enfrenta lo que la sonrisa venía gritando: la volatilidad no es una constante, es un proceso con vida propia. Los modelos de **Heston** y **SABR** la tratan como tal, reproducen la sonrisa desde los fundamentos, y son la puerta de entrada al pricing profesional moderno.
+Después bajamos al llano: el **delta hedging** ([Capítulo 19](../unidad4/cap19_delta_hedging.qmd)) es la réplica puesta en práctica, simulada día a día como la viviría un trader — con su error de cobertura, sus costos y el gamma mordiendo cerca del vencimiento. Es, en el fondo, la demostración experimental de Black-Scholes. Y el cierre ([Capítulo 20](../unidad4/cap20_volatilidad_estocastica.qmd)) enfrenta lo que la sonrisa venía gritando: la volatilidad no es una constante, es un proceso con vida propia. Los modelos de **Heston** y **SABR** la tratan como tal, reproducen la sonrisa desde los fundamentos, y son la puerta de entrada al pricing profesional moderno.
 
 La @fig-mapa-mod4 muestra cómo se encadenan los tres capítulos y qué traen del módulo anterior.
 
@@ -34,7 +34,7 @@ flowchart LR
 ```
 
 ::: {.callout-note title="Qué necesitás tener fresco" appearance="simple"}
-Este módulo apoya todo su peso sobre la simulación de Monte Carlo y el GBM (Capítulo 13), los procesos con saltos (Capítulo 14) y las nociones de colas y curtosis (Capítulos 7 y 11). Si venís directo, perfecto; si no, un repaso rápido de esos capítulos hace que este módulo fluya.
+Este módulo apoya todo su peso sobre la simulación de Monte Carlo y el GBM ([Capítulo 13](../unidad3/cap13_monte_carlo.qmd)), los procesos con saltos ([Capítulo 14](../unidad3/cap14_procesos_estocasticos_activos.qmd)) y las nociones de colas y curtosis (Capítulos [7](../unidad2/cap07_estadistica_optimizacion.qmd) y [11](../unidad3/cap11_var_expected_shortfall.qmd)). Si venís directo, perfecto; si no, un repaso rápido de esos capítulos hace que este módulo fluya.
 :::
 
 ---
@@ -57,7 +57,7 @@ Al completar este módulo, vas a ser capaz de:
 |:------:|------|--------|----------|
 | **18** | Derivados y Vol Implícita | `scipy.stats.norm`, iteración numérica | Black-Scholes, smile, griegas |
 | **19** | Delta Hedging | Simulación de trading, DataFrames | Cobertura dinámica, P&L, riesgo gamma |
-| **20** | Volatilidad Estocástica | Simulación de procesos acoplados | Heston, SABR, superficie de volatilidad |
+| **20** | Volatilidad Estocástica | Simulación de procesos acoplados | Heston, SABR, la sonrisa que Black-Scholes no explica |
 
 ---
 

@@ -14,7 +14,7 @@ nocite: |
 
 # Introducción: por qué Markowitz solo no alcanza {.unnumbered}
 
-En el Capítulo 8 aprendimos a construir la frontera eficiente. Pero si intentás usar Markowitz "puro" con datos reales, te chocás con un problema incómodo: **el modelo es extremadamente sensible a los retornos esperados** $\boldsymbol{\mu}$ que le das de entrada. Cambiás la estimación del retorno de un activo en medio punto y la cartera óptima se da vuelta por completo, concentrándose en dos o tres posiciones extremas (a veces con ventas en corto gigantes).
+En el [Capítulo 8](../unidad2/cap08_markowitz.qmd) aprendimos a construir la frontera eficiente. Pero si intentás usar Markowitz "puro" con datos reales, te chocás con un problema incómodo: **el modelo es extremadamente sensible a los retornos esperados** $\boldsymbol{\mu}$ que le das de entrada. Cambiás la estimación del retorno de un activo en medio punto y la cartera óptima se da vuelta por completo, concentrándose en dos o tres posiciones extremas (a veces con ventas en corto gigantes).
 
 El problema de fondo es que $\boldsymbol{\mu}$ es lo más difícil de estimar en finanzas: el promedio histórico es un estimador malísimo del retorno futuro. Entonces alimentamos el modelo más sensible con el input más ruidoso. El resultado son carteras que ningún gestor firmaría.
 
@@ -336,7 +336,7 @@ _esquema()
 
 
 ::: {.callout-warning title="Detalle práctico"}
-Los pesos de arriba no suman 1 (acá, casi 2) y pueden incluir cortos. En la práctica se re-normalizan y se agregan restricciones (no negatividad, límites por activo) resolviendo la optimización con `scipy.optimize.minimize`, como en el Capítulo 8, pero usando $\boldsymbol{\mu}_{BL}$ como retornos esperados.
+Los pesos de arriba no suman 1 (acá, casi 2) y pueden incluir cortos. En la práctica se re-normalizan y se agregan restricciones (no negatividad, límites por activo) resolviendo la optimización con `scipy.optimize.minimize`, como en el [Capítulo 8](../unidad2/cap08_markowitz.qmd), pero usando $\boldsymbol{\mu}_{BL}$ como retornos esperados.
 :::
 
 ---

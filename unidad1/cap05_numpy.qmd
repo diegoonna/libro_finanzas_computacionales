@@ -16,7 +16,7 @@ nocite: |
 
 Hasta ahora venimos representando datos financieros con **listas** y **diccionarios** de Python. Nos sirvieron para aprender a programar, pero tienen un problema serio: son lentas y verbosas cuando hay que hacer cuentas sobre miles de números. Y en finanzas, *siempre* hay miles de números: años de cotizaciones diarias, paneles de cientos de activos, millones de trayectorias en una simulación.
 
-Acá entra **NumPy** (de *Numerical Python*). Es la librería que le da a Python la capacidad de hacer cálculo numérico a la velocidad de un lenguaje compilado como C, pero con la comodidad de escribir Python. No es una librería más: es la base sobre la que están construidos Pandas, SciPy, scikit-learn y prácticamente todo lo que vas a usar de acá en adelante. Cuando en el Capítulo 6 hagas `pd.DataFrame`, por debajo hay arrays de NumPy; cuando en el Capítulo 8 optimices un portafolio de Markowitz, vas a estar multiplicando matrices de NumPy.
+Acá entra **NumPy** (de *Numerical Python*). Es la librería que le da a Python la capacidad de hacer cálculo numérico a la velocidad de un lenguaje compilado como C, pero con la comodidad de escribir Python. No es una librería más: es la base sobre la que están construidos Pandas, SciPy, scikit-learn y prácticamente todo lo que vas a usar de acá en adelante. Cuando en el [Capítulo 6](../unidad1/cap06_series_tiempo_pandas.qmd) hagas `pd.DataFrame`, por debajo hay arrays de NumPy; cuando en el [Capítulo 8](../unidad2/cap08_markowitz.qmd) optimices un portafolio de Markowitz, vas a estar multiplicando matrices de NumPy.
 
 ::: {.callout-tip title="La idea de fondo"}
 Programar con NumPy es cambiar el chip: en vez de pensar *"recorré la lista elemento por elemento y hacé la cuenta"*, pensás *"aplicá esta operación a todo el vector de una"*. Eso se llama **vectorización**, y es la habilidad central de este capítulo.
@@ -340,7 +340,7 @@ print(f"NumPy:         {t_numpy*1000:7.1f} ms")
 print(f"NumPy es ~{t_bucle/t_numpy:.0f}x más rápido")
 ```
 
-Sobre un millón de datos la diferencia es de uno a dos órdenes de magnitud. En una simulación de Monte Carlo con millones de trayectorias (Capítulo 13), esto es la diferencia entre que tu código termine en segundos o en horas.
+Sobre un millón de datos la diferencia es de uno a dos órdenes de magnitud. En una simulación de Monte Carlo con millones de trayectorias ([Capítulo 13](../unidad3/cap13_monte_carlo.qmd)), esto es la diferencia entre que tu código termine en segundos o en horas.
 
 ¿De dónde sale esa diferencia? Del **trabajo repetido que hace el intérprete**. En el bucle de Python, *cada una* del millón de vueltas repite la misma burocracia: mirar qué tipo tiene `x` (¿es int? ¿float? ¿string?), desempaquetar el valor del objeto que lo envuelve, decidir qué operación "elevar al cuadrado" corresponde a ese tipo, ejecutarla, y volver a empaquetar el resultado en un objeto nuevo. Un millón de elementos, un millón de veces la misma verificación. NumPy hace esa burocracia **una sola vez**: como el array es homogéneo (todos `float64`, gracias al `dtype`), sabe de antemano qué operación aplicar a todos, y delega el recorrido a un bucle compilado en C que barre la memoria contigua a toda velocidad — incluso procesando varios elementos por instrucción del procesador (SIMD). No es que Python "sea lento": es que le pedimos que vuelva a deducir lo obvio un millón de veces. La vectorización es, en el fondo, **mover la decisión fuera del bucle**.
 
@@ -587,7 +587,7 @@ print(f"\nVolatilidad diaria del portafolio: {vol_portafolio:.4f}")
 print(f"Volatilidad anualizada:            {vol_portafolio * np.sqrt(252):.2%}")
 ```
 
-Esas dos líneas —`w @ mu` y `w @ Sigma @ w`— son, literalmente, la Teoría Moderna de Portafolios. En el Capítulo 8 le vamos a pedir a la computadora que busque los pesos `w` que minimizan ese riesgo. Todo el andamiaje matemático ya lo tenés en NumPy.
+Esas dos líneas —`w @ mu` y `w @ Sigma @ w`— son, literalmente, la Teoría Moderna de Portafolios. En el [Capítulo 8](../unidad2/cap08_markowitz.qmd) le vamos a pedir a la computadora que busque los pesos `w` que minimizan ese riesgo. Todo el andamiaje matemático ya lo tenés en NumPy.
 
 El submódulo `np.linalg` completa el kit de álgebra lineal (inversas, determinantes, autovalores, resolución de sistemas):
 
@@ -602,7 +602,7 @@ print("Autovalores: ", np.linalg.eigvals(M))
 ```
 
 ::: {.callout-note title="Guardá esto para más adelante"}
-Black-Litterman (Capítulo 10) y la regresión por mínimos cuadrados (Capítulo 15) se resuelven invirtiendo matrices con `np.linalg.inv` y `np.linalg.solve`. El código que acabás de ver es la base de la mitad del libro.
+Black-Litterman ([Capítulo 10](../unidad2/cap10_black_litterman.qmd)) y la regresión por mínimos cuadrados ([Capítulo 15](../unidad3/cap15_econometria_modelos_lineales.qmd)) se resuelven invirtiendo matrices con `np.linalg.inv` y `np.linalg.solve`. El código que acabás de ver es la base de la mitad del libro.
 :::
 
 ---
@@ -611,7 +611,7 @@ Black-Litterman (Capítulo 10) y la regresión por mínimos cuadrados (Capítulo
 
 NumPy es potentísimo, pero tiene una limitación para el trabajo diario: los arrays no tienen **etiquetas**. En `R[:, 0]` vos sabés que la columna 0 es "el activo A" porque te lo acordás, no porque el array lo diga. Cuando manejás decenas de activos con fechas de por medio, eso se vuelve un problema.
 
-Ahí entra **Pandas** (Capítulo 6): pone etiquetas (nombres de columnas y un índice de fechas) *encima* de los arrays de NumPy. Un `DataFrame` es, en el fondo, un array de NumPy con nombres. Por eso todo lo que aprendiste acá —vectorización, broadcasting, `axis`, máscaras booleanas— se traslada casi idéntico a Pandas. No estás aprendiendo dos cosas: estás aprendiendo NumPy, y Pandas es NumPy con etiquetas.
+Ahí entra **Pandas** ([Capítulo 6](../unidad1/cap06_series_tiempo_pandas.qmd)): pone etiquetas (nombres de columnas y un índice de fechas) *encima* de los arrays de NumPy. Un `DataFrame` es, en el fondo, un array de NumPy con nombres. Por eso todo lo que aprendiste acá —vectorización, broadcasting, `axis`, máscaras booleanas— se traslada casi idéntico a Pandas. No estás aprendiendo dos cosas: estás aprendiendo NumPy, y Pandas es NumPy con etiquetas.
 
 ---
 

@@ -299,13 +299,13 @@ print(f"ES paramétrico (95%): ${es_param_95:>12,.2f}")
 print(f"ES histórico   (95%): ${cvar_95:>12,.2f}")
 ```
 
-Ambos métodos deberían parecerse con datos ~normales como los nuestros. Con retornos reales (colas pesadas), el histórico suele dar **más alto** — y es el que está diciendo la verdad. También se puede estimar el ES por **Monte Carlo**: simulás miles de retornos del modelo que quieras (con saltos, con t-Student) y promediás la cola simulada; lo haremos en el Capítulo 13.
+Ambos métodos deberían parecerse con datos ~normales como los nuestros. Con retornos reales (colas pesadas), el histórico suele dar **más alto** — y es el que está diciendo la verdad. También se puede estimar el ES por **Monte Carlo**: simulás miles de retornos del modelo que quieras (con saltos, con t-Student) y promediás la cola simulada; lo haremos en el [Capítulo 13](../unidad3/cap13_monte_carlo.qmd).
 
 ::: {.content-visible when-format="html"}
 ::: {.simulador}
 [Simulador · VaR contra ES cuando las colas pesan]{.simulador-titulo}
 
-La @fig-anatomia-var-es comparaba una normal con una t de Student. Acá elegís la distribución de los retornos (la normal del capítulo, una t de Student con los grados de libertad que quieras, o la mezcla con "días de crisis" del Capítulo 7) y la comparás con lo que diría un VaR paramétrico: la normal con **la misma media y la misma volatilidad**. Todo se calcula con fórmulas exactas, sin simular. El gráfico de abajo muestra la cola izquierda en escala logarítmica, donde se ven las diferencias que la escala lineal aplasta.
+La @fig-anatomia-var-es comparaba una normal con una t de Student. Acá elegís la distribución de los retornos (la normal del capítulo, una t de Student con los grados de libertad que quieras, o la mezcla con "días de crisis" del [Capítulo 7](../unidad2/cap07_estadistica_optimizacion.qmd)) y la comparás con lo que diría un VaR paramétrico: la normal con **la misma media y la misma volatilidad**. Todo se calcula con fórmulas exactas, sin simular. El gráfico de abajo muestra la cola izquierda en escala logarítmica, donde se ven las diferencias que la escala lineal aplasta.
 
 ```{=html}
 <div id="sim-var-es"></div>
@@ -320,7 +320,7 @@ La @fig-anatomia-var-es comparaba una normal con una t de Student. Acá elegís 
 
 1. Arranca con una t de 3 grados de libertad al 95%. El VaR verdadero (2.00%) es **menor** que el de la normal (2.43%): según el VaR, la t es menos riesgosa. El ES dice lo contrario (3.32% contra 3.05%). Con la misma volatilidad, la t concentra más días tranquilos y más desastres: el VaR mira justo donde no se nota y el ES promedia los desastres.
 2. Subí la confianza a 99%. Ahora el VaR de la t sí supera al de la normal, y su ES es 50% mayor (6.0% contra 4.0%). Las colas pesadas aparecen recién lejos del centro, y un VaR al 95% no las ve.
-3. Pasá a "Con días de crisis", la mezcla del Capítulo 7, al 99%. El VaR normal subestima el verdadero un tercio (3.6% contra 5.4%) y el ES casi a la mitad (4.1% contra 7.6%). Subí los días de crisis a 10% y mirá cómo se separan.
+3. Pasá a "Con días de crisis", la mezcla del [Capítulo 7](../unidad2/cap07_estadistica_optimizacion.qmd), al 99%. El VaR normal subestima el verdadero un tercio (3.6% contra 5.4%) y el ES casi a la mitad (4.1% contra 7.6%). Subí los días de crisis a 10% y mirá cómo se separan.
 4. Volvé a la t y subí $\nu$ hasta 30: las dos curvas se funden. La normal es el caso límite de la t, y por eso un VaR paramétrico funciona bien solo cuando las colas son livianas.
 :::
 :::
@@ -508,7 +508,7 @@ El test cuenta *cuántas* excepciones hubo, pero no *cuándo*: diez excepciones 
 
 ## EWMA: cuando la volatilidad tiene memoria
 
-Todo lo anterior usó **una** volatilidad, estimada con el año entero de datos. Pero mirá cualquier serie financiera real: hay semanas planas y semanas de pánico, y los días agitados vienen **en rachas** (el *volatility clustering* que formalizaremos en el Capítulo 20). Un VaR con volatilidad constante es un promedio entre la calma y la tormenta: sobreestima el riesgo en las épocas tranquilas y —mucho peor— **lo subestima justo cuando la tormenta llega**.
+Todo lo anterior usó **una** volatilidad, estimada con el año entero de datos. Pero mirá cualquier serie financiera real: hay semanas planas y semanas de pánico, y los días agitados vienen **en rachas** (el *volatility clustering* que formalizaremos en el [Capítulo 20](../unidad4/cap20_volatilidad_estocastica.qmd)). Un VaR con volatilidad constante es un promedio entre la calma y la tormenta: sobreestima el riesgo en las épocas tranquilas y —mucho peor— **lo subestima justo cuando la tormenta llega**.
 
 El modelo **EWMA** (*Exponentially Weighted Moving Average*, popularizado por RiskMetrics de J.P. Morgan) corrige esto con una idea simple: estimar la varianza dando **más peso a lo reciente**. Cada día, la varianza nueva es una mezcla de la varianza de ayer y del shock de ayer:
 
@@ -657,14 +657,14 @@ Los retornos financieros reales típicamente **rechazan** la normalidad con p-va
 - **Curtosis excesiva** (colas pesadas → más eventos extremos que la normal)
 - **Asimetría negativa** (más crashes que rallies)
 
-Esto hace que el VaR paramétrico normal **subestime** el riesgo verdadero — especialmente al 99%, donde manda la cola. Es el motivo de fondo por el que existen el VaR histórico, el ES, y los modelos con saltos del Capítulo 14.
+Esto hace que el VaR paramétrico normal **subestime** el riesgo verdadero — especialmente al 99%, donde manda la cola. Es el motivo de fondo por el que existen el VaR histórico, el ES, y los modelos con saltos del [Capítulo 14](../unidad3/cap14_procesos_estocasticos_activos.qmd).
 :::
 
 ---
 
 ## Resumen de Métricas
 
-Los tres métodos del capítulo (y el que llega en el Capítulo 13) comparten el final: un percentil de la distribución de pérdidas y el promedio de lo que queda más allá. Lo que cambia es cómo se obtiene esa distribución, y la @fig-tres-metodos-var lo resume.
+Los tres métodos del capítulo (y el que llega en el [Capítulo 13](../unidad3/cap13_monte_carlo.qmd)) comparten el final: un percentil de la distribución de pérdidas y el promedio de lo que queda más allá. Lo que cambia es cómo se obtiene esa distribución, y la @fig-tres-metodos-var lo resume.
 
 ```{mermaid}
 %%| label: fig-tres-metodos-var

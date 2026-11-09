@@ -285,7 +285,7 @@ _esquema()
 ```
 
 ::: {.callout-warning title="Lo que el p-value NO dice"}
-El p-value **no** es "la probabilidad de que el coeficiente sea cero", ni "la probabilidad de que el modelo esté mal". Es una afirmación sobre los *datos bajo una hipótesis*, no sobre la hipótesis. Y con miles de datos, coeficientes económicamente irrelevantes se vuelven "significativos": **significancia estadística ≠ relevancia económica**. Mirá siempre la magnitud del coeficiente además de su p-value. Esta distinción reaparecerá con fuerza en el Capítulo 17 (backtesting), donde probar muchas estrategias infla los falsos positivos.
+El p-value **no** es "la probabilidad de que el coeficiente sea cero", ni "la probabilidad de que el modelo esté mal". Es una afirmación sobre los *datos bajo una hipótesis*, no sobre la hipótesis. Y con miles de datos, coeficientes económicamente irrelevantes se vuelven "significativos": **significancia estadística ≠ relevancia económica**. Mirá siempre la magnitud del coeficiente además de su p-value. Esta distinción reaparecerá con fuerza en el [Capítulo 17](../unidad3/cap17_backtesting.qmd) (backtesting), donde probar muchas estrategias infla los falsos positivos.
 :::
 
 ::: {.content-visible when-format="html"}
@@ -308,7 +308,7 @@ La @fig-distribucion-muestral repetía la regresión del CAPM en 2000 muestras d
 1. Con los valores del capítulo, el alfa existe (0.2% mensual, 2.4% al año), pero el test lo detecta en apenas ~11% de las muestras, y casi una de cada cuatro da un alfa *negativo*. Mirá la última tarjeta: para detectarlo el 80% de las veces harían falta unos 150 años de datos.
 2. Llevá los años a 50. El beta ya estaba clavado y su desvío baja todavía más (de 0.07 a 0.03); el alfa mejora, pero se sigue detectando en menos de la mitad de las muestras. Más datos ayudan con la raíz cuadrada del tiempo: cuadruplicar la muestra solo divide el error por dos.
 3. Volvé a 10 años y bajá el ruido a 1%: el alfa pasa a detectarse en más de la mitad de las muestras, y alcanzan ~17 años para el 80%. Lo que esconde al alfa no es su tamaño solo, sino su tamaño *comparado con el ruido*.
-4. Poné el alfa en 0: igual ~5% de las muestras sale "significativo". Son falsos descubrimientos, exactamente la tasa de error que acepta un test al 5% (el problema que el Capítulo 17 multiplica por cientos de estrategias).
+4. Poné el alfa en 0: igual ~5% de las muestras sale "significativo". Son falsos descubrimientos, exactamente la tasa de error que acepta un test al 5% (el problema que el [Capítulo 17](../unidad3/cap17_backtesting.qmd) multiplica por cientos de estrategias).
 :::
 :::
 :::
@@ -522,7 +522,7 @@ Tres lecturas, cada una con una idea del capítulo:
 
 - **Los betas tienen sentido económico, y están bien estimados.** Ordenados de menor a mayor, aparecen primero las defensivas (JNJ, KO, WMT: betas por debajo de 0.5) y al final la tecnología (MSFT y AAPL entre 1.1 y 1.2; NVDA por encima de 2). Con más de 1.200 datos diarios, los errores estándar son de pocas centésimas: el beta se estima bien.
 - **El $R^2$ dice cuánto del riesgo es "de mercado".** Para AAPL o MSFT, el mercado explica alrededor de la mitad de la varianza diaria; para JNJ, apenas un 3%. El resto es riesgo propio de cada empresa, el que la diversificación elimina.
-- **El alfa casi nunca es significativo.** NVDA subió más de 50% anual en el período y su alfa estimado es enorme (cerca de 30% anual), pero su p-value no baja de 0.05: con cinco años de datos, ni siquiera eso alcanza para descartar la suerte. El único alfa "significativo" es el negativo de DIS (p ≈ 0.04). Pero probamos nueve acciones, y con nueve tests al 5% es esperable que alguno pase el umbral por azar. Es la trampa de las pruebas múltiples, el tema central del Capítulo 17.
+- **El alfa casi nunca es significativo.** NVDA subió más de 50% anual en el período y su alfa estimado es enorme (cerca de 30% anual), pero su p-value no baja de 0.05: con cinco años de datos, ni siquiera eso alcanza para descartar la suerte. El único alfa "significativo" es el negativo de DIS (p ≈ 0.04). Pero probamos nueve acciones, y con nueve tests al 5% es esperable que alguno pase el umbral por azar. Es la trampa de las pruebas múltiples, el tema central del [Capítulo 17](../unidad3/cap17_backtesting.qmd).
 
 ---
 
@@ -533,7 +533,7 @@ Tres lecturas, cada una con una idea del capítulo:
 - **Leer causalidad en una regresión**: MCO mide asociación condicional. "El beta es 1.3" no dice que el mercado *cause* el retorno del activo, solo que se mueven juntos en esa proporción.
 - **Omitir variables relevantes**: si al fondo value le regresás solo el mercado, el alfa absorbe lo omitido. El sesgo de variable omitida es el error más costoso en evaluación de estrategias.
 - **Ignorar la inestabilidad temporal del beta**: el beta de una empresa cambia con su negocio y su apalancamiento. Estimalo por ventanas móviles antes de asumir que es constante.
-- **Cazar p-values**: correr veinte especificaciones y reportar la significativa es garantía de falsos positivos. Definí el modelo antes de mirar los resultados (más de esto en el Capítulo 17).
+- **Cazar p-values**: correr veinte especificaciones y reportar la significativa es garantía de falsos positivos. Definí el modelo antes de mirar los resultados (más de esto en el [Capítulo 17](../unidad3/cap17_backtesting.qmd)).
 :::
 
 ---

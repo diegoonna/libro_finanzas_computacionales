@@ -86,7 +86,7 @@ aplicar_estilo()
 
 ## La fórmula de Black-Scholes
 
-Para una call europea sobre un activo que sigue un GBM (Capítulo 13) con volatilidad $\sigma$, con tasa libre de riesgo $r$:
+Para una call europea sobre un activo que sigue un GBM ([Capítulo 13](../unidad3/cap13_monte_carlo.qmd)) con volatilidad $\sigma$, con tasa libre de riesgo $r$:
 
 $$C = S_0\, N(d_1) - K e^{-rT} N(d_2)$$
 
@@ -124,7 +124,7 @@ print(f"  S - K·e^(-rT)   = {S - K * np.exp(-r * T):.4f}")
 La **paridad put-call** ($C - P = S - Ke^{-rT}$) que verificamos al final no depende de Black-Scholes ni de ningún modelo: sale de puro no-arbitraje. Por eso es el primer chequeo de cordura de cualquier implementación — si tu código la viola, está mal.
 
 ::: {.callout-note title="Los supuestos que después importarán"}
-Black-Scholes supone: volatilidad $\sigma$ **constante y conocida**, trayectorias continuas (sin saltos — ya sabemos por el Capítulo 14 que es falso), tasa constante, sin costos de transacción y posibilidad de operar continuamente. Cada supuesto se viola en la realidad, y la genialidad práctica del mercado fue inventar una forma de *medir* esas violaciones: la sonrisa de volatilidad que veremos enseguida.
+Black-Scholes supone: volatilidad $\sigma$ **constante y conocida**, trayectorias continuas (sin saltos — ya sabemos por el [Capítulo 14](../unidad3/cap14_procesos_estocasticos_activos.qmd) que es falso), tasa constante, sin costos de transacción y posibilidad de operar continuamente. Cada supuesto se viola en la realidad, y la genialidad práctica del mercado fue inventar una forma de *medir* esas violaciones: la sonrisa de volatilidad que veremos enseguida.
 :::
 
 ### ¿Qué mueve el precio de una opción?
@@ -317,7 +317,7 @@ plt.show()
 
 La curva de la @fig-smile no es plana: las opciones **fuera del dinero se cotizan a volatilidades más altas**, con la rama izquierda (puts de strikes bajos) típicamente más empinada — por su forma, *sonrisa* o *mueca* (smirk). ¿Qué está diciendo el mercado?
 
-- **Las colas existen**: los compradores pagan más (en vol) por las opciones que pagan en escenarios extremos, porque saben —desde el crash de 1987, cuando nació la sonrisa— que esos escenarios son más probables de lo que la normal admite. Es la curtosis del Capítulo 14 cotizada en pantalla.
+- **Las colas existen**: los compradores pagan más (en vol) por las opciones que pagan en escenarios extremos, porque saben —desde el crash de 1987, cuando nació la sonrisa— que esos escenarios son más probables de lo que la normal admite. Es la curtosis del [Capítulo 14](../unidad3/cap14_procesos_estocasticos_activos.qmd) cotizada en pantalla.
 - **La asimetría también**: la rama izquierda más cara refleja que los derrumbes son más violentos que los rallies, y que hay demanda estructural de protección (puts como seguro).
 
 La @fig-colas-sonrisa muestra la cadena completa con una put fuera del dinero. Si el mercado cree en una distribución con la cola izquierda más pesada que la lognormal de Black-Scholes, esa put vale más; y la única forma de que Black-Scholes reproduzca ese precio más alto es con una volatilidad más alta.
@@ -383,7 +383,7 @@ _esquema()
 ```
 
 ::: {.callout-important title="La sonrisa es el puente del libro"}
-Todo converge acá: los retornos tienen colas pesadas y asimetría (Cap. 7), los modelos con saltos las generan (Cap. 14), y la sonrisa es el mercado **poniéndoles precio**. Black-Scholes no está "mal" — es la vara con la que el mercado mide sus propias desviaciones de la normalidad. Los modelos que *reproducen* la sonrisa (Heston, SABR) son el tema del Capítulo 20.
+Todo converge acá: los retornos tienen colas pesadas y asimetría ([Cap. 7](../unidad2/cap07_estadistica_optimizacion.qmd)), los modelos con saltos las generan ([Cap. 14](../unidad3/cap14_procesos_estocasticos_activos.qmd)), y la sonrisa es el mercado **poniéndoles precio**. Black-Scholes no está "mal" — es la vara con la que el mercado mide sus propias desviaciones de la normalidad. Los modelos que *reproducen* la sonrisa (Heston, SABR) son el tema del [Capítulo 20](../unidad4/cap20_volatilidad_estocastica.qmd).
 :::
 
 ---

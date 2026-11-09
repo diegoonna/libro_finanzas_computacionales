@@ -22,7 +22,7 @@ En 1952, Harry Markowitz —con 25 años— respondió esa pregunta con una idea
 En este capítulo implementamos el modelo completo con NumPy y SciPy, y después nos metemos en las decisiones prácticas que todo gestor enfrenta y que el modelo básico deja abiertas.
 
 ::: {.callout-note title="Lo que ya sabés"}
-Todo el andamiaje matemático de este capítulo —producto matricial `@`, matriz de covarianzas, la forma cuadrática $\mathbf{w}^T\Sigma\mathbf{w}$— lo construimos en el Capítulo 5 (NumPy). Y la herramienta de optimización, `scipy.optimize.minimize`, la vimos en el Capítulo 7. Acá las juntamos.
+Todo el andamiaje matemático de este capítulo —producto matricial `@`, matriz de covarianzas, la forma cuadrática $\mathbf{w}^T\Sigma\mathbf{w}$— lo construimos en el [Capítulo 5](../unidad1/cap05_numpy.qmd) (NumPy). Y la herramienta de optimización, `scipy.optimize.minimize`, la vimos en el [Capítulo 7](../unidad2/cap07_estadistica_optimizacion.qmd). Acá las juntamos.
 :::
 
 ```{python}
@@ -149,7 +149,7 @@ La figura muestra cuatro correlaciones fijas; acá podés moverla de forma conti
 
 1. Dejá los pesos quietos y bajá $\rho$ de 1 a −1. El retorno no cambia ni una décima, pero el punto naranja se corre hacia la izquierda: el ahorro de riesgo sale *solo* de la correlación.
 2. Con $\rho = -1$, mirá el rombo verde: hay una mezcla de volatilidad **cero**, con apenas un 18% en la acción. Dos activos riesgosos combinados en una cartera sin riesgo.
-3. Subí $\rho$ a 0.9. El ahorro casi desaparece: la diversificación rinde poco justo cuando los activos se parecen. En las crisis las correlaciones suben (lo vemos en el Capítulo 12), y el "almuerzo gratis" se achica cuando más se lo necesita.
+3. Subí $\rho$ a 0.9. El ahorro casi desaparece: la diversificación rinde poco justo cuando los activos se parecen. En las crisis las correlaciones suben (lo vemos en el [Capítulo 12](../unidad3/cap12_riesgo_regulacion.qmd)), y el "almuerzo gratis" se achica cuando más se lo necesita.
 :::
 :::
 :::
@@ -198,7 +198,7 @@ for r_obj in retornos_objetivo:
 frontera_vol = np.array(frontera_vol)
 ```
 
-El argumento `r=r_obj` dentro de la lambda no es decorativo: congela el retorno objetivo de cada vuelta del bucle (ver el recuadro sobre lambdas en bucles del Capítulo 7). Sin él, todas las restricciones usarían el último `r_obj` y la frontera colapsaría en un solo punto.
+El argumento `r=r_obj` dentro de la lambda no es decorativo: congela el retorno objetivo de cada vuelta del bucle (ver el recuadro sobre lambdas en bucles del [Capítulo 7](../unidad2/cap07_estadistica_optimizacion.qmd)). Sin él, todas las restricciones usarían el último `r_obj` y la frontera colapsaría en un solo punto.
 
 ### El portafolio de mínima varianza global
 
@@ -324,7 +324,7 @@ _esquema()
 ::: {.simulador}
 [Simulador · Frontera eficiente y CML]{.simulador-titulo}
 
-El universo de cuatro activos del capítulo, con sus retornos esperados, la tasa libre de riesgo y la aversión al riesgo $\lambda$ del Capítulo 7 como controles (las volatilidades y correlaciones quedan fijas). "Tu cartera" es el punto de la CML que elige un inversor con esa $\lambda$: pone en el tangente la fracción $y = (E[R_T] - r_f)/(\lambda\,\sigma_T^2)$ y el resto a tasa. Las barras de abajo muestran qué hay adentro de cada cartera. Los pesos son el óptimo exacto: pueden diferir en alguna décima de los que imprime `minimize` con su tolerancia por defecto.
+El universo de cuatro activos del capítulo, con sus retornos esperados, la tasa libre de riesgo y la aversión al riesgo $\lambda$ del [Capítulo 7](../unidad2/cap07_estadistica_optimizacion.qmd) como controles (las volatilidades y correlaciones quedan fijas). "Tu cartera" es el punto de la CML que elige un inversor con esa $\lambda$: pone en el tangente la fracción $y = (E[R_T] - r_f)/(\lambda\,\sigma_T^2)$ y el resto a tasa. Las barras de abajo muestran qué hay adentro de cada cartera. Los pesos son el óptimo exacto: pueden diferir en alguna décima de los que imprime `minimize` con su tolerancia por defecto.
 
 ```{=html}
 <div id="sim-frontera"></div>
@@ -338,7 +338,7 @@ El universo de cuatro activos del capítulo, con sus retornos esperados, la tasa
 **Probá esto**
 
 1. Mové $\lambda$ de punta a punta. La estrella del tangente no se mueve y su barra tampoco: solo cambia cuánto va al tangente y cuánto a tasa. Con $\lambda$ bajo, la fracción en el tangente supera el 100%: el inversor se endeuda a tasa libre para comprar más tangente. Es la "misma composición para todos" de la @fig-frontera-cml.
-2. Subí el retorno esperado de la Acción Value de 10% a 11%, un solo punto. Su peso en el tangente casi se duplica (de ~8% a ~15%); con 12%, se triplica. Un punto de diferencia en $\boldsymbol{\mu}$ es menos que el error con que se lo estima, y el optimizador lo toma como verdad: es la sección que viene, "Los inputs importan más que el optimizador", y el motivo del Capítulo 9.
+2. Subí el retorno esperado de la Acción Value de 10% a 11%, un solo punto. Su peso en el tangente casi se duplica (de ~8% a ~15%); con 12%, se triplica. Un punto de diferencia en $\boldsymbol{\mu}$ es menos que el error con que se lo estima, y el optimizador lo toma como verdad: es la sección que viene, "Los inputs importan más que el optimizador", y el motivo del [Capítulo 9](../unidad2/cap09_hrp.qmd).
 3. Subí la tasa libre de riesgo de 3% a 4.5%. El tangente se corre hacia arriba por la frontera y el bono pasa de pesar ~71% a ~33%: cuando la tasa sin riesgo paga casi lo mismo que el bono, al bono ya no le queda nada que aportar.
 :::
 :::
@@ -527,7 +527,7 @@ Mezclar marcos: estimar $\mu$ como promedio de retornos nominales de una década
 
 Markowitz es el punto de partida de toda la teoría de portafolios, pero conviene salir del capítulo con sus límites claros:
 
-1. **Hipersensibilidad a los inputs**: cambios chicos en $\boldsymbol{\mu}$ producen carteras completamente distintas, y $\boldsymbol{\mu}$ es casi imposible de estimar bien. Es el problema que atacan **HRP** (capítulo siguiente, esquivando la inversión de $\Sigma$) y **Black-Litterman** (Capítulo 10, disciplinando la estimación de $\mu$).
+1. **Hipersensibilidad a los inputs**: cambios chicos en $\boldsymbol{\mu}$ producen carteras completamente distintas, y $\boldsymbol{\mu}$ es casi imposible de estimar bien. Es el problema que atacan **HRP** (capítulo siguiente, esquivando la inversión de $\Sigma$) y **Black-Litterman** ([Capítulo 10](../unidad2/cap10_black_litterman.qmd), disciplinando la estimación de $\mu$).
 2. **Supone que la varianza captura el riesgo**: ignora asimetrías y colas pesadas. Las métricas de cola (VaR, Expected Shortfall) llegan en el Módulo 3.
 3. **Un solo período**: el modelo decide una vez y se queda quieto; no contempla rebalanceo, costos de transacción ni impuestos.
 4. **Las correlaciones no son constantes**: en las crisis, justo cuando más importa, las correlaciones suben y la diversificación se evapora. Lo veremos con crudeza en el capítulo de riesgo y regulación.
@@ -609,7 +609,7 @@ def _esquema():
 _esquema()
 ```
 
-El resultado ilustra en carne propia las advertencias del capítulo. Mirá primero la tabla de $\mu$ estimados: NVDA con un retorno anualizado altísimo (la ola de la IA cayó entera dentro de la ventana), DIS en terreno negativo. El portafolio tangente **se toma esos números al pie de la letra**: asigna cero a más de la mitad del universo y concentra el capital en los cuatro o cinco tickers que mejor combinaron retorno y volatilidad *en esa muestra*. ¿De verdad creés que NVDA va a repetir ese μ los próximos cinco años? El optimizador sí. El GMV, que no usa $\boldsymbol{\mu}$, queda bastante más repartido y cargado en los activos defensivos. Esa fragilidad frente al $\mu$ estimado es exactamente el problema que atacan HRP (capítulo siguiente) y Black-Litterman (Capítulo 10) — y ahora la viste con datos de verdad.
+El resultado ilustra en carne propia las advertencias del capítulo. Mirá primero la tabla de $\mu$ estimados: NVDA con un retorno anualizado altísimo (la ola de la IA cayó entera dentro de la ventana), DIS en terreno negativo. El portafolio tangente **se toma esos números al pie de la letra**: asigna cero a más de la mitad del universo y concentra el capital en los cuatro o cinco tickers que mejor combinaron retorno y volatilidad *en esa muestra*. ¿De verdad creés que NVDA va a repetir ese μ los próximos cinco años? El optimizador sí. El GMV, que no usa $\boldsymbol{\mu}$, queda bastante más repartido y cargado en los activos defensivos. Esa fragilidad frente al $\mu$ estimado es exactamente el problema que atacan HRP (capítulo siguiente) y Black-Litterman ([Capítulo 10](../unidad2/cap10_black_litterman.qmd)) — y ahora la viste con datos de verdad.
 
 ---
 

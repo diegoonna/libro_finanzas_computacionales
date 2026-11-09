@@ -126,7 +126,7 @@ Dos propiedades del GBM que conviene tener presentes:
 
 ### Simulación vectorizada
 
-Simulamos **todas las trayectorias a la vez** con una matriz de shocks: filas = pasos de tiempo, columnas = simulaciones. El único bucle recorre el tiempo (cada precio depende del anterior); las 10.000 simulaciones avanzan en paralelo gracias a la vectorización del Capítulo 5.
+Simulamos **todas las trayectorias a la vez** con una matriz de shocks: filas = pasos de tiempo, columnas = simulaciones. El único bucle recorre el tiempo (cada precio depende del anterior); las 10.000 simulaciones avanzan en paralelo gracias a la vectorización del [Capítulo 5](../unidad1/cap05_numpy.qmd).
 
 La @fig-matriz-shocks muestra la forma de los datos antes de escribir el código: una fila por día y una columna por futuro posible.
 
@@ -252,7 +252,7 @@ El panel izquierdo de la @fig-caminos-gbm es el "abanico de futuros": todas las 
 
 ## VaR y Expected Shortfall por Monte Carlo
 
-En el Capítulo 11 calculamos VaR y ES con dos métodos: paramétrico (asume normal) e histórico (usa el pasado). Monte Carlo es el **tercer método**, y el más flexible: la distribución de pérdidas sale de las trayectorias simuladas, con el modelo que queramos. Hoy el modelo es GBM; en el próximo capítulo será uno con saltos — y el código de abajo no cambia.
+En el [Capítulo 11](../unidad3/cap11_var_expected_shortfall.qmd) calculamos VaR y ES con dos métodos: paramétrico (asume normal) e histórico (usa el pasado). Monte Carlo es el **tercer método**, y el más flexible: la distribución de pérdidas sale de las trayectorias simuladas, con el modelo que queramos. Hoy el modelo es GBM; en el próximo capítulo será uno con saltos — y el código de abajo no cambia.
 
 ```{python}
 #| label: var-montecarlo
@@ -404,7 +404,7 @@ En la [versión web de este capítulo](https://diegoonna.github.io/libro_finanza
 
 ## Puente al Módulo 4: valuar una opción por Monte Carlo
 
-Cerremos con el uso más famoso de Monte Carlo en finanzas. Una **call europea** da derecho a comprar el activo a precio $K$ en la fecha $T$; su pago final es $\max(S_T - K, 0)$. Bajo valuación neutral al riesgo (lo desarrollamos en el Capítulo 18), su precio es el pago esperado descontado, **simulando con drift igual a la tasa libre de riesgo** $r$:
+Cerremos con el uso más famoso de Monte Carlo en finanzas. Una **call europea** da derecho a comprar el activo a precio $K$ en la fecha $T$; su pago final es $\max(S_T - K, 0)$. Bajo valuación neutral al riesgo (lo desarrollamos en el [Capítulo 18](../unidad4/cap18_derivados_vol_implicita.qmd)), su precio es el pago esperado descontado, **simulando con drift igual a la tasa libre de riesgo** $r$:
 
 $$C = e^{-rT} \cdot E\big[\max(S_T - K, 0)\big]$$
 

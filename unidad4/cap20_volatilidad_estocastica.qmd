@@ -15,9 +15,9 @@ nocite: |
 
 # Introducción {.unnumbered}
 
-Cerramos el libro atacando la última gran mentira piadosa de Black-Scholes. En el Capítulo 18 vimos la evidencia: la **sonrisa de volatilidad**. Si la volatilidad fuera constante como supone el modelo, la vol implícita sería la misma en todos los strikes — y no lo es, en ningún mercado de opciones del planeta.
+Cerramos el libro atacando la última gran mentira piadosa de Black-Scholes. En el [Capítulo 18](../unidad4/cap18_derivados_vol_implicita.qmd) vimos la evidencia: la **sonrisa de volatilidad**. Si la volatilidad fuera constante como supone el modelo, la vol implícita sería la misma en todos los strikes — y no lo es, en ningún mercado de opciones del planeta.
 
-En el Capítulo 14 arreglamos una parte del problema agregando **saltos** al precio. Pero hay otro hecho estilizado que los saltos solos no explican: la volatilidad **cambia en el tiempo, y de manera persistente**. Hay semanas tranquilas y meses de pánico; la volatilidad se agrupa en rachas (*volatility clustering*), tiende a volver a un nivel normal cuando se dispara, y —el detalle crucial— **sube cuando el mercado cae**.
+En el [Capítulo 14](../unidad3/cap14_procesos_estocasticos_activos.qmd) arreglamos una parte del problema agregando **saltos** al precio. Pero hay otro hecho estilizado que los saltos solos no explican: la volatilidad **cambia en el tiempo, y de manera persistente**. Hay semanas tranquilas y meses de pánico; la volatilidad se agrupa en rachas (*volatility clustering*), tiende a volver a un nivel normal cuando se dispara, y —el detalle crucial— **sube cuando el mercado cae**.
 
 La respuesta natural: si la volatilidad se comporta como un proceso aleatorio... **modelémosla como un proceso aleatorio**. Eso son los modelos de volatilidad estocástica: dos procesos acoplados, uno para el precio y otro para su volatilidad.
 
@@ -243,7 +243,7 @@ En la @fig-heston-trayectorias, compará las trayectorias de abajo con la línea
 
 ### Heston genera la sonrisa
 
-La prueba de fuego: valuemos opciones bajo Heston (por Monte Carlo, con drift $r$) y preguntémosle a Black-Scholes qué volatilidad implícita "ve" en cada strike. Si el modelo es bueno, debería aparecer la sonrisa del Capítulo 18 — sin que se la hayamos puesto a mano.
+La prueba de fuego: valuemos opciones bajo Heston (por Monte Carlo, con drift $r$) y preguntémosle a Black-Scholes qué volatilidad implícita "ve" en cada strike. Si el modelo es bueno, debería aparecer la sonrisa del [Capítulo 18](../unidad4/cap18_derivados_vol_implicita.qmd) — sin que se la hayamos puesto a mano.
 
 ```{python}
 #| label: fig-heston-smile
@@ -440,9 +440,9 @@ No compiten: se usan para cosas distintas. **SABR** es el estándar para *cotiza
 
 Detengámonos un momento en el camino recorrido, porque este capítulo lo cierra:
 
-1. **GBM** (Cap. 13): precio aleatorio, vol constante. Elegante, insuficiente.
-2. **Saltos** (Cap. 14): el precio puede moverse discontinuamente → colas pesadas.
-3. **La sonrisa** (Cap. 18): el mercado cotiza las violaciones de Black-Scholes, cada día, en cada strike.
+1. **GBM** ([Cap. 13](../unidad3/cap13_monte_carlo.qmd)): precio aleatorio, vol constante. Elegante, insuficiente.
+2. **Saltos** ([Cap. 14](../unidad3/cap14_procesos_estocasticos_activos.qmd)): el precio puede moverse discontinuamente → colas pesadas.
+3. **La sonrisa** ([Cap. 18](../unidad4/cap18_derivados_vol_implicita.qmd)): el mercado cotiza las violaciones de Black-Scholes, cada día, en cada strike.
 4. **Volatilidad estocástica** (este capítulo): la vol tiene dinámica propia → clustering, leverage effect, y la sonrisa reproducida desde los fundamentos.
 
 ```{mermaid}
@@ -468,7 +468,7 @@ Cada modelo nace de un hecho empírico que el anterior no explicaba. Esa es la l
 - **Varianza negativa en la simulación de Heston**: el esquema de Euler ingenuo produce $v < 0$ y `sqrt` explota. Usá *full truncation* (como en el código) o esquemas exactos (QE de Andersen).
 - **Ignorar la condición de Feller**: si $2\kappa\theta < \xi^2$, la varianza toca cero con probabilidad positiva y la simulación exige más cuidado (nuestros parámetros la violan levemente — es lo habitual al calibrar equity — y por eso el truncamiento importa).
 - **Usar la fórmula de Hagan fuera de su dominio**: es una aproximación asintótica; con $T$ grande, $\nu$ alto o strikes extremos puede dar vols absurdas (incluso densidades negativas). Verificá contra Monte Carlo.
-- **Calibrar demasiados parámetros a pocos datos**: con 5 strikes cotizados y 5 parámetros libres, el ajuste es perfecto y no significa nada — el sobreajuste del Capítulo 17 aplica también acá.
+- **Calibrar demasiados parámetros a pocos datos**: con 5 strikes cotizados y 5 parámetros libres, el ajuste es perfecto y no significa nada — el sobreajuste del [Capítulo 17](../unidad3/cap17_backtesting.qmd) aplica también acá.
 - **Olvidar el drift neutral al riesgo al valuar**: para pricing, el drift del precio es $r$; el $\mu$ real solo importa para proyecciones.
 :::
 

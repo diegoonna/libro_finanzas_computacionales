@@ -8,9 +8,9 @@ number-sections: false
 
 Todo el mundo dice que "hay que aprender a programar", pero los cursos genéricos tienen un problema: te enseñan a invertir strings y a imprimir triángulos de asteriscos, y después no sabés qué hacer con eso. Este módulo toma el camino contrario: **desde el primer día, cada concepto de programación aparece resolviendo un problema financiero real**. Vas a aprender qué es una variable calculando interés compuesto, qué es un bucle valuando los flujos de un bono, y qué es una clase modelando ese bono como un objeto.
 
-La secuencia de los seis capítulos es una escalera donde cada peldaño resuelve la limitación del anterior. Arrancás con **variables y decisiones** (Capítulo 1): suficiente para calcular el valor tiempo del dinero, pero incómodo apenas hay muchos números. Las **estructuras de datos y los bucles** (Capítulo 2) resuelven eso: ahora podés recorrer los treinta cupones de un bono sin escribir treinta líneas. Pero el código se repite, así que lo encapsulás en **funciones** reutilizables (Capítulo 3), y cuando las funciones y los datos que las acompañan empiezan a viajar juntos por todos lados, los unís en **objetos** (Capítulo 4): la clase `Bono` que sabe valuarse a sí misma.
+La secuencia de los seis capítulos es una escalera donde cada peldaño resuelve la limitación del anterior. Arrancás con **variables y decisiones** ([Capítulo 1](../unidad1/cap01_pensamiento_computacional.qmd)): suficiente para calcular el valor tiempo del dinero, pero incómodo apenas hay muchos números. Las **estructuras de datos y los bucles** ([Capítulo 2](../unidad1/cap02_iteraciones_estructuras.qmd)) resuelven eso: ahora podés recorrer los treinta cupones de un bono sin escribir treinta líneas. Pero el código se repite, así que lo encapsulás en **funciones** reutilizables ([Capítulo 3](../unidad1/cap03_funciones_modularizacion.qmd)), y cuando las funciones y los datos que las acompañan empiezan a viajar juntos por todos lados, los unís en **objetos** ([Capítulo 4](../unidad1/cap04_poo.qmd)): la clase `Bono` que sabe valuarse a sí misma.
 
-Los últimos dos peldaños cambian de escala. **NumPy** (Capítulo 5) reemplaza los bucles por operaciones vectorizadas: la diferencia entre esperar horas y esperar segundos cuando los datos son miles. Y **Pandas** (Capítulo 6) le pone nombres y fechas a esos números para trabajar con series de tiempo reales — el pan de cada día del análisis financiero. Al cerrar el módulo vas a haber construido, con tus propias manos, una librería de valuación de renta fija y una curva de tasas. La @fig-escalera-mod1 resume el recorrido: cada flecha es la limitación que empuja al capítulo siguiente, y en cursiva está lo que construís en cada uno.
+Los últimos dos peldaños cambian de escala. **NumPy** ([Capítulo 5](../unidad1/cap05_numpy.qmd)) reemplaza los bucles por operaciones vectorizadas: la diferencia entre esperar horas y esperar segundos cuando los datos son miles. Y **Pandas** ([Capítulo 6](../unidad1/cap06_series_tiempo_pandas.qmd)) le pone nombres y fechas a esos números para trabajar con series de tiempo reales — el pan de cada día del análisis financiero. Al cerrar el módulo vas a haber construido, con tus propias manos, una librería de valuación de renta fija y una curva de tasas. La @fig-escalera-mod1 resume el recorrido: cada flecha es la limitación que empuja al capítulo siguiente, y en cursiva está lo que construís en cada uno.
 
 ```{mermaid}
 %%| label: fig-escalera-mod1
@@ -45,7 +45,7 @@ Al completar este módulo, vas a ser capaz de:
 
 1. **Programar en Python** con fluidez: variables, tipos, control de flujo, funciones y clases.
 2. **Modelar instrumentos de renta fija** como objetos reutilizables.
-3. **Valuar bonos** mediante flujos de fondos descontados y calcular su TIR (y, como extensión, su duración).
+3. **Valuar bonos** mediante flujos de fondos descontados y calcular su TIR, su duración y su convexidad.
 4. **Vectorizar cálculos** con NumPy: retornos, matrices de covarianzas, álgebra lineal.
 5. **Manipular series de tiempo** con Pandas y construir curvas de tasas desde precios de mercado.
 
@@ -60,7 +60,7 @@ Al completar este módulo, vas a ser capaz de:
 | **3** | Funciones y Modularización | `def`, `*args`, `try/except` | Librería `finanzas_basicas.py` |
 | **4** | Programación Orientada a Objetos | `class`, herencia, `@property` | Clase `Bono`, `BonoAmortizable` |
 | **5** | NumPy y Cálculo Vectorizado | `ndarray`, vectorización, broadcasting | Retornos y covarianzas vectorizados |
-| **6** | Series de Tiempo con Pandas | DataFrames, `pct_change()`, `ffill()` | ETTI, bootstrapping, curvas de tasas |
+| **6** | Series de Tiempo con Pandas | DataFrames, `pct_change()`, `ffill()` | ETTI, bootstrapping, curvas de tasas, duración y convexidad |
 
 ---
 
@@ -69,7 +69,7 @@ Al completar este módulo, vas a ser capaz de:
 ::: {style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;"}
 
 ::: {style="padding: 0.75rem; background: #f0f9ff; border-radius: 8px; text-align: center;"}
-**Python 3.11+**
+**Python 3.13**
 
 Lenguaje base
 :::

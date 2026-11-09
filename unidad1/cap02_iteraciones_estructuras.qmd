@@ -243,7 +243,7 @@ print("Precios diarios:", precios_accion)
 print("Variaciones absolutas diarias:", variaciones)
 ```
 
-Dos lecturas del resultado. Primero, el contenido: la acción subió $2, bajó $1, subió $4 — con 4 precios obtenemos **3 variaciones**, siempre una menos (no hay variación "del primer día"). Segundo, el detalle técnico del `len() - 1`: si el rango llegara hasta el final, `precios_accion[i + 1]` intentaría leer un elemento que no existe y el programa explotaría con `IndexError`. Este desfasaje entre una serie y sus diferencias te va a perseguir toda la carrera — en el Capítulo 6 lo va a manejar Pandas automáticamente con `pct_change()`, pero ahora sabés qué hace por dentro.
+Dos lecturas del resultado. Primero, el contenido: la acción subió $2, bajó $1, subió $4 — con 4 precios obtenemos **3 variaciones**, siempre una menos (no hay variación "del primer día"). Segundo, el detalle técnico del `len() - 1`: si el rango llegara hasta el final, `precios_accion[i + 1]` intentaría leer un elemento que no existe y el programa explotaría con `IndexError`. Este desfasaje entre una serie y sus diferencias te va a perseguir toda la carrera — en el [Capítulo 6](../unidad1/cap06_series_tiempo_pandas.qmd) lo va a manejar Pandas automáticamente con `pct_change()`, pero ahora sabés qué hace por dentro.
 
 ### Listas anidadas: representando matrices
 
@@ -281,7 +281,7 @@ Las listas anidadas funcionan, pero se vuelven lentas e incómodas con datos gra
 
 ### Copiar no es lo mismo que apuntar
 
-Es hora de cumplir una promesa del Capítulo 1. Ahí vimos que las variables de Python son **etiquetas** que apuntan a objetos en memoria, y que con los números (inmutables) eso no trae sorpresas: reasignar crea un objeto nuevo. Pero las listas son **mutables** —se pueden modificar sin crear un objeto nuevo— y ahí la historia cambia. Mirá este código y tratá de predecir la salida antes de ejecutarlo:
+Es hora de cumplir una promesa del [Capítulo 1](../unidad1/cap01_pensamiento_computacional.qmd). Ahí vimos que las variables de Python son **etiquetas** que apuntan a objetos en memoria, y que con los números (inmutables) eso no trae sorpresas: reasignar crea un objeto nuevo. Pero las listas son **mutables** —se pueden modificar sin crear un objeto nuevo— y ahí la historia cambia. Mirá este código y tratá de predecir la salida antes de ejecutarlo:
 
 ```{pyodide-python}
 #| label: aliasing-listas
@@ -424,7 +424,7 @@ _esquema()
 ```
 
 ::: {.callout-warning title="Esto aplica a TODOS los objetos mutables"}
-Los **diccionarios** (que ves en la sección siguiente) se comportan exactamente igual: `dict_b = dict_a` comparte el objeto, `dict_a.copy()` es superficial, y un diccionario con listas adentro necesita `deepcopy`. Lo mismo vale para cualquier objeto mutable, incluidas las clases que vas a crear en el Capítulo 4. Los inmutables (números, strings, tuplas) están exentos del problema: como no se pueden modificar, compartirlos es inofensivo — por eso el Capítulo 1 no necesitó esta advertencia.
+Los **diccionarios** (que ves en la sección siguiente) se comportan exactamente igual: `dict_b = dict_a` comparte el objeto, `dict_a.copy()` es superficial, y un diccionario con listas adentro necesita `deepcopy`. Lo mismo vale para cualquier objeto mutable, incluidas las clases que vas a crear en el [Capítulo 4](../unidad1/cap04_poo.qmd). Los inmutables (números, strings, tuplas) están exentos del problema: como no se pueden modificar, compartirlos es inofensivo — por eso el [Capítulo 1](../unidad1/cap01_pensamiento_computacional.qmd) no necesitó esta advertencia.
 :::
 
 ---
@@ -683,7 +683,7 @@ print(f"Verificación — VP a la TIR: ${vp_verificacion:.2f}")
 La TIR da cerca del **9.3%**: comprando a $950 un bono que promete cupones del 8% sobre $1000, tu rendimiento efectivo es mayor que el cupón — el descuento en el precio es rendimiento extra. Fijate la estructura del código: un `while` (buscar la tasa) que contiene un `for` (valuar a cada tasa candidata), con un `break` como condición de salida. Todos los ingredientes del capítulo trabajando juntos.
 
 ::: {.callout-tip title="Esto que hiciste tiene nombre"}
-La búsqueda incremental es el método numérico más simple para resolver ecuaciones que no se pueden despejar. Es lento pero transparente. En el Capítulo 3 vas a empaquetar esta lógica en una función reutilizable, y en el Capítulo 18 vas a conocer a su primo profesional —Newton-Raphson— extrayendo volatilidades implícitas de opciones. La idea es la misma; solo mejora la puntería.
+La búsqueda incremental es el método numérico más simple para resolver ecuaciones que no se pueden despejar. Es lento pero transparente. En el [Capítulo 3](../unidad1/cap03_funciones_modularizacion.qmd) vas a empaquetar esta lógica en una función reutilizable, y en el [Capítulo 18](../unidad4/cap18_derivados_vol_implicita.qmd) vas a conocer a su primo profesional —Newton-Raphson— extrayendo volatilidades implícitas de opciones. La idea es la misma; solo mejora la puntería.
 :::
 
 ::: {.content-visible when-format="html"}

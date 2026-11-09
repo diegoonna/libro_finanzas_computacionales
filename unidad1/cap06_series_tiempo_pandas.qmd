@@ -4,9 +4,10 @@ subtitle: "Estructuras de Datos, Manipulación y Cálculos Financieros"
 abstract: |
   Introducción a pandas como herramienta fundamental para la carga, limpieza y análisis de datos en finanzas.
   Estudiamos Series y DataFrames, manipulación de series temporales, cálculos vectorizados de retornos,
-  ventanas móviles y visualización técnica.
+  ventanas móviles y visualización técnica. Cerramos con renta fija: la curva de rendimientos
+  por bootstrapping y el riesgo de tasa de un bono (duración y convexidad).
 nocite: |
-  @mckinney2017, @hilpisch2018, @pandasdoc
+  @mckinney2017, @hilpisch2018, @pandasdoc, @fabozzi2015
 ---
 
 # Introducción {.unnumbered}
@@ -15,7 +16,7 @@ En el capítulo anterior descubriste el poder de NumPy, pero también su limitac
 
 **Pandas** resuelve exactamente eso: pone nombres de columnas y un índice (típicamente de fechas) *encima* de los arrays de NumPy. No es una librería nueva que aprender desde cero — es NumPy con etiquetas: la vectorización, el broadcasting y las máscaras booleanas que ya dominás funcionan igual. Lo que se agrega es la maquinaria para el trabajo diario con datos financieros reales: leer archivos, alinear fechas, rellenar feriados, calcular retornos y ventanas móviles, agrupar por sector.
 
-Este capítulo recorre esa maquinaria y cierra integrando todo en un caso real de renta fija: construir la **curva de rendimientos** a partir de precios de bonos.
+Este capítulo recorre esa maquinaria y cierra integrando todo en un caso real de renta fija: construir la **curva de rendimientos** a partir de precios de bonos, y medir cuánto se mueve el precio de un bono cuando las tasas cambian (su **duración** y su **convexidad**).
 
 ---
 
@@ -391,7 +392,7 @@ print(f"\nRetorno medio diario:  {df_diario['Ret_Simple'].mean():.4%}")
 print(f"Volatilidad diaria:    {df_diario['Ret_Simple'].std():.4%}")
 ```
 
-Dos lecturas de la salida. Primero, la **primera fila tiene `NaN`**: el primer día no tiene "día anterior" con quien compararse — es el mismo desfasaje que manejaste a mano con `range(len - 1)` en el Capítulo 2, ahora automático. Segundo, el retorno simple y el logarítmico son casi idénticos: para movimientos diarios chicos (±1%) la diferencia es despreciable; se separa en movimientos grandes.
+Dos lecturas de la salida. Primero, la **primera fila tiene `NaN`**: el primer día no tiene "día anterior" con quien compararse — es el mismo desfasaje que manejaste a mano con `range(len - 1)` en el [Capítulo 2](../unidad1/cap02_iteraciones_estructuras.qmd), ahora automático. Segundo, el retorno simple y el logarítmico son casi idénticos: para movimientos diarios chicos (±1%) la diferencia es despreciable; se separa en movimientos grandes.
 
 ### Ventanas Móviles (Rolling)
 Una pregunta constante en finanzas: *¿cómo viene el activo **últimamente**?* No en toda su historia — en los últimos 20 días, 60 días. Las **ventanas móviles** (`rolling`) calculan una estadística sobre una ventana que se desliza por la serie: la base de las medias móviles y de la volatilidad histórica.
@@ -408,7 +409,7 @@ print(df_diario[["Precio", "SMA_20", "Vol_20"]].iloc[18:23].round(3))
 print(f"\nVolatilidad anualizada al final de la muestra: {df_diario['Vol_20'].iloc[-1]:.1%}")
 ```
 
-Mirá las filas impresas: las primeras 19 observaciones de `SMA_20` son `NaN` — la ventana de 20 días recién se "llena" en la observación 20. Y la volatilidad final (~15%) es la lectura estándar del riesgo del activo: se anualizó multiplicando por $\sqrt{252}$, la regla que formalizamos en el Capítulo 7. Cuando en la práctica leas "vol histórica 20 ruedas", es exactamente esta cuenta.
+Mirá las filas impresas: las primeras 19 observaciones de `SMA_20` son `NaN` — la ventana de 20 días recién se "llena" en la observación 20. Y la volatilidad final (~15%) es la lectura estándar del riesgo del activo: se anualizó multiplicando por $\sqrt{252}$, la regla que formalizamos en el [Capítulo 7](../unidad2/cap07_estadistica_optimizacion.qmd). Cuando en la práctica leas "vol histórica 20 ruedas", es exactamente esta cuenta.
 
 ---
 
@@ -588,7 +589,7 @@ plt.tight_layout()
 plt.show()
 ```
 
-Dos novedades en este bloque. Primero, `plt.subplots(1, 2)` crea **dos gráficos en el mismo lienzo** (1 fila, 2 columnas) y devuelve un array de Axes — dibujás en cada uno por separado. Segundo, leé lo que los gráficos de la @fig-tres-tipos *dicen*: el histograma muestra retornos concentrados alrededor de cero con forma de campana, y la dispersión es una **nube sin patrón** — el retorno de ayer no predice el de hoy, tu primer vistazo a la eficiencia del mercado que formalizaremos en el Capítulo 16.
+Dos novedades en este bloque. Primero, `plt.subplots(1, 2)` crea **dos gráficos en el mismo lienzo** (1 fila, 2 columnas) y devuelve un array de Axes — dibujás en cada uno por separado. Segundo, leé lo que los gráficos de la @fig-tres-tipos *dicen*: el histograma muestra retornos concentrados alrededor de cero con forma de campana, y la dispersión es una **nube sin patrón** — el retorno de ayer no predice el de hoy, tu primer vistazo a la eficiencia del mercado que formalizaremos en el [Capítulo 16](../unidad3/cap16_series_temporales_macro.qmd).
 
 ### El atajo de pandas: `.plot()`
 
@@ -822,14 +823,145 @@ Interpolar linealmente es simple y transparente, pero los operadores de renta fi
 
 ---
 
+## Riesgo de tasa: duración y convexidad
+
+La curva dice a qué tasa descontar. La pregunta que sigue, la que se hace cualquiera que tenga bonos en cartera, es la inversa: **si las tasas se mueven, ¿cuánto pierdo?** En el [Capítulo 2](../unidad1/cap02_iteraciones_estructuras.qmd) viste que precio y tasa van en sentido contrario, y en el simulador de ese capítulo, que la relación no es una recta sino una curva. Esta sección le pone número a esa curva con las dos medidas que usa cualquier mesa de renta fija: la **duración**, que es la pendiente, y la **convexidad**, que es la curvatura.
+
+### Duración de Macaulay: el plazo promedio de los flujos
+
+Un bono *bullet* a 5 años no "dura" 5 años: los cupones devuelven parte del capital antes del vencimiento. La **duración de Macaulay** es el plazo promedio de los flujos, ponderado por cuánto pesa cada uno en el precio:
+
+$$D = \sum_{t=1}^{n} t \cdot w_t, \qquad w_t = \frac{F_t / (1+y)^t}{P}$$
+
+donde $F_t$ es el flujo del año $t$, $y$ la TIR y $P$ el precio. Es trabajo para un DataFrame: una fila por flujo y columnas que se calculan vectorizadas. Usamos el bono que nos acompaña desde el [Capítulo 2](../unidad1/cap02_iteraciones_estructuras.qmd) (nominal 1000, cupón 8%, 5 años) con una TIR del 10%:
+
+```{python}
+#| label: duracion-tabla
+def tabla_flujos(vn, cupon, anios, tir):
+    """Una fila por flujo: plazo, monto, valor presente y peso en el precio."""
+    t = np.arange(1, anios + 1)
+    flujos = np.full(anios, vn * cupon)
+    flujos[-1] += vn                        # el último año se cobra cupón + nominal
+    df = pd.DataFrame({"t": t, "flujo": flujos})
+    df["vp"] = df["flujo"] / (1 + tir) ** df["t"]
+    df["peso"] = df["vp"] / df["vp"].sum()
+    return df
+
+flujos_bono = tabla_flujos(1000, 0.08, 5, 0.10)
+precio = flujos_bono["vp"].sum()
+macaulay = (flujos_bono["t"] * flujos_bono["peso"]).sum()
+
+print(flujos_bono.round(4))
+print(f"\nPrecio:               ${precio:,.2f}")
+print(f"Duración de Macaulay: {macaulay:.2f} años")
+```
+
+El último flujo (cupón más nominal) explica el 72.6% del precio, pero los cuatro cupones anteriores tiran del promedio hacia adelante: la duración da 4.28 años, no 5. Un bono **cupón cero** no tiene flujos intermedios, así que su duración es exactamente su plazo.
+
+### Duración modificada: de años a sensibilidad
+
+Lo valioso de la duración no es el plazo en sí, sino lo que dice sobre el riesgo. Derivando el precio respecto de la tasa aparece la **duración modificada**, que es directamente la sensibilidad porcentual del precio:
+
+$$D_{mod} = \frac{D}{1+y}, \qquad \frac{\Delta P}{P} \approx -D_{mod} \cdot \Delta y$$
+
+Para nuestro bono, $D_{mod} = 4.28 / 1.10 = 3.89$: si la tasa sube un punto porcentual, del 10% al 11%, el precio cae aproximadamente 3.89%. Las mesas suelen expresarlo en plata con el **DV01** (*dollar value of a basis point*): cuánto cambia el precio cuando la tasa se mueve un punto básico (0.01%).
+
+### Convexidad: la corrección de segundo orden
+
+La duración aproxima la curva precio-tasa con su recta tangente. Para movimientos chicos alcanza; para movimientos grandes, la curva se despega de la recta. La **convexidad** mide esa curvatura y agrega un término cuadrático a la aproximación:
+
+$$C = \frac{1}{P\,(1+y)^2} \sum_{t=1}^{n} t\,(t+1)\, \frac{F_t}{(1+y)^t}, \qquad \frac{\Delta P}{P} \approx -D_{mod}\,\Delta y + \tfrac{1}{2}\, C\, (\Delta y)^2$$
+
+Juntamos todo en una función y ponemos a prueba las dos aproximaciones contra el precio exacto, que siempre podemos recalcular con la TIR nueva:
+
+```{python}
+#| label: duracion-convexidad
+def riesgo_tasa(vn, cupon, anios, tir):
+    """Precio, duraciones, convexidad y DV01 de un bono bullet."""
+    df = tabla_flujos(vn, cupon, anios, tir)
+    precio = df["vp"].sum()
+    macaulay = (df["t"] * df["peso"]).sum()
+    modificada = macaulay / (1 + tir)
+    convexidad = (df["t"] * (df["t"] + 1) * df["vp"]).sum() / (precio * (1 + tir) ** 2)
+    return {"precio": precio, "macaulay": macaulay, "modificada": modificada,
+            "convexidad": convexidad, "dv01": modificada * precio * 0.0001}
+
+r = riesgo_tasa(1000, 0.08, 5, 0.10)
+for nombre, valor in r.items():
+    print(f"{nombre:>11}: {valor:,.4f}")
+
+# Shocks de tasa: precio exacto (repreciando) contra las dos aproximaciones
+shocks = np.array([-0.03, -0.01, 0.01, 0.03])
+comparacion = pd.DataFrame({
+    "exacto": [riesgo_tasa(1000, 0.08, 5, 0.10 + dy)["precio"] for dy in shocks],
+    "solo duración": r["precio"] * (1 - r["modificada"] * shocks),
+    "duración + convexidad": r["precio"] * (1 - r["modificada"] * shocks
+                                            + 0.5 * r["convexidad"] * shocks**2),
+}, index=[f"{dy * 100:+.0f} pp" for dy in shocks])
+print()
+print(comparacion.round(2))
+```
+
+El DV01 de 0.36 dice que, por cada 1000 de nominal, un punto básico mueve el precio 36 centavos. En la tabla, con shocks de ±1 punto la duración sola se equivoca por menos de un peso. Con ±3 puntos el error llega a casi 9 pesos, y siempre en la misma dirección: **la recta subestima el precio**, tanto cuando la tasa baja como cuando sube. Sumando la convexidad, el error a ±3 puntos baja a medio peso. La @fig-duracion-convexidad muestra por qué.
+
+```{python}
+#| label: fig-duracion-convexidad
+#| fig-cap: "Precio del bono (nominal 1000, cupón 8%, 5 años) en función de la TIR. La duración aproxima la curva con su tangente en el 10%; al sumar la convexidad, la aproximación se pega a la curva en un rango mucho más amplio."
+tires = np.linspace(0.02, 0.18, 81)
+dy = tires - 0.10
+exacto = [riesgo_tasa(1000, 0.08, 5, y)["precio"] for y in tires]
+lineal = r["precio"] * (1 - r["modificada"] * dy)
+cuadratica = r["precio"] * (1 - r["modificada"] * dy + 0.5 * r["convexidad"] * dy**2)
+
+fig, ax = plt.subplots(figsize=(9, 4.5))
+ax.plot(tires * 100, exacto, lw=2.5, label="Precio exacto")
+ax.plot(tires * 100, lineal, "--", lw=1.8, label="Solo duración (tangente)")
+ax.plot(tires * 100, cuadratica, ":", lw=2.2, label="Duración + convexidad")
+ax.plot(10, r["precio"], "o", color="black", zorder=5)
+ax.set_xlabel("TIR (%)")
+ax.set_ylabel("Precio ($)")
+ax.set_title("La duración es la pendiente; la convexidad, la curvatura")
+ax.legend()
+plt.tight_layout()
+plt.show()
+```
+
+Esa asimetría es una buena noticia para quien tiene el bono: cuando la tasa baja gana más de lo que anticipa la duración, y cuando sube pierde menos. Cualquier bono sin opciones tiene convexidad positiva, y el mercado la paga: a igual duración, el bono más convexo cotiza más caro.
+
+### Qué hace subir o bajar la duración
+
+```{python}
+#| label: duracion-cupon-plazo
+# Duración modificada al 10% para distintos cupones (a 5 años) y plazos (cupón 8%)
+por_cupon = pd.Series({f"cupón {c:.0%}": riesgo_tasa(1000, c, 5, 0.10)["modificada"]
+                       for c in [0, 0.04, 0.08, 0.12]})
+por_plazo = pd.Series({f"{n} años": riesgo_tasa(1000, 0.08, n, 0.10)["modificada"]
+                       for n in [2, 5, 10, 30]})
+print("Según el cupón (5 años):")
+print(por_cupon.round(2))
+print("\nSegún el plazo (cupón 8%):")
+print(por_plazo.round(2))
+```
+
+Dos reglas para tener a mano. **Más cupón, menos duración**: el capital vuelve antes, y el cupón cero, con 4.55, es el más sensible de los cuatro. **Más plazo, más duración**, pero con rendimientos decrecientes: pasar de 10 a 30 años no triplica la duración, la lleva de 6.40 a 9.68, porque a una tasa del 10% los flujos lejanos valen poco hoy.
+
+::: {.callout-tip title="Inmunización: la duración como herramienta de gestión"}
+Si tenés que pagar una suma conocida dentro de $H$ años, como una aseguradora o un fondo de pensión, podés armar una cartera de bonos cuya duración sea igual a $H$. Si la tasa sube, los bonos caen de precio, pero los cupones se reinvierten a una tasa más alta; si baja, pasa lo contrario. Con la duración igual al horizonte, los dos efectos se compensan, al menos para shocks chicos que mueven toda la curva por igual. Esa idea, la **inmunización**, explica por qué los gestores de renta fija hablan más de duración que de plazo.
+:::
+
+---
+
 ## Errores comunes
 
 ::: {.callout-warning title="Trampas frecuentes"}
 - **Fechas como texto**: si olvidás `parse_dates` (o `pd.to_datetime`), las fechas quedan como strings: se ordenan alfabéticamente, `resample` falla y los gráficos salen desordenados. Verificá con `df.index.dtype`.
 - **El `NaN` inicial de `pct_change()`**: la primera observación de cualquier serie de retornos es `NaN`. Si después calculás `mean()` no pasa nada (pandas lo ignora), pero si convertís a NumPy o lo pasás a otra librería, ese `NaN` propaga y arruina el cálculo. `dropna()` primero.
 - **`ffill` con huecos largos**: arrastrar un precio un día es razonable; arrastrarlo tres meses (un bono que dejó de cotizar) fabrica una serie plana con volatilidad cero — un activo "sin riesgo" que no existe. Poné un límite (`ffill(limit=5)`) o revisá los huecos antes.
-- **Look-ahead con `shift` al revés**: `shift(-1)` trae el dato de *mañana* a la fila de hoy. Útil para armar targets de predicción, letal si se te cuela en una señal de trading: estarías operando con información del futuro (el tema central del Capítulo 17).
+- **Look-ahead con `shift` al revés**: `shift(-1)` trae el dato de *mañana* a la fila de hoy. Útil para armar targets de predicción, letal si se te cuela en una señal de trading: estarías operando con información del futuro (el tema central del [Capítulo 17](../unidad3/cap17_backtesting.qmd)).
 - **`SettingWithCopyWarning`**: asignar sobre un "recorte" de un DataFrame (`df[df.x > 0]["y"] = 1`) puede modificar una copia y no el original. La forma segura es una sola indexación con `.loc`: `df.loc[df.x > 0, "y"] = 1`.
+- **Confundir Macaulay con modificada**: la de Macaulay está en años; la modificada es la sensibilidad del precio. Usar la de Macaulay en $\Delta P / P \approx -D \cdot \Delta y$ sobreestima la caída en un factor $(1+y)$: con tasas del 10%, un 10% de error.
+- **Estirar la duración a shocks grandes**: la recta tangente sirve para movimientos de pocos puntos básicos. Para un shock de 300 puntos, el error ya es de casi 1% del precio; sumá la convexidad o, mejor, repreciá con la tasa nueva.
+- **Olvidar que se movió una sola tasa**: la duración de esta sección supone que todas las tasas se mueven igual (un desplazamiento paralelo). Si la curva se empina o se aplana, bonos con la misma duración reaccionan distinto.
 :::
 
 ---
