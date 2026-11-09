@@ -428,6 +428,36 @@ flowchart LR
     class TNA,TEA,TC,TEM tasa
 ```
 
+::: {.content-visible when-format="html"}
+::: {.simulador}
+[Simulador · Valor tiempo del dinero]{.simulador-titulo}
+
+El capital crece con la tasa nominal anual que elijas, capitalizada cada cuánto quieras. La línea azul es esa capitalización (con escalones: los intereses se acreditan al final de cada período), la gris es el interés simple, que nunca reinvierte, y la verde punteada la capitalización continua, el techo al que se acerca cualquier frecuencia. Arranca con el ejemplo del capítulo.
+
+```{=html}
+<div id="sim-tvm"></div>
+<script type="module">
+  import { montar } from "../simuladores/tvm.js";
+  montar(document.getElementById("sim-tvm"));
+</script>
+```
+
+::: {.probar}
+**Probá esto**
+
+1. Con los valores iniciales el valor futuro es $259,374.25, el del bloque de interés compuesto. Pasá la capitalización a continua: sube a $271,828.18 y la TEA a 10.52%. Con una tasa del 10%, capitalizar más seguido agrega apenas medio punto de TEA.
+2. Poné la TNA en 48% y la capitalización mensual: la TEA da 60.10%, la del bloque de conversión de tasas. Con capitalización diaria llega a 61.56%. Con tasas altas la frecuencia sí pesa: de anual a mensual son doce puntos de TEA.
+3. Volvé al 10% anual y llevá el plazo a 30 años: el interés simple llega a $400,000 y el compuesto a $1,744,940.23. El extra de $1,344,940.23 es interés sobre interés. Y el capital se duplica en 7.27 años: la "regla del 72" de los operadores (72 / 10 = 7.2) es este mismo cálculo aproximado.
+:::
+:::
+:::
+
+::: {.content-visible when-format="pdf"}
+::: {.callout-note title="Simulador interactivo"}
+En la [versión web de este capítulo](https://diegoonna.github.io/libro_finanzas_computacionales/unidad1/cap01_pensamiento_computacional.html) hay un simulador donde podés mover el capital, la tasa nominal, el plazo y la frecuencia de capitalización, y comparar el interés compuesto con el simple y con el continuo.
+:::
+:::
+
 ### Valor Presente
 
 $$VP = \frac{VF}{(1 + r)^n}$$

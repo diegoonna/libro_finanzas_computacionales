@@ -12,7 +12,7 @@ import {
   distribucionDefaults, estrategiaMomentum, sharpeAnual, simularCobertura, precioBono, tirBono,
   covMuestral, ordenJerarquico, pesosHRP, blackLitterman, varianzaEWMA, colaBinomial,
   regresionSimple, tInv, pendienteMCO, regresionEspuria,
-  sabrVol, densidadImplicita,
+  sabrVol, densidadImplicita, metricasBono, bootstrapCurva, valorFuturo, teaDesdeTna,
 } from "./finanzas.js";
 import { readFileSync } from "node:fs";
 
@@ -257,6 +257,47 @@ for (const [c, n, precio, ref] of [[0.08, 5, 950, 0.09295327539501987], [0, 10, 
   chequear(`TIR bono c=${c} n=${n} a $${precio}`, tirBono(1000, c, n, precio), ref, 1e-12);
 }
 chequear("TIR fuera de rango", tirBono(1000, 0.08, 5, 1e6) ?? -1, -1, 0);
+
+// Duración y convexidad del Capítulo 6, contra riesgo_tasa:
+// [cupón, años, tasa, precio, Macaulay, modificada, convexidad, DV01]
+for (const [c, n, y, ...ref] of [
+  [0.08, 5, 0.1, 924.1842646118308, 4.281412085933427, 3.8921928053940245, 20.09731535887853, 0.35971033455805357],
+  [0, 10, 0.05, 613.9132535407591, 10.0, 9.523809523809524, 99.77324263038547, 0.5846792890864373],
+  [0.12, 30, 0.15, 803.0206108987775, 7.6353203261765605, 6.639408979283966, 84.62878887823584, 0.5331582254551439],
+  [0.03, 2, 0.01, 1039.4079011861581, 1.9714231821182686, 1.951904140711157, 5.769721329745196, 0.20288245862131554],
+]) {
+  const m = metricasBono(1000, c, n, y);
+  ["precio", "macaulay", "modificada", "convexidad", "dv01"].forEach((k, i) =>
+    chequear(`${k} bono c=${c} n=${n} y=${y}`, m[k], ref[i], 1e-9 * Math.max(1, ref[i])));
+  chequear(`pesos suman 1 c=${c} n=${n}`, m.pesos.reduce((a, b) => a + b, 0), 1, 1e-12);
+}
+
+// Bootstrapping del Capítulo 6 con los bonos del capítulo (y una variante), contra pandas
+const cupones = [0.05, 0.06, 0.065, 0.07, 0.075];
+for (const [precios, ref] of [
+  [[100, 100.5, 99.8, 100.2, 99.5],
+   [0.050000000000000044, 0.05750271012139341, 0.06648886825026779, 0.07041525572394147, 0.07826015824101185]],
+  [[103, 102, 101, 100, 99],
+   [0.01941747572815533, 0.05016843674765936, 0.06273836942427558, 0.07222560230538733, 0.08071980747935048]],
+]) {
+  const { spot, forward } = bootstrapCurva(cupones.map((cupon, i) => ({ cupon, precio: precios[i] })));
+  spot.forEach((z, i) => chequear(`spot ${i + 1} años, precios ${precios}`, z, ref[i], 1e-12));
+  // Sin arbitraje: invertir n años a la spot rinde lo mismo que encadenar las forward
+  const encadenado = forward.reduce((a, f) => a * (1 + f), 1);
+  chequear(`forwards encadenadas = spot a 5 años, precios ${precios}`, encadenado, (1 + spot[4]) ** 5, 1e-12);
+}
+
+// Valor tiempo del dinero del Capítulo 1: [capital, TNA, m, años, VF, TEA]
+for (const [C, r, m, t, vf, tea] of [
+  [100000, 0.1, 1, 10, 259374.24601000024, 0.10000000000000009],
+  [100000, 0.1, Infinity, 10, 271828.1828459045, 0.10517091807564763],
+  [100000, 0.48, 12, 1, 160103.22185676816, 0.6010322185676815],
+  [1000, 0.48, 365, 2.5, 3317.5005399575075, 0.6155648696231597],
+  [5000, 0.07, 4, 30, 40095.91715669793, 0.07185903128906279],
+]) {
+  chequear(`VF C=${C} TNA=${r} m=${m} t=${t}`, valorFuturo(C, r, m, t), vf, 1e-9 * vf);
+  chequear(`TEA TNA=${r} m=${m}`, teaDesdeTna(r, m), tea, 1e-12);
+}
 
 // Momentum del Capítulo 17 sobre una serie determinística, contra la versión de numpy
 const serie = Float64Array.from({ length: 300 }, (_, t) => 0.01 * Math.sin(t * 1.7) + 0.003 * Math.cos(t * 0.3) - 0.0005);

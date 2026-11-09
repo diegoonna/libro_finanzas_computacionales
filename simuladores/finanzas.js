@@ -710,6 +710,44 @@ export function tirBono(nominal, tasaCupon, anios, precio) {
   return (lo + hi) / 2;
 }
 
+// Riesgo de tasa del Capítulo 6, como riesgo_tasa: duración de Macaulay (años),
+// modificada, convexidad, DV01 y el peso de cada flujo en el precio.
+export function metricasBono(nominal, tasaCupon, anios, tasa) {
+  const vp = flujosBono(nominal, tasaCupon, anios).map((f, i) => f / (1 + tasa) ** (i + 1));
+  const precio = vp.reduce((a, b) => a + b, 0);
+  const macaulay = vp.reduce((s, v, i) => s + (i + 1) * v, 0) / precio;
+  const modificada = macaulay / (1 + tasa);
+  const convexidad = vp.reduce((s, v, i) => s + (i + 1) * (i + 2) * v, 0) / (precio * (1 + tasa) ** 2);
+  return { precio, macaulay, modificada, convexidad, dv01: modificada * precio * 1e-4,
+           pesos: vp.map((v) => v / precio) };
+}
+
+// Bootstrapping del Capítulo 6: bonos con cupón anual y plazos 1, 2, …, n consecutivos
+// ([{cupon, precio}], cupón en decimal). Cada bono despeja la spot de su plazo usando las
+// ya halladas. Devuelve las spot y las forward de un año (la primera es la spot a 1 año).
+export function bootstrapCurva(bonos, nominal = 100) {
+  const spot = [];
+  for (const [i, { cupon, precio }] of bonos.entries()) {
+    const C = nominal * cupon;
+    const vpCupones = spot.reduce((s, z, j) => s + C / (1 + z) ** (j + 1), 0);
+    spot.push(((C + nominal) / (precio - vpCupones)) ** (1 / (i + 1)) - 1);
+  }
+  const forward = spot.map((z, i) => (i === 0 ? z : (1 + z) ** (i + 1) / (1 + spot[i - 1]) ** i - 1));
+  return { spot, forward };
+}
+
+// --- Valor tiempo del dinero (Capítulo 1) ----------------------------------
+
+// Valor futuro con una TNA capitalizada m veces por año; m = Infinity es la capitalización continua
+export function valorFuturo(capital, tna, m, anios) {
+  return capital * (m === Infinity ? Math.exp(tna * anios) : (1 + tna / m) ** (m * anios));
+}
+
+// TEA equivalente a una TNA capitalizada m veces por año (el mapa de fig-conversion-tasas)
+export function teaDesdeTna(tna, m) {
+  return m === Infinity ? Math.expm1(tna) : (1 + tna / m) ** m - 1;
+}
+
 // --- Backtesting (Capítulo 17) -------------------------------------------
 
 // Momentum del capítulo: el día t se invierte si la media de los `ventana` días previos

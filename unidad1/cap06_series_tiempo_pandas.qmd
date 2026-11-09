@@ -784,6 +784,36 @@ print((curva * 100).round(3))
 
 Cuando las forward están **por encima** de las spot, el mercado espera que las tasas suban (curva creciente): cada tramo nuevo "empuja" el promedio hacia arriba.
 
+::: {.content-visible when-format="html"}
+::: {.simulador}
+[Simulador · Bootstrapping de la curva]{.simulador-titulo}
+
+Los cinco bonos del capítulo, con sus cupones fijos y el precio como perilla. De los precios salen, en este orden, las tasas spot (puntos azules), las forward de un año (escalones naranjas: cada una vale para su tramo) y, para comparar, la TIR de cada bono (rombos grises). El nominal es 100.
+
+```{=html}
+<div id="sim-curva"></div>
+<script type="module">
+  import { montar } from "../simuladores/curva.js";
+  montar(document.getElementById("sim-curva"));
+</script>
+```
+
+::: {.probar}
+**Probá esto**
+
+1. Los valores iniciales reproducen la tabla del capítulo: spot de 5.00% a 7.83% y forward de 5.00% a 11.02%. Con la curva creciente, cada TIR queda por debajo de la spot de su plazo: la TIR es un promedio de las spot de todos los flujos, y los cupones tempranos se descuentan a tasas más bajas.
+2. Subí el precio del bono a 3 años de 99.8 a 101: la spot a 3 años baja a 6.17%, la forward 2–3 cae a 7.01% y la 3–4 salta a 9.81%. Un solo precio que se mueve 1.2% le hace un serrucho a las forward, y por eso en la práctica se suaviza la curva (Nelson-Siegel, splines).
+3. Bajá el precio del bono a 1 año a 97: la spot a 1 año sube a 8.25% y la forward 1–2 se desploma a 3.12%. El tramo corto quedó invertido: el mercado estaría descontando una baja fuerte de tasas para el año que viene.
+:::
+:::
+:::
+
+::: {.content-visible when-format="pdf"}
+::: {.callout-note title="Simulador interactivo"}
+En la [versión web de este capítulo](https://diegoonna.github.io/libro_finanzas_computacionales/unidad1/cap06_series_tiempo_pandas.html) hay un simulador donde podés mover el precio de cada uno de los cinco bonos y ver cómo cambian las tasas spot, las forward y la TIR de cada bono.
+:::
+:::
+
 ### Interpolar la curva para plazos intermedios
 
 Nuestra curva tiene puntos solo en 1, 2, 3, 4 y 5 años, pero en la práctica necesitamos descontar flujos que caen en cualquier fecha (por ejemplo, a 2,5 años). Para eso **interpolamos**. Pandas trae `interpolate()`, que rellena los huecos de un índice: reindexamos la curva a una grilla más fina y dejamos que complete linealmente.
@@ -927,6 +957,36 @@ plt.show()
 ```
 
 Esa asimetría es una buena noticia para quien tiene el bono: cuando la tasa baja gana más de lo que anticipa la duración, y cuando sube pierde menos. Cualquier bono sin opciones tiene convexidad positiva, y el mercado la paga: a igual duración, el bono más convexo cotiza más caro.
+
+::: {.content-visible when-format="html"}
+::: {.simulador}
+[Simulador · Duración y convexidad]{.simulador-titulo}
+
+La @fig-duracion-convexidad y la tabla de shocks, para cualquier bono. Arriba, el precio exacto contra la tangente (solo duración) y la parábola (duración más convexidad); la línea vertical es la TIR después del shock, y los tres puntos sobre ella, el precio que da cada método. Abajo, el peso de cada flujo en el precio: la duración de Macaulay es su centro de gravedad. El nominal es siempre 1000; arranca con el bono del capítulo y un shock de +3 puntos.
+
+```{=html}
+<div id="sim-duracion"></div>
+<script type="module">
+  import { montar } from "../simuladores/duracion.js";
+  montar(document.getElementById("sim-duracion"));
+</script>
+```
+
+::: {.probar}
+**Probá esto**
+
+1. Con los valores iniciales, las lecturas son las de la tabla: el precio cae de $924.18 a $824.14, la duración sola se equivoca en −$7.87 y con convexidad en +$0.49. Bajá el shock a +0.25: los errores se achican a −$0.06 y $0.00. Para movimientos chicos, la tangente alcanza.
+2. Poné el cupón en 0: queda una sola barra, en el año 5, y la duración de Macaulay es exactamente 5.00 años. Subí el cupón a 15%: los cupones tiran el centro de gravedad hacia adelante y la duración baja.
+3. Volvé al cupón de 8% y llevá el plazo a 30 años con el shock en +3: el precio cae 22.95%, la duración se equivoca en −$49.38 y la convexidad todavía deja +$11.21. Con −3 puntos los errores son −$77.00 y −$16.42. En bonos largos y shocks grandes, lo único confiable es repreciar.
+:::
+:::
+:::
+
+::: {.content-visible when-format="pdf"}
+::: {.callout-note title="Simulador interactivo"}
+En la [versión web de este capítulo](https://diegoonna.github.io/libro_finanzas_computacionales/unidad1/cap06_series_tiempo_pandas.html) hay un simulador donde podés mover el cupón, el plazo, la TIR y el tamaño del shock, y comparar el precio exacto con las aproximaciones por duración y por duración más convexidad.
+:::
+:::
 
 ### Qué hace subir o bajar la duración
 
