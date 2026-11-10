@@ -16,10 +16,10 @@ nocite: |
 
 Hasta ahora venimos representando datos financieros con **listas** y **diccionarios** de Python. Nos sirvieron para aprender a programar, pero tienen un problema serio: son lentas y verbosas cuando hay que hacer cuentas sobre miles de números. Y en finanzas, *siempre* hay miles de números: años de cotizaciones diarias, paneles de cientos de activos, millones de trayectorias en una simulación.
 
-Acá entra **NumPy** (de *Numerical Python*). Es la librería que le da a Python la capacidad de hacer cálculo numérico a la velocidad de un lenguaje compilado como C, pero con la comodidad de escribir Python. No es una librería más: es la base sobre la que están construidos Pandas, SciPy, scikit-learn y prácticamente todo lo que vas a usar de acá en adelante. Cuando en el [Capítulo 6](../unidad1/cap06_series_tiempo_pandas.qmd) hagas `pd.DataFrame`, por debajo hay arrays de NumPy; cuando en el [Capítulo 8](../unidad2/cap08_markowitz.qmd) optimices un portafolio de Markowitz, vas a estar multiplicando matrices de NumPy.
+Acá entra **NumPy** (de *Numerical Python*) [@harris2020]. Es la librería que le da a Python la capacidad de hacer cálculo numérico a la velocidad de un lenguaje compilado como C, pero con la comodidad de escribir Python. No es una librería más: es la base sobre la que están construidos Pandas, SciPy, scikit-learn y prácticamente todo lo que vas a usar de acá en adelante. Cuando en el [Capítulo 6](../unidad1/cap06_series_tiempo_pandas.qmd) hagas `pd.DataFrame`, por debajo hay arrays de NumPy; cuando en el [Capítulo 8](../unidad2/cap08_markowitz.qmd) optimices un portafolio de Markowitz, vas a estar multiplicando matrices de NumPy.
 
 ::: {.callout-tip title="La idea de fondo"}
-Programar con NumPy es cambiar el chip: en vez de pensar *"recorré la lista elemento por elemento y hacé la cuenta"*, pensás *"aplicá esta operación a todo el vector de una"*. Eso se llama **vectorización**, y es la habilidad central de este capítulo.
+Programar con NumPy es cambiar el chip: en vez de pensar *"recorré la lista elemento por elemento y hacé la cuenta"*, pensás *"aplicá esta operación a todo el vector de una vez"*. Eso se llama **vectorización**, y es la habilidad central de este capítulo.
 :::
 
 ```{python}
@@ -57,7 +57,7 @@ retornos = precios[1:] / precios[:-1] - 1
 print(retornos)
 ```
 
-`precios[1:]` es "todos los precios desde el segundo" ($P_t$) y `precios[:-1]` es "todos menos el último" ($P_{t-1}$). NumPy divide los dos vectores **elemento a elemento** automáticamente. Sin bucles, sin índices, sin listas vacías. Esto no es solo más corto: sobre datos reales es **decenas o cientos de veces más rápido**, porque la operación corre en código C optimizado en lugar de un bucle interpretado de Python.
+`precios[1:]` es "todos los precios desde el segundo" ($P_t$) y `precios[:-1]` es "todos menos el último" ($P_{t-1}$). NumPy divide los dos vectores **elemento a elemento** automáticamente. Sin bucles, sin índices, sin listas vacías. Esto no es solo más corto: sobre datos reales es decenas o cientos de veces más rápido, porque la operación corre en código C optimizado en lugar de un bucle interpretado de Python.
 
 La @fig-slicing-retornos muestra el truco: los dos recortes son el mismo array **desfasado una posición**, así que al ponerlos uno sobre otro cada precio queda alineado con el del día anterior.
 
@@ -287,7 +287,7 @@ print(f"\nDías con pérdida: {mascara_perdidas.sum()} de {retornos_diarios.size
 print(f"Pérdida promedio: {perdidas.mean():.2%}")
 ```
 
-Fijate el truco de `mascara_perdidas.sum()`: como `True` vale 1 y `False` vale 0, sumar una máscara booleana **cuenta cuántas condiciones se cumplen**. Es un patrón que vas a repetir mil veces (¿cuántos días superaron el VaR?, ¿cuántos activos rindieron más que el mercado?, etc.).
+Fijate el truco de `mascara_perdidas.sum()`: como `True` vale 1 y `False` vale 0, sumar una máscara booleana cuenta cuántas condiciones se cumplen. Es un patrón que vas a repetir mil veces (¿cuántos días superaron el VaR?, ¿cuántos activos rindieron más que el mercado?, etc.).
 
 ---
 
@@ -303,7 +303,7 @@ precios = np.array([100.0, 102.5, 101.0, 103.5, 105.0])
 ret_log = np.log(precios[1:] / precios[:-1])
 print("Retornos log:", ret_log)
 
-# Convertir un vector entero de tasas anuales a mensuales, todo de una
+# Convertir un vector entero de tasas anuales a mensuales, todo de una vez
 tasas_anuales = np.array([0.40, 0.35, 0.50, 0.45])
 tasas_mensuales = (1 + tasas_anuales) ** (1/12) - 1
 print("Tasas mensuales equivalentes:", np.round(tasas_mensuales, 4))
@@ -342,7 +342,7 @@ print(f"NumPy es ~{t_bucle/t_numpy:.0f}x más rápido")
 
 Sobre un millón de datos la diferencia es de uno a dos órdenes de magnitud. En una simulación de Monte Carlo con millones de trayectorias ([Capítulo 13](../unidad3/cap13_monte_carlo.qmd)), esto es la diferencia entre que tu código termine en segundos o en horas.
 
-¿De dónde sale esa diferencia? Del **trabajo repetido que hace el intérprete**. En el bucle de Python, *cada una* del millón de vueltas repite la misma burocracia: mirar qué tipo tiene `x` (¿es int? ¿float? ¿string?), desempaquetar el valor del objeto que lo envuelve, decidir qué operación "elevar al cuadrado" corresponde a ese tipo, ejecutarla, y volver a empaquetar el resultado en un objeto nuevo. Un millón de elementos, un millón de veces la misma verificación. NumPy hace esa burocracia **una sola vez**: como el array es homogéneo (todos `float64`, gracias al `dtype`), sabe de antemano qué operación aplicar a todos, y delega el recorrido a un bucle compilado en C que barre la memoria contigua a toda velocidad — incluso procesando varios elementos por instrucción del procesador (SIMD). No es que Python "sea lento": es que le pedimos que vuelva a deducir lo obvio un millón de veces. La vectorización es, en el fondo, **mover la decisión fuera del bucle**.
+¿De dónde sale esa diferencia? Del trabajo repetido que hace el intérprete. En el bucle de Python, *cada una* del millón de vueltas repite la misma burocracia: mirar qué tipo tiene `x` (¿es int? ¿float? ¿string?), desempaquetar el valor del objeto que lo envuelve, decidir qué operación "elevar al cuadrado" corresponde a ese tipo, ejecutarla, y volver a empaquetar el resultado en un objeto nuevo. Un millón de elementos, un millón de veces la misma verificación. NumPy hace esa burocracia **una sola vez**: como el array es homogéneo (todos `float64`, gracias al `dtype`), sabe de antemano qué operación aplicar a todos, y delega el recorrido a un bucle compilado en C que barre la memoria contigua a toda velocidad, incluso procesando varios elementos por instrucción del procesador (SIMD). No es que Python "sea lento": es que le pedimos que vuelva a deducir lo obvio un millón de veces. La vectorización es, en el fondo, mover la decisión fuera del bucle.
 
 ---
 
@@ -551,7 +551,7 @@ El broadcasting solo funciona si las dimensiones son compatibles: o son iguales,
 
 Acá NumPy muestra para qué fue diseñado. La optimización de portafolios del Módulo 2 se escribe entera en lenguaje matricial, y NumPy lo implementa directo.
 
-El **producto matricial** se hace con el operador `@` (no con `*`, que es elemento a elemento). Veamos el cálculo más importante de toda la teoría de portafolios: el **retorno esperado de un portafolio**, que es el producto entre el vector de pesos $\mathbf{w}$ y el vector de retornos esperados $\boldsymbol{\mu}$.
+El **producto matricial** se hace con el operador `@` (no con `*`, que es elemento a elemento). Veamos el cálculo más importante de toda la teoría de portafolios: el retorno esperado de un portafolio, que es el producto entre el vector de pesos $\mathbf{w}$ y el vector de retornos esperados $\boldsymbol{\mu}$.
 
 ```{python}
 #| label: producto-portafolio

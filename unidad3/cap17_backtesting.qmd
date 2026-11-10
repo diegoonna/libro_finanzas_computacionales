@@ -45,7 +45,7 @@ aplicar_estilo()
 
 La división fundamental:
 
-- **In-sample (IS)**: los datos usados para *diseñar* la estrategia (elegir reglas, calibrar parámetros). Ahí la estrategia siempre luce bien — la elegiste porque lucía bien ahí.
+- **In-sample (IS)**: los datos usados para *diseñar* la estrategia (elegir reglas, calibrar parámetros). Ahí la estrategia siempre luce bien: la elegiste porque lucía bien ahí.
 - **Out-of-sample (OOS)**: datos que la estrategia **nunca vio**. La única evidencia admisible sobre su capacidad real.
 
 ```{python}
@@ -104,7 +104,7 @@ La @fig-snooping-is-oos muestra las 60 variantes a la vez: arriba, el Sharpe de 
 ```{python}
 #| label: fig-snooping-is-oos
 #| echo: false
-#| fig-cap: "Las 60 ventanas de momentum sobre ruido puro. Arriba, Sharpe in-sample, con la ventana elegida en rojo; abajo, el Sharpe out-of-sample de cada una. La mejor in-sample no es mejor afuera: el ranking del diseño no predice nada."
+#| fig-cap: "Las 60 ventanas de momentum sobre ruido puro. Arriba, Sharpe in-sample, con la ventana elegida resaltada; abajo, el Sharpe out-of-sample de cada una. La mejor in-sample no es mejor afuera: el ranking del diseño no predice nada."
 import sys; sys.path.insert(0, "..")
 from _esquemas import *
 import numpy as np
@@ -135,17 +135,17 @@ def _esquema():
 _esquema()
 ```
 
-Los datos son **ruido puro por construcción** — no hay nada que descubrir. Y sin embargo, probando 60 variantes, alguna siempre luce bien in-sample. Fuera de muestra, el castillo se derrumba. Ese mecanismo tiene nombre: **data snooping** (o *p-hacking*): probar hasta que algo "funcione" garantiza encontrar espejismos.
+Los datos son **ruido puro por construcción**: no hay nada que descubrir. Y sin embargo, probando 60 variantes, alguna siempre luce bien in-sample. Fuera de muestra, el resultado desaparece. Ese mecanismo tiene nombre: **data snooping** (o *p-hacking*) [@white2000; @bailey2014]. Probar hasta que algo "funcione" garantiza encontrar espejismos.
 
 ::: {.callout-warning title="La regla de oro"}
-Los datos out-of-sample se usan **una sola vez**. Si evaluás en OOS, no te gusta el resultado, retocás la estrategia y volvés a evaluar en el mismo OOS... el OOS acaba de convertirse en in-sample. Esta regla es incómoda y por eso casi nadie la cumple — y por eso la mayoría de los backtests publicados no se replican.
+Los datos out-of-sample se usan **una sola vez**. Si evaluás en OOS, no te gusta el resultado, retocás la estrategia y volvés a evaluar en el mismo OOS... el OOS acaba de convertirse en in-sample. Esta regla es incómoda y por eso casi nadie la cumple, y por eso la mayoría de los backtests publicados no se replican.
 :::
 
 ### Sobreajuste: la curva que memoriza
 
-El data snooping es la versión "entre estrategias" de un fenómeno general: el **sobreajuste** (*overfitting*). Un modelo con suficientes parámetros puede memorizar cualquier historia — incluyendo su ruido. Cuantos más parámetros libres tenga tu estrategia (ventanas, umbrales, filtros, horarios), más capacidad tiene de ajustarse a accidentes del pasado que no se repetirán.
+El data snooping es la versión "entre estrategias" de un fenómeno general: el **sobreajuste** (*overfitting*). Un modelo con suficientes parámetros puede memorizar cualquier historia, incluyendo su ruido. Cuantos más parámetros libres tenga tu estrategia (ventanas, umbrales, filtros, horarios), más capacidad tiene de ajustarse a accidentes del pasado que no se repetirán.
 
-Regla mental de López de Prado: **la probabilidad de que un backtest sea falso crece con el número de configuraciones probadas** — y quien lo publica rara vez te dice cuántas probó.
+Regla mental de López de Prado: la probabilidad de que un backtest sea falso crece con el número de configuraciones probadas, y quien lo publica rara vez te dice cuántas probó.
 
 ---
 
@@ -159,7 +159,7 @@ Bajo $H_0$, el estadístico t del retorno medio nos dice cuán sorprendente es l
 
 $$t = \frac{\bar{r}}{s / \sqrt{n}} \qquad\text{y de hecho}\qquad t \approx \text{Sharpe anualizado} \times \sqrt{\text{años}}$$
 
-Esa equivalencia es una de las fórmulas más útiles del oficio: **el t-stat de una estrategia es su Sharpe por la raíz de los años observados**. Un Sharpe de 1.0 necesita ~4 años para ser significativo al 5%; un Sharpe de 0.5, ¡16 años!
+Esa equivalencia es una de las fórmulas más útiles del oficio: el t-stat de una estrategia es su Sharpe por la raíz de los años observados. Un Sharpe de 1.0 necesita ~4 años para ser significativo al 5%; un Sharpe de 0.5, ¡16 años!
 
 La @fig-vara-significancia dibuja las dos reglas que gobiernan este capítulo: cuánto historial hace falta para que un Sharpe sea creíble (izquierda), y cuán rápido se vuelve casi seguro encontrar un falso positivo cuando se prueban muchas variantes (derecha, el tema del recuadro que viene).
 
@@ -275,7 +275,7 @@ La @fig-walk-forward dibuja el esquema con los números que vamos a usar: dos a�
 ```{python}
 #| label: fig-walk-forward
 #| echo: false
-#| fig-cap: "Walk-forward sobre los 10 años de datos: cada fila es una vuelta, con 504 días de entrenamiento (azul) seguidos de 126 días de operación (rojo). La ventana rueda 126 días por vuelta. La fila de abajo concatena todos los tramos rojos: un track record de 8 años en el que ningún día fue usado para elegir los parámetros con los que se operó."
+#| fig-cap: "Walk-forward sobre los 10 años de datos: cada fila es una vuelta, con 504 días de entrenamiento (en azul) seguidos de 126 días de operación (en naranja). La ventana rueda 126 días por vuelta. La fila de abajo concatena todos los tramos de operación: un track record de 8 años en el que ningún día fue usado para elegir los parámetros con los que se operó."
 import sys; sys.path.insert(0, "..")
 from _esquemas import *
 
@@ -335,7 +335,7 @@ print(f"Tramos operados: {len(elecciones)} | Ventanas elegidas: {elecciones}")
 evaluar(oos_ruido, "Walk-forward sobre ruido")
 ```
 
-Dos observaciones valiosas: las **ventanas elegidas saltan erráticamente** de tramo en tramo — señal inequívoca de que no hay estructura real que estimar, solo ruido que cambia de disfraz. Y el desempeño concatenado es mediocre, como debe ser. Un walk-forward con parámetros *estables* entre tramos y desempeño OOS consistente es de las mejores señales de que una estrategia es genuina.
+Dos observaciones valiosas: las **ventanas elegidas saltan erráticamente** de tramo en tramo, señal inequívoca de que no hay estructura real que estimar, solo ruido que cambia de disfraz. Y el desempeño concatenado es mediocre, como debe ser. Un walk-forward con parámetros *estables* entre tramos y desempeño OOS consistente es de las mejores señales de que una estrategia es genuina.
 
 ---
 
@@ -379,7 +379,6 @@ ax = axes[0]
 ax.plot(equity_r, label="Walk-forward sobre ruido")
 ax.plot(equity_e, label="Estrategia con edge real")
 ax.set_ylabel("Equity (base 1)")
-ax.set_title("Curvas de capital out-of-sample")
 ax.legend()
 ax.grid(True, alpha=0.3)
 
@@ -395,7 +394,61 @@ plt.tight_layout()
 plt.show()
 ```
 
-Como en la @fig-equity-drawdown, leé siempre la curva de capital junto con la de drawdown: el Sharpe resume, pero la trayectoria muestra si las ganancias vinieron parejas o de un golpe de suerte, y cuánto dolor (drawdown) hubo que aguantar en el camino. Un inversor real abandona la estrategia en el fondo del drawdown — si ese fondo es -40%, el Sharpe final es teoría.
+Como en la @fig-equity-drawdown, leé siempre la curva de capital junto con la de drawdown: el Sharpe resume, pero la trayectoria muestra si las ganancias vinieron parejas o de un golpe de suerte, y cuánto dolor (drawdown) hubo que aguantar en el camino. Un inversor real abandona la estrategia en el fondo del drawdown: si ese fondo es -40%, el Sharpe final es teoría.
+
+### El margen de error del Sharpe: bootstrap
+
+El reporte da un Sharpe de 1.30 para la estrategia con edge real, pero ese número salió de una muestra de 840 días. Con otros 840 días del mismo proceso habría salido otro. El p-value contesta si el Sharpe es distinto de cero; para saber entre qué valores puede estar hace falta un intervalo de confianza, y la forma más directa de construirlo es el **bootstrap** [@efron1993].
+
+La idea es usar la propia muestra como si fuera la población. Se sortean 840 días con reposición entre los observados, se calcula el Sharpe de esa muestra artificial y se repite miles de veces. La dispersión de esos Sharpes aproxima la que tendría el estimador si pudiéramos repetir la historia.
+
+```{python}
+#| label: bootstrap-sharpe
+def ic_sharpe(r, rng, n_rep=5000, nivel=0.95):
+    """Intervalo de confianza del Sharpe por bootstrap: remuestrea los días con reposición."""
+    n = len(r)
+    sharpes = np.empty(n_rep)
+    for i in range(n_rep):
+        muestra = r[rng.integers(0, n, n)]
+        sharpes[i] = sharpe(muestra)
+    cola = (1 - nivel) / 2
+    return np.quantile(sharpes, [cola, 1 - cola]), sharpes
+
+rng_b = np.random.default_rng(5)     # generador propio, para no alterar el resto del capítulo
+(ic_inf, ic_sup), sharpes_boot = ic_sharpe(señal_real, rng_b)
+
+print(f"Sharpe observado: {sharpe(señal_real):.2f}")
+print(f"Intervalo del 95%: [{ic_inf:.2f}, {ic_sup:.2f}]")
+print(f"Desvío de las réplicas: {sharpes_boot.std():.2f}")
+print(f"Réplicas con Sharpe negativo: {(sharpes_boot < 0).mean():.1%}")
+```
+
+```{python}
+#| label: fig-bootstrap-sharpe
+#| fig-cap: "Distribución del Sharpe de la estrategia con edge real en 5000 remuestreos de sus 840 días. La línea llena marca el valor observado y las punteadas los límites del intervalo del 95%."
+fig, ax = plt.subplots(figsize=(9, 4.5))
+ax.hist(sharpes_boot, bins=60, color="#1e3a5f", alpha=0.75)
+ax.axvline(sharpe(señal_real), color="#c2410c", linewidth=2, label="Sharpe observado")
+for limite in (ic_inf, ic_sup):
+    ax.axvline(limite, color="#c2410c", linestyle="--", linewidth=1.2)
+ax.axvline(0, color="#94a3b8", linewidth=1)
+ax.set_xlabel("Sharpe anualizado")
+ax.set_ylabel("Cantidad de réplicas")
+ax.legend()
+ax.grid(True, alpha=0.3)
+plt.tight_layout()
+plt.show()
+```
+
+El intervalo va de 0.22 a 2.37 (@fig-bootstrap-sharpe). En este caso conocemos el valor verdadero, porque la serie la fabricamos nosotros: una media diaria de 0.0004 con un desvío de 0.012 equivale a un Sharpe anual de 0.53. El 1.30 observado fue una muestra favorable, y el intervalo, que contiene al 0.53, lo advertía.
+
+El desvío de las réplicas, 0.54, coincide con una regla que ya apareció de otra forma: el error estándar de un Sharpe anualizado es aproximadamente $1/\sqrt{\text{años}}$, que con 3.3 años da 0.55. Un Sharpe medido con tres años de datos tiene un margen de error de medio punto hacia cada lado, cualquiera sea su valor.
+
+::: {.callout-note title="Dos límites del bootstrap"}
+Sortear días sueltos supone que los retornos son independientes entre sí. Si la serie tiene autocorrelación, o períodos de volatilidad alta que se agrupan como los del [Capítulo 11](../unidad3/cap11_var_expected_shortfall.qmd), ese sorteo destruye la dependencia y el intervalo queda más angosto de lo que corresponde. La variante habitual es el bootstrap por bloques, que sortea tramos de días consecutivos.
+
+El segundo límite es más importante. El bootstrap mide el error de muestreo de una estrategia dada y no corrige el sesgo de haberla elegido entre muchas. El intervalo de la mejor de 60 variantes está centrado en un Sharpe que ya viene inflado por la selección.
+:::
 
 ### Los costos que el backtest olvida
 
@@ -423,7 +476,7 @@ print(f"Sharpe neto de costos: {sharpe(r_neto):.2f}")
 
 ## El protocolo, en síntesis
 
-Un backtest confiable sigue esta secuencia — y el orden importa:
+Un backtest confiable sigue esta secuencia, y el orden importa:
 
 1. **Hipótesis primero**: por qué debería funcionar (fundamento económico), antes de mirar datos.
 2. **Diseño in-sample**, con la menor cantidad de parámetros posible.
@@ -476,9 +529,32 @@ _ = reporte(r_spy[-len(oos_spy):], "Buy & hold SPY")
 
 Este resultado es una clase entera de honestidad estadística, así que leelo despacio:
 
-- **Las ventanas elegidas son estables entre tramos** — nada del salto errático que vimos sobre ruido puro. Eso sugiere que el momentum del índice tiene *algo* de estructura real.
-- El Sharpe out-of-sample es positivo, pero el **p-value no baja del umbral**: con ~2.5 años de track record OOS, la fórmula $t \approx \text{Sharpe} \times \sqrt{\text{años}}$ hace su trabajo implacable. Un Sharpe cercano a 1 con dos años y medio de datos **no es evidencia suficiente** — verificalo vos mismo con la fórmula.
-- Y la comparación que un backtest siempre debe incluir: en el mismo período, **comprar y no hacer nada rindió más**. El período OOS fue mayormente alcista, y toda estrategia que pasa tiempo en cash paga ese costo. El consuelo del momentum es un drawdown máximo menor — es una estrategia *defensiva*, y su valor aparecería en un bear market largo, no en este tramo. Elegir el benchmark correcto es parte del protocolo.
+- Las ventanas elegidas son estables entre tramos, nada del salto errático que vimos sobre ruido puro. Eso sugiere que el momentum del índice tiene *algo* de estructura real.
+- El Sharpe out-of-sample es positivo, pero el p-value no baja del umbral: con ~2.5 años de track record OOS, la fórmula $t \approx \text{Sharpe} \times \sqrt{\text{años}}$ hace su trabajo implacable. Un Sharpe cercano a 1 con dos años y medio de datos **no es evidencia suficiente**: verificalo vos mismo con la fórmula.
+- Y la comparación que un backtest siempre debe incluir: en el mismo período, comprar y no hacer nada rindió más. El período OOS fue mayormente alcista, y toda estrategia que pasa tiempo en cash paga ese costo. El consuelo del momentum es un drawdown máximo menor: es una estrategia *defensiva*, y su valor aparecería en un bear market largo, no en este tramo. Elegir el benchmark correcto es parte del protocolo.
+
+El bootstrap de la sección de métricas permite ponerle márgenes a esa comparación. La última línea remuestrea los mismos días para las dos estrategias, que es lo que corresponde cuando se comparan sobre el mismo período.
+
+```{python}
+#| label: bootstrap-spy
+bh_spy = r_spy[-len(oos_spy):]
+rng_spy = np.random.default_rng(5)
+
+for nombre, serie in [("Momentum SPY (walk-forward)", oos_spy), ("Buy & hold SPY", bh_spy)]:
+    (inf, sup), _ = ic_sharpe(serie, rng_spy)
+    print(f"{nombre:<28} Sharpe: {sharpe(serie):5.2f} | IC 95%: [{inf:5.2f}, {sup:5.2f}]")
+
+# Diferencia de Sharpes, con los mismos días sorteados para ambas
+n_spy = len(oos_spy)
+diferencias = np.empty(5000)
+for i in range(5000):
+    dias = rng_spy.integers(0, n_spy, n_spy)
+    diferencias[i] = sharpe(oos_spy[dias]) - sharpe(bh_spy[dias])
+inf, sup = np.quantile(diferencias, [0.025, 0.975])
+print(f"{'Diferencia (momentum - B&H)':<28} {sharpe(oos_spy) - sharpe(bh_spy):13.2f} | IC 95%: [{inf:5.2f}, {sup:5.2f}]")
+```
+
+El intervalo del momentum incluye el cero, en línea con su p-value de 0.149, y el de comprar y mantener lo excluye por poco. La diferencia entre los dos Sharpes es de −0.39, con un intervalo que va de −2.12 a 1.42: con dos años y medio de datos no se puede afirmar que una estrategia sea mejor que la otra.
 
 Ah, y esto es *antes* de costos de transacción. La conclusión metodológica —no sobre el momentum sino sobre el oficio— es que un backtest honesto casi nunca da un veredicto rotundo: da matices, condiciones y un p-value incómodo. Desconfiá de los que no.
 
@@ -490,6 +566,7 @@ Ah, y esto es *antes* de costos de transacción. La conclusión metodológica �
 - **Re-usar el out-of-sample**: la más común y la más letal. Cada iteración de "ajusto y vuelvo a probar" lo degrada a in-sample.
 - **Reportar el mejor de N sin decir N**: el Sharpe del mejor de 100 intentos es una estadística de orden, no una medida de habilidad.
 - **Ignorar la estabilidad de los parámetros**: si el óptimo salta de 5 a 60 entre tramos del walk-forward, no estás estimando nada real.
+- **Reportar un Sharpe sin su margen de error**: con pocos años de historia el intervalo de confianza mide más de un punto de ancho. Un Sharpe de 1.3 y uno de 0.9 medidos sobre el mismo par de años son estadísticamente indistinguibles.
 - **Backtests demasiado cortos**: recordá $t \approx \text{Sharpe} \times \sqrt{\text{años}}$; con 2 años de datos casi nada es demostrable.
 - **Confundir el drawdown máximo del backtest con el peor caso posible**: el futuro no está obligado a repetir el peor pasado; es un piso, no un techo.
 :::

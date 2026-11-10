@@ -15,9 +15,9 @@ nocite: |
 
 # Introducción {.unnumbered}
 
-Hasta ahora analizamos activos de a uno: su retorno, su volatilidad, su distribución. Pero ningún inversor serio tiene un solo activo. La pregunta real es otra: **¿cómo combinar activos para obtener el mejor balance entre retorno y riesgo?**
+Hasta ahora analizamos activos de a uno: su retorno, su volatilidad, su distribución. Pero ningún inversor serio tiene un solo activo. La pregunta real es otra: ¿cómo combinar activos para obtener el mejor balance entre retorno y riesgo?
 
-En 1952, Harry Markowitz —con 25 años— respondió esa pregunta con una idea que le valdría el Nobel: el riesgo de una cartera **no es el promedio de los riesgos individuales**, porque los activos no se mueven en sincronía perfecta. Cuando uno cae, otro puede subir. Esa compensación —la **covarianza**— es la materia prima de la diversificación, y puede medirse y optimizarse.
+En 1952, Harry Markowitz —con 25 años— respondió esa pregunta con una idea que le valdría el Nobel [@markowitz1952]: el riesgo de una cartera no es el promedio de los riesgos individuales, porque los activos no se mueven en sincronía perfecta. Cuando uno cae, otro puede subir. Esa compensación —la **covarianza**— es la materia prima de la diversificación, y puede medirse y optimizarse.
 
 En este capítulo implementamos el modelo completo con NumPy y SciPy, y después nos metemos en las decisiones prácticas que todo gestor enfrenta y que el modelo básico deja abiertas.
 
@@ -82,9 +82,9 @@ print(f"  Volatilidad:      {vol_p:.2%}")
 print(f"  Promedio simple de vols individuales: {vols.mean():.2%}")
 ```
 
-Fijate el resultado: la volatilidad del portafolio es **menor que el promedio de las volatilidades individuales**. No elegimos nada inteligente todavía —son pesos iguales— y la diversificación ya nos regaló varios puntos de riesgo. Eso es lo que Markowitz llamó *the only free lunch in finance*.
+Fijate el resultado: la volatilidad del portafolio es menor que el promedio de las volatilidades individuales. No elegimos nada inteligente todavía —son pesos iguales— y la diversificación ya nos regaló varios puntos de riesgo. Eso es lo que Markowitz llamó *the only free lunch in finance*.
 
-La @fig-diversificacion-correlacion muestra de dónde sale ese regalo con el caso más simple: dos activos combinados en todas las proporciones posibles. Si se movieran en perfecta sincronía ($\rho = 1$), la volatilidad de la mezcla sería el promedio ponderado de las dos y la combinación caería sobre una recta. Cuanto menor es la correlación, más se curva la línea hacia la izquierda: **menos riesgo por el mismo retorno**.
+La @fig-diversificacion-correlacion muestra de dónde sale ese regalo con el caso más simple: dos activos combinados en todas las proporciones posibles. Si se movieran en perfecta sincronía ($\rho = 1$), la volatilidad de la mezcla sería el promedio ponderado de las dos y la combinación caería sobre una recta. Cuanto menor es la correlación, más se curva la línea hacia la izquierda: menos riesgo por el mismo retorno.
 
 ```{python}
 #| label: fig-diversificacion-correlacion
@@ -170,7 +170,7 @@ $$\min_{\mathbf{w}} \ \mathbf{w}^T \Sigma \mathbf{w} \quad \text{sujeto a} \quad
 
 El conjunto de soluciones dibuja una curva en el plano riesgo-retorno: la **frontera eficiente**. Todo portafolio por debajo de ella es mejorable (misma volatilidad, más retorno); por encima no hay nada alcanzable.
 
-Un detalle: este problema genera la frontera de *mínima varianza* completa. Su tramo inferior —por debajo del portafolio de mínima varianza global que vemos enseguida— **no es eficiente**: para la misma volatilidad, el tramo superior ofrece más retorno. Por eso en el gráfico lo dibujamos punteado. En este universo ese tramo es muy corto (va del bono al GMV y casi queda tapado por su marcador), pero con otros activos puede ser largo, y conviene no confundirlo con la frontera.
+Un detalle: este problema genera la frontera de *mínima varianza* completa. Su tramo inferior —por debajo del portafolio de mínima varianza global que vemos enseguida— **no es eficiente**: para la misma volatilidad, el tramo superior ofrece más retorno. Por eso en el gráfico lo dibujamos punteado. En este universo ese tramo es muy corto (va del bono al GMV), pero con otros activos puede ser largo, y conviene no confundirlo con la frontera.
 
 ```{python}
 #| label: frontera
@@ -223,7 +223,7 @@ Como era de esperar, el GMV se carga hacia el bono (el activo menos volátil) pe
 
 Ahora agreguemos un ingrediente: un **activo libre de riesgo** con tasa $r_f$ (un plazo fijo, una letra del tesoro). Poder combinar la frontera con ese activo cambia la geometría del problema: las combinaciones entre $r_f$ y cualquier portafolio riesgoso son **rectas** en el plano riesgo-retorno.
 
-¿Cuál es la mejor recta? La que sale de $r_f$ y **apenas toca** la frontera: la **Capital Market Line (CML)**. El punto de tangencia es el **portafolio tangente**, que maximiza el **ratio de Sharpe**:
+¿Cuál es la mejor recta? La que sale de $r_f$ y **apenas toca** la frontera: la **Capital Market Line (CML)**. El punto de tangencia es el **portafolio tangente**, que maximiza el **ratio de Sharpe** [@sharpe1966]:
 
 $$\text{Sharpe} = \frac{E[R_p] - r_f}{\sigma_p}$$
 
@@ -260,7 +260,7 @@ ax.plot(frontera_vol[:corte + 1] * 100, retornos_objetivo[:corte + 1] * 100, ":"
         color="#1e3a5f", linewidth=1.5, label="Tramo ineficiente")
 
 # Capital Market Line: recta desde (0, rf) que pasa por el tangente
-x_cml = np.linspace(0, vol_tan * 1.4, 50)
+x_cml = np.linspace(0, (mu.max() - rf) / sharpe_tan, 50)
 ax.plot(x_cml * 100, (rf + sharpe_tan * x_cml) * 100, "--", color="#637238", linewidth=2,
         label="Capital Market Line")
 
@@ -269,8 +269,8 @@ ax.scatter(vols * 100, mu * 100, s=90, c="#c2410c", zorder=5, label="Activos ind
 for a, v, m in zip(activos, vols, mu):
     ax.annotate(a, (v * 100, m * 100), textcoords="offset points",
                 xytext=(8, -4), fontsize=8)
-ax.scatter(res_gmv.fun * 100, (w_gmv @ mu) * 100, s=160, c="#b45309", marker="D",
-           zorder=6, label="Mínima varianza (GMV)")
+ax.scatter(res_gmv.fun * 100, (w_gmv @ mu) * 100, s=130, marker="D", facecolors="none",
+           edgecolors="#1e3a5f", linewidths=2, zorder=6, label="Mínima varianza (GMV)")
 ax.scatter(vol_tan * 100, ret_tan * 100, s=180, c="#637238", marker="*",
            zorder=6, label="Portafolio tangente")
 ax.scatter(0, rf * 100, s=90, c="black", marker="s", zorder=6,
@@ -278,14 +278,13 @@ ax.scatter(0, rf * 100, s=90, c="black", marker="s", zorder=6,
 
 ax.set_xlabel("Volatilidad anual (%)")
 ax.set_ylabel("Retorno esperado anual (%)")
-ax.set_title("Frontera Eficiente, GMV, Tangente y CML")
 ax.legend(loc="lower right")
 ax.grid(True, alpha=0.3)
 plt.tight_layout()
 plt.show()
 ```
 
-La lectura de la @fig-frontera-cml es una de las ideas más profundas de las finanzas: **con un activo libre de riesgo disponible, la frontera curva deja de ser el menú óptimo**. Todo inversor racional debería pararse sobre la CML: elegir el portafolio tangente para su plata riesgosa, y regular su nivel de riesgo total moviendo la proporción entre el tangente y el activo libre de riesgo. El conservador pone 30% en el tangente y 70% a tasa; el agresivo, todo en el tangente (o incluso se apalanca). La *composición* de la parte riesgosa es la misma para ambos.
+La lectura de la @fig-frontera-cml es una de las ideas más profundas de las finanzas: con un activo libre de riesgo disponible, la frontera curva deja de ser el menú óptimo. Todo inversor racional debería pararse sobre la CML: elegir el portafolio tangente para la parte riesgosa de su capital, y regular su nivel de riesgo total moviendo la proporción entre el tangente y el activo libre de riesgo. El conservador pone 30% en el tangente y 70% a tasa; el agresivo, todo en el tangente (o incluso se apalanca). La *composición* de la parte riesgosa es la misma para ambos.
 
 ¿Y qué hay *adentro* de cada punto de la frontera? La @fig-composicion-frontera lo muestra, de izquierda (GMV) a derecha (máximo retorno): el bono domina el extremo conservador, y a medida que se le pide más retorno la cartera va cambiando bono por acciones, hasta terminar 100% en la acción growth. Fijate que la acción defensiva nunca pesa mucho y sale de la cartera a mitad de camino: su combinación de retorno y correlación no compite con la de sus vecinas.
 
@@ -363,7 +362,7 @@ Hasta acá maximizamos Sharpe como si fuera la única opción. No lo es, y elegi
 | **Máximo Sharpe** | Retorno en exceso por unidad de volatilidad *total* | El estándar de la industria para comparar estrategias |
 | **Máximo Sortino** | Como Sharpe, pero solo castiga la volatilidad *a la baja* | Cuando la distribución es asimétrica y no querés castigar las subas |
 
-El punto fino está entre Sharpe y Sortino. La volatilidad castiga **ambas colas**: para el Sharpe, un activo que da sorpresas positivas enormes es tan "riesgoso" como uno que se derrumba. El **Sortino** corrige eso usando en el denominador solo la **desviación a la baja** (*downside deviation*), calculada con los retornos por debajo de un umbral (típicamente $r_f$ o cero):
+El punto fino está entre Sharpe y Sortino. La volatilidad castiga **ambas colas**: para el Sharpe, un activo que da sorpresas positivas enormes es tan "riesgoso" como uno que se derrumba. El **Sortino** [@sortino1991] corrige eso usando en el denominador solo la **desviación a la baja** (*downside deviation*), calculada con los retornos por debajo de un umbral (típicamente $r_f$ o cero):
 
 $$\text{Sortino} = \frac{E[R_p] - r_f}{\sigma_{down}}, \qquad \sigma_{down} = \sqrt{\frac{1}{n}\sum_{r_i < \tau} (r_i - \tau)^2}$$
 
@@ -392,17 +391,17 @@ for nombre, r in [("Estrategia A", r_A), ("Estrategia B", r_B)]:
           f"{stats.skew(r):>11.2f}")
 ```
 
-Las dos estrategias tienen el mismo Sharpe (misma media, misma varianza), pero el Sortino revela que **B pierde de manera más contenida**: su riesgo "malo" es menor. Si tu inversor sufre las caídas más de lo que disfruta las subas —o sea, si es humano—, el Sortino describe mejor su experiencia.
+Las dos estrategias tienen el mismo Sharpe (misma media, misma varianza), pero el Sortino revela que B pierde de manera más contenida: su riesgo "malo" es menor. Si tu inversor sufre las caídas más de lo que disfruta las subas —o sea, si es humano—, el Sortino describe mejor su experiencia.
 
 ::: {.callout-tip title="¿Cuál usar?"}
-No hay respuesta universal, pero sí una guía: **Sharpe para comparar y comunicar** (todo el mundo lo entiende y lo calcula igual), **Sortino cuando la asimetría importa** (estrategias con opciones, crédito, o cualquier cosa con colas raras), **mínima varianza cuando no confiás en tus retornos esperados**, y "máximo retorno" solo como provocación intelectual. Y siempre mirá más de una métrica: cada una ilumina un ángulo distinto.
+No hay respuesta universal, pero sí una guía: Sharpe para comparar y comunicar (todo el mundo lo entiende y lo calcula igual), Sortino cuando la asimetría importa (estrategias con opciones, crédito, o cualquier cosa con colas raras), mínima varianza cuando no confiás en tus retornos esperados, y "máximo retorno" solo como provocación intelectual. Y siempre mirá más de una métrica: cada una ilumina un ángulo distinto.
 :::
 
 ---
 
 ## Los inputs importan más que el optimizador
 
-El 90% del esfuerzo práctico en Markowitz no está en la optimización (eso lo hace `scipy` en milisegundos) sino en **estimar bien $\boldsymbol{\mu}$ y $\Sigma$**. Tres decisiones concretas que cambian los resultados:
+El 90% del esfuerzo práctico en Markowitz no está en la optimización (eso lo hace `scipy` en milisegundos) sino en estimar bien $\boldsymbol{\mu}$ y $\Sigma$. Tres decisiones concretas que cambian los resultados:
 
 La @fig-pipeline-inputs ordena esas decisiones como lo que son: pasos de una tubería que termina en $\boldsymbol{\mu}$ y $\Sigma$, mucho antes de llegar al optimizador.
 
@@ -444,11 +443,11 @@ print(f"\n$100 a 20 años, solo precio:   ${100 * (1 + apreciacion) ** 20:,.0f}"
 print(f"$100 a 20 años, retorno total: ${100 * (1 + apreciacion + dividend_yield) ** 20:,.0f}")
 ```
 
-Para un optimizador, esto no es un detalle: una acción de alto dividendo puede parecer mediocre mirando solo el precio y ser excelente en retorno total. **Usá siempre precios ajustados por dividendos** (*adjusted close*) o sumá el yield explícitamente.
+Para un optimizador, esto no es un detalle: una acción de alto dividendo puede parecer mediocre mirando solo el precio y ser excelente en retorno total. Usá siempre precios ajustados por dividendos (*adjusted close*) o sumá el yield explícitamente.
 
 ### Renta fija en el universo: más que "el activo sin riesgo"
 
-En el modelo de la CML, la renta fija aparece como el activo libre de riesgo de volatilidad cero. Pero un **bono real** (como los que valuamos en el Módulo 1) no es eso: tiene riesgo de tasa (duración), riesgo de crédito y volatilidad de precio. La forma correcta de tratarlo es **incluirlo como un activo riesgoso más** dentro del universo, con su $\mu$, su $\sigma$ y —lo más valioso— su **baja correlación** con las acciones.
+En el modelo de la CML, la renta fija aparece como el activo libre de riesgo de volatilidad cero. Pero un **bono real** (como los que valuamos en el Módulo 1) no es eso: tiene riesgo de tasa (duración), riesgo de crédito y volatilidad de precio. La forma correcta de tratarlo es incluirlo como un activo riesgoso más dentro del universo, con su $\mu$, su $\sigma$ y —lo más valioso— su **baja correlación** con las acciones.
 
 Ya lo hicimos sin decirlo: nuestro cuarto activo es un bono corporativo. Mirá cuánto aporta:
 
@@ -475,7 +474,6 @@ ax.plot(frontera_vol * 100, retornos_objetivo * 100, color="#1e3a5f", linewidth=
         label="Frontera con bonos")
 ax.set_xlabel("Volatilidad anual (%)")
 ax.set_ylabel("Retorno esperado anual (%)")
-ax.set_title("El efecto de agregar renta fija al universo")
 ax.legend()
 ax.grid(True, alpha=0.3)
 plt.tight_layout()
@@ -504,18 +502,18 @@ for nombre, r_nom, pi in casos:
     print(f"{nombre:<34}{r_nom:>8.0%}{pi:>10.0%}{r_real:>8.1%}")
 ```
 
-¿Por qué importa para Markowitz? Porque en series largas o inflacionarias, la inflación **infla artificialmente las medias y las correlaciones**: todos los activos "suben" juntos con el nivel de precios, y el optimizador cree ver retornos altos y co-movimientos que no existen en términos reales. La regla práctica:
+¿Por qué importa para Markowitz? Porque en series largas o inflacionarias, la inflación infla artificialmente las medias y las correlaciones: todos los activos "suben" juntos con el nivel de precios, y el optimizador cree ver retornos altos y co-movimientos que no existen en términos reales. La regla práctica:
 
-- **Horizontes cortos y baja inflación** (retornos diarios/mensuales en economías estables): trabajar en nominal es aceptable; la inflación es un ruido de fondo casi constante.
+- Horizontes cortos y baja inflación (retornos diarios/mensuales en economías estables): trabajar en nominal es aceptable; la inflación es un ruido de fondo casi constante.
 - **Horizontes largos o alta inflación**: deflactá las series (o trabajá en una moneda dura de referencia) *antes* de estimar $\mu$ y $\Sigma$. Lo que le importa al inversor es el poder de compra, no los pesos nominales.
 
 ### ¿Retornos directos o excesos de retorno?
 
 Última decisión de diseño: ¿optimizamos sobre los retornos "crudos" de cada activo, o sobre su **exceso** respecto de una referencia ($r_i - r_f$, o $r_i - r_{mkt}$)? La respuesta depende de qué pregunta estés haciendo:
 
-- **Retornos directos (o reales)** — cuando la pregunta es de **asignación de capital total**: "tengo $X$, ¿cómo lo reparto?". El nivel absoluto de cada retorno importa, porque la alternativa de no invertir (o de quedarse en tasa) es parte del problema. La frontera y la CML de este capítulo trabajan así.
-- **Excesos sobre la tasa libre de riesgo** ($r_i - r_f$) — cuando la tasa varía en el tiempo y querés que tu estimación de $\mu$ no mezcle "premio por riesgo" con "nivel de tasas". El ratio de Sharpe ya está definido sobre excesos; estimar directamente en excesos hace todo más consistente, especialmente con datos que cruzan regímenes de tasas muy distintos.
-- **Excesos sobre el mercado** ($r_i - r_{mkt}$) — cuando el problema no es asignar capital sino **construir una cartera activa** que le gane a un benchmark. Ahí lo que optimizás es el *tracking error* y el exceso de retorno relativo; el riesgo "de mercado" es irrelevante porque el benchmark ya lo carga. Es el mundo de los fondos con mandato relativo.
+- **Retornos directos (o reales)**: cuando la pregunta es de **asignación de capital total**: "tengo $X$, ¿cómo lo reparto?". El nivel absoluto de cada retorno importa, porque la alternativa de no invertir (o de quedarse en tasa) es parte del problema. La frontera y la CML de este capítulo trabajan así.
+- Excesos sobre la tasa libre de riesgo ($r_i - r_f$): cuando la tasa varía en el tiempo y querés que tu estimación de $\mu$ no mezcle "premio por riesgo" con "nivel de tasas". El ratio de Sharpe ya está definido sobre excesos; estimar directamente en excesos hace todo más consistente, especialmente con datos que cruzan regímenes de tasas muy distintos.
+- **Excesos sobre el mercado** ($r_i - r_{mkt}$): cuando el problema no es asignar capital sino **construir una cartera activa** que le gane a un benchmark. Ahí lo que optimizás es el *tracking error* y el exceso de retorno relativo; el riesgo "de mercado" es irrelevante porque el benchmark ya lo carga. Es el mundo de los fondos con mandato relativo.
 
 ::: {.callout-warning title="El error clásico"}
 Mezclar marcos: estimar $\mu$ como promedio de retornos nominales de una década de tasas altas, y usarlo para optimizar hoy con tasas bajas. El "premio" que el optimizador ve es en gran parte nivel de tasas que ya no existe. Trabajar en excesos sobre $r_f$ inmuniza contra esto.
@@ -609,7 +607,7 @@ def _esquema():
 _esquema()
 ```
 
-El resultado ilustra en carne propia las advertencias del capítulo. Mirá primero la tabla de $\mu$ estimados: NVDA con un retorno anualizado altísimo (la ola de la IA cayó entera dentro de la ventana), DIS en terreno negativo. El portafolio tangente **se toma esos números al pie de la letra**: asigna cero a más de la mitad del universo y concentra el capital en los cuatro o cinco tickers que mejor combinaron retorno y volatilidad *en esa muestra*. ¿De verdad creés que NVDA va a repetir ese μ los próximos cinco años? El optimizador sí. El GMV, que no usa $\boldsymbol{\mu}$, queda bastante más repartido y cargado en los activos defensivos. Esa fragilidad frente al $\mu$ estimado es exactamente el problema que atacan HRP (capítulo siguiente) y Black-Litterman ([Capítulo 10](../unidad2/cap10_black_litterman.qmd)) — y ahora la viste con datos de verdad.
+El resultado ilustra en carne propia las advertencias del capítulo. Mirá primero la tabla de $\mu$ estimados: NVDA con un retorno anualizado altísimo (la ola de la IA cayó entera dentro de la ventana), DIS en terreno negativo. El portafolio tangente se toma esos números al pie de la letra: asigna cero a más de la mitad del universo y concentra el capital en los cuatro o cinco tickers que mejor combinaron retorno y volatilidad *en esa muestra*. ¿De verdad creés que NVDA va a repetir ese μ los próximos cinco años? El optimizador sí. El GMV, que no usa $\boldsymbol{\mu}$, queda bastante más repartido y cargado en los activos defensivos. Esa fragilidad frente al $\mu$ estimado es exactamente el problema que atacan HRP (capítulo siguiente) y Black-Litterman ([Capítulo 10](../unidad2/cap10_black_litterman.qmd)), y ahora la viste con datos de verdad.
 
 ---
 

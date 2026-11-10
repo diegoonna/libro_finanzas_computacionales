@@ -22,7 +22,7 @@ Si tuvieras que quedarte con una sola herramienta estadística para trabajar en 
 - ¿Mi fondo genera valor o solo cobra caro por exposición al mercado? (alfa)
 - ¿Qué parte del retorno se explica por tamaño, valor, momentum? (modelos de factores)
 
-Este capítulo construye la herramienta con el rigor necesario para usarla bien: no alcanza con llamar a una librería; hay que saber **qué supone el modelo, cuándo mienten los p-values y cómo se leen los resultados**.
+Este capítulo construye la herramienta con el rigor necesario para usarla bien: no alcanza con llamar a una librería; hay que saber qué supone el modelo, cuándo mienten los p-values y cómo se leen los resultados.
 
 ```{python}
 #| label: setup
@@ -56,13 +56,13 @@ Tres aclaraciones que evitan malentendidos comunes:
 2. **El error $\varepsilon$ no es un defecto**: representa todo lo que afecta a $y$ y no está en el modelo. La pregunta clave será qué propiedades tiene.
 3. **Los $\beta$ se interpretan "todo lo demás constante"**: $\beta_1$ es el efecto de $x_1$ sobre $y$ *manteniendo fijas las otras variables*. Esta lectura condicional es lo que hace potente (y delicada) a la regresión múltiple.
 
-### Estimación por Mínimos Cuadrados Ordinarios (MCO)
+### Estimación por mínimos cuadrados ordinarios (MCO)
 
 ¿Cómo elegir los $\beta$? El criterio de **MCO** (*OLS* en inglés): minimizar la suma de los errores al cuadrado. Para el caso simple ($y = \alpha + \beta x + \varepsilon$) la solución tiene forma cerrada:
 
 $$\hat\beta = \frac{\text{Cov}(x, y)}{\text{Var}(x)}, \qquad \hat\alpha = \bar{y} - \hat\beta \bar{x}$$
 
-La primera fórmula es reveladora: **el beta es una covarianza normalizada**. Ya la conocés de la teoría de portafolios — no es casualidad, es la misma matemática.
+La primera fórmula es reveladora: el beta es una covarianza normalizada. Ya la conocés de la teoría de portafolios: no es casualidad, es la misma matemática.
 
 La @fig-mco-residuos muestra qué es exactamente lo que se minimiza: para cada punto, la distancia *vertical* hasta la recta (el residuo). MCO eleva cada residuo al cuadrado, los suma, y elige la recta que hace más chica esa suma.
 
@@ -144,7 +144,7 @@ class RegresionLineal:
 
 ## Aplicación 1: el CAPM y la estimación del beta
 
-El **CAPM** (Capital Asset Pricing Model) afirma que el exceso de retorno esperado de un activo es proporcional al exceso de retorno del mercado:
+El **CAPM** (Capital Asset Pricing Model) [@sharpe1964] afirma que el exceso de retorno esperado de un activo es proporcional al exceso de retorno del mercado:
 
 $$E[R_i] - r_f = \beta_i \left(E[R_m] - r_f\right)$$
 
@@ -153,7 +153,7 @@ Su versión empírica es una regresión lineal sobre datos históricos:
 $$\underbrace{R_{i,t} - r_f}_{y} = \alpha + \beta \underbrace{(R_{m,t} - r_f)}_{x} + \varepsilon_t$$
 
 - $\beta$ mide la **sensibilidad al mercado**: β=1.3 significa "cuando el mercado sube 1%, este activo sube 1.3% en promedio".
-- $\alpha$ es el retorno **no explicado por el mercado**: si es positivo y significativo, el activo rindió más de lo que su riesgo justifica. Todo gestor activo afirma tener alfa; la regresión permite verificarlo.
+- $\alpha$ es el retorno no explicado por el mercado: si es positivo y significativo, el activo rindió más de lo que su riesgo justifica. Todo gestor activo afirma tener alfa; la regresión permite verificarlo.
 
 ```{python}
 #| label: capm
@@ -170,7 +170,7 @@ modelo.resumen()
 print(f"\nValores reales: alpha={alpha_real}, beta={beta_real}")
 ```
 
-El beta se recupera con precisión; el alfa, no tanto (mirá su p-value en la salida de `statsmodels` más abajo). Esa asimetría no es un accidente de esta muestra, es una lección general: **detectar alfa exige muchísimos más datos que estimar beta**, porque el alfa es una constante pequeña escondida en mucho ruido.
+El beta se recupera con precisión; el alfa, no tanto (mirá su p-value en la salida de `statsmodels` más abajo). Esa asimetría no es un accidente de esta muestra, es una lección general: detectar alfa exige muchísimos más datos que estimar beta, porque el alfa es una constante pequeña escondida en mucho ruido.
 
 La @fig-capm-scl muestra la regresión que acabamos de estimar: cada punto es un mes, y la pendiente de la recta es el beta.
 
@@ -184,7 +184,7 @@ ax.plot(x_line * 100, (modelo.alpha + modelo.beta * x_line) * 100, color="#c2410
         linewidth=2, label=f"Recta MCO: β = {modelo.beta:.2f}")
 ax.set_xlabel("Exceso de retorno del mercado (%)")
 ax.set_ylabel("Exceso de retorno del activo (%)")
-ax.set_title(f"Security Characteristic Line — R² = {modelo.r2:.2f}")
+ax.set_title(f"Security Characteristic Line, R² = {modelo.r2:.2f}")
 ax.legend()
 ax.grid(True, alpha=0.3)
 plt.tight_layout()
@@ -199,7 +199,7 @@ Los coeficientes estimados son **variables aleatorias**: con otra muestra habrí
 
 - **Error estándar (se)**: el "desvío típico" del estimador. Un beta de 1.30 con se de 0.07 está bien clavado; con se de 0.60 no sabés casi nada.
 - **Estadístico t**: cuántos errores estándar dista el coeficiente de cero: $t = \hat\beta / se(\hat\beta)$. Regla mental: $|t| > 2$ ≈ significativo al 5%.
-- **p-value**: la probabilidad de observar un coeficiente tan grande (en valor absoluto) **si el verdadero fuera cero**. Un p-value de 0.03 dice: "si el activo no tuviera relación con el mercado, ver este beta sería raro (3%)".
+- **p-value**: la probabilidad de observar un coeficiente tan grande (en valor absoluto) si el verdadero fuera cero. Un p-value de 0.03 dice: "si el activo no tuviera relación con el mercado, ver este beta sería raro (3%)".
 
 Para ver que los coeficientes son variables aleatorias, alcanza con repetir el experimento. La @fig-distribucion-muestral simula 2000 muestras de 120 meses con los mismos $\alpha$ y $\beta$ verdaderos del ejemplo y estima la regresión en cada una. El beta sale casi siempre cerca de 1.3; el alfa, en cambio, cae a ambos lados de cero muy seguido.
 
@@ -285,7 +285,7 @@ _esquema()
 ```
 
 ::: {.callout-warning title="Lo que el p-value NO dice"}
-El p-value **no** es "la probabilidad de que el coeficiente sea cero", ni "la probabilidad de que el modelo esté mal". Es una afirmación sobre los *datos bajo una hipótesis*, no sobre la hipótesis. Y con miles de datos, coeficientes económicamente irrelevantes se vuelven "significativos": **significancia estadística ≠ relevancia económica**. Mirá siempre la magnitud del coeficiente además de su p-value. Esta distinción reaparecerá con fuerza en el [Capítulo 17](../unidad3/cap17_backtesting.qmd) (backtesting), donde probar muchas estrategias infla los falsos positivos.
+El p-value **no** es "la probabilidad de que el coeficiente sea cero", ni "la probabilidad de que el modelo esté mal". Es una afirmación sobre los *datos bajo una hipótesis*, no sobre la hipótesis. Y con miles de datos, coeficientes económicamente irrelevantes se vuelven "significativos": significancia estadística ≠ relevancia económica. Mirá siempre la magnitud del coeficiente además de su p-value. Esta distinción reaparecerá con fuerza en el [Capítulo 17](../unidad3/cap17_backtesting.qmd) (backtesting), donde probar muchas estrategias infla los falsos positivos.
 :::
 
 ::: {.content-visible when-format="html"}
@@ -330,7 +330,7 @@ ols = sm.OLS(exceso_activo, X).fit()
 print(ols.summary(xname=["alpha", "beta_mkt"]))
 ```
 
-De esta tabla, lo que hay que saber mirar: los **coeficientes** con sus intervalos de confianza (¿el intervalo del beta contiene 1? ¿el del alfa contiene 0?), el **R²** (proporción de la varianza explicada), y los p-values. El resto (Durbin-Watson, Jarque-Bera de los residuos) son diagnósticos de supuestos — el tema siguiente.
+De esta tabla, lo que hay que saber mirar: los **coeficientes** con sus intervalos de confianza (¿el intervalo del beta contiene 1? ¿el del alfa contiene 0?), el **R²** (proporción de la varianza explicada), y los p-values. El resto (Durbin-Watson, Jarque-Bera de los residuos) son diagnósticos de supuestos, el tema siguiente.
 
 ---
 
@@ -346,7 +346,7 @@ Los estimadores MCO son insesgados y de mínima varianza (**teorema de Gauss-Mar
 | No autocorrelación | Errores independientes en el tiempo | **A veces no** | Errores Newey-West (HAC) |
 | Normalidad | Errores normales (para inferencia exacta) | No en colas | Muestras grandes ayudan (TCL) |
 
-Las violaciones de homocedasticidad y autocorrelación **no sesgan los coeficientes**, pero **mienten los errores estándar** — y con ellos los p-values. La solución estándar en finanzas es usar errores robustos:
+Las violaciones de homocedasticidad y autocorrelación **no sesgan los coeficientes**, pero **mienten los errores estándar**, y con ellos los p-values. La solución estándar en finanzas es usar errores robustos:
 
 ```{python}
 #| label: errores-robustos
@@ -359,7 +359,7 @@ print(f"  Robusto (Newey-West, HAC):        {ols_robusto.bse[1]:.4f}")
 ```
 
 ::: {.callout-tip title="Regla práctica"}
-En regresiones con series de tiempo financieras, reportá errores **Newey-West (HAC)** por defecto. Si los datos fueran ideales, no perdés nada; si no lo son (lo usual), tus p-values dejan de estar inflados.
+En regresiones con series de tiempo financieras, reportá errores **Newey-West (HAC)** [@newey1987] por defecto. Si los datos fueran ideales, no perdés nada; si no lo son (lo usual), tus p-values dejan de estar inflados.
 :::
 
 La @fig-flujo-regresion ordena todo lo anterior como una rutina de trabajo: la estimación es un paso rápido en el medio; lo que decide si el resultado es creíble está antes y después.
@@ -390,7 +390,7 @@ La extensión a varias variables es directa en la práctica (`statsmodels` recib
 
 ### Aplicación 2: modelos multifactor (Fama-French)
 
-El CAPM explica los retornos con un solo factor (el mercado). La evidencia empírica encontró sistemáticamente dos anomalías: las empresas **chicas** rinden más que las grandes, y las **baratas** (alto valor libro / valor de mercado) más que las caras. Fama y French (1993) propusieron agregarlas como factores:
+El CAPM explica los retornos con un solo factor (el mercado). La evidencia empírica encontró sistemáticamente dos anomalías: las empresas **chicas** rinden más que las grandes, y las **baratas** (alto valor libro / valor de mercado) más que las caras. @fama1993 propusieron agregarlas como factores:
 
 $$R_i - r_f = \alpha + \beta_m (R_m - r_f) + \beta_s \cdot SMB + \beta_v \cdot HML + \varepsilon$$
 
@@ -488,7 +488,7 @@ print(f"Varianza cubierta:      {var_con:.6f}  "
       f"(reducción del {1 - var_con/var_sin:.0%})")
 ```
 
-Por cada peso de cartera, vendés $h^*$ pesos de futuro, y la varianza cae en $R^2$ — el mismo $R^2$ de la regresión. Todas las piezas encajan.
+Por cada peso de cartera, vendés $h^*$ pesos de futuro, y la varianza cae en $R^2$, el mismo $R^2$ de la regresión. Todas las piezas encajan.
 
 ---
 

@@ -1,29 +1,39 @@
 ---
 title: "Capítulo 11: Valor en Riesgo (VaR) y Expected Shortfall"
-subtitle: "Medición de Riesgo de Mercado: VaR Paramétrico, Histórico y CVaR"
+subtitle: "Medición del riesgo de mercado: VaR paramétrico, VaR histórico y Expected Shortfall"
 abstract: |
-  Introducimos las herramientas fundamentales de medición de riesgo: VaR paramétrico 
-  e histórico, Expected Shortfall (CVaR), volatilidad EWMA, y tests de normalidad
-  para entender las limitaciones de los modelos gaussianos.
+  Presentamos las dos medidas centrales del riesgo de mercado, el VaR y el
+  Expected Shortfall, con sus cálculos paramétrico e histórico. Vemos cómo se
+  verifica un VaR con el test de Kupiec, cómo se adapta a una volatilidad que
+  cambia en el tiempo con EWMA, y qué queda del supuesto de normalidad cuando
+  se lo contrasta con datos reales.
 nocite: |
   @jorion2006, @hull2018risk, @mcneil2015
 ---
 
 # Introducción {.unnumbered}
 
-El **Value at Risk (VaR)** responde a la pregunta más importante en gestión de riesgo:
+El **Value at Risk (VaR)** es la medida de riesgo de mercado más difundida. Responde una pregunta concreta:
 
-> *¿Cuál es la máxima pérdida esperada en un horizonte dado, con un nivel de confianza determinado?*
+> *¿Qué pérdida no se va a superar, en un horizonte dado, con una probabilidad determinada?*
 
-::: {.callout-note title="Ejemplo intuitivo"}
-Si el VaR diario al 95% de un portafolio es $150,000, significa que **en 19 de cada 20 días**, la pérdida no superará esa cifra. Pero en 1 de cada 20 días, sí podría.
+Formalmente es un cuantil de la distribución de resultados. Si $\alpha$ es el nivel de confianza (95%, 99%) y $q_{1-\alpha}$ es el cuantil de los retornos que deja una probabilidad $1-\alpha$ a su izquierda, el VaR de un portafolio de valor $W$ es
+
+$$VaR_\alpha = -\,q_{1-\alpha} \cdot W$$
+
+Conviene leer la definición con cuidado, porque se la suele citar mal: el VaR no es la pérdida máxima posible ni una pérdida esperada. Es un umbral, y no dice nada sobre cuánto se pierde los días en que se lo supera [@jorion2006].
+
+::: {.callout-note title="Ejemplo"}
+Si el VaR diario al 95% de un portafolio es de \$150.000, en 19 de cada 20 días la pérdida no debería superar esa cifra. En el día restante puede superarla, y el VaR no dice por cuánto.
 :::
+
+El capítulo calcula ese cuantil de dos maneras, suponiendo normalidad y leyendo directamente los datos. Después presenta el Expected Shortfall, que mide lo que el VaR deja afuera, y termina con dos problemas prácticos: cómo se verifica que un VaR está bien calibrado y qué hacer cuando la volatilidad cambia en el tiempo. Todo se desarrolla primero con retornos simulados, donde conocemos la respuesta correcta, y al final se repite con datos reales.
 
 ---
 
-## Generación de Datos
+## Generación de datos
 
-Antes de calcular el VaR, necesitamos retornos. Simulamos un año de retornos diarios:
+Antes de calcular el VaR necesitamos retornos. Simulamos un año de retornos diarios con distribución normal. Es una elección deliberada: al conocer la distribución verdadera podemos comprobar si cada método devuelve lo que debería.
 
 ```{python}
 #| label: datos
@@ -55,13 +65,13 @@ aplicar_estilo()
 
 ---
 
-## VaR Paramétrico (Normal)
+## VaR paramétrico (normal)
 
-El primer método es el más rápido y el que más supuestos hace: asumir que los retornos siguen una **distribución normal**. Si eso es cierto, la distribución entera queda descripta por dos números que ya estimamos —media $\mu$ y desvío $\sigma$— y el cuantil que define el VaR tiene fórmula cerrada:
+El primer método es el más rápido y el que más supuestos hace: asumir que los retornos siguen una distribución normal. En ese caso la distribución queda descripta por dos números que ya estimamos, la media $\mu$ y el desvío $\sigma$, y el cuantil que define el VaR tiene fórmula cerrada:
 
-$$VaR_{\alpha} = -(\mu + z_\alpha \cdot \sigma) \cdot W$$
+$$VaR_{\alpha} = -(\mu + z_{1-\alpha} \cdot \sigma) \cdot W$$
 
-donde $z_\alpha$ es el cuantil de la normal estándar (para 95%, $z = -1.645$: el punto que deja el 5% de la campana a su izquierda) y $W$ es el valor del portafolio.
+donde $z_{1-\alpha}$ es el cuantil de la normal estándar que deja una probabilidad $1-\alpha$ a su izquierda (para una confianza del 95%, $z_{0.05} = -1.645$) y $W$ es el valor del portafolio.
 
 ```{python}
 #| label: var-parametrico
@@ -83,13 +93,13 @@ print(f"Como % del portafolio (95%):  {var_param_95 / valor_portafolio:.4%}")
 print(f"Como % del portafolio (99%):  {var_param_99 / valor_portafolio:.4%}")
 ```
 
-Traduzcamos el número a castellano, porque es lo que te van a pedir en cualquier comité de riesgo: *"con un portafolio de \$10 millones, en 19 de cada 20 días la pérdida no debería superar los ~\$240.000 (un 2.4% del portafolio)"*. Y la comparación entre niveles enseña algo general: pasar del 95% al 99% de confianza **encarece el VaR en casi un 50%** — meterse más adentro de la cola cuesta cada vez más caro, porque la cola se estira.
+El número se informa siempre con su horizonte y su confianza: *"con un portafolio de \$10 millones, en 19 de cada 20 días la pérdida no debería superar unos \$234.000, un 2.3% del portafolio"*. La comparación entre niveles también deja una enseñanza: pasar del 95% al 99% de confianza aumenta el VaR alrededor de un 40%. Cada punto adicional de confianza cuesta más que el anterior, porque obliga a ir más lejos en la cola.
 
 ---
 
-## VaR Histórico
+## VaR histórico
 
-El método paramétrico se apoya por completo en el supuesto de normalidad. El **VaR histórico** toma el camino opuesto: no asume *ninguna* distribución — deja que los datos hablen solos. La receta es de una simplicidad brutal: ordenás los retornos observados de peor a mejor y leés el percentil correspondiente. El VaR 95% es, literalmente, "el retorno del día que está en el puesto 5% de los peores".
+El método paramétrico depende por completo del supuesto de normalidad. El **VaR histórico** no supone ninguna distribución: ordena los retornos observados del peor al mejor y lee el percentil que corresponde. El VaR al 95% es, sin más, el retorno que separa al 5% de los peores días del resto.
 
 ```{python}
 #| label: var-historico
@@ -104,16 +114,16 @@ print(f"VaR Histórico (95%, 1 día): ${var_hist_95:>12,.2f}")
 print(f"VaR Histórico (99%, 1 día): ${var_hist_99:>12,.2f}")
 ```
 
-Con nuestros datos, el histórico da parecido al paramétrico — lógico, porque los retornos *fueron simulados* de una normal. Con retornos reales (colas pesadas), el histórico al 99% suele salir **más alto**, porque los peores días de la muestra son peores de lo que la normal admite. Esa diferencia entre métodos no es un defecto: es un **diagnóstico** — cuando el histórico y el paramétrico divergen, la distribución real se está apartando de la normal justo donde más importa.
+Con nuestros datos el histórico da algo menos que el paramétrico (unos \$214.000 contra \$234.000 al 95%). La diferencia es ruido de muestreo: los retornos salieron de una normal, y con 252 observaciones el percentil 5 empírico no coincide exactamente con el teórico. Con retornos reales, que tienen colas pesadas, la diferencia es sistemática y de signo contrario: el histórico al 99% suele superar al paramétrico, porque los peores días de la muestra son peores de lo que la normal admite. Cuando los dos métodos divergen de esa manera, la divergencia informa algo: la distribución se aparta de la normal en la zona que más importa.
 
-El precio de la flexibilidad del histórico: al 99% con un año de datos (252 observaciones), el percentil 1 se estima con **apenas 2 o 3 observaciones**. Tu medida de riesgo cuelga de un puñado de días — por eso en la práctica se usan ventanas más largas o métodos híbridos.
+La flexibilidad del histórico tiene un costo. Al 99% y con un año de datos, el percentil 1 se apoya en apenas tres o cuatro observaciones, y una medida de riesgo que depende de tan pocos días es muy inestable. Por eso en la práctica se usan ventanas más largas o métodos híbridos.
 
-La @fig-var-historico-ordenado muestra la receta completa: los 252 días puestos en fila, del peor al mejor. El VaR histórico no es más que leer dónde termina la franja roja.
+La @fig-var-historico-ordenado muestra el procedimiento completo: los 252 días en fila, del peor al mejor, con la cola del 5% resaltada. El VaR histórico es el punto donde termina esa franja.
 
 ```{python}
 #| label: fig-var-historico-ordenado
 #| echo: false
-#| fig-cap: "VaR histórico: los 252 retornos del año ordenados del peor al mejor. Los días en rojo forman la cola del 5%; el VaR 95% es la frontera de esa franja. Al 99%, la cola se reduce a 2 o 3 barras."
+#| fig-cap: "VaR histórico: los 252 retornos del año ordenados del peor al mejor. Las barras resaltadas forman la cola del 5%; el VaR 95% es la frontera de esa franja. Al 99%, la cola se reduce a unas pocas barras."
 import sys; sys.path.insert(0, "..")
 from _esquemas import *
 import numpy as np
@@ -150,33 +160,32 @@ _esquema()
 
 ---
 
-## Comparación Visual: Paramétrico vs. Histórico
+## Comparación visual: paramétrico e histórico
 
-La @fig-comparacion-var pone los dos métodos sobre el mismo dibujo: el histograma de los datos, la campana que supone el método paramétrico y el corte del 5% que marca cada uno.
+La @fig-comparacion-var reúne los dos métodos en un mismo gráfico: el histograma de los datos, la normal que supone el método paramétrico y el corte del 5% que marca cada uno.
 
 ```{python}
 #| label: fig-comparacion-var
-#| fig-cap: "Retornos observados, normal ajustada y las dos líneas de VaR 95%. Con datos simulados de una normal, ambos cortes caen casi en el mismo lugar."
+#| fig-cap: "Retornos observados, normal ajustada y el percentil 5 según cada método. Como los datos se simularon de una normal, los dos cortes quedan cerca; la distancia entre ambos es error de muestreo."
 fig, ax = plt.subplots(figsize=(10, 5))
 
-# Histograma de retornos
-ax.hist(retornos, bins=40, density=True, alpha=0.6, color="#94a3b8",
+# Histograma de retornos, en %
+ax.hist(retornos * 100, bins=40, density=True, alpha=0.6, color="#94a3b8",
         edgecolor="white", label="Retornos observados")
 
-# Curva normal teórica
+# Normal con la media y el desvío de la muestra
 x = np.linspace(retornos.min(), retornos.max(), 200)
-ax.plot(x, stats.norm.pdf(x, mu, sigma), color="#1e3a5f", linewidth=2,
-        label="Normal teórica")
+ax.plot(x * 100, stats.norm.pdf(x, mu, sigma) / 100, color="#1e3a5f", linewidth=2,
+        label="Normal ajustada")
 
-# Líneas de VaR
-ax.axvline(percentil_5, color="#c2410c", linewidth=2, linestyle="--",
-           label=f"VaR Hist 95% ({percentil_5:.4f})")
-ax.axvline(mu + z * sigma, color="#637238", linewidth=2, linestyle=":",
-           label=f"VaR Param 95% ({mu + z * sigma:.4f})")
+# El corte del 5% según cada método
+ax.axvline(percentil_5 * 100, color="#c2410c", linewidth=2, linestyle="--",
+           label=f"Percentil 5 histórico ({percentil_5:.2%})")
+ax.axvline((mu + z * sigma) * 100, color="#637238", linewidth=2, linestyle=":",
+           label=f"Percentil 5 de la normal ({mu + z * sigma:.2%})")
 
-ax.set_xlabel("Retorno Diario")
+ax.set_xlabel("Retorno diario (%)")
 ax.set_ylabel("Densidad")
-ax.set_title("Distribución de Retornos con Líneas de VaR")
 ax.legend(fontsize=9)
 ax.grid(True, alpha=0.3)
 plt.tight_layout()
@@ -184,24 +193,24 @@ plt.show()
 ```
 
 ::: {.callout-warning title="Diferencias entre métodos"}
-El VaR paramétrico y el histórico **no necesariamente coinciden**. La diferencia se agranda cuando la distribución real se desvía de la normal (colas pesadas, asimetría).
+El VaR paramétrico y el histórico coinciden solo si los retornos son normales y la muestra es grande. La diferencia crece cuando la distribución real tiene colas pesadas o asimetría.
 :::
 
 ---
 
 ## Expected Shortfall (CVaR): mirar dentro de la cola
 
-El VaR tiene un defecto conceptual serio: te dice *dónde empieza* la zona de desastre, pero **no te dice nada de lo que pasa adentro**. Dos portafolios pueden tener el mismo VaR al 95% y comportamientos totalmente distintos en ese 5% restante: uno pierde apenas un poco más que el VaR, el otro se pulveriza. Para el VaR, son idénticos.
+El VaR tiene una limitación conceptual seria: indica dónde empieza la zona de pérdidas extremas, pero no dice nada de lo que ocurre dentro de ella. Dos portafolios pueden tener el mismo VaR al 95% y comportarse de manera muy distinta en el 5% restante: uno pierde apenas un poco más que el VaR y el otro pierde varias veces esa cifra. Para el VaR son idénticos.
 
-El **Expected Shortfall** (ES), también llamado **CVaR** (*Conditional Value at Risk*), corrige exactamente eso. Su pregunta es:
+El **Expected Shortfall** (ES), también llamado **CVaR** (*Conditional Value at Risk*), responde la pregunta que el VaR deja abierta:
 
-> *En los peores escenarios —los que superan el VaR—, ¿cuánto pierdo **en promedio**?*
+> *En los escenarios que superan el VaR, ¿cuánto se pierde en promedio?*
 
-$$ES_\alpha = -E\big[\,r \mid r < -VaR_\alpha\,\big]$$
+$$ES_\alpha = -E\big[\,r \mid r \le q_{1-\alpha}\,\big] \cdot W$$
 
-Es una esperanza **condicional**: promediamos los retornos *dado que* caímos en la cola. Por construcción, el ES siempre es mayor o igual que el VaR — es el "qué tan feo se pone" después de cruzar la frontera.
+Es una esperanza condicional: se promedian los retornos dado que cayeron en la cola. Por construcción, el ES es siempre mayor o igual que el VaR [@mcneil2015].
 
-La @fig-anatomia-var-es muestra las dos medidas sobre la misma cola. A la izquierda, el VaR es una frontera y el ES es el centro de gravedad de lo que queda del otro lado. A la derecha, dos distribuciones con **exactamente el mismo VaR 95%**: para el VaR son idénticas, pero la de colas pesadas esconde pérdidas mucho más profundas, y el ES las ve.
+La @fig-anatomia-var-es muestra las dos medidas sobre la misma cola. A la izquierda, el VaR es una frontera y el ES es el centro de gravedad de lo que queda del otro lado. A la derecha, dos distribuciones con exactamente el mismo VaR 95%: el VaR no las distingue, pero la de colas pesadas tiene pérdidas mucho más profundas, y el ES lo registra.
 
 ```{python}
 #| label: fig-anatomia-var-es
@@ -263,7 +272,7 @@ _esquema()
 
 ### Cálculo histórico: promediar la cola
 
-Con el método histórico, el cálculo es de una transparencia total: filtrás los días peores que el VaR y promediás.
+Con el método histórico el cálculo es directo: se filtran los días peores que el VaR y se promedian.
 
 ```{python}
 #| label: cvar
@@ -283,11 +292,11 @@ print("→ Cuando el día es malo de verdad, la pérdida promedio supera al VaR 
 
 ### Cálculo paramétrico: fórmula cerrada bajo normalidad
 
-Si asumimos retornos normales, el ES también tiene fórmula cerrada. Para nivel de confianza $\alpha$:
+Si asumimos retornos normales, el ES también tiene fórmula cerrada. Para un nivel de confianza $\alpha$:
 
 $$ES_\alpha = -\left(\mu - \sigma \cdot \frac{\phi(z_{1-\alpha})}{1-\alpha}\right) \cdot W$$
 
-donde $\phi$ es la densidad normal estándar y $z_{1-\alpha}$ el cuantil. El cociente $\phi(z)/(1-\alpha)$ es la "media de la cola" de la normal.
+donde $\phi$ es la densidad de la normal estándar y $z_{1-\alpha}$ el mismo cuantil que usamos para el VaR. El cociente $\phi(z_{1-\alpha})/(1-\alpha)$ es la distancia, medida en desvíos, entre la media y el promedio de la cola.
 
 ```{python}
 #| label: es-parametrico
@@ -299,13 +308,13 @@ print(f"ES paramétrico (95%): ${es_param_95:>12,.2f}")
 print(f"ES histórico   (95%): ${cvar_95:>12,.2f}")
 ```
 
-Ambos métodos deberían parecerse con datos ~normales como los nuestros. Con retornos reales (colas pesadas), el histórico suele dar **más alto** — y es el que está diciendo la verdad. También se puede estimar el ES por **Monte Carlo**: simulás miles de retornos del modelo que quieras (con saltos, con t-Student) y promediás la cola simulada; lo haremos en el [Capítulo 13](../unidad3/cap13_monte_carlo.qmd).
+Los dos valores difieren en casi un 14%, aunque los datos son normales. La explicación es la misma que en el VaR, agravada: el ES histórico al 95% promedia apenas 13 días, y un promedio de 13 observaciones de la cola tiene mucho error. Con retornos reales y muestras largas la relación suele invertirse, y el histórico supera al paramétrico porque registra las colas pesadas que la normal ignora. El ES también se puede estimar por Monte Carlo: se simulan miles de retornos del modelo elegido (con saltos, con t de Student) y se promedia la cola simulada. Lo hacemos en el [Capítulo 13](../unidad3/cap13_monte_carlo.qmd).
 
 ::: {.content-visible when-format="html"}
 ::: {.simulador}
 [Simulador · VaR contra ES cuando las colas pesan]{.simulador-titulo}
 
-La @fig-anatomia-var-es comparaba una normal con una t de Student. Acá elegís la distribución de los retornos (la normal del capítulo, una t de Student con los grados de libertad que quieras, o la mezcla con "días de crisis" del [Capítulo 7](../unidad2/cap07_estadistica_optimizacion.qmd)) y la comparás con lo que diría un VaR paramétrico: la normal con **la misma media y la misma volatilidad**. Todo se calcula con fórmulas exactas, sin simular. El gráfico de abajo muestra la cola izquierda en escala logarítmica, donde se ven las diferencias que la escala lineal aplasta.
+La @fig-anatomia-var-es comparaba una normal con una t de Student. Acá elegís la distribución de los retornos (la normal del capítulo, una t de Student con los grados de libertad que quieras, o la mezcla con "días de crisis" del [Capítulo 7](../unidad2/cap07_estadistica_optimizacion.qmd)) y la comparás con lo que diría un VaR paramétrico: la normal con la misma media y la misma volatilidad. Todo se calcula con fórmulas exactas, sin simular. El gráfico de abajo muestra la cola izquierda en escala logarítmica, donde se ven las diferencias que la escala lineal aplasta.
 
 ```{=html}
 <div id="sim-var-es"></div>
@@ -334,13 +343,13 @@ En la [versión web de este capítulo](https://diegoonna.github.io/libro_finanza
 
 ### Por qué el ES es "coherente" y el VaR no
 
-Hay un argumento matemático de fondo, y vale la pena entenderlo porque explica por qué **Basilea cambió del VaR al ES** para riesgo de mercado.
+Hay un argumento formal a favor del ES, y vale la pena conocerlo porque explica por qué la regulación de Basilea reemplazó el VaR por el ES para el riesgo de mercado.
 
-Una medida de riesgo razonable debería premiar la diversificación: el riesgo de una cartera combinada no debería superar la suma de los riesgos individuales. Esa propiedad se llama **subaditividad**:
+Una medida de riesgo razonable debería reconocer la diversificación: el riesgo de una cartera combinada no debería superar la suma de los riesgos de sus partes. Esa propiedad se llama **subaditividad**, y es una de las cuatro que @artzner1999 le exigen a una medida para considerarla *coherente*:
 
 $$\rho(A + B) \;\le\; \rho(A) + \rho(B)$$
 
-El VaR **puede violarla**. El ejemplo clásico: dos bonos independientes que rara vez caen en default, pero cuando caen, pierden mucho.
+El VaR puede violarla. El ejemplo clásico usa dos bonos independientes que rara vez caen en default pero que, cuando caen, pierden mucho.
 
 ```{python}
 #| label: subaditividad
@@ -368,9 +377,9 @@ print(f"{'VaR 95%':<18}{var_h(r_A):>9.1%}{var_h(r_B):>9.1%}{var_h(r_AB):>15.1%}"
 print(f"{'ES  95%':<18}{es_h(r_A):>9.1%}{es_h(r_B):>9.1%}{es_h(r_AB):>15.1%}")
 ```
 
-Mirá el resultado con atención, porque es contraintuitivo: cada bono individual tiene **VaR negativo o nulo** (la probabilidad de default, 3%, es menor que el 5% de la cola, así que el VaR "no ve" el default). Pero la cartera diversificada tiene VaR **positivo y grande**: al combinar dos bonos, la probabilidad de que *al menos uno* caiga (~6%) ya asoma dentro de la cola del 5%.
+El resultado es contraintuitivo. Cada bono por separado tiene un VaR negativo, es decir, ninguna pérdida: la probabilidad de default (3%) es menor que el 5% de la cola, y el VaR no llega a registrarla. La cartera diversificada, en cambio, tiene un VaR positivo y grande, porque la probabilidad de que al menos uno de los dos bonos caiga (cerca del 6%) ya supera el 5%.
 
-Según el VaR, **diversificar empeoró el riesgo** — un absurdo económico. El ES, en cambio, ve el default de cada bono individual (porque promedia toda la cola, no solo mira la frontera) y reporta correctamente que la cartera combinada es menos riesgosa que cada bono solo. Esa es la diferencia entre una medida coherente y una que no lo es.
+Según el VaR, diversificar aumentó el riesgo, lo cual no tiene sentido económico. El ES registra el default de cada bono individual, porque promedia toda la cola en lugar de mirar solo su frontera, e informa correctamente que la cartera combinada es menos riesgosa que cada bono por separado.
 
 La @fig-subaditividad muestra de dónde sale la paradoja. Cada barra reparte el 100% de la probabilidad entre los resultados posibles, del peor al mejor, y la línea marca el 5%. El VaR es el resultado sobre el que cae esa línea.
 
@@ -429,16 +438,16 @@ _esquema()
 | **VaR** | ¿Dónde empieza la zona de pérdidas extremas? | No siempre | No |
 | **ES/CVaR** | ¿Cuánto pierdo en promedio cuando estoy en esa zona? | Sí (coherente) | Sí |
 
-Por estas propiedades, **Basilea III (FRTB)** reemplazó el VaR 99% por el **ES 97.5%** como métrica regulatoria de riesgo de mercado. En la práctica profesional se reportan ambos: el VaR por tradición y comparabilidad, el ES por honestidad sobre las colas.
+Por estas propiedades, la revisión del marco de riesgo de mercado de Basilea (FRTB) reemplazó el VaR al 99% por el ES al 97.5% como métrica regulatoria [@bcbs2019]. En la práctica se informan los dos: el VaR por tradición y comparabilidad, el ES porque describe la cola.
 :::
 
 ---
 
-## Backtesting de VaR: ¿el modelo dice la verdad?
+## Backtesting del VaR: ¿el modelo está bien calibrado?
 
-Calculamos un VaR 95%. ¿Cómo sabemos si es *correcto*? Hay una forma directa de auditarlo, y es la que exigen los reguladores: contar. Si el VaR 95% está bien calibrado, la pérdida real debería superarlo **el 5% de los días** — ni mucho más (el modelo subestima el riesgo) ni mucho menos (lo sobreestima, y estás inmovilizando capital de más). Cada día en que la pérdida supera al VaR se llama una **excepción**.
+Calculamos un VaR al 95%. Para saber si es correcto hay una verificación directa, que es la que exigen los reguladores: contar. Si el VaR está bien calibrado, la pérdida real debería superarlo el 5% de los días. Si lo supera mucho más seguido, el modelo subestima el riesgo; si lo supera mucho menos, lo sobreestima y obliga a inmovilizar capital de más. Cada día en que la pérdida supera al VaR se llama una **excepción**.
 
-El **test de Kupiec** (o *proportion of failures*) formaliza el conteo. Su lógica: si cada día hay una probabilidad del 5% de excepción, y los días son independientes, el número total de excepciones en $n$ días sigue una **distribución binomial** — igual que contar caras en tiradas de una moneda cargada al 5%. Con eso podemos preguntar: *¿el número de excepciones que observé es compatible con esa binomial?* Si observamos demasiadas, la probabilidad de que el modelo esté bien calibrado (el p-value) se hace chica y lo rechazamos.
+El test de @kupiec1995, conocido como *proportion of failures*, formaliza ese conteo. Si cada día tiene una probabilidad del 5% de ser una excepción y los días son independientes, el número de excepciones en $n$ días sigue una distribución binomial. La pregunta es entonces si la cantidad observada es compatible con esa binomial. El test original compara las dos hipótesis con un cociente de verosimilitud y rechaza tanto por exceso como por defecto de excepciones. Acá usamos una versión más simple, que mira solo la cola superior de la binomial, porque el caso que preocupa es el de un modelo que subestima el riesgo.
 
 ```{python}
 #| label: backtesting
@@ -459,14 +468,14 @@ print(f"\np-value (Kupiec): {p_value:.4f}")
 print("Aprobado" if p_value > 0.05 else "Rechazado: demasiadas excepciones")
 ```
 
-Interpretemos el resultado: esperábamos ~12.6 excepciones en 252 días y observamos un número cercano; el p-value alto dice que esa cantidad es perfectamente compatible con un modelo bien calibrado — **no hay evidencia contra el VaR**. Si hubiéramos observado 25 excepciones, el p-value se derrumbaría y el modelo quedaría rechazado. Este es exactamente el mecanismo del "semáforo de Basilea": los reguladores cuentan las excepciones del año y, si son demasiadas, el banco sufre un multiplicador de capital mayor.
+Esperábamos 12.6 excepciones en 252 días y observamos 9. El p-value de 0.89 indica que esa cantidad es perfectamente compatible con un modelo bien calibrado: no hay evidencia contra el VaR. Con 20 excepciones o más el p-value caería por debajo del 5% y el modelo quedaría rechazado. Este es el mecanismo del "semáforo" de Basilea: el regulador cuenta las excepciones del año y, si son demasiadas, aumenta el multiplicador de capital del banco.
 
-La @fig-kupiec-binomial dibuja el test: la binomial dice cuántas excepciones son esperables si el modelo está bien, y la zona roja reúne las cantidades tan altas que serían una sorpresa (menos del 5% de probabilidad).
+La @fig-kupiec-binomial representa el test: la binomial indica cuántas excepciones son esperables si el modelo está bien calibrado, y las barras resaltadas reúnen las cantidades tan altas que tendrían menos de un 5% de probabilidad.
 
 ```{python}
 #| label: fig-kupiec-binomial
 #| echo: false
-#| fig-cap: "Test de Kupiec: distribución del número de excepciones en 252 días si el VaR 95% está bien calibrado, Binomial(252, 5%). Las barras rojas forman la zona de rechazo; la flecha marca las excepciones observadas."
+#| fig-cap: "Test de Kupiec: distribución del número de excepciones en 252 días si el VaR 95% está bien calibrado, Binomial(252, 5%). Las barras resaltadas forman la zona de rechazo; la flecha marca las excepciones observadas."
 import sys; sys.path.insert(0, "..")
 from _esquemas import *
 import numpy as np
@@ -500,23 +509,23 @@ def _esquema():
 _esquema()
 ```
 
-::: {.callout-note title="Lo que Kupiec no ve"}
-El test cuenta *cuántas* excepciones hubo, pero no *cuándo*: diez excepciones repartidas en el año y diez excepciones en dos semanas de crisis dan el mismo veredicto, aunque el segundo caso delata un modelo que no reacciona a los cambios de régimen. Tests más finos (Christoffersen) auditan también la independencia de las excepciones. Y ese defecto nos lleva directo al problema siguiente: la volatilidad **cambia en el tiempo**.
+::: {.callout-note title="Lo que el conteo no ve"}
+El test cuenta cuántas excepciones hubo, pero no cuándo. Diez excepciones repartidas a lo largo del año y diez concentradas en dos semanas de crisis reciben el mismo veredicto, aunque el segundo caso corresponde a un modelo que no reacciona a los cambios de régimen. El test de @christoffersen1998 agrega esa verificación: contrasta que las excepciones sean independientes entre sí, y lo implementamos más adelante. El problema de fondo es que la volatilidad cambia en el tiempo, y es el tema de la sección siguiente.
 :::
 
 ---
 
-## EWMA: cuando la volatilidad tiene memoria
+## EWMA: cuando la volatilidad cambia en el tiempo
 
-Todo lo anterior usó **una** volatilidad, estimada con el año entero de datos. Pero mirá cualquier serie financiera real: hay semanas planas y semanas de pánico, y los días agitados vienen **en rachas** (el *volatility clustering* que formalizaremos en el [Capítulo 20](../unidad4/cap20_volatilidad_estocastica.qmd)). Un VaR con volatilidad constante es un promedio entre la calma y la tormenta: sobreestima el riesgo en las épocas tranquilas y —mucho peor— **lo subestima justo cuando la tormenta llega**.
+Hasta acá usamos una sola volatilidad, estimada con el año completo. Las series financieras reales no se comportan así: alternan períodos tranquilos con períodos agitados, y los días de mucho movimiento tienden a venir agrupados (el *volatility clustering* que formalizamos en el [Capítulo 20](../unidad4/cap20_volatilidad_estocastica.qmd)). Un VaR con volatilidad constante promedia esos dos estados: sobreestima el riesgo en los períodos tranquilos y, lo que es más grave, lo subestima en los agitados.
 
-El modelo **EWMA** (*Exponentially Weighted Moving Average*, popularizado por RiskMetrics de J.P. Morgan) corrige esto con una idea simple: estimar la varianza dando **más peso a lo reciente**. Cada día, la varianza nueva es una mezcla de la varianza de ayer y del shock de ayer:
+El modelo **EWMA** (*Exponentially Weighted Moving Average*), difundido por RiskMetrics [@riskmetrics1996], estima la varianza dando más peso a los datos recientes. Cada día, la varianza nueva combina la varianza del día anterior con el último retorno al cuadrado:
 
 $$\sigma_t^2 = \lambda \sigma_{t-1}^2 + (1-\lambda) r_{t-1}^2$$
 
-El parámetro $\lambda$ (RiskMetrics usa 0.94) controla la memoria: un shock grande de ayer entra con peso $(1-\lambda) = 6\%$ y después se va desvaneciendo geométricamente. Resultado: cuando el mercado se agita, la volatilidad estimada **sube en días, no en meses** — y el VaR con ella.
+El parámetro $\lambda$ controla la memoria; RiskMetrics propone 0.94 para datos diarios. Un retorno grande entra con peso $1-\lambda = 6\%$ y después se va diluyendo geométricamente. Cuando el mercado se agita, la volatilidad estimada sube en cuestión de días, y el VaR sube con ella.
 
-Desarrollando la recursión, la varianza EWMA resulta ser un promedio de todos los retornos al cuadrado pasados, con pesos $(1-\lambda)\lambda^k$ para el día de hace $k+1$ ruedas. La @fig-pesos-ewma compara esos pesos con los de la volatilidad "de siempre", que le da a cada día del año el mismo peso.
+Desarrollando la recursión, la varianza EWMA resulta ser un promedio de todos los retornos al cuadrado pasados, con pesos $(1-\lambda)\lambda^k$ para el retorno de hace $k+1$ ruedas. La @fig-pesos-ewma compara esos pesos con los de la volatilidad muestral, que le da a cada día del año el mismo peso.
 
 ```{python}
 #| label: fig-pesos-ewma
@@ -551,49 +560,84 @@ def _esquema():
 _esquema()
 ```
 
+Para ver el modelo en funcionamiento hace falta una serie cuya volatilidad cambie de verdad. Los retornos del comienzo del capítulo no sirven, porque se simularon con volatilidad constante. Simulamos entonces un año con dos regímenes: uno tranquilo, con un desvío diario de 0.9%, y un tramo de estrés de 50 ruedas con un desvío de 2.5%.
+
+```{python}
+#| label: datos-regimenes
+rng_reg = np.random.default_rng(21)
+dias = np.arange(252)
+en_estres = (dias >= 150) & (dias < 200)          # ruedas 150 a 199
+
+# El desvío de cada día depende del régimen
+retornos_reg = rng_reg.normal(0.0004, np.where(en_estres, 0.025, 0.009))
+
+mu_reg, sigma_reg = retornos_reg.mean(), retornos_reg.std()
+print(f"Volatilidad anualizada del año completo: {sigma_reg * np.sqrt(252):.1%}")
+print(f"  en el tramo tranquilo: {retornos_reg[~en_estres].std() * np.sqrt(252):.1%}")
+print(f"  en el tramo de estrés: {retornos_reg[en_estres].std() * np.sqrt(252):.1%}")
+```
+
 ```{python}
 #| label: fig-ewma-var-dinamico
-#| fig-cap: "Arriba: volatilidad EWMA contra la volatilidad constante del año. Abajo: el VaR 95% que resulta de cada una."
-lambd = 0.94  # Factor de decaimiento (RiskMetrics)
+#| fig-cap: "Arriba: volatilidad EWMA contra la volatilidad constante del año, con el tramo de estrés sombreado. Abajo: los retornos diarios y el límite de pérdida al 95% que resulta de cada volatilidad."
+lambd = 0.94  # factor de decaimiento de RiskMetrics
 
-# Calcular varianza EWMA
-varianza_ewma = np.zeros(len(retornos))
-varianza_ewma[0] = retornos[0] ** 2
-
-for t in range(1, len(retornos)):
-    varianza_ewma[t] = lambd * varianza_ewma[t-1] + (1 - lambd) * retornos[t-1] ** 2
-
+# Varianza EWMA: la de cada día usa solo retornos anteriores
+varianza_ewma = np.zeros(len(retornos_reg))
+varianza_ewma[0] = retornos_reg[:20].var()    # valor inicial: varianza de las primeras 20 ruedas
+for t in range(1, len(retornos_reg)):
+    varianza_ewma[t] = lambd * varianza_ewma[t-1] + (1 - lambd) * retornos_reg[t-1] ** 2
 vol_ewma = np.sqrt(varianza_ewma)
 
-# VaR dinámico con EWMA
-var_ewma = -(mu + z * vol_ewma) * valor_portafolio
+# Límite de pérdida al 95%, expresado como retorno, con cada volatilidad
+limite_const = mu_reg + z * sigma_reg         # usa el desvío del año completo
+limite_ewma = mu_reg + z * vol_ewma
 
 fig, axes = plt.subplots(2, 1, figsize=(10, 7), sharex=True)
 
-# Panel superior: volatilidad
+# Panel superior: las dos volatilidades
 ax = axes[0]
-ax.plot(vol_ewma * np.sqrt(252) * 100, linewidth=1.5, color="#1e3a5f", label="EWMA (λ=0.94)")
-ax.axhline(sigma * np.sqrt(252) * 100, color="#c2410c", linestyle="--", alpha=0.7, label="Vol constante")
-ax.set_ylabel("Volatilidad Anualizada (%)")
-ax.set_title("Comparación: Volatilidad Constante vs. EWMA")
+ax.axvspan(150, 200, color="#94a3b8", alpha=0.2, label="Tramo de estrés")
+ax.plot(vol_ewma * np.sqrt(252) * 100, linewidth=1.5, color="#1e3a5f", label="EWMA (λ = 0.94)")
+ax.axhline(sigma_reg * np.sqrt(252) * 100, color="#c2410c", linestyle="--",
+           label="Volatilidad constante")
+ax.set_ylabel("Volatilidad anualizada (%)")
 ax.legend()
 ax.grid(True, alpha=0.3)
 
-# Panel inferior: VaR dinámico vs constante
+# Panel inferior: retornos contra los dos límites
 ax = axes[1]
-ax.fill_between(range(len(var_ewma)), var_ewma, alpha=0.3, color="#c2410c", label="VaR EWMA")
-ax.axhline(var_param_95, color="#1e3a5f", linestyle="--", label="VaR constante")
-ax.set_xlabel("Día")
-ax.set_ylabel("VaR ($)")
-ax.set_title("VaR Dinámico (EWMA) vs. Constante")
-ax.legend()
+ax.axvspan(150, 200, color="#94a3b8", alpha=0.2)
+ax.bar(dias, retornos_reg * 100, width=1.0, color="#94a3b8", label="Retorno diario")
+ax.plot(limite_ewma * 100, linewidth=1.5, color="#1e3a5f", label="Límite con EWMA")
+ax.axhline(limite_const * 100, color="#c2410c", linestyle="--", label="Límite constante")
+ax.set_xlabel("Rueda")
+ax.set_ylabel("Retorno diario (%)")
+ax.legend(ncol=3, loc="upper left")
 ax.grid(True, alpha=0.3)
 
 plt.tight_layout()
 plt.show()
 ```
 
-Leé los dos paneles de la @fig-ewma-var-dinamico juntos. Arriba: la volatilidad EWMA oscila alrededor de la constante (línea roja), con episodios donde se dispara por encima y períodos donde duerme por debajo — la línea roja es el promedio de dos regímenes distintos. Abajo, la consecuencia para el riesgo: el **VaR dinámico se expande en los períodos agitados y se contrae en los tranquilos**, mientras el VaR constante ignora todo. En los picos, el VaR constante está *subestimando* el riesgo del día — y esas son exactamente las excepciones agrupadas que el test de Kupiec no sabe detectar.
+En el panel superior de la @fig-ewma-var-dinamico, la volatilidad constante (línea punteada) queda a mitad de camino entre los dos regímenes y no describe bien a ninguno. La EWMA tarda algunas ruedas en reconocer el cambio, pero después acompaña al tramo de estrés y vuelve a bajar cuando termina. El panel inferior muestra la consecuencia sobre el VaR: el límite constante resulta holgado durante la calma y queda corto en el tramo de estrés, mientras que el límite EWMA se abre y se cierra con la volatilidad.
+
+El conteo de excepciones permite medir esa diferencia:
+
+```{python}
+#| label: excepciones-regimenes
+exc_const = retornos_reg < limite_const
+exc_ewma = retornos_reg < limite_ewma
+
+for nombre, exc in [("VaR constante", exc_const), ("VaR EWMA", exc_ewma)]:
+    p = 1 - binom.cdf(exc.sum() - 1, len(exc), 1 - confianza)
+    print(f"{nombre:<14} excepciones: {exc.sum():>2} | "
+          f"en el tramo de estrés: {exc[en_estres].sum()} | p-value: {p:.3f}")
+```
+
+Los dos modelos tienen 10 excepciones y el mismo p-value: para el test de la sección anterior son indistinguibles. Pero 7 de las 10 excepciones del VaR constante caen en el tramo de estrés, que ocupa apenas el 20% del año, mientras que el EWMA tiene solo 3 en ese tramo. Es el caso que describía el recuadro anterior: un modelo que aprueba por la cantidad de excepciones y que, sin embargo, falla de manera sistemática en el momento en que más se lo necesita.
+
+Dos aclaraciones sobre el experimento. La semilla está elegida para que los dos conteos coincidan; con otras, el EWMA suele sumar algunas excepciones más, porque reacciona con retraso al comienzo del estrés, pero la concentración de las excepciones del VaR constante se repite. Y el VaR constante corre con ventaja, porque su desvío se calcula con el año completo, incluidos los días que todavía no habían ocurrido. El EWMA solo usa el pasado, que es la situación real de quien mide riesgo.
 
 ::: {.content-visible when-format="html"}
 ::: {.simulador}
@@ -627,9 +671,51 @@ En la [versión web de este capítulo](https://diegoonna.github.io/libro_finanza
 
 ---
 
-## Test de Normalidad
+## Independencia de las excepciones: el test de Christoffersen
 
-Cerramos auditando el supuesto sobre el que descansa todo el enfoque paramétrico: ¿los retornos son normales? El **test de Jarque-Bera** lo contrasta midiendo asimetría y curtosis:
+El conteo de Kupiec supone que las excepciones son independientes, pero no lo verifica. El test de @christoffersen1998 contrasta ese supuesto de la manera más simple posible: compara la probabilidad de una excepción al día siguiente de otra excepción con la probabilidad de una excepción al día siguiente de un día normal. Si las excepciones son independientes, las dos probabilidades coinciden; si vienen agrupadas, la primera es mayor.
+
+Para hacerlo se cuentan las cuatro transiciones posibles entre un día y el siguiente ($n_{00}$, $n_{01}$, $n_{10}$ y $n_{11}$, donde 1 indica excepción) y se comparan dos modelos con un cociente de verosimilitud: uno con una única probabilidad de excepción y otro con dos, según lo que haya pasado el día anterior. Bajo independencia, el estadístico sigue una distribución $\chi^2$ con un grado de libertad.
+
+```{python}
+#| label: christoffersen
+from scipy.stats import chi2
+
+def test_independencia(excepciones):
+    """Test de independencia de Christoffersen sobre una serie de excepciones (True/False)."""
+    e = np.asarray(excepciones, dtype=int)
+    ayer, hoy = e[:-1], e[1:]
+    n00 = np.sum((ayer == 0) & (hoy == 0))    # día normal después de un día normal
+    n01 = np.sum((ayer == 0) & (hoy == 1))    # excepción después de un día normal
+    n10 = np.sum((ayer == 1) & (hoy == 0))    # día normal después de una excepción
+    n11 = np.sum((ayer == 1) & (hoy == 1))    # excepción después de otra excepción
+    p01 = n01 / (n00 + n01)
+    p11 = n11 / (n10 + n11)
+    p = (n01 + n11) / len(hoy)
+
+    def log_veros(n_no, n_si, prob):
+        # log-verosimilitud de n_si excepciones y n_no días normales, con probabilidad prob
+        return (n_no * np.log(1 - prob) if n_no else 0.0) + (n_si * np.log(prob) if n_si else 0.0)
+
+    lr = -2 * (log_veros(n00 + n10, n01 + n11, p)
+               - log_veros(n00, n01, p01) - log_veros(n10, n11, p11))
+    return p01, p11, lr, chi2.sf(lr, 1)
+
+for nombre, exc in [("VaR constante", exc_const), ("VaR EWMA", exc_ewma)]:
+    p01, p11, lr, pv = test_independencia(exc)
+    print(f"{nombre:<14} P(exc | ayer normal) = {p01:.1%} | P(exc | ayer exc) = {p11:.1%} | "
+          f"LR = {lr:.2f} | p-value = {pv:.3f}")
+```
+
+El test no rechaza la independencia en ninguno de los dos casos, y el resultado merece una explicación, porque sabemos que 7 de las 10 excepciones del VaR constante están concentradas en 50 ruedas. La razón es que el test solo mira días consecutivos. En esa serie hay un único par de excepciones seguidas; las demás están cerca unas de otras, pero separadas por días normales, y para el test eso no cuenta como agrupamiento. A esto se suma que con diez excepciones cualquier test tiene poca potencia.
+
+La conclusión práctica es que ningún test reemplaza a la inspección directa de cuándo ocurren las excepciones. Kupiec mira la cantidad, Christoffersen mira las rachas de días consecutivos, y un agrupamiento de varias semanas puede pasar por los dos sin ser detectado. Al final del capítulo repetimos el test con datos reales y una muestra cinco veces más larga.
+
+---
+
+## Test de normalidad
+
+Queda por revisar el supuesto sobre el que descansa todo el enfoque paramétrico: ¿los retornos son normales? El test de Jarque-Bera [@jarque1987] lo contrasta a partir de la asimetría y la curtosis de la muestra:
 
 - $H_0$: Los retornos son normales (skewness = 0, curtosis = 3)
 - $H_1$: No son normales
@@ -649,20 +735,20 @@ print(f"p-value:                 {jb_pvalue:>.4f}")
 print(f"{'-> No se rechaza normalidad' if jb_pvalue > 0.05 else '-> Se rechaza normalidad'}")
 ```
 
-El test no rechaza — pero ojo con la lectura: nuestros retornos **fueron simulados de una normal**, así que el test está funcionando como debe (no encuentra anormalidad donde no la hay). El valor pedagógico está en el contraste con lo que pasa al aplicar exactamente este test a datos reales:
+El test rechaza la normalidad al 5% (p-value de 0.039), aunque los retornos se simularon de una normal. No es un error del código. Un test con un nivel de significación del 5% rechaza una hipótesis verdadera una de cada veinte veces, y esta muestra es una de ellas: el exceso de curtosis es casi nulo, y lo que empuja al estadístico es una asimetría positiva de 0.38 que apareció por azar en 252 observaciones. El [Capítulo 17](../unidad3/cap17_backtesting.qmd) vuelve sobre estos falsos positivos. Lo que interesa acá es la magnitud: el estadístico vale 6.5, y con datos reales el orden es muy distinto.
 
-::: {.callout-warning title="En datos reales..."}
-Los retornos financieros reales típicamente **rechazan** la normalidad con p-values microscópicos. Presentan:
+::: {.callout-warning title="En datos reales"}
+Los retornos financieros rechazan la normalidad casi sin excepción, con p-values prácticamente nulos. Presentan:
 
-- **Curtosis excesiva** (colas pesadas → más eventos extremos que la normal)
-- **Asimetría negativa** (más crashes que rallies)
+- **Exceso de curtosis**: colas pesadas, es decir, más eventos extremos de los que admite la normal.
+- **Asimetría negativa**, con frecuencia: en los índices accionarios las caídas grandes suelen ser más frecuentes que las subas grandes.
 
-Esto hace que el VaR paramétrico normal **subestime** el riesgo verdadero — especialmente al 99%, donde manda la cola. Es el motivo de fondo por el que existen el VaR histórico, el ES, y los modelos con saltos del [Capítulo 14](../unidad3/cap14_procesos_estocasticos_activos.qmd).
+En consecuencia, el VaR paramétrico normal subestima el riesgo, sobre todo al 99%, donde el resultado depende casi por completo de la cola. Es la razón de fondo por la que existen el VaR histórico, el ES y los modelos con saltos del [Capítulo 14](../unidad3/cap14_procesos_estocasticos_activos.qmd).
 :::
 
 ---
 
-## Resumen de Métricas
+## Resumen de métricas
 
 Los tres métodos del capítulo (y el que llega en el [Capítulo 13](../unidad3/cap13_monte_carlo.qmd)) comparten el final: un percentil de la distribución de pérdidas y el promedio de lo que queda más allá. Lo que cambia es cómo se obtiene esa distribución, y la @fig-tres-metodos-var lo resume.
 
@@ -713,7 +799,7 @@ print(resumen.to_string(index=False))
 
 ## Con datos reales
 
-El capítulo entero descansó sobre retornos simulados de una normal — ideal para aprender los métodos, tramposo para juzgarlos. El veredicto final se lo damos a los datos: cinco años del ETF SPY (el S&P 500), del dataset del libro (`datos/precios.csv`, ver @sec-datos-financieros).
+Todo el capítulo trabajó con retornos simulados de una normal, que sirven para aprender los métodos pero no para evaluarlos. Para eso hacen falta datos reales: cinco años del ETF SPY, que replica al S&P 500, tomados del dataset del libro (`datos/precios.csv`, ver @sec-datos-financieros).
 
 ```{python}
 #| label: var-datos-reales
@@ -741,18 +827,44 @@ print(f"Exceso de curtosis: {kurtosis(r_spy, fisher=True):+.2f} | "
       f"Asimetría: {skew(r_spy):+.2f}")
 ```
 
-Todo lo que el capítulo anticipó, junto y en un solo resultado. Al 95%, el paramétrico y el histórico casi coinciden — a esa profundidad de la cola, la normal todavía zafa. Al **99% se separan**: los peores días reales del S&P son peores de lo que la campana admite, y el histórico lo reporta. El ES amplifica el mensaje (la cola no solo empieza antes: es más profunda). Y el test de Jarque-Bera, que con los datos simulados no encontraba nada, acá **rechaza la normalidad sin despeinarse** — el exceso de curtosis positivo es la firma de las colas pesadas. Con datos reales, el VaR paramétrico normal es la métrica que menos deberías creerle justo donde más la necesitás.
+El resultado reúne lo que el capítulo fue anticipando. Al 95%, el VaR paramétrico y el histórico casi coinciden: a esa profundidad de la cola, la normal todavía es una aproximación aceptable. Al 99% se separan, porque los peores días del S&P 500 son peores de lo que la normal admite, y el histórico lo refleja. El ES refuerza la conclusión: la cola no solo empieza antes, también es más profunda. El test de Jarque-Bera, cuyo estadístico valía 6.5 con los datos simulados, acá supera los 4.000, y el p-value es nulo a cualquier precisión razonable. La causa es un exceso de curtosis cercano a 9, la marca de las colas pesadas. La asimetría, en cambio, resulta levemente positiva en esta muestra: la asimetría negativa es frecuente en los índices accionarios, pero no es una regla.
+
+Queda por ver si las excepciones del VaR son independientes. Aplicamos el test de Christoffersen al VaR al 99%, con volatilidad constante y con EWMA:
+
+```{python}
+#| label: independencia-datos-reales
+def limite_ewma_normal(r, z, lambd=0.94):
+    """Límite de pérdida diario (como retorno) con volatilidad EWMA."""
+    varianza = np.zeros(len(r))
+    varianza[0] = r[:20].var()
+    for t in range(1, len(r)):
+        varianza[t] = lambd * varianza[t-1] + (1 - lambd) * r[t-1] ** 2
+    return r.mean() + z * np.sqrt(varianza)
+
+exc_spy_const = r_spy < mu_spy + z_99 * sigma_spy
+exc_spy_ewma = r_spy < limite_ewma_normal(r_spy, z_99)
+
+for nombre, exc in [("VaR constante", exc_spy_const), ("VaR EWMA", exc_spy_ewma)]:
+    p01, p11, lr, pv = test_independencia(exc)
+    print(f"{nombre:<14} P(exc | ayer normal) = {p01:.1%} | P(exc | ayer exc) = {p11:.1%} | "
+          f"LR = {lr:.2f} | p-value = {pv:.3f}")
+```
+
+Con el VaR constante, la probabilidad de una excepción es de 1.6% después de un día normal y de 9.1% después de otra excepción, más de cinco veces mayor. El p-value de 0.058 queda apenas por encima del 5%: la evidencia de agrupamiento es fuerte, aunque no alcanza para rechazar con el umbral habitual, en buena medida porque a ese nivel de confianza hay pocas excepciones. Con EWMA las dos probabilidades se acercan (2.0% y 4.0%) y el p-value sube a 0.52. Al adaptar la volatilidad, el modelo elimina buena parte de la dependencia entre excepciones, que es lo que se le pedía.
+
+Con datos reales, el VaR paramétrico normal es menos confiable precisamente en los niveles de confianza altos, que son los que más interesan.
 
 ---
 
 ## Errores comunes
 
 ::: {.callout-warning title="Trampas frecuentes"}
-- **El signo del cuantil**: el percentil 5 de los retornos es un número *negativo*; el VaR se reporta *positivo* (es una pérdida). Ese signo menos perdido es el bug más común en implementaciones de VaR — verificá que tu VaR sea positivo.
-- **Escalar con $\sqrt{t}$ sin pensar**: $VaR_{10d} = VaR_{1d}\sqrt{10}$ solo vale si los retornos son i.i.d. y sin autocorrelación. Con volatility clustering (o sea, siempre), la regla subestima el riesgo de horizontes largos en épocas agitadas.
-- **Confundir VaR en % con VaR en $**: mezclar las dos unidades a mitad de un cálculo (multiplicar dos veces por $W$, o ninguna) produce errores de orden de magnitud que a veces sobreviven hasta el reporte.
-- **Volatilidad sin anualizar (o anualizada dos veces)**: sé consistente con el horizonte — VaR diario con $\sigma$ diaria, VaR anual con $\sigma$ anual. La mezcla es otro clásico silencioso.
-- **Auditar solo la cantidad de excepciones**: Kupiec aprueba un modelo cuyas excepciones vienen todas juntas en una crisis. Mirá también *cuándo* ocurren (independencia), no solo cuántas son.
+- **El signo del cuantil**: el percentil 5 de los retornos es un número negativo y el VaR se informa positivo, porque es una pérdida. Olvidar ese signo es el error más frecuente al implementar un VaR.
+- **Escalar con $\sqrt{t}$ sin revisar los supuestos**: $VaR_{10d} = VaR_{1d}\sqrt{10}$ vale solo si los retornos son i.i.d. Con volatilidad agrupada, que es el caso habitual, la regla subestima el riesgo de los horizontes largos en los períodos agitados.
+- **Confundir VaR en porcentaje con VaR en dinero**: mezclar las dos unidades en un mismo cálculo (multiplicar dos veces por $W$, o ninguna) produce errores de varios órdenes de magnitud.
+- **Volatilidad sin anualizar, o anualizada dos veces**: el horizonte debe ser consistente. VaR diario con $\sigma$ diaria, VaR anual con $\sigma$ anual.
+- **Confiar en un único test de backtesting**: Kupiec mira la cantidad de excepciones y Christoffersen las rachas de días consecutivos. Un agrupamiento de semanas puede pasar por los dos.
+- **Verificar solo la cantidad de excepciones**: el conteo aprueba un modelo cuyas excepciones ocurren todas juntas en una crisis. Hay que mirar también cuándo ocurren.
 :::
 
 ---

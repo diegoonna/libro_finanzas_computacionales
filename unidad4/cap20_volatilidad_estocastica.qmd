@@ -15,11 +15,11 @@ nocite: |
 
 # Introducción {.unnumbered}
 
-Cerramos el libro atacando la última gran mentira piadosa de Black-Scholes. En el [Capítulo 18](../unidad4/cap18_derivados_vol_implicita.qmd) vimos la evidencia: la **sonrisa de volatilidad**. Si la volatilidad fuera constante como supone el modelo, la vol implícita sería la misma en todos los strikes — y no lo es, en ningún mercado de opciones del planeta.
+Cerramos el libro atacando la última gran mentira piadosa de Black-Scholes. En el [Capítulo 18](../unidad4/cap18_derivados_vol_implicita.qmd) vimos la evidencia: la **sonrisa de volatilidad**. Si la volatilidad fuera constante como supone el modelo, la vol implícita sería la misma en todos los strikes, y no lo es, en ningún mercado de opciones del planeta.
 
-En el [Capítulo 14](../unidad3/cap14_procesos_estocasticos_activos.qmd) arreglamos una parte del problema agregando **saltos** al precio. Pero hay otro hecho estilizado que los saltos solos no explican: la volatilidad **cambia en el tiempo, y de manera persistente**. Hay semanas tranquilas y meses de pánico; la volatilidad se agrupa en rachas (*volatility clustering*), tiende a volver a un nivel normal cuando se dispara, y —el detalle crucial— **sube cuando el mercado cae**.
+En el [Capítulo 14](../unidad3/cap14_procesos_estocasticos_activos.qmd) arreglamos una parte del problema agregando **saltos** al precio. Pero hay otro hecho estilizado que los saltos solos no explican: la volatilidad cambia en el tiempo, y de manera persistente. Hay semanas tranquilas y meses de pánico; la volatilidad se agrupa en rachas (*volatility clustering*), tiende a volver a un nivel normal cuando se dispara, y —el detalle crucial— sube cuando el mercado cae.
 
-La respuesta natural: si la volatilidad se comporta como un proceso aleatorio... **modelémosla como un proceso aleatorio**. Eso son los modelos de volatilidad estocástica: dos procesos acoplados, uno para el precio y otro para su volatilidad.
+La respuesta natural: si la volatilidad se comporta como un proceso aleatorio... modelémosla como un proceso aleatorio. Eso son los modelos de volatilidad estocástica: dos procesos acoplados, uno para el precio y otro para su volatilidad.
 
 ```{python}
 #| label: setup
@@ -46,7 +46,7 @@ Antes de los modelos, los hechos. Tres rasgos empíricos que cualquier serie fin
 
 1. **Clustering**: los días agitados vienen en rachas; la volatilidad de mañana se parece a la de hoy.
 2. **Reversión a la media**: los picos de pánico (VIX en 80) no duran; la vol vuelve a su zona normal.
-3. **Efecto apalancamiento** (*leverage effect*): las caídas del precio vienen acompañadas de subas de volatilidad — la correlación entre retornos y cambios de vol es **negativa**.
+3. **Efecto apalancamiento** (*leverage effect*): las caídas del precio vienen acompañadas de subas de volatilidad, y la correlación entre retornos y cambios de vol es **negativa**.
 
 ```{python}
 #| label: fig-clustering
@@ -61,9 +61,8 @@ for t in range(1, n):
     ret[t] = vol[t] * rng.standard_normal()
 
 fig, axes = plt.subplots(2, 1, figsize=(10, 5), sharex=True)
-axes[0].plot(ret, linewidth=0.6)
-axes[0].set_ylabel("Retorno diario")
-axes[0].set_title("Volatility clustering: la agitación viene en rachas")
+axes[0].plot(ret * 100, linewidth=0.6)
+axes[0].set_ylabel("Retorno diario (%)")
 axes[1].plot(vol * np.sqrt(252) * 100, color="#c2410c", linewidth=1)
 axes[1].set_ylabel("Vol anualizada (%)")
 axes[1].set_xlabel("Día")
@@ -79,7 +78,7 @@ El GBM no puede producir el panel de arriba de la @fig-clustering: su volatilida
 
 ## El modelo de Heston
 
-Steven Heston (1993) propuso el modelo de volatilidad estocástica más usado de la historia, porque combina realismo con una virtud práctica enorme (tiene fórmulas semi-cerradas para valuar opciones). Son **dos procesos acoplados** — el precio y su varianza $v_t = \sigma_t^2$:
+Steven Heston [-@heston1993] propuso el modelo de volatilidad estocástica más usado de la historia, porque combina realismo con una virtud práctica enorme (tiene fórmulas semi-cerradas para valuar opciones). Son **dos procesos acoplados**: el precio y su varianza $v_t = \sigma_t^2$:
 
 $$\begin{aligned} dS &= \mu S\, dt + \sqrt{v}\, S\, dW^S \\ dv &= \kappa (\theta - v)\, dt + \xi \sqrt{v}\, dW^v \end{aligned} \qquad \text{con } \operatorname{corr}(dW^S, dW^v) = \rho$$
 
@@ -226,7 +225,6 @@ fig, axes = plt.subplots(2, 1, figsize=(10, 6), sharex=True)
 
 axes[0].plot(S_h[:, :5], linewidth=1)
 axes[0].set_ylabel("Precio ($)")
-axes[0].set_title("Heston: el precio y su volatilidad, acoplados")
 axes[1].plot(np.sqrt(v_h[:, :5]) * 100, linewidth=1)
 axes[1].axhline(np.sqrt(params["theta"]) * 100, color="black", linestyle="--",
                 alpha=0.6, label="Nivel de largo plazo √θ")
@@ -239,11 +237,11 @@ plt.tight_layout()
 plt.show()
 ```
 
-En la @fig-heston-trayectorias, compará las trayectorias de abajo con la línea horizontal que sería la vol del GBM: acá cada camino tiene su propia historia de calma y turbulencia, siempre gravitando alrededor de $\sqrt{\theta}$. Y mirá las trayectorias del precio junto a las de su vol: cuando el precio cae, su vol tiende a dispararse — el $\rho$ negativo trabajando.
+En la @fig-heston-trayectorias, compará las trayectorias de abajo con la línea horizontal que sería la vol del GBM: acá cada camino tiene su propia historia de calma y turbulencia, siempre gravitando alrededor de $\sqrt{\theta}$. Y mirá las trayectorias del precio junto a las de su vol: cuando el precio cae, su vol tiende a dispararse. Es el $\rho$ negativo trabajando.
 
 ### Heston genera la sonrisa
 
-La prueba de fuego: valuemos opciones bajo Heston (por Monte Carlo, con drift $r$) y preguntémosle a Black-Scholes qué volatilidad implícita "ve" en cada strike. Si el modelo es bueno, debería aparecer la sonrisa del [Capítulo 18](../unidad4/cap18_derivados_vol_implicita.qmd) — sin que se la hayamos puesto a mano.
+La prueba de fuego: valuemos opciones bajo Heston (por Monte Carlo, con drift $r$) y preguntémosle a Black-Scholes qué volatilidad implícita "ve" en cada strike. Si el modelo es bueno, debería aparecer la sonrisa del [Capítulo 18](../unidad4/cap18_derivados_vol_implicita.qmd), sin que se la hayamos puesto a mano.
 
 ```{python}
 #| label: fig-heston-smile
@@ -283,7 +281,6 @@ ax.axhline(np.sqrt(params["theta"]) * 100, color="#c2410c", linestyle="--", alph
            label="Vol 'constante' de referencia (√θ)")
 ax.set_xlabel("Strike K")
 ax.set_ylabel("Volatilidad implícita (%)")
-ax.set_title("Heston produce la sonrisa (smirk) por sí solo")
 ax.legend()
 ax.grid(True, alpha=0.3)
 plt.tight_layout()
@@ -333,7 +330,7 @@ def _esquema():
 _esquema()
 ```
 
-En la práctica profesional, el flujo es el inverso al nuestro: se **calibra** — se buscan los parámetros de Heston que reproducen los precios de opciones observados hoy — y con el modelo calibrado se valúan productos exóticos, se calculan griegas consistentes con la sonrisa y se arman coberturas.
+En la práctica profesional, el flujo es el inverso al nuestro: se **calibra**, es decir, se buscan los parámetros de Heston que reproducen los precios de opciones observados hoy, y con el modelo calibrado se valúan productos exóticos, se calculan griegas consistentes con la sonrisa y se arman coberturas.
 
 ---
 
@@ -345,7 +342,7 @@ $$\begin{aligned} dF &= \alpha F^{\beta} \, dW^F \\ d\alpha &= \nu \, \alpha \, 
 
 donde $F$ es el precio *forward* y $\alpha$ su volatilidad. Diferencias de diseño respecto de Heston: la vol es **lognormal y sin reversión** (más simple), y el exponente $\beta \in [0,1]$ interpola entre dinámica normal ($\beta=0$, usada en tasas) y lognormal ($\beta=1$, como acciones).
 
-¿Por qué conquistó la industria un modelo *menos* realista que Heston? Por una razón práctica imbatible: Hagan y coautores derivaron una **fórmula aproximada cerrada** para la volatilidad implícita en función de $(K, F, \alpha, \beta, \rho, \nu)$. Sin simulaciones, sin transformadas: la sonrisa entera en una expresión evaluable al instante. SABR no se usa tanto para *simular* mercados como para **describir e interpolar sonrisas**: con 3-4 parámetros ajustás los puntos cotizados y leés cualquier strike intermedio.
+¿Por qué conquistó la industria un modelo *menos* realista que Heston? Por una razón práctica imbatible: @hagan2002 derivaron una **fórmula aproximada cerrada** para la volatilidad implícita en función de $(K, F, \alpha, \beta, \rho, \nu)$. Sin simulaciones, sin transformadas: la sonrisa entera en una expresión evaluable al instante. SABR no se usa tanto para *simular* mercados como para **describir e interpolar sonrisas**: con 3-4 parámetros ajustás los puntos cotizados y leés cualquier strike intermedio.
 
 ```{python}
 #| label: fig-sabr
@@ -390,7 +387,6 @@ for rho_i, nu_i, etiqueta in escenarios:
 
 ax.set_xlabel("Strike K")
 ax.set_ylabel("Volatilidad implícita (%)")
-ax.set_title("SABR: cada parámetro esculpe la sonrisa")
 ax.legend()
 ax.grid(True, alpha=0.3)
 plt.tight_layout()
@@ -431,7 +427,7 @@ En la [versión web de este capítulo](https://diegoonna.github.io/libro_finanza
 :::
 
 ::: {.callout-note title="¿Heston o SABR? El criterio profesional"}
-No compiten: se usan para cosas distintas. **SABR** es el estándar para *cotizar e interpolar* sonrisas (sobre todo en tasas) por su fórmula instantánea. **Heston** es el caballo de batalla para *simular y valuar* productos dependientes de la trayectoria (exóticos, estructurados) porque tiene una dinámica temporal completa y consistente. Y la familia sigue: local vol (Dupire), modelos local-estocásticos (LSV), rough volatility — la frontera actual de la investigación.
+No compiten: se usan para cosas distintas. **SABR** es el estándar para *cotizar e interpolar* sonrisas (sobre todo en tasas) por su fórmula instantánea. **Heston** es el caballo de batalla para *simular y valuar* productos dependientes de la trayectoria (exóticos, estructurados) porque tiene una dinámica temporal completa y consistente. Y la familia sigue: local vol (Dupire), modelos local-estocásticos (LSV), rough volatility, la frontera actual de la investigación.
 :::
 
 ---
@@ -458,17 +454,17 @@ flowchart LR
     class S hecho
 ```
 
-Cada modelo nace de un hecho empírico que el anterior no explicaba. Esa es la lección metodológica más importante que este libro puede darte: **los modelos no son verdades, son herramientas con dominio de validez** — y el trabajo del analista cuantitativo es conocer ese dominio, medir lo que queda afuera (Módulo 3 entero) y elegir la herramienta adecuada para cada pregunta.
+Cada modelo nace de un hecho empírico que el anterior no explicaba. Esa es la lección metodológica más importante que este libro puede darte: los modelos no son verdades, son herramientas con dominio de validez, y el trabajo del analista cuantitativo es conocer ese dominio, medir lo que queda afuera (Módulo 3 entero) y elegir la herramienta adecuada para cada pregunta.
 
 ---
 
 ## Errores comunes
 
 ::: {.callout-warning title="Trampas frecuentes"}
-- **Varianza negativa en la simulación de Heston**: el esquema de Euler ingenuo produce $v < 0$ y `sqrt` explota. Usá *full truncation* (como en el código) o esquemas exactos (QE de Andersen).
-- **Ignorar la condición de Feller**: si $2\kappa\theta < \xi^2$, la varianza toca cero con probabilidad positiva y la simulación exige más cuidado (nuestros parámetros la violan levemente — es lo habitual al calibrar equity — y por eso el truncamiento importa).
+- **Varianza negativa en la simulación de Heston**: el esquema de Euler ingenuo produce $v < 0$ y `sqrt` falla. Usá *full truncation* (como en el código) o esquemas exactos (QE de @andersen2008).
+- **Ignorar la condición de Feller**: si $2\kappa\theta < \xi^2$, la varianza toca cero con probabilidad positiva y la simulación exige más cuidado (nuestros parámetros la violan levemente (es lo habitual al calibrar equity), y por eso el truncamiento importa).
 - **Usar la fórmula de Hagan fuera de su dominio**: es una aproximación asintótica; con $T$ grande, $\nu$ alto o strikes extremos puede dar vols absurdas (incluso densidades negativas). Verificá contra Monte Carlo.
-- **Calibrar demasiados parámetros a pocos datos**: con 5 strikes cotizados y 5 parámetros libres, el ajuste es perfecto y no significa nada — el sobreajuste del [Capítulo 17](../unidad3/cap17_backtesting.qmd) aplica también acá.
+- **Calibrar demasiados parámetros a pocos datos**: con 5 strikes cotizados y 5 parámetros libres, el ajuste es perfecto y no significa nada; el sobreajuste del [Capítulo 17](../unidad3/cap17_backtesting.qmd) aplica también acá.
 - **Olvidar el drift neutral al riesgo al valuar**: para pricing, el drift del precio es $r$; el $\mu$ real solo importa para proyecciones.
 :::
 

@@ -14,9 +14,9 @@ nocite: |
 
 # Introducción {.unnumbered}
 
-En el capítulo anterior aprendimos a medir el riesgo con VaR y Expected Shortfall. Este capítulo responde una pregunta distinta: **¿qué pasa cuando los modelos fallan?** Porque fallan. Y cuando fallan a escala de sistema financiero, las consecuencias las paga toda la economía.
+En el capítulo anterior aprendimos a medir el riesgo con VaR y Expected Shortfall. Este capítulo responde una pregunta distinta: ¿qué pasa cuando los modelos fallan? Porque fallan. Y cuando fallan a escala de sistema financiero, las consecuencias las paga toda la economía.
 
-La regulación bancaria moderna es, en gran medida, la **historia acumulada de esos fracasos**: cada crisis dejó una regla nueva. Entender ese marco no es un tema "legal" ajeno al análisis cuantitativo — define qué modelos se usan, cuánto capital inmovilizan los bancos y qué límites tiene la toma de riesgo. Y las dos historias que cierran el capítulo (LTCM y 2008) son las mejores clases de humildad cuantitativa jamás dictadas.
+La regulación bancaria moderna es, en gran medida, la historia acumulada de esos fracasos: cada crisis dejó una regla nueva. Entender ese marco no es un tema "legal" ajeno al análisis cuantitativo: define qué modelos se usan, cuánto capital inmovilizan los bancos y qué límites tiene la toma de riesgo. Y las dos historias que cierran el capítulo (LTCM y 2008) son las mejores clases de humildad cuantitativa jamás dictadas.
 
 ```{python}
 #| label: setup
@@ -39,7 +39,7 @@ aplicar_estilo()
 
 ## Stress testing: preguntar "¿y si...?"
 
-El VaR mira la distribución *estimada con datos recientes*. El **stress testing** hace la pregunta complementaria: *¿cuánto perdería la cartera si se repitiera un escenario extremo concreto?* No pregunta por probabilidades — pregunta por **consecuencias**.
+El VaR mira la distribución *estimada con datos recientes*. El **stress testing** hace la pregunta complementaria: *¿cuánto perdería la cartera si se repitiera un escenario extremo concreto?* No pregunta por probabilidades: pregunta por **consecuencias**.
 
 Hay dos familias de escenarios:
 
@@ -70,14 +70,14 @@ for esc, p in perdidas.items():
 La tabla de arriba es, en miniatura, lo que los reguladores exigen a los bancos a escala gigante: los **CCAR/DFAST** en EEUU y los stress tests del BCE someten los balances completos a escenarios macro adversos de varios años. Un banco que "no aprueba" enfrenta restricciones para pagar dividendos o recomprar acciones.
 
 ::: {.callout-tip title="VaR y stress testing se complementan"}
-El VaR dice *"esto es lo que puede pasar en un día normal-malo, según los datos recientes"*. El stress test dice *"esto es lo que pasaría si vuelve 2008, tengan los datos recientes la pinta que tengan"*. El primero es probabilístico y miope; el segundo es determinístico y de memoria larga. Un buen tablero de riesgo muestra ambos.
+El VaR dice *"esto es lo que puede pasar en un día normal-malo, según los datos recientes"*. El stress test dice *"esto es lo que pasaría si vuelve 2008, sea cual sea el aspecto de los datos recientes"*. El primero es probabilístico y miope; el segundo es determinístico y de memoria larga. Un buen tablero de riesgo muestra ambos.
 :::
 
 ---
 
 ## Basilea III: la arquitectura regulatoria
 
-Los **Acuerdos de Basilea** son los estándares globales de regulación bancaria, emitidos por el Comité de Basilea (BIS). La versión III, respuesta directa a 2008, se apoya en tres pilares conceptuales: capital de mejor calidad, límites al apalancamiento y —por primera vez— reglas de liquidez.
+Los **Acuerdos de Basilea** son los estándares globales de regulación bancaria, emitidos por el Comité de Basilea (BIS) [@bis2011]. La versión III, respuesta directa a 2008, se apoya en tres pilares conceptuales: capital de mejor calidad, límites al apalancamiento y —por primera vez— reglas de liquidez.
 
 La @fig-arquitectura-basilea es el mapa de esta sección: qué riesgos mide el regulador, con qué herramienta, y en qué ratio termina cada uno.
 
@@ -104,11 +104,11 @@ flowchart LR
 
 ### Capital: el colchón contra pérdidas
 
-La idea central: los activos de un banco pueden perder valor; el **capital propio** es el colchón que absorbe esas pérdidas antes de que las paguen los depositantes. Basilea exige un mínimo de capital **en proporción al riesgo de los activos**:
+La idea central: los activos de un banco pueden perder valor; el **capital propio** es el colchón que absorbe esas pérdidas antes de que las paguen los depositantes. Basilea exige un mínimo de capital en proporción al riesgo de los activos:
 
 $$\text{Ratio de capital} = \frac{\text{Capital}}{\text{RWA}} \geq \text{mínimos regulatorios}$$
 
-donde **RWA** (*Risk-Weighted Assets*) son los activos ponderados por riesgo: un bono del tesoro pondera cerca de 0%, una hipoteca ~35-50%, un préstamo corporativo riesgoso 100% o más. Mil millones en letras del tesoro exigen mucho menos capital que mil millones en préstamos a startups — razonable.
+donde **RWA** (*Risk-Weighted Assets*) son los activos ponderados por riesgo: un bono del tesoro pondera cerca de 0%, una hipoteca ~35-50%, un préstamo corporativo riesgoso 100% o más. Mil millones en letras del tesoro exigen mucho menos capital que mil millones en préstamos a startups, lo cual es razonable.
 
 ```{python}
 #| label: rwa
@@ -218,14 +218,13 @@ ax.fill_between(trimestres, 0, ppnr * 10, alpha=0.15, color="#637238",
                 label="PPNR (escala ×10)")
 ax.set_xlabel("Trimestre del escenario adverso")
 ax.set_ylabel("Capital ($M)")
-ax.set_title("Anatomía de un stress test: el PPNR amortigua las pérdidas")
 ax.legend()
 ax.grid(True, alpha=0.3)
 plt.tight_layout()
 plt.show()
 ```
 
-La lección de la @fig-ppnr: un banco con PPNR robusto puede absorber una ola de pérdidas crediticias sin acercarse al mínimo; uno con PPNR débil llega a la misma crisis sin amortiguador. Por eso los equipos de PPNR de los bancos grandes emplean pequeños ejércitos de modeladores.
+La lección de la @fig-ppnr: un banco con PPNR robusto puede absorber una ola de pérdidas crediticias sin acercarse al mínimo; uno con PPNR débil llega a la misma crisis sin amortiguador. Por eso los equipos de PPNR de los bancos grandes emplean equipos numerosos de modeladores.
 
 ### Riesgo de mercado vs. riesgo operacional
 
@@ -237,17 +236,17 @@ Basilea clasifica los riesgos en tres grandes categorías, cada una con su carga
 | **De mercado** | Los precios se mueven en contra | Caída del portafolio de trading | VaR, ES (FRTB) |
 | **Operacional** | Fallas de procesos, sistemas, personas | Fraude, cyberataque, *fat finger* | Bases de eventos, escenarios |
 
-El riesgo **operacional** es el más resbaladizo: no tiene "posición" que cerrar ni distribución de mercado que estimar. Casos célebres: Barings (1995, un solo trader ocultando pérdidas quebró un banco de 233 años), Société Générale (2008, €4.9bn), Knight Capital (2012, un deploy de software defectuoso perdió $440M en 45 minutos). Su gestión es más de procesos y controles que de matemática — pero su carga de capital es real.
+El riesgo **operacional** es el más resbaladizo: no tiene "posición" que cerrar ni distribución de mercado que estimar. Casos célebres: Barings (1995, un solo trader ocultando pérdidas quebró un banco de 233 años), Société Générale (2008, €4.9bn), Knight Capital (2012, un deploy de software defectuoso perdió $440M en 45 minutos). Su gestión es más de procesos y controles que de matemática, pero su carga de capital es real.
 
 ---
 
-## Caso 1 — LTCM: cuando los genios fallan
+## Caso 1. LTCM: cuando los genios fallan
 
-**Long-Term Capital Management** era, en 1997, el hedge fund más prestigioso del planeta: fundado por el legendario trader John Meriwether, con **Myron Scholes y Robert Merton** (Nobel 1997, los del modelo de opciones) en el directorio. Su estrategia: *convergence trades* — apostar a que diferenciales de precio entre bonos casi idénticos (por ejemplo, un bono del tesoro recién emitido contra uno viejo) se achicarían. Diferenciales minúsculos, así que para volverlos rentables usaban un **apalancamiento de ~25:1**: con $4.7bn de capital controlaban más de $125bn en posiciones.
+**Long-Term Capital Management** era, en 1997, el hedge fund más prestigioso del planeta [@lowenstein2000]: fundado por el legendario trader John Meriwether, con Myron Scholes y Robert Merton (Nobel 1997, los del modelo de opciones) en el directorio. Su estrategia: *convergence trades*, es decir, apostar a que diferenciales de precio entre bonos casi idénticos (por ejemplo, un bono del tesoro recién emitido contra uno viejo) se achicarían. Diferenciales minúsculos, así que para volverlos rentables usaban un **apalancamiento de ~25:1**: con $4.7bn de capital controlaban más de $125bn en posiciones.
 
 Los modelos decían que esas posiciones eran seguras: los diferenciales *siempre* convergían, y las posiciones estaban diversificadas entre mercados supuestamente independientes.
 
-En agosto de 1998, **Rusia defaulteó su deuda**. Y ocurrió lo que los modelos no contemplaban: en la corrida global hacia la calidad, *todos* los diferenciales se ampliaron *a la vez*. Posiciones "independientes" en Japón, Europa y EEUU perdieron juntas: la correlación, que en los datos históricos era baja, **saltó hacia 1 exactamente cuando importaba**. Con 25:1 de apalancamiento, no hay margen para esperar la convergencia: los margin calls obligan a vender en el peor momento, ampliando aún más los diferenciales — una espiral. En pocas semanas LTCM perdió $4.4bn, y la Fed de Nueva York tuvo que coordinar un rescate privado para evitar que la liquidación forzada arrastrara al sistema.
+En agosto de 1998, **Rusia defaulteó su deuda**. Y ocurrió lo que los modelos no contemplaban: en la corrida global hacia la calidad, *todos* los diferenciales se ampliaron *a la vez*. Posiciones "independientes" en Japón, Europa y EEUU perdieron juntas: la correlación, que en los datos históricos era baja, saltó hacia 1 exactamente cuando importaba. Con 25:1 de apalancamiento, no hay margen para esperar la convergencia: los margin calls obligan a vender en el peor momento, ampliando aún más los diferenciales, en una espiral. En pocas semanas LTCM perdió $4.4bn, y la Fed de Nueva York tuvo que coordinar un rescate privado para evitar que la liquidación forzada arrastrara al sistema.
 
 Lo que mató a LTCM no fue una pérdida, sino un circuito que se alimenta solo. La @fig-espiral-ltcm lo dibuja: una vez que arranca, cada vuelta agranda la siguiente.
 
@@ -292,7 +291,6 @@ ax.plot(equity, linewidth=2)
 ax.axvline(150, color="#c2410c", linestyle="--", label="Default ruso: las correlaciones saltan")
 ax.set_xlabel("Día")
 ax.set_ylabel("Capital (base 100)")
-ax.set_title(f"LTCM estilizado: {n_estrategias} apuestas 'independientes' con apalancamiento {apalancamiento}:1")
 ax.legend()
 ax.grid(True, alpha=0.3)
 plt.tight_layout()
@@ -308,12 +306,12 @@ Recorré la @fig-ltcm de izquierda a derecha: meses de retornos suaves y consist
 
 1. **Las correlaciones históricas no son un contrato**: en las crisis convergen a 1, exactamente cuando la diversificación más se necesita.
 2. **El apalancamiento convierte problemas de precio en problemas de supervivencia**: sin margen para esperar, tenés que vender en el peor momento.
-3. **La liquidez es un riesgo en sí mismo**: LTCM tenía razón "a largo plazo" en muchas posiciones — pero como dijo Keynes, el mercado puede permanecer irracional más tiempo del que vos podés permanecer solvente.
+3. **La liquidez es un riesgo en sí mismo**: LTCM tenía razón "a largo plazo" en muchas posiciones, pero como dijo Keynes, el mercado puede permanecer irracional más tiempo del que vos podés permanecer solvente.
 4. **El prestigio de los modelos (y de los Nobel) no es gestión de riesgo.**
 
 ---
 
-## Caso 2 — 2008: la correlación falsa
+## Caso 2. La crisis de 2008: la correlación falsa
 
 La crisis de 2008 es demasiado grande para un capítulo; acá nos enfocamos en su **corazón cuantitativo**: cómo un supuesto de correlación mal calibrado, industrializado a escala de billones de dólares, hizo estallar el sistema.
 
@@ -321,7 +319,7 @@ La crisis de 2008 es demasiado grande para un capítulo; acá nos enfocamos en s
 
 La cadena, simplificada: los bancos originaban **hipotecas** (crecientemente *subprime*, de baja calidad), las empaquetaban en bonos (**MBS**), y luego empaquetaban esos bonos en **CDOs** (*Collateralized Debt Obligations*) divididos en **tramos**: el tramo *senior* cobra primero (y tenía calificación AAA), el *equity* absorbe las primeras pérdidas.
 
-¿Cómo puede un paquete de hipotecas mediocres producir un tramo AAA? Por la **diversificación**: si los defaults son suficientemente *independientes* entre sí, la probabilidad de que fallen *muchas a la vez* —que es lo único que daña al tramo senior— es minúscula. Todo el edificio descansa en una pregunta: **¿cuán correlacionados están los defaults de las hipotecas?**
+¿Cómo puede un paquete de hipotecas mediocres producir un tramo AAA? Por la **diversificación**: si los defaults son suficientemente *independientes* entre sí, la probabilidad de que fallen *muchas a la vez* —que es lo único que daña al tramo senior— es minúscula. Todo el edificio descansa en una pregunta: ¿cuán correlacionados están los defaults de las hipotecas?
 
 La @fig-tramos-cdo muestra la cascada de pérdidas: lo que pierde el pool se va apilando desde abajo, y cada tramo solo empieza a perder cuando el de abajo ya se perdió entero.
 
@@ -370,9 +368,9 @@ _esquema()
 
 ### La fórmula: la cópula gaussiana
 
-Para responderla, la industria adoptó masivamente la **cópula gaussiana** de David Li (2000): un modelo elegante que describe la dependencia entre defaults con un único parámetro de correlación $\rho$, calibrado con datos históricos... de años en que la vivienda en EEUU nunca había caído a escala nacional. La calibración típica asumía correlaciones **bajas**: los defaults eran eventos idiosincráticos (alguien pierde su empleo), no sistémicos.
+Para responderla, la industria adoptó masivamente la **cópula gaussiana** de David Li [-@li2000]: un modelo elegante que describe la dependencia entre defaults con un único parámetro de correlación $\rho$, calibrado con datos históricos... de años en que la vivienda en EEUU nunca había caído a escala nacional. La calibración típica asumía correlaciones **bajas**: los defaults eran eventos idiosincráticos (alguien pierde su empleo), no sistémicos.
 
-El error fatal: cuando los precios de la vivienda caen a nivel nacional, **todos los deudores subprime entran en problemas por la misma causa al mismo tiempo**. La correlación real en el escenario relevante no era 0.2: era cercana a 1.
+El error fatal: cuando los precios de la vivienda caen a nivel nacional, todos los deudores subprime entran en problemas por la misma causa al mismo tiempo. La correlación real en el escenario relevante no era 0.2: era cercana a 1.
 
 ```{python}
 #| label: cdo-correlacion
@@ -397,7 +395,7 @@ for rho in [0.05, 0.20, 0.60]:
           f"{'casi siempre' if p_senior < 0.005 else 'NO: riesgo real'}")
 ```
 
-Mirá la tabla: la **pérdida promedio es la misma** en las tres filas (la correlación no cambia cuántas hipotecas caen *en promedio*), pero la probabilidad de que la pérdida atraviese el tramo senior **se multiplica por órdenes de magnitud** al subir $\rho$. Con $\rho$ bajo, las pérdidas siempre rondan el promedio y el AAA es intocable; con $\rho$ alto, la distribución se vuelve bimodal — o no pasa casi nada, **o caen todas juntas**. El mismo instrumento, la misma mora esperada... y calificaciones que pasaron de "prácticamente libre de riesgo" a basura en cuestión de meses de 2007-2008.
+Mirá la tabla: la pérdida promedio es la misma en las tres filas (la correlación no cambia cuántas hipotecas caen *en promedio*), pero la probabilidad de que la pérdida atraviese el tramo senior se multiplica por órdenes de magnitud al subir $\rho$. Con $\rho$ bajo, las pérdidas siempre rondan el promedio y el AAA es intocable; con $\rho$ alto, la distribución se vuelve bimodal: o no pasa casi nada, **o caen todas juntas**. El mismo instrumento, la misma mora esperada... y calificaciones que pasaron de "prácticamente libre de riesgo" a basura en cuestión de meses de 2007-2008.
 
 ::: {.content-visible when-format="html"}
 ::: {.simulador}
@@ -437,7 +435,7 @@ El resto de la historia se sigue de ahí: los tramos AAA estaban en todos lados 
 1. **Un parámetro calibrado en tiempos de calma no describe la crisis**: la correlación es *condicional al régimen*, y el régimen que importa es el peor.
 2. **La elegancia matemática no valida los supuestos**: la cópula gaussiana era tratable y estándar; su supuesto central era falso.
 3. **El riesgo de modelo se industrializa**: un modelo mediocre usado por una mesa es un problema local; usado por toda la industria para calificar billones, es sistémico.
-4. **Las colas y la dependencia extrema importan más que el centro**: dos distribuciones con la misma media y varianza pueden tener riesgos de cola radicalmente distintos — el puente perfecto hacia el próximo capítulo.
+4. **Las colas y la dependencia extrema importan más que el centro**: dos distribuciones con la misma media y varianza pueden tener riesgos de cola radicalmente distintos, el puente perfecto hacia el próximo capítulo.
 
 ---
 

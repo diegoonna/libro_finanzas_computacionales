@@ -14,7 +14,7 @@ nocite: |
 
 # Introducción: por qué Markowitz solo no alcanza {.unnumbered}
 
-En el [Capítulo 8](../unidad2/cap08_markowitz.qmd) aprendimos a construir la frontera eficiente. Pero si intentás usar Markowitz "puro" con datos reales, te chocás con un problema incómodo: **el modelo es extremadamente sensible a los retornos esperados** $\boldsymbol{\mu}$ que le das de entrada. Cambiás la estimación del retorno de un activo en medio punto y la cartera óptima se da vuelta por completo, concentrándose en dos o tres posiciones extremas (a veces con ventas en corto gigantes).
+En el [Capítulo 8](../unidad2/cap08_markowitz.qmd) aprendimos a construir la frontera eficiente. Pero si intentás usar Markowitz "puro" con datos reales, te chocás con un problema incómodo: el modelo es extremadamente sensible a los retornos esperados $\boldsymbol{\mu}$ que le das de entrada. Cambiás la estimación del retorno de un activo en medio punto y la cartera óptima se da vuelta por completo, concentrándose en dos o tres posiciones extremas (a veces con ventas en corto gigantes).
 
 El problema de fondo es que $\boldsymbol{\mu}$ es lo más difícil de estimar en finanzas: el promedio histórico es un estimador malísimo del retorno futuro. Entonces alimentamos el modelo más sensible con el input más ruidoso. El resultado son carteras que ningún gestor firmaría.
 
@@ -23,7 +23,7 @@ El problema de fondo es que $\boldsymbol{\mu}$ es lo más difícil de estimar en
 > En lugar de *inventar* los retornos esperados desde cero, arranquemos del retorno que el mercado ya está asumiendo hoy, y ajustémoslo solo donde tengamos una opinión concreta y en la medida de nuestra confianza en ella.
 
 ::: {.callout-tip title="La idea en una frase"}
-Markowitz te pregunta *"¿cuánto va a rendir cada activo?"* y se cree tu respuesta al pie de la letra. Black-Litterman te pregunta *"¿en qué diferís del mercado, y cuán seguro estás?"* — una pregunta mucho más honesta y fácil de responder.
+Markowitz te pregunta *"¿cuánto va a rendir cada activo?"* y se cree tu respuesta al pie de la letra. Black-Litterman te pregunta *"¿en qué diferís del mercado, y cuán seguro estás?"*, una pregunta mucho más honesta y fácil de responder.
 :::
 
 La @fig-pipeline-bl, al final del capítulo, resume el recorrido completo en un solo diagrama; volvé a ella si en algún paso perdés el hilo.
@@ -53,7 +53,7 @@ Imaginate que querés estimar cuánto va a rendir una acción. Tenés dos fuente
 1. Una **creencia previa**: "el mercado, con todo su peso, está descontando un 8% para este activo". Es una referencia sensata y difícil de discutir.
 2. Una **opinión propia** (nueva información): "yo estudié el sector y creo que va a rendir 12%".
 
-¿Con qué te quedás? Ni una ni otra a ciegas: hacés un **promedio ponderado por tu confianza**. Si tu análisis es muy sólido, tu estimación final se acerca al 12%; si tenés dudas, se queda cerca del 8% del mercado. Y si tu opinión coincide con el mercado, no cambia nada.
+¿Con qué te quedás? Ni una ni otra a ciegas: hacés un promedio ponderado por tu confianza. Si tu análisis es muy sólido, tu estimación final se acerca al 12%; si tenés dudas, se queda cerca del 8% del mercado. Y si tu opinión coincide con el mercado, no cambia nada.
 
 La @fig-mezcla-bayesiana dibuja ese razonamiento con números: cada fuente es una campana centrada en su estimación, más angosta cuanto más confiable. La combinación cae entre ambas, más cerca de la más precisa, y es más angosta que las dos: juntar información reduce la incertidumbre.
 
@@ -100,7 +100,7 @@ _esquema()
 ```
 
 
-Ese mecanismo —partir de una creencia y moverla hacia la nueva evidencia en proporción a la confianza— es exactamente lo que formaliza Black-Litterman. En la literatura vas a ver que la versión completa se deriva como una actualización bayesiana (*prior* + verosimilitud → *posterior*), pero **no hace falta la maquinaria bayesiana** para entenderlo ni usarlo: se puede escribir como un conjunto de operaciones matriciales cerradas. Ese es el camino que vamos a tomar.
+Ese mecanismo —partir de una creencia y moverla hacia la nueva evidencia en proporción a la confianza— es exactamente lo que formaliza Black-Litterman [@black1992]. En la literatura vas a ver que la versión completa se deriva como una actualización bayesiana (*prior* + verosimilitud → *posterior*), pero no hace falta la maquinaria bayesiana para entenderlo ni usarlo: se puede escribir como un conjunto de operaciones matriciales cerradas. Ese es el camino que vamos a tomar.
 
 ---
 
@@ -118,14 +118,14 @@ donde:
 
 - $\mathbf{w}_{mkt}$ son los pesos de la cartera de mercado (por capitalización),
 - $\Sigma$ es la matriz de covarianzas de los retornos,
-- $\delta$ es el **coeficiente de aversión al riesgo** del mercado (típicamente entre 2 y 3).
+- $\delta$ es el coeficiente de aversión al riesgo del mercado (típicamente entre 2 y 3).
 
 ```{python}
 #| label: equilibrio
 # Universo de ejemplo: 3 activos (digamos, tres clases de activos)
 activos = ["Acciones USA", "Acciones EU", "Bonos"]
 
-# Pesos de mercado (por capitalización) — suman 1
+# Pesos de mercado (por capitalización), suman 1
 w_mkt = np.array([0.55, 0.30, 0.15])
 
 # Matriz de covarianzas anual de los retornos
@@ -145,7 +145,7 @@ for a, pi in zip(activos, Pi):
     print(f"{a:<14} retorno implícito: {pi:6.2%}")
 ```
 
-Fijate lo que acabamos de lograr: **sin estimar un solo retorno esperado a mano**, obtuvimos un vector $\boldsymbol{\Pi}$ razonable, coherente con el riesgo de cada activo y con lo que el mercado efectivamente tiene comprado. Los activos más riesgosos y con más peso en el mercado tienen mayor retorno implícito. Este $\boldsymbol{\Pi}$ es nuestra creencia de partida.
+Fijate lo que acabamos de lograr: sin estimar un solo retorno esperado a mano, obtuvimos un vector $\boldsymbol{\Pi}$ razonable, coherente con el riesgo de cada activo y con lo que el mercado efectivamente tiene comprado. Los activos más riesgosos y con más peso en el mercado tienen mayor retorno implícito. Este $\boldsymbol{\Pi}$ es nuestra creencia de partida.
 
 ::: {.callout-note title="¿De dónde sale δ?"}
 El coeficiente de aversión al riesgo se puede estimar como $\delta = (\mu_{mkt} - r_f) / \sigma_{mkt}^2$: el premio por riesgo del mercado dividido por su varianza. Con un premio del ~5% y una volatilidad del ~14% anual, da $\delta \approx 2.5$, el valor que usamos.
@@ -181,7 +181,7 @@ print("Matriz P (picks):\n", P)
 print("\nVector Q (views):", Q)
 ```
 
-Para la incertidumbre $\Omega$, una convención estándar (He y Litterman, 1999) es hacerla proporcional a la varianza de la propia view bajo el modelo: views sobre activos más volátiles arrastran más incertidumbre. Aparece también un parámetro escalar $\tau$ (chico, ~0.025–0.05) que refleja la confianza global en el equilibrio. Una alternativa popular es la de Idzorek (2007): en lugar de fijar $\Omega$ directamente, le pide al inversor un **porcentaje de confianza** (de 0 a 100%) para cada view y deduce $\Omega$ a partir de él.
+Para la incertidumbre $\Omega$, una convención estándar [@he1999] es hacerla proporcional a la varianza de la propia view bajo el modelo: views sobre activos más volátiles arrastran más incertidumbre. Aparece también un parámetro escalar $\tau$ (chico, ~0.025–0.05) que refleja la confianza global en el equilibrio. Una alternativa popular es la de @idzorek2007: en lugar de fijar $\Omega$ directamente, le pide al inversor un **porcentaje de confianza** (de 0 a 100%) para cada view y deduce $\Omega$ a partir de él.
 
 ```{python}
 #| label: omega
@@ -262,7 +262,7 @@ $$\boldsymbol{\mu}_{BL} = \left[ (\tau\Sigma)^{-1} + P^T \Omega^{-1} P \right]^{
 
 Parece intimidante, pero es exactamente el **promedio ponderado por confianza** de la intuición, escrito en matrices. Cada término $(\cdot)^{-1}$ es una "precisión" (lo inverso de la incertidumbre): el equilibrio pesa según su precisión $(\tau\Sigma)^{-1}$ y las views según la suya $P^T\Omega^{-1}P$. Donde no hay view, prevalece el equilibrio; donde hay una view muy confiable, ella domina.
 
-Para verlo, conviene mirar el caso de **un solo activo con una sola view**: la fórmula se reduce a
+Para verlo, conviene mirar el caso de un solo activo con una sola view: la fórmula se reduce a
 
 $$\mu_{BL} = \frac{\pi/\sigma_\pi^2 + q/\sigma_q^2}{1/\sigma_\pi^2 + 1/\sigma_q^2}$$
 
@@ -283,7 +283,7 @@ for a, pi, m in zip(activos, Pi, mu_BL):
     print(f"{a:<14}{pi:>13.2%}{m:>17.2%}")
 ```
 
-Leé la tabla con calma: los retornos ajustados se **movieron desde el equilibrio hacia nuestras views**. Acciones EU subió del 2.5% al 7.2%: bastante, pero lejos del 12% que afirmamos, porque el modelo pondera esa view contra el equilibrio. USA también subió, empujado por la view relativa. Ningún valor saltó hasta la view: el modelo mezcló, no reemplazó. Eso es precisamente lo que le faltaba a Markowitz.
+Leé la tabla con calma: los retornos ajustados se movieron desde el equilibrio hacia nuestras views. Acciones EU subió del 2.5% al 7.2%: bastante, pero lejos del 12% que afirmamos, porque el modelo pondera esa view contra el equilibrio. USA también subió, empujado por la view relativa. Ningún valor saltó hasta la view: el modelo mezcló, no reemplazó. Eso es precisamente lo que le faltaba a Markowitz.
 
 Fijate también un efecto menos obvio: Bonos **subió** (de 0.4% a 0.7%), aunque la view 2 lo ponía *por debajo* de USA. La razón es que la fórmula propaga la información a través de $\Sigma$: si EU y USA rinden más, y Bonos está (poco, pero) correlacionado con ellos, su retorno esperado también se ajusta. Las views no actúan aisladas: viajan por las covarianzas.
 
@@ -307,7 +307,7 @@ for a, wm, wb in zip(activos, w_mkt, w_BL):
 print(f"\nSuma de pesos BL: {w_BL.sum():.1%}")
 ```
 
-Cuando **no hay views**, $\mathbf{w}_{BL}$ reproduce la cartera de mercado (por construcción: es el punto de partida). Al agregar opiniones, el modelo **se desvía del mercado en la dirección de esas views**, y la magnitud del desvío depende de dos cosas: cuánto difiere cada view del equilibrio y cuánto confiás en ella. Acá la view sobre EU es muy agresiva —12% contra un equilibrio de 2.5%—, y la cartera sin restricciones lo refleja: Acciones EU pasa del 30% a casi 130%, y los pesos suman cerca de 200%, es decir, una cartera apalancada. No es un error del modelo: es lo que implica *creer* esa view con esa confianza. Por eso en la práctica se combinan views más moderadas con las restricciones del recuadro siguiente. La @fig-equilibrio-vs-bl muestra los dos desplazamientos juntos.
+Cuando **no hay views**, $\mathbf{w}_{BL}$ reproduce la cartera de mercado (por construcción: es el punto de partida). Al agregar opiniones, el modelo se desvía del mercado en la dirección de esas views, y la magnitud del desvío depende de dos cosas: cuánto difiere cada view del equilibrio y cuánto confiás en ella. Acá la view sobre EU es muy agresiva —12% contra un equilibrio de 2.5%—, y la cartera sin restricciones lo refleja: Acciones EU pasa del 30% a casi 130%, y los pesos suman cerca de 200%, es decir, una cartera apalancada. No es un error del modelo: es lo que implica *creer* esa view con esa confianza. Por eso en la práctica se combinan views más moderadas con las restricciones del recuadro siguiente. La @fig-equilibrio-vs-bl muestra los dos desplazamientos juntos.
 
 ```{python}
 #| label: fig-equilibrio-vs-bl
@@ -367,14 +367,13 @@ for i, a in enumerate(activos):
 ax.set_xscale("log")
 ax.set_xlabel("Factor de escala de Ω  (← más confianza en las views | menos confianza →)")
 ax.set_ylabel("Retorno esperado μ_BL (%)")
-ax.set_title("Los retornos BL viajan entre las views y el equilibrio según la confianza")
 ax.legend()
 ax.grid(True, alpha=0.3)
 plt.tight_layout()
 plt.show()
 ```
 
-En la @fig-efecto-confianza, a la izquierda (mucha confianza) los retornos se acercan a lo que afirman las views; a la derecha (poca confianza) vuelven a las líneas punteadas del equilibrio. **El modelo nunca te deja "irte" más allá de tus propias views ni ignorar del todo al mercado**: interpola entre ambos de manera controlada.
+En la @fig-efecto-confianza, a la izquierda (mucha confianza) los retornos se acercan a lo que afirman las views; a la derecha (poca confianza) vuelven a las líneas punteadas del equilibrio. El modelo nunca te deja "irte" más allá de tus propias views ni ignorar del todo al mercado: interpola entre ambos de manera controlada.
 
 ::: {.content-visible when-format="html"}
 ::: {.simulador}

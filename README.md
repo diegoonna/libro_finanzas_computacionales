@@ -1,6 +1,6 @@
-# Finanzas Computacionales
+# Finanzas Computacionales con Python
 
-Este repositorio contiene el libro **"Finanzas Computacionales: De los Fundamentos a los Derivados"**, escrito con [Quarto](https://quarto.org/) y publicado en [diegoonna.github.io/libro_finanzas_computacionales](https://diegoonna.github.io/libro_finanzas_computacionales/).
+Este repositorio contiene el libro **"Finanzas Computacionales con Python: De los Fundamentos a los Derivados"**, escrito con [Quarto](https://quarto.org/) y publicado en [diegoonna.github.io/libro_finanzas_computacionales](https://diegoonna.github.io/libro_finanzas_computacionales/).
 
 Son 20 capítulos organizados en 4 módulos que van desde pensamiento computacional y Python básico hasta derivados y volatilidad estocástica, pasando por portafolios, riesgo y econometría. La idea central: cada concepto financiero se aprende escribiendo y ejecutando código.
 
@@ -104,6 +104,16 @@ Si querés otro estilo o imagen, ajustá `cover-image`, `favicon` o el tema en [
 ## Versiones
 
 Lo que fue cambiando en el libro, de lo más nuevo a lo más viejo. Cada versión junta un hito que se nota al abrir el sitio; los arreglos chicos quedan adentro de la versión en la que entraron.
+
+**v0.13 (noviembre 2026)**
+
+- El libro pasa a llamarse "Finanzas Computacionales con Python" y tiene una página de inicio nueva.
+- Revisión completa del capítulo 11: el VaR se define como un cuantil, la sección de EWMA trabaja sobre una serie con dos regímenes de volatilidad y se agrega el test de independencia de Christoffersen, también con datos reales.
+- Diez temas breves que faltaban: tasa real e inflación (capítulo 1), pruebas con `assert` (3), precio sucio, precio limpio y cupón corrido (6), componentes principales de la matriz de correlaciones (9), shocks correlacionados con Cholesky y variables de control (13), intervalo de confianza del Sharpe por bootstrap (17), el forward y el costo de acarreo (18) y el balance diario entre gamma y theta (19).
+- Citas en el texto: las afirmaciones remiten a la bibliografía en el lugar donde se hacen, y se sumaron nueve referencias.
+- Revisión de la redacción de todos los capítulos, con un registro más sobrio y títulos sin mayúsculas innecesarias.
+- Estilo único para los gráficos: se quitaron los títulos que repetían el epígrafe, los retornos se muestran en porcentaje y el mapa de correlaciones del capítulo 9 lleva los valores anotados.
+- Correcciones: la sonrisa de volatilidad del capítulo 18 era simétrica y ahora tiene el sesgo que se observa en acciones; en el capítulo 11 el texto decía que el test de Jarque-Bera no rechazaba cuando sí lo hacía; en el capítulo 19 el error de cobertura del ejemplo es de 0.91 y no "de centavos".
 
 **v0.12 (noviembre 2026)**
 

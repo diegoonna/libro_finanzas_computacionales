@@ -14,11 +14,11 @@ Hasta ahora hemos escrito código de forma lineal. En este capítulo aprendemos 
 
 ---
 
-## Definición de Funciones
+## Definición de funciones
 
 Una función es un bloque de código reutilizable que recibe **parámetros** y devuelve un **resultado**.
 
-La mejor forma de pensar una función es como una **caja negra con un contrato** (@fig-funcion-caja-negra): entran parámetros, sale un resultado por `return`, y quien la usa no necesita saber qué pasa adentro.
+La mejor forma de pensar una función es como una caja negra con un contrato (@fig-funcion-caja-negra): entran parámetros, sale un resultado por `return`, y quien la usa no necesita saber qué pasa adentro.
 
 ```{mermaid}
 %%| label: fig-funcion-caja-negra
@@ -63,7 +63,7 @@ print(f"Valor futuro: ${vf:,.2f}")
 
 ### Recibir y devolver múltiples valores
 
-En Python, una función puede **recibir varios parámetros** y también **devolver más de un resultado**.
+En Python, una función puede **recibir varios parámetros** y también devolver más de un resultado.
 Esto es útil en finanzas cuando, a partir de los mismos datos, queremos obtener más de un indicador.
 
 ```{pyodide-python}
@@ -85,7 +85,7 @@ print(f"Rendimiento total: {rendimiento:.2%}")
 Cuando devolvemos varios valores, Python los empaqueta en una tupla.
 Luego podemos "desempaquetarlos" en variables separadas para trabajar con cada resultado de forma clara.
 
-### Parámetros por Defecto
+### Parámetros por defecto
 
 ```{pyodide-python}
 #| label: params-default
@@ -101,12 +101,12 @@ print(f"VP a 1 año: ${vp1:,.2f}")
 print(f"VP a 5 años: ${vp2:,.2f}")
 ```
 
-### Argumentos Variables (`*args`)
+### Argumentos variables (`*args`)
 
 Hasta ahora vimos funciones con una cantidad fija de parámetros.  
 Pero en problemas financieros muchas veces no sabemos de antemano cuántos valores vamos a procesar (por ejemplo, una serie de flujos que puede tener 3, 10 o 30 períodos).
 
-`*args` permite que una función reciba una **cantidad variable de argumentos posicionales**.
+`*args` permite que una función reciba una cantidad variable de argumentos posicionales.
 Dentro de la función, esos argumentos se agrupan en una **tupla**.
 
 Esto nos da flexibilidad sin tener que escribir versiones distintas de la misma función.
@@ -145,7 +145,7 @@ Si cada dato tiene un rol distinto y fijo (por ejemplo `capital`, `tasa`, `perio
 
 ---
 
-## Scope (Alcance) de las Variables
+## Alcance (*scope*) de las variables
 
 El **scope** o alcance define en qué parte del programa una variable es "visible" y puede ser utilizada. En Python, distinguimos principalmente entre dos niveles:
 
@@ -153,7 +153,7 @@ El **scope** o alcance define en qué parte del programa una variable es "visibl
 2.  **Scope Local**: Variables definidas dentro de una función. Solo existen mientras la función se está ejecutando y no pueden verse desde fuera.
 
 
-La @fig-scope muestra los dos niveles como cajas anidadas. Cuando Python encuentra un nombre adentro de una función, lo busca **primero en la caja local** y, solo si no lo encuentra, sube a la global. Por eso `calcular_rendimiento` ve `tasa_mercado`, y por eso afuera no existe `variable_interna`.
+La @fig-scope muestra los dos niveles como cajas anidadas. Cuando Python encuentra un nombre adentro de una función, lo busca primero en la caja local y, solo si no lo encuentra, sube a la global. Por eso `calcular_rendimiento` ve `tasa_mercado`, y por eso afuera no existe `variable_interna`.
 
 ```{mermaid}
 %%| label: fig-scope
@@ -178,9 +178,9 @@ flowchart TB
     class l1,l2,l3 loc
 ```
 
-### Variables Globales vs. Locales
+### Variables globales y locales
 
-Una función puede **leer** una variable global, pero no puede modificarla directamente: para eso existe la declaración `global tasa_mercado` dentro de la función. Que exista no significa que convenga usarla — en código financiero es una mala práctica, porque una función que modifica estado externo se vuelve impredecible (el resultado deja de depender solo de sus parámetros). En todo este libro, las funciones reciben lo que necesitan por parámetro y devuelven resultados con `return`.
+Una función puede **leer** una variable global, pero no puede modificarla directamente: para eso existe la declaración `global tasa_mercado` dentro de la función. Que exista no significa que convenga usarla: en código financiero es una mala práctica, porque una función que modifica estado externo se vuelve impredecible (el resultado deja de depender solo de sus parámetros). En todo este libro, las funciones reciben lo que necesitan por parámetro y devuelven resultados con `return`.
 
 ```{pyodide-python}
 #| label: scope-basico
@@ -201,7 +201,7 @@ operacion_interna()
 # print(variable_interna) 
 ```
 
-### El concepto de "Shadowing" (Sombreado)
+### El concepto de *shadowing* (sombreado)
 
 Si definimos una variable dentro de una función con el mismo nombre que una global, la versión local "sombra" a la global durante la ejecución de esa función.
 
@@ -242,7 +242,7 @@ Siempre que necesites un dato dentro de una función, **pásalo como parámetro*
 
 ### ¿Qué recibe una función cuando le pasás una lista?
 
-Cerremos el círculo con el concepto de *aliasing* del [Capítulo 2](../unidad1/cap02_iteraciones_estructuras.qmd) ("copiar no es lo mismo que apuntar"), porque tiene una consecuencia directa sobre las funciones. Cuando llamás `mi_funcion(cartera)`, la función **no recibe una copia** de la cartera: recibe **otra etiqueta al mismo objeto**. Con parámetros inmutables (números, strings) esto es invisible — no se pueden modificar. Pero con una **lista o diccionario**, si la función lo muta, *el llamador ve el cambio*:
+Cerremos el círculo con el concepto de *aliasing* del [Capítulo 2](../unidad1/cap02_iteraciones_estructuras.qmd) ("copiar no es lo mismo que apuntar"), porque tiene una consecuencia directa sobre las funciones. Cuando llamás `mi_funcion(cartera)`, la función **no recibe una copia** de la cartera: recibe otra etiqueta al mismo objeto. Con parámetros inmutables (números, strings) esto es invisible: no se pueden modificar. Pero con una **lista o diccionario**, si la función lo muta, *el llamador ve el cambio*:
 
 ```{pyodide-python}
 #| label: mutar-argumentos
@@ -259,7 +259,7 @@ print(f"Flujos netos:      {flujos_netos}")
 print(f"¿Y mis originales? {mis_flujos}   ← ¡también cambiaron!")
 ```
 
-La función "devolvió" los flujos netos, pero de paso **destruyó los originales** — `mis_flujos` y el parámetro `flujos` eran el mismo objeto. En un análisis real esto es venenoso: valuás la cartera dos veces y da distinto, porque la primera pasada la modificó. Hay dos diseños correctos, y ambos empiezan igual — **no mutar lo que te prestaron**:
+La función "devolvió" los flujos netos, pero de paso **destruyó los originales**: `mis_flujos` y el parámetro `flujos` eran el mismo objeto. En un análisis real esto es venenoso: valuás la cartera dos veces y da distinto, porque la primera pasada la modificó. Hay dos diseños correctos, y ambos empiezan igual: no mutar lo que te prestaron:
 
 ```{pyodide-python}
 #| label: no-mutar-argumentos
@@ -278,12 +278,12 @@ print(f"Originales intactos: {mis_flujos}")
 ```
 
 ::: {.callout-tip title="La convención del oficio"}
-Una función debería **recibir datos, devolver resultados y no tocar nada más** — ni globales (la sección anterior) ni los objetos que le pasaron (esta). A las funciones que cumplen esto se las llama *puras*, y son las más fáciles de testear, reutilizar y razonar. Todas las funciones de la librería que construimos al final del capítulo son puras.
+Una función debería recibir datos, devolver resultados y no tocar nada más: ni globales (la sección anterior) ni los objetos que le pasaron (esta). A las funciones que cumplen esto se las llama *puras*, y son las más fáciles de testear, reutilizar y razonar. Todas las funciones de la librería que construimos al final del capítulo son puras.
 :::
 
 ---
 
-## Manejo de Errores: `try` / `except`
+## Manejo de errores: `try` / `except`
 
 En el mundo real, los datos financieros casi nunca llegan "perfectos": pueden venir incompletos, en formato incorrecto o fuera de rango.
 El manejo de excepciones con `try` / `except` permite que el programa sea **robusto**, evitando que se rompa ante errores esperables.
@@ -297,7 +297,7 @@ Una **excepción** es un error que ocurre durante la ejecución del programa (ru
 - acceder a una clave inexistente en un diccionario (`KeyError`),
 - o intentar usar un tipo de dato incorrecto (`TypeError`).
 
-Si no capturamos la excepción, el programa se detiene **e imprime un traceback** — el "informe forense" del error. Saber leerlo es probablemente la habilidad que más tiempo te va a ahorrar en toda tu carrera, así que detengámonos un minuto.
+Si no capturamos la excepción, el programa se detiene **e imprime un traceback**, el "informe forense" del error. Saber leerlo es probablemente la habilidad que más tiempo te va a ahorrar en toda tu carrera, así que detengámonos un minuto.
 
 ::: {.callout-tip title="Cómo leer un traceback (la habilidad subvalorada)"}
 Un traceback típico luce así:
@@ -317,9 +317,9 @@ La receta para leerlo:
 
 1. **Empezá por la última línea**: ahí está el *tipo* de error (`ZeroDivisionError`) y el *mensaje* (`division by zero`). Es el "qué pasó".
 2. **Subí una línea**: es el lugar exacto donde explotó (`finanzas_basicas.py`, línea 8). Es el "dónde".
-3. **El resto, de abajo hacia arriba, es la cadena de llamadas**: quién llamó a quién hasta llegar ahí. El "cómo llegamos". Ojo: la línea que explotó no siempre es la culpable — acá el bug probablemente esté en quien pasó `tasa = -1`, no en la fórmula.
+3. **El resto, de abajo hacia arriba, es la cadena de llamadas**: quién llamó a quién hasta llegar ahí. El "cómo llegamos". La línea donde aparece el error no siempre es la culpable: acá el bug probablemente esté en quien pasó `tasa = -1`, no en la fórmula.
 
-El error de principiante es leer solo la primera línea (que es la *menos* informativa) o, peor, no leer nada y adivinar. El traceback te está diciendo exactamente qué, dónde y cómo — gratis.
+El error de principiante es leer solo la primera línea (que es la *menos* informativa) o, peor, no leer nada y adivinar. El traceback te está diciendo exactamente qué, dónde y cómo, gratis.
 :::
 
 Con `try` / `except`, en cambio, podemos capturar el error y decidir cómo responder sin que el programa muera.
@@ -467,7 +467,7 @@ Primero validamos reglas financieras, luego capturamos errores inevitables del m
 
 ## Módulos y librerías en Python
 
-Cuando un programa crece, no conviene dejar todo en un solo archivo. Python permite **organizar el código en módulos** para reutilizar funciones, mantener orden y facilitar el testing.
+Cuando un programa crece, no conviene dejar todo en un solo archivo. Python permite organizar el código en módulos para reutilizar funciones, mantener orden y facilitar el testing.
 
 ### ¿Para qué sirve un módulo?
 
@@ -515,11 +515,11 @@ En general, preferí `import modulo` o `import modulo as alias` porque hacen exp
 
 ---
 
-## Problemática Financiera: Librería `finanzas_basicas.py`
+## Problema financiero: la librería `finanzas_basicas.py`
 
-Hora de cosechar lo sembrado. En los dos capítulos anteriores resolviste problemas financieros reales —interés compuesto, conversión de tasas, valuación de bonos, TIR— pero cada solución quedó atrapada en su ejemplo. Vamos a **rescatar esa lógica y empaquetarla en una librería reutilizable**: el conjunto de funciones que vas a poder importar en cualquier análisis futuro. En un entorno real, este código viviría en un archivo `finanzas_basicas.py` y se importaría con `from finanzas_basicas import valuacion_bono, tir`.
+Hora de cosechar lo sembrado. En los dos capítulos anteriores resolviste problemas financieros reales —interés compuesto, conversión de tasas, valuación de bonos, TIR— pero cada solución quedó atrapada en su ejemplo. Vamos a rescatar esa lógica y empaquetarla en una librería reutilizable: el conjunto de funciones que vas a poder importar en cualquier análisis futuro. En un entorno real, este código viviría en un archivo `finanzas_basicas.py` y se importaría con `from finanzas_basicas import valuacion_bono, tir`.
 
-### Funciones de la Librería
+### Funciones de la librería
 
 ```{pyodide-python}
 #| label: libreria
@@ -606,9 +606,9 @@ flowchart LR
     class A uso
 ```
 
-Las funciones de una librería se apoyan unas en otras — si mañana mejorás la valuación, la TIR mejora gratis. Notá también el "techo de seguridad": una función de librería no puede colgarse en un bucle infinito porque alguien le pasó un precio absurdo; falla rápido y con un mensaje claro.
+Las funciones de una librería se apoyan unas en otras: si mañana mejorás la valuación, la TIR mejora gratis. Notá también el "techo de seguridad": una función de librería no puede colgarse en un bucle infinito porque alguien le pasó un precio absurdo; falla rápido y con un mensaje claro.
 
-### Usando la Librería
+### Uso de la librería
 
 ```{pyodide-python}
 #| label: uso-libreria
@@ -636,7 +636,105 @@ rendimiento = tir(1000, 0.08, 5, 950)
 print(f"TIR al precio de $950: {rendimiento:.2%}")
 ```
 
-Compará el punto 4 con las ~10 líneas de bucle que necesitaste en el [Capítulo 2](../unidad1/cap02_iteraciones_estructuras.qmd): la misma lógica, pero ahora **valuar un bono es una línea** — y con validación de inputs incluida. Ese salto de "código que escribo cada vez" a "herramienta que invoco" es exactamente lo que este capítulo vino a enseñar. En el próximo capítulo estas funciones van a dar su paso final: convertirse en *métodos* de una clase `Bono`.
+Compará el punto 4 con las ~10 líneas de bucle que necesitaste en el [Capítulo 2](../unidad1/cap02_iteraciones_estructuras.qmd): la misma lógica, pero ahora valuar un bono es una línea, y con validación de inputs incluida. Ese salto de "código que escribo cada vez" a "herramienta que invoco" es exactamente lo que este capítulo vino a enseñar. En el próximo capítulo estas funciones van a dar su paso final: convertirse en *métodos* de una clase `Bono`.
+
+---
+
+## Probar el código: `assert`
+
+La librería funciona en los cinco ejemplos que acabamos de correr. Queda una pregunta que todo código de uso repetido tiene que poder contestar: cómo sabemos que sigue funcionando después de modificarla. Mirar los resultados a ojo cada vez no es un método. La alternativa es dejar escritas las verificaciones, de manera que se puedan volver a ejecutar en un segundo.
+
+La herramienta mínima es la sentencia `assert`. Recibe una condición: si es verdadera no hace nada, y si es falsa detiene el programa con un `AssertionError` y el mensaje que le hayamos indicado.
+
+```{pyodide-python}
+#| label: assert-basico
+assert valor_futuro(1000, 0.10, 2) > 1000     # se cumple: no imprime nada
+print("Primera verificación superada")
+
+try:
+    assert valor_futuro(100, 0.10, 1) == 110, "100 al 10% durante un año deberían ser 110"
+except AssertionError as error:
+    print("Falló:", error)
+
+print(valor_futuro(100, 0.10, 1))
+```
+
+La segunda verificación falla, y no porque la función esté mal. El resultado es 110.00000000000001: la computadora guarda los decimales en binario, 0.10 no tiene representación exacta, y el error aparece en el último dígito. Es el mismo motivo por el que `0.1 + 0.2 == 0.3` da `False` en Python. La consecuencia práctica es una regla: los números decimales no se comparan con `==`, se comparan con una tolerancia.
+
+Con esa precaución podemos escribir las pruebas de la librería. Conviene combinar tres tipos:
+
+- **Casos calculados a mano**: un ejemplo simple cuyo resultado conocemos sin usar el código.
+- **Propiedades financieras**: hechos que tienen que cumplirse siempre. Un bono cuyo cupón es igual a la tasa de descuento vale su nominal, el precio baja cuando la tasa sube, y con tasa cero el VPN es la suma de los flujos.
+- **Ida y vuelta**: si valuamos un bono al 10% y le pedimos a `tir()` el rendimiento de ese precio, tiene que devolver 10%.
+
+```{pyodide-python}
+#| label: pruebas-libreria
+def casi_igual(a, b, tolerancia=1e-9):
+    """Compara dos números decimales admitiendo un error de redondeo."""
+    return abs(a - b) < tolerancia
+
+
+def probar_libreria():
+    # 1. Caso calculado a mano
+    assert casi_igual(valor_futuro(100, 0.10, 1), 110)
+
+    # 2. Con tasa cero, el VPN es la suma de los flujos
+    assert casi_igual(valor_presente_neto([-1000, 400, 400, 400], 0.0), 200)
+
+    # 3. Cupón igual a la tasa de descuento: el bono vale su nominal
+    assert casi_igual(valuacion_bono(1000, 0.08, 0.08, 5), 1000, tolerancia=1e-6)
+
+    # 4. Si la tasa sube, el precio baja
+    assert valuacion_bono(1000, 0.08, 0.12, 5) < valuacion_bono(1000, 0.08, 0.10, 5)
+
+    # 5. Ida y vuelta: la TIR del precio calculado al 10% es 10%
+    precio = valuacion_bono(1000, 0.08, 0.10, 5)
+    assert casi_igual(tir(1000, 0.08, 5, precio), 0.10, tolerancia=0.0002)
+
+    # 6. Un cupón negativo tiene que ser rechazado
+    try:
+        valuacion_bono(1000, -0.05, 0.10, 5)
+        assert False, "valuacion_bono aceptó un cupón negativo"
+    except ValueError:
+        pass
+
+    print("Las 6 pruebas pasaron")
+
+
+probar_libreria()
+```
+
+La tolerancia de la prueba 5 es más amplia que las otras porque `tir()` avanza de a un punto básico y no puede ser más precisa que su paso. Elegir la tolerancia obliga a pensar qué precisión promete cada función, y eso ya es una ventaja de escribir la prueba.
+
+El valor de estas verificaciones aparece cuando alguien toca el código. Supongamos que una modificación de `valuacion_bono()` cambia el recorrido del bucle y los flujos empiezan a descontarse desde el período 0 en lugar del 1, un error de índice muy común:
+
+```{pyodide-python}
+#| label: prueba-detecta-error
+def valuacion_bono_modificada(valor_nominal, tasa_cupon, tasa_descuento, anios):
+    cupon = valor_nominal * tasa_cupon
+    precio = 0
+    for t in range(anios):                    # el error: debería ser range(1, anios + 1)
+        flujo = cupon + (valor_nominal if t == anios - 1 else 0)
+        precio += flujo / (1 + tasa_descuento) ** t
+    return precio
+
+
+print(f"Precio al 10%: {valuacion_bono_modificada(1000, 0.08, 0.10, 5):.2f}")
+
+try:
+    a_la_par = valuacion_bono_modificada(1000, 0.08, 0.08, 5)
+    assert casi_igual(a_la_par, 1000, tolerancia=1e-6), f"a la par debería valer 1000 y dio {a_la_par:.2f}"
+except AssertionError as error:
+    print("Falló:", error)
+```
+
+El precio al 10% da 1016.60 en lugar de 924.18. Es un número con aspecto razonable para un bono, y en una planilla de resultados podría pasar inadvertido. La prueba de la paridad lo detecta de inmediato: un bono que debería valer 1000 da 1080.
+
+::: {.callout-note title="`assert` y `raise` no cumplen la misma función"}
+Los dos detienen el programa, pero se dirigen a problemas distintos. `raise` responde a datos inválidos que pueden llegar desde afuera, como un cupón negativo o una lista vacía, y forma parte del comportamiento de la función. `assert` verifica que el propio código hace lo que su autor cree que hace. Por eso las validaciones de entrada se escriben con `raise` y las pruebas con `assert`.
+
+En un proyecto real las pruebas no se guardan junto al código. Van a un archivo aparte, por ejemplo `test_finanzas_basicas.py`, con una función por prueba cuyo nombre empieza con `test_`. La herramienta `pytest` encuentra esos archivos, ejecuta todas las funciones e informa cuáles fallaron. El mecanismo es el mismo `assert` de esta sección.
+:::
 
 ---
 
@@ -644,7 +742,7 @@ Compará el punto 4 con las ~10 líneas de bucle que necesitaste en el [Capítul
 El principio **DRY** (*Don't Repeat Yourself*) propone evitar duplicar la misma lógica en distintos lugares del código.
 Cuando repetimos fórmulas o bloques manualmente, aumentamos el riesgo de inconsistencias: si cambia un supuesto (por ejemplo, la tasa o la frecuencia), debemos corregir múltiples líneas y es fácil olvidar alguna.
 
-Aplicar DRY en finanzas significa **encapsular cálculos recurrentes en funciones** (por ejemplo, `valuacion_bono()` o `valor_presente_neto()`) para tener:
+Aplicar DRY en finanzas significa encapsular cálculos recurrentes en funciones (por ejemplo, `valuacion_bono()` o `valor_presente_neto()`) para tener:
 
 - **menos errores** de mantenimiento,
 - **mayor claridad** del modelo,
@@ -672,10 +770,11 @@ precio_b = valuacion_bono(1000, 0.06, 0.08, 3)
 ## Errores comunes
 
 ::: {.callout-warning title="Trampas frecuentes"}
-- **Argumento por defecto mutable**: `def agregar(flujo, lista=[])` comparte la MISMA lista entre todas las llamadas — los flujos de un bono aparecen en otro. El idioma correcto: `def agregar(flujo, lista=None)` y crear la lista adentro (`if lista is None: lista = []`).
-- **Olvidar el `return`**: una función que calcula pero no retorna devuelve `None` silenciosamente; el error explota recién más adelante ("unsupported operand type NoneType"). Si la función produce un valor, terminá con `return`.
+- **Argumento por defecto mutable**: `def agregar(flujo, lista=[])` comparte la MISMA lista entre todas las llamadas, y los flujos de un bono aparecen en otro. El idioma correcto: `def agregar(flujo, lista=None)` y crear la lista adentro (`if lista is None: lista = []`).
+- **Olvidar el `return`**: una función que calcula pero no retorna devuelve `None` silenciosamente; el error aparece recién más adelante ("unsupported operand type NoneType"). Si la función produce un valor, terminá con `return`.
 - **Capturar `Exception` a ciegas**: `except Exception: pass` esconde *todos* los errores, incluidos los bugs que necesitás ver. Capturá el error específico que esperás (`except ValueError:`) y dejá que el resto explote.
 - **Modificar los argumentos recibidos**: si tu función hace `flujos.append(...)` sobre la lista que le pasaron, el llamador ve su lista alterada sin saberlo. Trabajá sobre una copia (`flujos = list(flujos)`) o no mutes.
+- **Comparar decimales con `==`**: `valor_futuro(100, 0.10, 1) == 110` da `False` por un error de redondeo en el último dígito. En las pruebas y en cualquier condición, compará con una tolerancia (`abs(a - b) < 1e-9`).
 - **Validar tarde (o nunca)**: validar los inputs al inicio de la función (como hace `valuacion_bono`) da errores claros y cercanos a la causa; sin validación, el error aparece diez llamadas más adentro con un mensaje incomprensible.
 :::
 

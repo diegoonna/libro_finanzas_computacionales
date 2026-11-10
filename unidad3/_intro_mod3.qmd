@@ -6,7 +6,7 @@ number-sections: false
 
 *Medir lo que puede salir mal y validar lo que creemos saber*
 
-El Módulo 2 terminó con una advertencia: los modelos de portafolio son tan buenos como sus supuestos, y los supuestos fallan. Este módulo —el más largo y diverso del libro— se toma esa advertencia en serio y construye el oficio completo del análisis cuantitativo de riesgo: **medir la incertidumbre, simularla, modelarla y, sobre todo, desconfiar de los propios modelos con método**.
+El Módulo 2 terminó con una advertencia: los modelos de portafolio son tan buenos como sus supuestos, y los supuestos fallan. Este módulo —el más largo y diverso del libro— se toma esa advertencia en serio y construye el oficio completo del análisis cuantitativo de riesgo: medir la incertidumbre, simularla, modelarla y, sobre todo, desconfiar de los propios modelos con método.
 
 El recorrido avanza en cuatro actos. Primero, la **medición del riesgo** y su contexto institucional: el VaR y el Expected Shortfall como lenguaje estándar ([Capítulo 11](../unidad3/cap11_var_expected_shortfall.qmd)), y el marco regulatorio que las crisis fueron dejando —Basilea III, stress testing— junto a las dos historias que todo analista debería saber contar: LTCM y 2008 ([Capítulo 12](../unidad3/cap12_riesgo_regulacion.qmd)). Segundo, los **modelos del mundo**: la simulación de Monte Carlo con el Browniano geométrico ([Capítulo 13](../unidad3/cap13_monte_carlo.qmd)) y su corrección necesaria, los procesos con saltos y colas gruesas que describen los mercados reales ([Capítulo 14](../unidad3/cap14_procesos_estocasticos_activos.qmd)).
 
@@ -42,25 +42,25 @@ flowchart LR
 ```
 
 ::: {.callout-note title="El hilo conductor" appearance="simple"}
-Si tuviéramos que resumir el módulo en una frase, sería esta: **la media y la varianza no cuentan la historia de las colas, y en las colas vive el riesgo**. Cada capítulo ataca una consecuencia distinta de esa frase.
+Si tuviéramos que resumir el módulo en una frase, sería esta: la media y la varianza no cuentan la historia de las colas, y en las colas vive el riesgo. Cada capítulo ataca una consecuencia distinta de esa frase.
 :::
 
 ---
 
-## 🎯 Objetivos de Aprendizaje {.unnumbered}
+## Objetivos de aprendizaje {.unnumbered}
 
 Al completar este módulo, vas a ser capaz de:
 
-1. **Calcular Value at Risk y Expected Shortfall** con métodos paramétrico, histórico y por Monte Carlo.
-2. **Ubicar el riesgo en su marco regulatorio** (stress testing, Basilea III) y aprender de las crisis.
+1. Calcular Value at Risk y Expected Shortfall con métodos paramétrico, histórico y por Monte Carlo.
+2. Ubicar el riesgo en su marco regulatorio (stress testing, Basilea III) y aprender de las crisis.
 3. **Simular trayectorias de precios** con Browniano geométrico y modelos con saltos.
-4. **Construir e interpretar modelos lineales** aplicados a finanzas (CAPM, multifactor).
-5. **Modelar y pronosticar series de tiempo** con ARIMA y VAR.
+4. Construir e interpretar modelos lineales aplicados a finanzas (CAPM, multifactor).
+5. Modelar y pronosticar series de tiempo con ARIMA y VAR.
 6. **Validar estrategias** con backtesting out-of-sample y walk-forward.
 
 ---
 
-## 🗓️ Recorrido Capítulo a Capítulo {.unnumbered}
+## Recorrido capítulo a capítulo {.unnumbered}
 
 | Capítulo | Tema | Python | Finanzas |
 |:------:|------|--------|----------|
@@ -74,7 +74,7 @@ Al completar este módulo, vas a ser capaz de:
 
 ---
 
-## 🧰 Herramientas y Librerías {.unnumbered}
+## Herramientas y librerías {.unnumbered}
 
 ::: {style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;"}
 
@@ -106,23 +106,25 @@ Distribuciones y trayectorias
 
 ---
 
-## 🔑 Concepto Clave: VaR y Expected Shortfall {.unnumbered}
+## Concepto clave: VaR y Expected Shortfall {.unnumbered}
 
 ::: {.callout-important appearance="simple"}
 El **Value at Risk** al nivel de confianza $\alpha$ responde: *¿cuál es la pérdida que solo se excede el $(1-\alpha)\%$ de las veces?*
 
-$$VaR_\alpha = -(\mu + z_\alpha \cdot \sigma) \cdot W$$
+$$VaR_\alpha = -\,q_{1-\alpha} \cdot W$$
+
+donde $q_{1-\alpha}$ es el cuantil de los retornos que deja una probabilidad $1-\alpha$ a su izquierda y $W$ el valor del portafolio.
 
 Pero el VaR solo marca **dónde empieza** la zona de desastre. El **Expected Shortfall** mira adentro: *¿cuánto pierdo en promedio cuando la cruzo?*
 
-$$ES_\alpha = -E\big[\,r \mid r < -VaR_\alpha\,\big]$$
+$$ES_\alpha = -E\big[\,r \mid r \le q_{1-\alpha}\,\big] \cdot W$$
 
 La tensión entre estas dos preguntas —y por qué la regulación migró de una a la otra— es el punto de partida del módulo.
 :::
 
 ---
 
-## 📚 Lecturas Recomendadas {.unnumbered}
+## Lecturas recomendadas {.unnumbered}
 
 - Jorion, P. (2006). *Value at Risk*. McGraw-Hill.
 - Glasserman, P. (2003). *Monte Carlo Methods in Financial Engineering*. Springer.

@@ -45,9 +45,9 @@ aplicar_estilo()
 
 ### Por qué importa
 
-Todo pronóstico basado en el pasado descansa en un supuesto: que **las reglas del juego no cambian**. Formalmente, una serie es **estacionaria** (en sentido débil) si su media, su varianza y sus autocovarianzas no dependen del tiempo. Si la serie tiene tendencia, o su varianza explota, el pasado ya no es una guía del futuro y los modelos que veremos dan resultados sin sentido.
+Todo pronóstico basado en el pasado descansa en un supuesto: que las reglas del juego no cambian. Formalmente, una serie es **estacionaria** (en sentido débil) si su media, su varianza y sus autocovarianzas no dependen del tiempo. Si la serie tiene tendencia, o su varianza explota, el pasado ya no es una guía del futuro y los modelos que veremos dan resultados sin sentido.
 
-El peligro concreto se llama **regresión espuria**: dos series con tendencia, sin ninguna relación real, muestran correlaciones altísimas y p-values espectaculares. Veámoslo — es el error más caro de la econometría aplicada:
+El peligro concreto se llama **regresión espuria** [@granger1974]: dos series con tendencia, sin ninguna relación real, muestran correlaciones altísimas y p-values espectaculares. Veámoslo: es el error más caro de la econometría aplicada:
 
 ```{python}
 #| label: espuria
@@ -68,7 +68,7 @@ print(f"  En DIFERENCIAS:  R² = {res_difs.rsquared:.3f}, "
       f"p-value = {res_difs.pvalues[1]:.3f}  ← la verdad: no hay relación")
 ```
 
-Las series en **niveles** (los paseos) no son estacionarias y la regresión "encuentra" una relación fuerte que no existe. Las mismas series en **diferencias** (sus incrementos, que sí son estacionarios) revelan la verdad. Moraleja operativa que ya usamos en todo el libro sin justificarla: **por eso trabajamos con retornos y no con precios**.
+Las series en **niveles** (los paseos) no son estacionarias y la regresión "encuentra" una relación fuerte que no existe. Las mismas series en **diferencias** (sus incrementos, que sí son estacionarios) revelan la verdad. Moraleja operativa que ya usamos en todo el libro sin justificarla: por eso trabajamos con retornos y no con precios.
 
 La @fig-regresion-espuria muestra el engaño. Dos paseos aleatorios independientes, por pura casualidad, derivan en direcciones parecidas durante tramos largos; en niveles, la nube de puntos se inclina y la regresión la declara "significativa" con un p-value minúsculo. En diferencias, la ilusión desaparece.
 
@@ -204,11 +204,11 @@ _esquema()
 
 Una serie estacionaria se modela combinando dos mecanismos:
 
-- **AR(p)** — *autorregresivo*: el valor de hoy depende de los últimos $p$ valores. "La inflación de este mes se parece a la de los meses anteriores" (inercia, persistencia).
+- **AR(p)**, *autorregresivo*: el valor de hoy depende de los últimos $p$ valores. "La inflación de este mes se parece a la de los meses anteriores" (inercia, persistencia).
 
 $$y_t = c + \phi_1 y_{t-1} + \dots + \phi_p y_{t-p} + \varepsilon_t$$
 
-- **MA(q)** — *media móvil*: el valor de hoy depende de los últimos $q$ **shocks**. "El error de ayer todavía repercute hoy" (efectos transitorios de las sorpresas).
+- **MA(q)**, *media móvil*: el valor de hoy depende de los últimos $q$ **shocks**. "El error de ayer todavía repercute hoy" (efectos transitorios de las sorpresas).
 
 $$y_t = c + \varepsilon_t + \theta_1 \varepsilon_{t-1} + \dots + \theta_q \varepsilon_{t-q}$$
 
@@ -285,7 +285,7 @@ La PACF muestra dos barras significativas y luego nada: la firma de un AR(2). En
 
 ## ARIMA en acción: modelar y pronosticar la inflación
 
-Armemos el flujo completo con una serie macro simulada con la persistencia típica de la inflación mensual. El orden de los pasos es la metodología de **Box-Jenkins**, que resume la @fig-box-jenkins.
+Armemos el flujo completo con una serie macro simulada con la persistencia típica de la inflación mensual. El orden de los pasos es la metodología de **Box-Jenkins** [@box2015], que resume la @fig-box-jenkins.
 
 ```{mermaid}
 %%| label: fig-box-jenkins
@@ -354,14 +354,13 @@ ax.plot(media, color="#c2410c", linewidth=2, label="Pronóstico ARIMA")
 ax.fill_between(banda.index, banda.iloc[:, 0], banda.iloc[:, 1],
                 alpha=0.2, color="#c2410c", label="IC 95%")
 ax.set_ylabel("Inflación mensual (%)")
-ax.set_title("Pronóstico a 24 meses con intervalos de confianza")
 ax.legend()
 ax.grid(True, alpha=0.3)
 plt.tight_layout()
 plt.show()
 ```
 
-Dos rasgos para leer en la @fig-pronostico-arima, típicos de todo pronóstico ARIMA: la predicción **converge a la media de largo plazo** de la serie (la inercia se agota), y las bandas **se abren con el horizonte** hasta estabilizarse — el modelo es honesto sobre lo poco que sabe del futuro lejano.
+Dos rasgos para leer en la @fig-pronostico-arima, típicos de todo pronóstico ARIMA: la predicción converge a la media de largo plazo de la serie (la inercia se agota), y las bandas se abren con el horizonte hasta estabilizarse; el modelo es honesto sobre lo poco que sabe del futuro lejano.
 
 ::: {.callout-warning title="¿Y pronosticar retornos de acciones?"}
 Tentador, pero el ARIMA sobre retornos accionarios suele encontrar... nada ($p = q = 0$): los retornos son casi impredecibles por su propio pasado (eficiencia de mercado en su forma débil). Donde los modelos de series de tiempo brillan es en variables **con inercia estructural**: inflación, tasas, actividad, y —muy especialmente— la *volatilidad* (la familia GARCH, prima hermana de ARMA aplicada a la varianza).
@@ -421,7 +420,7 @@ print("Coeficientes de la ecuación de inflación:")
 print(resultado.params["inflacion"].round(3))
 ```
 
-Los coeficientes recuperan la estructura que sembramos: la inflación depende positivamente de su pasado y **negativamente de la tasa pasada**. Pero la forma más útil de leer un VAR no es la tabla de coeficientes sino la...
+Los coeficientes recuperan la estructura que sembramos: la inflación depende positivamente de su pasado y negativamente de la tasa pasada. Pero la forma más útil de leer un VAR no es la tabla de coeficientes sino la...
 
 ### Función de impulso-respuesta (IRF)
 
@@ -432,15 +431,14 @@ La IRF responde la pregunta de política: *si hoy golpeo al sistema con un shock
 #| fig-cap: "Funciones de impulso-respuesta del VAR estimado, 24 meses. Cada panel muestra cómo responde la variable de la fila a un shock de una unidad en la variable de la columna, con su banda de confianza."
 irf = resultado.irf(24)
 irf.plot(orth=False, figsize=(10, 7))
-plt.suptitle("Funciones de impulso-respuesta (24 meses)", y=1.02)
 plt.tight_layout()
 plt.show()
 ```
 
-En la @fig-irf, mirá el panel "tasa → inflacion": un shock de tasa deprime la inflación durante varios meses, con el efecto máximo no inmediato sino rezagado — exactamente la dinámica "la política monetaria actúa con rezagos" que los bancos centrales repiten. El panel "inflacion → tasa" muestra la respuesta de política: la tasa sube tras un shock inflacionario y luego decae.
+En la @fig-irf, mirá el panel "tasa → inflacion": un shock de tasa deprime la inflación durante varios meses, con el efecto máximo no inmediato sino rezagado, exactamente la dinámica "la política monetaria actúa con rezagos" que los bancos centrales repiten. El panel "inflacion → tasa" muestra la respuesta de política: la tasa sube tras un shock inflacionario y luego decae.
 
 ::: {.callout-note title="Los VAR en la práctica"}
-Los bancos centrales usan VARs (y variantes: SVAR, BVAR, FAVAR) como caballo de batalla para el análisis de política monetaria desde los trabajos de Sims (Nobel 2011). En finanzas se usan para sistemas tasa-inflación-actividad, para pronóstico macro que alimenta modelos de PPNR y stress testing ([Capítulo 12](../unidad3/cap12_riesgo_regulacion.qmd)), y para estudiar transmisión entre mercados.
+Los bancos centrales usan VARs (y variantes: SVAR, BVAR, FAVAR) como caballo de batalla para el análisis de política monetaria desde los trabajos de Sims [@sims1980], premio Nobel en 2011. En finanzas se usan para sistemas tasa-inflación-actividad, para pronóstico macro que alimenta modelos de PPNR y stress testing ([Capítulo 12](../unidad3/cap12_riesgo_regulacion.qmd)), y para estudiar transmisión entre mercados.
 :::
 
 ---

@@ -16,9 +16,9 @@ nocite: |
 
 Imaginate que trabajás en la mesa de derivados de un banco y un cliente te compra una call. Cobraste la prima, pero ahora tenés un problema: si la acción sube fuerte, el payoff que vas a tener que pagar crece sin límite. **¿Cómo dormís tranquilo?**
 
-La respuesta es la idea más profunda de todo el pricing de derivados: **cubrirse replicando**. Si la call tiene delta 0.63, su valor se mueve como 0.63 acciones; entonces comprás 0.63 acciones y tu posición combinada (call vendida + acciones) queda momentáneamente **insensible** al precio. El problema es que el delta cambia cuando el precio se mueve (eso es el gamma) y cuando pasa el tiempo — así que la cobertura hay que **rebalancearla continuamente**. De ahí el nombre: cobertura dinámica.
+La respuesta es la idea más profunda de todo el pricing de derivados: **cubrirse replicando**. Si la call tiene delta 0.63, su valor se mueve como 0.63 acciones; entonces comprás 0.63 acciones y tu posición combinada (call vendida + acciones) queda momentáneamente **insensible** al precio. El problema es que el delta cambia cuando el precio se mueve (eso es el gamma) y cuando pasa el tiempo, así que la cobertura hay que **rebalancearla continuamente**. De ahí el nombre: cobertura dinámica.
 
-Y acá la conexión conceptual con el capítulo anterior: Black y Scholes derivaron su fórmula mostrando que esta estrategia de réplica, llevada al límite continuo, reproduce el payoff de la opción **exactamente**, sin importar hacia dónde vaya el mercado. El precio de la opción *es* el costo de replicarla. La simulación de este capítulo es, en el fondo, **la demostración experimental de Black-Scholes**.
+Y acá la conexión conceptual con el capítulo anterior: @black1973 derivaron su fórmula mostrando que esta estrategia de réplica, llevada al límite continuo, reproduce el payoff de la opción **exactamente**, sin importar hacia dónde vaya el mercado. El precio de la opción *es* el costo de replicarla. La simulación de este capítulo es, en el fondo, la demostración experimental de Black-Scholes.
 
 Vamos a construirla completa, integrando todo el libro: GBM ([Cap. 13](../unidad3/cap13_monte_carlo.qmd)), Black-Scholes y griegas ([Cap. 18](../unidad4/cap18_derivados_vol_implicita.qmd)), y pandas para el registro de operaciones ([Cap. 6](../unidad1/cap06_series_tiempo_pandas.qmd)).
 
@@ -187,7 +187,7 @@ print(f"Error de cobertura:       ${error_hedge:8.2f}  "
       f"({error_hedge / prima:+.1%} de la prima)")
 ```
 
-Leé el resultado con perspectiva: el precio se movió durante un año entero —quizás terminó 20% arriba o abajo— y sin embargo el trader cubierto termina con un error de **centavos por cada 100 de prima**. No adivinó el mercado ni le hizo falta: la réplica transformó una posición especulativa en un negocio de fabricación. El banco "fabrica" la opción comprando y vendiendo el subyacente, y su ganancia es el margen sobre el costo de fabricación — no una apuesta direccional.
+Leé el resultado con perspectiva: el precio se movió durante un año entero —quizás terminó 20% arriba o abajo— y sin embargo el trader cubierto termina con una diferencia de 0.91 sobre un contrato de 100 de nominal, a su favor en este escenario (más adelante veremos de dónde sale). No adivinó el mercado ni le hizo falta: la réplica transformó una posición especulativa en un negocio de fabricación. El banco "fabrica" la opción comprando y vendiendo el subyacente, y su ganancia es el margen sobre el costo de fabricación, no una apuesta direccional.
 
 ```{python}
 #| label: fig-hedge-cuatro-paneles
@@ -228,10 +228,10 @@ plt.tight_layout()
 plt.show()
 ```
 
-Fijate dos cosas en la @fig-hedge-cuatro-paneles. Primero, el panel inferior izquierdo: la cartera replicante **persigue al valor de la opción** durante todo el año — esa es la réplica funcionando. Segundo, el panel del delta comparado con el del precio: cuando el precio cruza el strike, el delta se mueve rápido y los rebalanceos se agrandan. Ahí gobierna el **gamma**.
+Fijate dos cosas en la @fig-hedge-cuatro-paneles. Primero, el panel inferior izquierdo: la cartera replicante persigue al valor de la opción durante todo el año. Esa es la réplica funcionando. Segundo, el panel del delta comparado con el del precio: cuando el precio cruza el strike, el delta se mueve rápido y los rebalanceos se agrandan. Ahí gobierna el **gamma**.
 
 ::: {.callout-tip title="Comprar caro y vender barato, por diseño"}
-Observá el patrón de los trades: cuando el precio **sube**, el delta sube y el trader **compra**; cuando **baja**, **vende**. El cubridor de una opción vendida compra en las subas y vende en las bajas — sistemáticamente pierde en cada ida y vuelta. Ese costo acumulado no es un defecto: **es exactamente el valor temporal de la opción** que cobró como prima. Si la volatilidad realizada termina siendo la que cotizó ($\sigma$), prima y costo de cobertura se cancelan. Si el mercado se mueve *más* que lo cotizado, el cubridor pierde; si se mueve *menos*, gana. Vender opciones cubiertas es, en el fondo, **vender volatilidad**.
+Observá el patrón de los trades: cuando el precio **sube**, el delta sube y el trader **compra**; cuando **baja**, **vende**. El cubridor de una opción vendida compra en las subas y vende en las bajas: sistemáticamente pierde en cada ida y vuelta. Ese costo acumulado no es un defecto: es exactamente el valor temporal de la opción que cobró como prima. Si la volatilidad realizada termina siendo la que cotizó ($\sigma$), prima y costo de cobertura se cancelan. Si el mercado se mueve *más* que lo cotizado, el cubridor pierde; si se mueve *menos*, gana. Vender opciones cubiertas es, en el fondo, **vender volatilidad**.
 :::
 
 La @fig-compra-cara verifica el patrón con los datos de la simulación: cada punto es un día, con el movimiento del precio en el eje horizontal y la cantidad de acciones operadas en el vertical.
@@ -269,9 +269,91 @@ _esquema()
 
 ---
 
+## El balance diario: gamma contra theta
+
+El recuadro anterior afirma que el costo de comprar caro y vender barato se compensa con el valor temporal de la opción. Esa compensación se puede escribir día por día. Si a la variación de la cartera cubierta le aplicamos la ecuación de Black-Scholes, el resultado de un día queda reducido a una sola expresión [@derman2016]:
+
+$$\text{P\&L diario} \approx \tfrac{1}{2}\,\Gamma S^2 \left[\sigma^2\,\Delta t - \left(\frac{\Delta S}{S}\right)^2\right]$$
+
+El primer término es lo que el vendedor cobra por el paso del tiempo: la opción que debe vale un poco menos cada día, y ese ingreso (el **theta**) es proporcional al gamma y a la varianza que se cotizó. El segundo es lo que pierde por haber quedado con el delta desactualizado, y depende del cuadrado del retorno que efectivamente ocurrió. El signo del día lo decide una comparación simple: el vendedor gana si el precio se movió menos que $\sigma\sqrt{\Delta t}$ y pierde si se movió más, sin importar la dirección.
+
+La simulación ya tiene todo lo necesario para comprobarlo. Solo falta una función para el gamma.
+
+```{python}
+#| label: gamma-theta
+def bs_gamma(S, K, T, r, sigma):
+    """Gamma de la call: cuánto cambia el delta por cada peso que se mueve el precio."""
+    d1 = (np.log(S / K) + (r + 0.5 * sigma**2) * T) / (sigma * np.sqrt(T))
+    return norm.pdf(d1) / (S * sigma * np.sqrt(T))
+
+hoy = df.iloc[:-1]                                    # estado al comienzo de cada día
+precio_hoy = hoy["precio"].to_numpy()
+plazo = T - hoy["dia"].to_numpy() * dt
+gamma_pesos = bs_gamma(precio_hoy, K, plazo, r, sigma) * precio_hoy**2
+
+retorno = df["precio"].pct_change().to_numpy()[1:]    # lo que pasó ese día
+pnl_diario = df["pnl"].diff().to_numpy()[1:]          # resultado real de la cobertura
+pnl_aprox = 0.5 * gamma_pesos * (sigma**2 * dt - retorno**2)
+
+equilibrio = sigma * np.sqrt(dt)
+dias_calmos = np.abs(retorno) < equilibrio
+
+print(f"Movimiento de equilibrio: {equilibrio:.2%} diario")
+print(f"Días por debajo: {dias_calmos.sum()}   suman {pnl_diario[dias_calmos].sum():+.2f}")
+print(f"Días por encima: {(~dias_calmos).sum()}   suman {pnl_diario[~dias_calmos].sum():+.2f}")
+print(f"\nP&L acumulado en el año:  {pnl_diario.sum():.2f}")
+print(f"Según la aproximación:    {pnl_aprox.sum():.2f}")
+print(f"Correlación entre ambos, día a día: {np.corrcoef(pnl_diario, pnl_aprox)[0, 1]:.3f}")
+print(f"\nVolatilidad cotizada:  {sigma:.1%}")
+print(f"Volatilidad realizada: {np.sqrt((retorno**2).mean() * 252):.1%}")
+print(f"\nTheta cobrado el primer día: {0.5 * gamma_pesos[0] * sigma**2 * dt:.3f}")
+print(f"Peor día: retorno de {retorno[pnl_diario.argmin()]:+.1%}, P&L de {pnl_diario.min():.2f}")
+```
+
+Con una volatilidad del 25% anual, el movimiento de equilibrio es de 1.57% diario. En 183 de los 252 días el precio se movió menos y la cobertura sumó 2.92; en los 69 restantes se movió más y perdió 2.00. El saldo de 0.92 coincide con el error de cobertura de 0.91 que habíamos obtenido, salvo un centavo que corresponde al registro del primer día, y la aproximación lo reproduce casi exactamente: 0.93, con una correlación diaria de 0.998.
+
+La explicación de ese resto a favor también queda a la vista. La opción se vendió a una volatilidad del 25% y el mercado terminó realizando 23.5%: el vendedor cobró theta por una varianza mayor que la que después pagó en gamma.
+
+```{python}
+#| label: fig-gamma-theta
+#| fig-cap: "El balance diario de la cobertura. Izquierda: resultado de cada día contra el retorno del subyacente; la curva punteada es la parábola teórica con el gamma del primer día y las líneas verticales marcan el movimiento de equilibrio. Derecha: el resultado acumulado, real y según la aproximación."
+fig, (izq, der) = plt.subplots(1, 2, figsize=(12, 4.5))
+
+x = np.linspace(-0.05, 0.05, 200)
+izq.scatter(retorno * 100, pnl_diario, s=14, alpha=0.7, color="#1e3a5f")
+izq.plot(x * 100, 0.5 * gamma_pesos[0] * (sigma**2 * dt - x**2), color="#c2410c",
+         linestyle="--", linewidth=1.5, label="Parábola con el gamma inicial")
+for limite in (-equilibrio, equilibrio):
+    izq.axvline(limite * 100, color="#94a3b8", linestyle=":", linewidth=1)
+izq.axhline(0, color="#94a3b8", linewidth=0.8)
+izq.set_xlabel("Retorno diario del subyacente (%)")
+izq.set_ylabel("P&L del día ($)")
+izq.set_title("Cada día: una parábola invertida")
+izq.legend(loc="lower center")
+izq.grid(True, alpha=0.3)
+
+der.plot(np.cumsum(pnl_diario), color="#1e3a5f", linewidth=1.5, label="Real")
+der.plot(np.cumsum(pnl_aprox), color="#c2410c", linestyle="--", linewidth=1.5,
+         label="Aproximación gamma-theta")
+der.set_xlabel("Día")
+der.set_ylabel("P&L acumulado ($)")
+der.set_title("El año completo")
+der.legend()
+der.grid(True, alpha=0.3)
+
+plt.tight_layout()
+plt.show()
+```
+
+En el panel izquierdo de la @fig-gamma-theta los puntos dibujan parábolas invertidas. No caen todos sobre la misma curva porque el gamma cambia de un día a otro: los días con poco gamma quedan cerca del cero, cualquiera sea el retorno. El peor día del año fue una suba de 4.7% que costó 0.19, unas diez veces el theta que se cobraba por día al comienzo. Es el perfil típico de quien vende opciones: muchas ganancias chicas y pocas pérdidas grandes.
+
+La fórmula ordena además lo que sigue del capítulo. El resultado de cada día es proporcional al gamma, de modo que la cobertura es más ruidosa donde el gamma es alto: cerca del strike y cerca del vencimiento. Y como depende de la diferencia entre la varianza cotizada y la realizada, quien vende una opción y la cubre no toma posición sobre la dirección del precio, sino sobre cuánto se va a mover [@taleb1997].
+
+---
+
 ## El error de cobertura: de dónde viene y cómo se achica
 
-En el mundo ideal de Black-Scholes el rebalanceo es *continuo* y el error es cero. Nosotros rebalanceamos una vez por día, y entre rebalanceo y rebalanceo el delta queda desactualizado. ¿Cuánto cuesta esa discretización? La respuesta la da el **gamma**: entre dos rebalanceos, el error de la aproximación lineal es $\tfrac{1}{2}\Gamma (\Delta S)^2$ — cuadrático en el movimiento del precio.
+En el mundo ideal de Black-Scholes el rebalanceo es *continuo* y el error es cero. Nosotros rebalanceamos una vez por día, y entre rebalanceo y rebalanceo el delta queda desactualizado. ¿Cuánto cuesta esa discretización? La respuesta la da el **gamma**: entre dos rebalanceos, el error de la aproximación lineal es $\tfrac{1}{2}\Gamma (\Delta S)^2$, cuadrático en el movimiento del precio.
 
 La teoría predice algo verificable: el error de cobertura tiene media ~0 y su desvío **cae como $1/\sqrt{n}$** con la frecuencia de rebalanceo. Comprobémoslo con un experimento masivo:
 
@@ -312,14 +394,13 @@ for nombre, err in resultados.items():
 ax.axvline(0, color="black", alpha=0.4)
 ax.set_xlabel("Error de cobertura ($)")
 ax.set_ylabel("Densidad")
-ax.set_title("Rebalancear más seguido angosta la distribución del error")
 ax.legend()
 ax.grid(True, alpha=0.3)
 plt.tight_layout()
 plt.show()
 ```
 
-En la @fig-error-frecuencia, la media es ~0 en todos los casos (la cobertura no está sesgada) y el desvío se achica con la raíz de la frecuencia: de mensual a diario hay un factor $\sqrt{252/12} \approx 4.6$. En el límite continuo, el error desaparece — **esa es la demostración experimental del argumento de Black-Scholes**.
+En la @fig-error-frecuencia, la media es ~0 en todos los casos (la cobertura no está sesgada) y el desvío se achica con la raíz de la frecuencia: de mensual a diario hay un factor $\sqrt{252/12} \approx 4.6$. En el límite continuo, el error desaparece: esa es la demostración experimental del argumento de Black-Scholes.
 
 ### El freno del mundo real: costos de transacción
 
@@ -350,7 +431,7 @@ for nombre, n in frecuencias.items():
     print(f"{nombre:<16}{err.mean():>12.3f}{err.std():>10.3f}")
 ```
 
-Ahora el error medio es **negativo y empeora con la frecuencia**: los costos son un peaje que se paga en cada rebalanceo. El trader real equilibra: rebalancea por bandas ("solo si el delta se desvió más de X"), usa el gamma para decidir cuándo vale la pena, y cotiza la opción con un margen que cubra este peaje.
+Ahora el error medio es negativo y empeora con la frecuencia: los costos son un peaje que se paga en cada rebalanceo. El trader real equilibra: rebalancea por bandas ("solo si el delta se desvió más de X"), usa el gamma para decidir cuándo vale la pena, y cotiza la opción con un margen que cubra este peaje.
 
 La @fig-frecuencia-costos junta los dos experimentos en un barrido más fino de frecuencias. A la izquierda, sin costos, el desvío cae siguiendo la recta $1/\sqrt{n}$ de la teoría. A la derecha, el peaje: como las dos funciones reciben la misma semilla, simulan exactamente los mismos escenarios, y la diferencia entre sus resultados es el costo de transacción puro, sin ruido de muestreo encima.
 
@@ -435,7 +516,7 @@ En la [versión web de este capítulo](https://diegoonna.github.io/libro_finanza
 
 ## Cuando el gamma muerde: cerca del strike, cerca del vencimiento
 
-El talón de Aquiles de la cobertura delta es la zona donde el gamma explota: **strike cercano y poco tiempo restante** (el pico puntiagudo del capítulo anterior). Ahí el delta salta de casi-0 a casi-1 con movimientos chicos del precio, y ninguna frecuencia razonable de rebalanceo alcanza.
+El talón de Aquiles de la cobertura delta es la zona donde el gamma explota: strike cercano y poco tiempo restante (el pico puntiagudo del capítulo anterior). Ahí el delta salta de casi-0 a casi-1 con movimientos chicos del precio, y ninguna frecuencia razonable de rebalanceo alcanza.
 
 ```{python}
 #| label: fig-pin-risk
@@ -458,12 +539,11 @@ ax2.plot(deltas_pin[-40:], color="#c2410c", label="Delta")
 ax.set_xlabel("Últimos 40 días")
 ax.set_ylabel("Precio ($)", color="#1e3a5f")
 ax2.set_ylabel("Delta", color="#c2410c")
-ax.set_title("Pin risk: el delta se vuelve loco cuando el precio baila sobre el strike")
 plt.tight_layout()
 plt.show()
 ```
 
-En esos últimos días de la @fig-pin-risk, el trader compra arriba y vende abajo una y otra vez, sangrando en cada vuelta — el famoso **pin risk**. La respuesta profesional es cubrir también la curvatura: el **delta-gamma hedging** agrega *otra opción* a la cartera para neutralizar el gamma (las acciones solas no pueden: su gamma es cero). Es la puerta de entrada a la gestión de books de opciones reales.
+En esos últimos días de la @fig-pin-risk, el trader compra arriba y vende abajo una y otra vez, perdiendo en cada vuelta: el famoso **pin risk**. La respuesta profesional es cubrir también la curvatura: el **delta-gamma hedging** agrega *otra opción* a la cartera para neutralizar el gamma (las acciones solas no pueden: su gamma es cero). Es la puerta de entrada a la gestión de books de opciones reales.
 
 ---
 
@@ -473,6 +553,7 @@ En esos últimos días de la @fig-pin-risk, el trader compra arriba y vende abaj
 - **Olvidar el interés del cash**: en horizontes largos, el carry del cash es parte material del resultado; omitirlo sesga el error de cobertura.
 - **Rebalancear con el delta de ayer**: el delta debe calcularse con el precio y el tiempo *de hoy*, antes de operar. Desfasar un día introduce un error sistemático.
 - **Confundir el P&L del hedge con ganancia de trading**: el objetivo del cubridor es error ~0; un P&L grande (a favor o en contra) significa que la cobertura falló o que la vol realizada difirió de la cotizada.
+- **Juzgar la cobertura por un solo escenario**: el resultado de un camino depende de la volatilidad que se realizó en él. Un error a favor no indica que la cobertura fue buena, y uno en contra no indica que fue mala; hay que mirar la distribución sobre muchos escenarios.
 - **Ignorar el caso T→0 en las funciones**: `bs_delta` con `T=0` divide por cero si no se maneja aparte; en el vencimiento el delta es un escalón.
 - **Simular con drift μ para valuar**: la réplica funciona con cualquier drift (esa es la magia), pero el mark-to-market usa el precio Black-Scholes, que vive en el mundo neutral al riesgo.
 :::

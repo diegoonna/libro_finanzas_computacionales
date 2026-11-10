@@ -36,6 +36,14 @@ def aplicar_estilo():
         PRIMARIO, ACENTO, SECUNDARIO, GRIS, "#7c3aed", "#0f766e", "#b45309", "#be185d"])
     plt.rcParams["axes.spines.top"] = False
     plt.rcParams["axes.spines.right"] = False
+    # Ejes, rótulos y leyendas en los grises del libro; títulos de panel en el color primario
+    plt.rcParams.update({
+        "axes.edgecolor": "#94a3b8", "axes.labelcolor": "#334155",
+        "xtick.color": "#64748b", "ytick.color": "#64748b",
+        "xtick.labelcolor": "#334155", "ytick.labelcolor": "#334155",
+        "axes.titlesize": 11, "axes.titleweight": "bold", "axes.titlecolor": PRIMARIO,
+        "legend.edgecolor": "#e2e8f0", "legend.framealpha": 0.9,
+    })
 
 
 def sombrear_cola(ax, x, densidad, umbral, color=ACENTO, etiqueta=None, alpha=0.35):

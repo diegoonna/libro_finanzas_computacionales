@@ -20,17 +20,17 @@ Miremos el punto exacto donde quedamos al final del [Capítulo 3](../unidad1/cap
 bono = {"ticker": "GD30", "valor_nominal": 1000, "tasa_cupon": 0.08, "anios": 5}
 ```
 
-...y funciones sueltas que operaban sobre él, a las que había que pasarles cada dato por separado: `valuacion_bono(bono["valor_nominal"], bono["tasa_cupon"], tasa, bono["anios"])`. Funciona, pero tiene una fragilidad estructural: **nada une los datos con las funciones que saben operarlos**. Cualquier parte del programa puede meter mano en el diccionario y romper un invariante (¿una tasa de cupón de -8%? ¿un diccionario al que le falta una clave?), y las funciones tienen que confiar en que el diccionario que reciben viene bien armado.
+...y funciones sueltas que operaban sobre él, a las que había que pasarles cada dato por separado: `valuacion_bono(bono["valor_nominal"], bono["tasa_cupon"], tasa, bono["anios"])`. Funciona, pero tiene una fragilidad estructural: nada une los datos con las funciones que saben operarlos. Cualquier parte del programa puede meter mano en el diccionario y romper un invariante (¿una tasa de cupón de -8%? ¿un diccionario al que le falta una clave?), y las funciones tienen que confiar en que el diccionario que reciben viene bien armado.
 
-La **Programación Orientada a Objetos** propone otra organización: juntar en una misma entidad —el **objeto**— los datos y el comportamiento que les corresponde. Un objeto `Bono` *sabe* su ticker y su cupón, y *sabe* valuarse. Es la forma de programar que más se parece a cómo pensamos las finanzas: los instrumentos del mundo real **ya son objetos** — tienen propiedades y hacen cosas.
+La **Programación Orientada a Objetos** [@phillips2018] propone otra organización: juntar en una misma entidad —el **objeto**— los datos y el comportamiento que les corresponde. Un objeto `Bono` *sabe* su ticker y su cupón, y *sabe* valuarse. Es la forma de programar que más se parece a cómo pensamos las finanzas: los instrumentos del mundo real **ya son objetos**; tienen propiedades y hacen cosas.
 
 ### Los paradigmas, en contexto {.unnumbered}
 
 Un **paradigma de programación** es un estilo general de estructurar el código. No hay uno "correcto"; hay herramientas para problemas distintos, y en este libro los vas a usar todos:
 
-1. **Imperativo**: secuencias de instrucciones que modifican el estado paso a paso — los bucles y acumuladores del [Capítulo 2](../unidad1/cap02_iteraciones_estructuras.qmd).
-2. **Funcional**: organizar el código en funciones reutilizables con entradas y salidas claras — el [Capítulo 3](../unidad1/cap03_funciones_modularizacion.qmd).
-3. **Orientado a Objetos**: modelar entidades que agrupan datos y comportamiento — este capítulo.
+1. **Imperativo**: secuencias de instrucciones que modifican el estado paso a paso (los bucles y acumuladores del [Capítulo 2](../unidad1/cap02_iteraciones_estructuras.qmd)).
+2. **Funcional**: organizar el código en funciones reutilizables con entradas y salidas claras (el [Capítulo 3](../unidad1/cap03_funciones_modularizacion.qmd)).
+3. **Orientado a Objetos**: modelar entidades que agrupan datos y comportamiento (este capítulo).
 
 La POO no reemplaza a los anteriores: se apoya en ellos. Adentro de cada método vas a seguir escribiendo bucles y llamando funciones.
 
@@ -43,7 +43,7 @@ Dos conceptos que conviene separar bien desde el principio:
 -   **Clase**: la *plantilla* (o plano, *blueprint*). Define qué atributos y qué métodos tendrán todos los objetos de ese tipo. Se escribe **una vez**.
 -   **Objeto** (o *instancia*): cada ejemplar concreto construido a partir de la plantilla, con sus propios valores.
 
-La analogía financiera directa: la clase es "el concepto de bono" (todo bono tiene ticker, nominal, cupón, y sabe valuarse); los objetos son el GD30, el AL30, el GD35 — cada uno con sus números.
+La analogía financiera directa: la clase es "el concepto de bono" (todo bono tiene ticker, nominal, cupón, y sabe valuarse); los objetos son el GD30, el AL30, el GD35, cada uno con sus números.
 
 
 La @fig-clase-instancias lo muestra con los bonos del capítulo.
@@ -88,7 +88,7 @@ print(f"{galicia.ticker}: ${galicia.precio}")
 # El objeto sabe hacer cosas con sus propios datos
 var = apple.actualizar_precio(180.00)
 print(f"\n{apple.ticker} actualizada a ${apple.precio} ({var:+.2%})")
-print(f"{galicia.ticker} sigue en ${galicia.precio} — cada objeto tiene SU estado")
+print(f"{galicia.ticker} sigue en ${galicia.precio}: cada objeto tiene SU estado")
 ```
 
 Fijate el resultado clave del final: actualizamos el precio de `apple` y el de `galicia` **no se movió**. Cada instancia guarda su propio **estado** (el conjunto de valores de sus atributos en un momento dado). Una plantilla, muchos ejemplares independientes: eso es una clase.
@@ -153,21 +153,21 @@ print(f"Valor al 8%:  ${gd30.valuar(0.08):,.2f}")
 print(f"Valor al 6%:  ${gd30.valuar(0.06):,.2f}")
 ```
 
-Leé los tres precios del final: al 10% el bono vale menos que el nominal (bajo la par), al 8% vale exactamente $1000 (a la par — la tasa de descuento coincide con el cupón), y al 6% vale más (sobre la par). Es la relación inversa precio-tasa del [Capítulo 2](../unidad1/cap02_iteraciones_estructuras.qmd), pero ahora **el bono se valúa solo**: `gd30.valuar(0.10)` en lugar de acordarte qué función suelta aplicarle a qué diccionario.
+Leé los tres precios del final: al 10% el bono vale menos que el nominal (bajo la par), al 8% vale exactamente $1000 (a la par, porque la tasa de descuento coincide con el cupón), y al 6% vale más (sobre la par). Es la relación inversa precio-tasa del [Capítulo 2](../unidad1/cap02_iteraciones_estructuras.qmd), pero ahora el bono se valúa solo: `gd30.valuar(0.10)` en lugar de acordarte qué función suelta aplicarle a qué diccionario.
 
 Tres detalles de diseño en esta clase que son marca de calidad:
 
-1. **Validación en el constructor**: el `raise ValueError` impide que exista un bono con cupón negativo. Con el diccionario, nada lo impedía — esta es la **encapsulación** trabajando: el objeto protege sus propios invariantes.
-2. **`@property`**: el decorador hace que `cupon` se use como un atributo (`gd30.cupon`, sin paréntesis) pero se **calcule** al momento a partir del estado. Si mañana cambia el nominal, el cupón se actualiza solo — no hay dos copias del dato que puedan desincronizarse.
+1. **Validación en el constructor**: el `raise ValueError` impide que exista un bono con cupón negativo. Con el diccionario, nada lo impedía. Esta es la **encapsulación** trabajando: el objeto protege sus propios invariantes.
+2. **`@property`**: el decorador hace que `cupon` se use como un atributo (`gd30.cupon`, sin paréntesis) pero se **calcule** al momento a partir del estado. Si mañana cambia el nominal, el cupón se actualiza solo: no hay dos copias del dato que puedan desincronizarse.
 3. **`__repr__`**: define cómo se muestra el objeto al imprimirlo. Un minuto de trabajo que paga cada vez que hagas debugging.
 
 ::: {.callout-tip title="Encapsulación: la idea de fondo"}
-Encapsular es ocultar la cocina y exponer el menú: el usuario de la clase llama `valuar(0.10)` sin saber (ni importarle) que adentro hay un bucle con acumulador. Eso te da libertad para mejorar la implementación interna —mañana la vectorizás con NumPy— sin romper el código de nadie que use la clase. Las **interfaces estables con interiores cambiables** son lo que permite construir sistemas grandes.
+Encapsular es ocultar la cocina y exponer el menú: el usuario de la clase llama `valuar(0.10)` sin saber (ni importarle) que adentro hay un bucle con acumulador. Eso te da libertad para mejorar la implementación interna —mañana la vectorizás con NumPy— sin romper el código de nadie que use la clase. Las interfaces estables con interiores cambiables son lo que permite construir sistemas grandes.
 :::
 
 ### Atributos de instancia vs. atributos de clase
 
-Todo lo que definimos con `self.` es un **atributo de instancia**: cada objeto tiene su copia. Pero a veces hay datos compartidos por *todos* los objetos de la clase — y para eso existen los **atributos de clase**, definidos directamente en el cuerpo:
+Todo lo que definimos con `self.` es un **atributo de instancia**: cada objeto tiene su copia. Pero a veces hay datos compartidos por *todos* los objetos de la clase, y para eso existen los **atributos de clase**, definidos directamente en el cuerpo:
 
 ```{python}
 #| label: atributos-clase
@@ -185,9 +185,9 @@ BonoLocal.mercado = "MAE"
 print(f"Ahora ambos cotizan en: {b1.mercado} / {b2.mercado}")
 ```
 
-Un solo cambio (`BonoLocal.mercado = "MAE"`) y las dos instancias lo ven — esa es la utilidad: constantes y configuración compartida viven en la clase, datos propios de cada objeto viven en la instancia.
+Un solo cambio (`BonoLocal.mercado = "MAE"`) y las dos instancias lo ven. Esa es la utilidad: constantes y configuración compartida viven en la clase, datos propios de cada objeto viven en la instancia.
 
-Pero hay una sutileza que confunde a todo el mundo la primera vez: ¿qué pasa si asignás el atributo compartido **a través de una instancia**?
+Pero hay una sutileza que confunde a todo el mundo la primera vez: ¿qué pasa si asignás el atributo compartido a través de una instancia?
 
 ```{python}
 #| label: atributos-shadowing
@@ -199,7 +199,7 @@ print(f"b2.mercado: {b2.mercado}")
 print(f"BonoLocal.mercado: {BonoLocal.mercado}")
 ```
 
-**No cambió para todos.** La asignación `b1.mercado = "NYSE"` no modificó el atributo de clase: creó un atributo **de instancia** nuevo en `b1` que, a partir de ahí, *tapa* (hace *shadowing*) al de clase — solo para `b1`. `b2` y la clase siguen en "MAE". La regla de búsqueda de Python lo explica: al leer `objeto.atributo`, primero busca en la instancia y, si no está, sube a la clase. Al **asignar** `objeto.atributo = ...`, siempre escribe en la instancia. Moraleja: los atributos de clase se modifican **por la clase** (`BonoLocal.mercado = ...`), nunca por una instancia.
+**No cambió para todos.** La asignación `b1.mercado = "NYSE"` no modificó el atributo de clase: creó un atributo **de instancia** nuevo en `b1` que, a partir de ahí, *tapa* (hace *shadowing*) al de clase, solo para `b1`. `b2` y la clase siguen en "MAE". La regla de búsqueda de Python lo explica: al leer `objeto.atributo`, primero busca en la instancia y, si no está, sube a la clase. Al **asignar** `objeto.atributo = ...`, siempre escribe en la instancia. Moraleja: los atributos de clase se modifican **por la clase** (`BonoLocal.mercado = ...`), nunca por una instancia.
 
 
 La @fig-busqueda-atributos dibuja esa regla. Leer y escribir **no son simétricos**: la lectura sube a la clase si hace falta, la escritura nunca.
@@ -226,13 +226,13 @@ flowchart TD
     class R3 err
 ```
 
-Esto también responde una pregunta natural: ¿da lo mismo definir un atributo en el cuerpo de la clase que dentro del `__init__`? No — son cosas distintas. En el cuerpo de la clase creás **un** atributo compartido; con `self.` dentro del `__init__` creás un atributo **por cada objeto**. Para valores inmutables la diferencia puede pasar inadvertida (por el shadowing, cada asignación posterior "individualiza" el valor), pero con valores **mutables** es un campo minado: la trampa del atributo de clase mutable te espera en los Errores comunes.
+Esto también responde una pregunta natural: ¿da lo mismo definir un atributo en el cuerpo de la clase que dentro del `__init__`? No: son cosas distintas. En el cuerpo de la clase creás **un** atributo compartido; con `self.` dentro del `__init__` creás un atributo **por cada objeto**. Para valores inmutables la diferencia puede pasar inadvertida (por el shadowing, cada asignación posterior "individualiza" el valor), pero con valores **mutables** es un campo minado: la trampa del atributo de clase mutable te espera en los Errores comunes.
 
 ---
 
 ## Interacción y composición: objetos que contienen objetos
 
-Los objetos se vuelven realmente potentes cuando **colaboran**. Un objeto puede recibir a otro como parámetro, o directamente **contenerlo** como atributo — la relación llamada **composición** ("tiene un"): un portafolio *tiene* instrumentos.
+Los objetos se vuelven realmente potentes cuando **colaboran**. Un objeto puede recibir a otro como parámetro, o directamente **contenerlo** como atributo, la relación llamada **composición** ("tiene un"): un portafolio *tiene* instrumentos.
 
 ```{python}
 #| label: composicion
@@ -281,13 +281,13 @@ sequenceDiagram
     P-->>U: 10 × 924.18 + 20 × 692.77
 ```
 
-Mirá la cadena de delegación: le pedimos el valor al *portafolio*, el portafolio se lo pide a cada *bono*, y cada bono ejecuta su propio bucle de descuento. Cada clase resuelve **su** parte del problema y delega el resto — nadie sabe más de lo que necesita. Esta forma de partir problemas grandes en cajas chicas que colaboran es el corazón del diseño orientado a objetos.
+Mirá la cadena de delegación: le pedimos el valor al *portafolio*, el portafolio se lo pide a cada *bono*, y cada bono ejecuta su propio bucle de descuento. Cada clase resuelve **su** parte del problema y delega el resto: nadie sabe más de lo que necesita. Esta forma de partir problemas grandes en cajas chicas que colaboran es el corazón del diseño orientado a objetos.
 
 ---
 
 ## Herencia: `Bono` → `BonoAmortizable`
 
-La composición modela "tiene un". La **herencia** modela **"es un"**: un bono amortizable *es un* bono — comparte casi todo con el bono bullet, salvo el cronograma de pagos (devuelve el capital en cuotas, no todo al final). Sería absurdo reescribir la clase entera por esa única diferencia. La herencia permite que una **subclase** tome todo lo de su **superclase** y redefina solo lo que cambia:
+La composición modela "tiene un". La **herencia** modela **"es un"**: un bono amortizable *es un* bono, y comparte casi todo con el bono bullet, salvo el cronograma de pagos (devuelve el capital en cuotas, no todo al final). Sería absurdo reescribir la clase entera por esa única diferencia. La herencia permite que una **subclase** tome todo lo de su **superclase** y redefina solo lo que cambia:
 
 
 Antes del código, el mapa completo de las clases del capítulo (@fig-diagrama-clases). Las flechas con triángulo son herencia ("es un"); el rombo es composición ("tiene un").
@@ -369,7 +369,7 @@ def _esquema():
 _esquema()
 ```
 
-Compará los cronogramas: el bullet paga poco cada año y un pago gigante al final; el amortizable devuelve el capital de a partes (por eso sus cupones bajan: el interés se calcula sobre un saldo que decrece). Y ahora la observación importante: **no escribimos `valuar()` en la subclase** — se hereda de `Bono` y funciona perfecto, porque `valuar()` llama a `self.flujos()` y Python usa automáticamente la versión del objeto concreto. El amortizable vale más al 10% porque recupera el capital antes: menos tiempo descontando a tasa alta. La clase te acaba de enseñar duración sin nombrarla (ese concepto se formaliza en renta fija como *duration*).
+Compará los cronogramas: el bullet paga poco cada año y un pago gigante al final; el amortizable devuelve el capital de a partes (por eso sus cupones bajan: el interés se calcula sobre un saldo que decrece). Y ahora la observación importante: no escribimos `valuar()` en la subclase. Se hereda de `Bono` y funciona perfecto, porque `valuar()` llama a `self.flujos()` y Python usa automáticamente la versión del objeto concreto. El amortizable vale más al 10% porque recupera el capital antes: menos tiempo descontando a tasa alta. La clase te acaba de enseñar duración sin nombrarla (ese concepto se formaliza en renta fija como *duration*).
 
 ### `super()`: extender sin reescribir
 
@@ -385,13 +385,13 @@ class BonoCorporativo(Bono):
         self.calificacion = calificacion                             # y nosotros lo nuevo
 
 corp = BonoCorporativo("YPF29", 1000, 0.09, 4, calificacion="B+")
-print(f"{corp} — calificación {corp.calificacion}")
+print(f"{corp}, calificación {corp.calificacion}")
 print(f"Valor al 12%: ${corp.valuar(0.12):,.2f}")
 ```
 
 ### Polimorfismo: una interfaz, muchos comportamientos
 
-La consecuencia más elegante de la herencia: código que opera sobre "bonos en general" sin preguntar de qué tipo es cada uno. El mismo método (`valuar`) ejecuta la rutina correcta según el objeto — eso es el **polimorfismo**:
+La consecuencia más elegante de la herencia: código que opera sobre "bonos en general" sin preguntar de qué tipo es cada uno. El mismo método (`valuar`) ejecuta la rutina correcta según el objeto: eso es el **polimorfismo**:
 
 ```{python}
 #| label: polimorfismo
@@ -415,7 +415,7 @@ El bucle no tiene un solo `if` preguntando el tipo: le pide a cada objeto que se
 Tres convenciones que el ecosistema Python espera de tu código orientado a objetos:
 
 1.  **Nomenclatura**: clases en `PascalCase` y en singular (`Bono`, `CalculadoraRiesgo`); métodos y atributos en `snake_case` con verbos para las acciones (`calcular_tir()`, `obtener_precio()`).
-2.  **Visibilidad por convención**: un guion bajo inicial (`_saldo`) señala "uso interno, no toques desde afuera"; doble guion (`__clave`) activa el ocultamiento fuerte de Python. No hay `private` como en otros lenguajes — hay acuerdos entre adultos.
+2.  **Visibilidad por convención**: un guion bajo inicial (`_saldo`) señala "uso interno, no toques desde afuera"; doble guion (`__clave`) activa el ocultamiento fuerte de Python. No hay `private` como en otros lenguajes: hay acuerdos entre adultos.
 3.  **Principio de Responsabilidad Única (SRP)**: cada clase debe tener **una** razón para cambiar. Si tu clase `Bono` empieza a descargar precios de internet, graficar y mandar emails, es hora de dividirla: el bono valúa, otra clase descarga, otra grafica.
 
 ::: {.callout-note title="¿Y el destructor `__del__`?"}
@@ -427,11 +427,11 @@ Python también tiene un método `__del__` que se ejecuta cuando el objeto es el
 ## Errores comunes
 
 ::: {.callout-warning title="Trampas frecuentes"}
-- **Olvidar `self`**: escribir `def valuar(tasa)` en lugar de `def valuar(self, tasa)` produce el críptico `takes 1 positional argument but 2 were given`. Python siempre pasa el objeto como primer argumento — tenés que recibirlo.
+- **Olvidar `self`**: escribir `def valuar(tasa)` en lugar de `def valuar(self, tasa)` produce el críptico `takes 1 positional argument but 2 were given`. Python siempre pasa el objeto como primer argumento: tenés que recibirlo.
 - **Olvidar `self.` al asignar**: dentro de `__init__`, `precio = precio` crea una variable local que muere al salir del método; el atributo se crea con `self.precio = precio`. El síntoma: `AttributeError` al usar el objeto.
-- **Atributo de clase mutable**: definir `posiciones = []` a nivel de clase hace que **todas** las instancias compartan la misma lista — agregás un bono a una cartera y aparece en todas. Las colecciones siempre se inicializan en `__init__` con `self.posiciones = []`.
-- **Redefinir un método y romper el contrato**: si tu subclase redefine `flujos()` pero devuelve otra cosa (un dict en vez de una lista), todos los métodos heredados que dependían de él (`valuar`) explotan. Al heredar, respetá las firmas y tipos del padre.
-- **Herencia donde iba composición**: `Portafolio(Bono)` es un error conceptual — un portafolio no *es* un bono, *tiene* bonos. La pregunta "¿es un... o tiene un...?" decide entre heredar y componer.
+- **Atributo de clase mutable**: definir `posiciones = []` a nivel de clase hace que **todas** las instancias compartan la misma lista; agregás un bono a una cartera y aparece en todas. Las colecciones siempre se inicializan en `__init__` con `self.posiciones = []`.
+- **Redefinir un método y romper el contrato**: si tu subclase redefine `flujos()` pero devuelve otra cosa (un dict en vez de una lista), todos los métodos heredados que dependían de él (`valuar`) fallan. Al heredar, respetá las firmas y tipos del padre.
+- **Herencia donde iba composición**: `Portafolio(Bono)` es un error conceptual: un portafolio no *es* un bono, *tiene* bonos. La pregunta "¿es un... o tiene un...?" decide entre heredar y componer.
 :::
 
 ---

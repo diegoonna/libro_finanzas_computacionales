@@ -14,7 +14,7 @@ nocite: |
 
 En el capítulo anterior descubriste el poder de NumPy, pero también su limitación: los arrays no tienen **etiquetas**. `R[:, 0]` es "la columna 0", y vos tenés que acordarte de que esa columna es el GD30 y de que la fila 40 es el 3 de marzo. Con dos activos se tolera; con doscientos activos y diez años de fechas, es inmanejable.
 
-**Pandas** resuelve exactamente eso: pone nombres de columnas y un índice (típicamente de fechas) *encima* de los arrays de NumPy. No es una librería nueva que aprender desde cero — es NumPy con etiquetas: la vectorización, el broadcasting y las máscaras booleanas que ya dominás funcionan igual. Lo que se agrega es la maquinaria para el trabajo diario con datos financieros reales: leer archivos, alinear fechas, rellenar feriados, calcular retornos y ventanas móviles, agrupar por sector.
+**Pandas** [@mckinney2017] resuelve exactamente eso: pone nombres de columnas y un índice (típicamente de fechas) *encima* de los arrays de NumPy. No es una librería nueva que aprender desde cero: es NumPy con etiquetas. La vectorización, el broadcasting y las máscaras booleanas que ya dominás funcionan igual. Lo que se agrega es la maquinaria para el trabajo diario con datos financieros reales: leer archivos, alinear fechas, rellenar feriados, calcular retornos y ventanas móviles, agrupar por sector.
 
 Este capítulo recorre esa maquinaria y cierra integrando todo en un caso real de renta fija: construir la **curva de rendimientos** a partir de precios de bonos, y medir cuánto se mueve el precio de un bono cuando las tasas cambian (su **duración** y su **convexidad**).
 
@@ -52,7 +52,7 @@ print(f"\nMedia: {precios_serie.mean():.2f}")
 print(f"Desvío estándar: {precios_serie.std():.2f}")
 ```
 
-Fijate la salida: cada precio aparece junto a su día, y los métodos estadísticos (`mean`, `std`) vienen incorporados — no hace falta importar nada más. Ojo con la lectura del desvío (~4.6 sobre una media de 113): mide cuánto se dispersan los *niveles* de precio alrededor de su promedio, **no** cuánto se mueve el precio por día. La volatilidad —el riesgo de verdad— se mide sobre los *retornos*, y la calculamos más adelante en este capítulo.
+Fijate la salida: cada precio aparece junto a su día, y los métodos estadísticos (`mean`, `std`) vienen incorporados y no hace falta importar nada más. Atención con la lectura del desvío (~4.6 sobre una media de 113): mide cuánto se dispersan los *niveles* de precio alrededor de su promedio, **no** cuánto se mueve el precio por día. La volatilidad —el riesgo de verdad— se mide sobre los *retornos*, y la calculamos más adelante en este capítulo.
 
 ### DataFrames (2D)
 Un **DataFrame** es la estructura tabular (filas y columnas) que vas a usar el 90% del tiempo. Técnicamente, cada columna es una Serie, y todas comparten el mismo índice. Armemos una tabla de bonos soberanos argentinos:
@@ -69,7 +69,7 @@ df = pd.DataFrame(datos)
 print(df)
 ```
 
-Un diccionario de listas se convierte directamente en tabla: las claves son las columnas. Notá el patrón financiero en los datos: a mayor plazo del bono (GD30 → GD46), menor precio — el tiempo descuenta.
+Un diccionario de listas se convierte directamente en tabla: las claves son las columnas. Notá el patrón financiero en los datos: a mayor plazo del bono (GD30 → GD46), menor precio, porque el tiempo descuenta.
 
 La @fig-anatomia-dataframe separa las piezas de un DataFrame de series de tiempo, el formato que vas a usar en el resto del libro: un índice que etiqueta las filas, nombres que etiquetan las columnas y, en el medio, un array de NumPy.
 
@@ -125,30 +125,30 @@ _esquema()
 ```
 
 
-### Exploración Inicial
-Regla de oro del análisis de datos: **antes de calcular nada, mirá qué tenés**. Pandas trae cuatro métodos de inspección que deberían ser tu reflejo automático al cargar cualquier dataset:
+### Exploración inicial
+Regla de oro del análisis de datos: antes de calcular nada, mirá qué tenés. Pandas trae cuatro métodos de inspección que deberían ser tu reflejo automático al cargar cualquier dataset:
 
 ```{python}
 #| label: exploracion
 print(f"Dimensiones: {df.shape}")
 print(f"Columnas: {df.columns.tolist()}\n")
 
-# head(): las primeras filas — ¿los datos tienen la pinta esperada?
+# head(): las primeras filas. ¿Los datos tienen el aspecto esperado?
 print(df.head(3))
 
-# describe(): estadísticas rápidas — ¿hay valores absurdos? ¿escalas raras?
+# describe(): estadísticas rápidas. ¿Hay valores absurdos? ¿escalas raras?
 print()
 print(df.describe().round(2))
 ```
 
-`head()` responde "¿cargué lo que creía?" y `describe()` responde "¿hay algo raro?" (un precio negativo, un máximo ridículo, menos filas que las esperadas delatan problemas de carga). Completan el kit `df.tail()` (últimas filas — útil para ver si la serie llega hasta la fecha esperada) y `df.info()` (tipos de datos y memoria — clave para detectar números que se cargaron como texto).
+`head()` responde "¿cargué lo que creía?" y `describe()` responde "¿hay algo raro?" (un precio negativo, un máximo ridículo, menos filas que las esperadas delatan problemas de carga). Completan el kit `df.tail()` (últimas filas, útil para ver si la serie llega hasta la fecha esperada) y `df.info()` (tipos de datos y memoria, clave para detectar números que se cargaron como texto).
 
 ---
 
-## Lectura, Escritura y Alineación de Datos
+## Lectura, escritura y alineación de datos
 
-### I/O de Archivos
-En la práctica, los datos no se tipean a mano: llegan en archivos (CSV, Excel) exportados de un sistema o descargados de un proveedor. Pandas lee y escribe todos los formatos usuales (`read_csv`, `read_excel`, `to_csv`, `to_excel`). Hagamos el ciclo completo — guardar nuestra tabla de bonos y volver a leerla — que es además la forma de verificar que entendés el formato:
+### Lectura y escritura de archivos
+En la práctica, los datos no se tipean a mano: llegan en archivos (CSV, Excel) exportados de un sistema o descargados de un proveedor. Pandas lee y escribe todos los formatos usuales (`read_csv`, `read_excel`, `to_csv`, `to_excel`). Hagamos el ciclo completo: guardar nuestra tabla de bonos y volver a leerla, que es además la forma de verificar que entendés el formato:
 
 ```{python}
 #| label: io-ejemplo
@@ -164,15 +164,15 @@ print(df_leido)
 print(f"\n¿La ida y vuelta preservó los datos? {df.equals(df_leido)}")
 ```
 
-Dos parámetros de `read_csv` que vas a usar constantemente con series de tiempo: `parse_dates=["Fecha"]` (convierte la columna a fechas de verdad en lugar de texto) e `index_col="Fecha"` (la establece como índice del DataFrame). Sin `parse_dates`, las fechas quedan como strings y ningún método temporal funciona — es la causa #1 de "pandas no me ordena por fecha".
+Dos parámetros de `read_csv` que vas a usar constantemente con series de tiempo: `parse_dates=["Fecha"]` (convierte la columna a fechas de verdad en lugar de texto) e `index_col="Fecha"` (la establece como índice del DataFrame). Sin `parse_dates`, las fechas quedan como strings y ningún método temporal funciona: es la causa #1 de "pandas no me ordena por fecha".
 
 ::: {.callout-note title="¿Y de dónde saco los datos?"}
 Para descargar datos reales —precios con yfinance, series macro de FRED, o datos institucionales de Bloomberg— el apéndice @sec-datos-financieros tiene la guía completa, incluido el patrón profesional: *descargar una vez, guardar a CSV, y analizar siempre desde el archivo local* con las herramientas de esta sección.
 :::
 
-### Alineación de Índices e Integración de Datos
+### Alineación de índices e integración de datos
 
-Acá viene un problema **real** que las listas de Python no pueden resolver bien. Supongamos que seguís un bono que cotiza en Buenos Aires y una acción que cotiza en Nueva York. El 24 de marzo es feriado en Argentina (no hay precio local) pero NY opera; el 4 de julio es al revés. Si guardaras los precios en dos listas, **los índices dejarían de corresponderse** a partir del primer feriado — y cualquier cálculo conjunto (un spread, una correlación) compararía días distintos sin avisarte.
+Acá viene un problema **real** que las listas de Python no pueden resolver bien. Supongamos que seguís un bono que cotiza en Buenos Aires y una acción que cotiza en Nueva York. El 24 de marzo es feriado en Argentina (no hay precio local) pero NY opera; el 4 de julio es al revés. Si guardaras los precios en dos listas, los índices dejarían de corresponderse a partir del primer feriado, y cualquier cálculo conjunto (un spread, una correlación) compararía días distintos sin avisarte.
 
 Pandas resuelve esto **alineando por etiqueta**: al combinar las dos series, empareja las fechas iguales y marca explícitamente los huecos con `NaN`. Veámoslo:
 
@@ -194,12 +194,12 @@ panel = pd.concat([precios_byma, precios_nyse], axis=1)
 print(panel)
 ```
 
-Leé la tabla resultante: el 24/03 tiene precio de AAPL pero `NaN` en GD30 (feriado argentino), y el 04/07 al revés. Pandas **no inventó datos ni desalineó nada**: te mostró exactamente dónde falta información, para que decidas qué hacer (rellenar, eliminar — la sección de Limpieza). Con listas, este problema se resolvía con contabilidad manual de índices; con Pandas, desaparece.
+Leé la tabla resultante: el 24/03 tiene precio de AAPL pero `NaN` en GD30 (feriado argentino), y el 04/07 al revés. Pandas no inventó datos ni desalineó nada: te mostró exactamente dónde falta información, para que decidas qué hacer (rellenar, eliminar; la sección de Limpieza). Con listas, este problema se resolvía con contabilidad manual de índices; con Pandas, desaparece.
 
 Para combinar datasets, el kit completo:
 
-- `merge()`: unión por columnas (como un JOIN de SQL) — el caso típico: pegar la TIR y la paridad de cada ticker.
-- `join()` / `concat()`: unión por índice — el caso típico con `DatetimeIndex`, como recién.
+- `merge()`: unión por columnas (como un JOIN de SQL). El caso típico: pegar la TIR y la paridad de cada ticker.
+- `join()` / `concat()`: unión por índice. El caso típico con `DatetimeIndex`, como recién.
 - Tipos de unión: `inner` (solo claves comunes), `outer` (todas las claves, con NaN donde falte), `left`/`right`.
 
 ```{python}
@@ -213,7 +213,7 @@ print(df_unido)
 
 ---
 
-## Selección y Filtrado
+## Selección y filtrado
 
 ### Indexación: .loc vs .iloc
 - `.loc`: Busca por **etiquetas** de índice y nombres de columnas.
@@ -229,7 +229,7 @@ df_idx = df.set_index("Ticker")
 print(f"Precio GD30 (.loc):\n{df_idx.loc['GD30', 'Precio']}")
 ```
 
-### Filtrado Booleano y Máscaras
+### Filtrado booleano y máscaras
 Permite filtrar filas según condiciones lógicas o pertenencia a listas mediante `.isin()`.
 
 ```{python}
@@ -245,7 +245,7 @@ print(df[df["Ticker"].isin(tickers_interes)])
 
 ---
 
-## Manejo de Fechas y Series Temporales
+## Manejo de fechas y series temporales
 
 Pandas es excepcionalmente potente para trabajar con frecuencias temporales. Primero convertimos datos a tipo fecha con `pd.to_datetime()` y establecemos un `DatetimeIndex`.
 
@@ -257,7 +257,7 @@ df_time = pd.DataFrame({"Precio": [100, 101, 102.5]}, index=pd.to_datetime(fecha
 print(df_time.index)
 ```
 
-### Resample: Cambio de Frecuencias
+### Resample: cambio de frecuencia
 El método `resample()` permite agrupar datos por períodos (diario `"D"`, semanal `"W"`, fin de mes `"ME"`) y aplicar funciones de agregación.
 
 ```{python}
@@ -279,9 +279,9 @@ De 100 días hábiles quedaron 5 puntas de mes. Elegimos `.last()` porque para p
 
 ---
 
-## Limpieza y Transformación de Datos
+## Limpieza y transformación de datos
 
-Los datos financieros reales vienen con "agujeros" (`NaN`): feriados, activos que no cotizaron, errores del proveedor. Ya vimos cómo la alineación los hace visibles; ahora, qué hacer con ellos. El kit: `isna()` para detectarlos, `dropna()` para eliminar las filas afectadas, y `fillna()` para rellenarlos — en particular con `ffill` (*forward fill*: arrastrar el último valor válido).
+Los datos financieros reales vienen con "agujeros" (`NaN`): feriados, activos que no cotizaron, errores del proveedor. Ya vimos cómo la alineación los hace visibles; ahora, qué hacer con ellos. El kit: `isna()` para detectarlos, `dropna()` para eliminar las filas afectadas, y `fillna()` para rellenarlos, en particular con `ffill` (*forward fill*: arrastrar el último valor válido).
 
 Trabajemos sobre el panel desalineado de la sección anterior, que tenía exactamente este problema:
 
@@ -293,7 +293,7 @@ print(panel.isna().sum(), "\n")
 # Opción 1: eliminar las filas incompletas (perdemos información)
 print("dropna(): quedan", len(panel.dropna()), "filas de", len(panel))
 
-# Opción 2: forward fill — cada hueco toma el último precio conocido
+# Opción 2: forward fill, cada hueco toma el último precio conocido
 panel_limpio = panel.ffill()
 print("\nPanel con ffill():")
 print(panel_limpio)
@@ -361,24 +361,24 @@ def _esquema():
 _esquema()
 ```
 
-Compará las dos opciones sobre el caso concreto: `dropna()` tira los días de feriado enteros (perdés también el precio del mercado que **sí** operó), mientras que `ffill()` conserva todo, asumiendo que el precio del activo sin cotización "sigue siendo el del último cierre". Para precios, esa suposición es económicamente razonable — por eso `ffill` es el default en finanzas — pero no es gratis: el precio arrastrado es *viejo*, y en un día de crisis puede estar muy lejos del valor real.
+Compará las dos opciones sobre el caso concreto: `dropna()` tira los días de feriado enteros (perdés también el precio del mercado que **sí** operó), mientras que `ffill()` conserva todo, asumiendo que el precio del activo sin cotización "sigue siendo el del último cierre". Para precios, esa suposición es económicamente razonable; por eso `ffill` es el default en finanzas, pero no es gratis: el precio arrastrado es *viejo*, y en un día de crisis puede estar muy lejos del valor real.
 
 ::: {.callout-tip title="Forward Fill en Finanzas"}
-`ffill` es ideal para feriados y huecos cortos: asume que el precio vigente es el del último cierre válido. La alternativa `bfill` (rellenar con el valor *siguiente*) casi nunca corresponde en finanzas: usa información del futuro — un *look-ahead bias* disfrazado de limpieza.
+`ffill` es ideal para feriados y huecos cortos: asume que el precio vigente es el del último cierre válido. La alternativa `bfill` (rellenar con el valor *siguiente*) casi nunca corresponde en finanzas: usa información del futuro, un *look-ahead bias* disfrazado de limpieza.
 :::
 
 ---
 
-## Operaciones Vectorizadas y Cálculos Financieros
+## Operaciones vectorizadas y cálculos financieros
 
 Pandas optimiza operaciones sobre columnas enteras sin necesidad de bucles `for`.
 
-### Movimientos y Variaciones
+### Movimientos y variaciones
 - `.shift(n)`: Desplaza los datos $n$ posiciones (útil para comparar $P_t$ vs $P_{t-1}$).
 - `.pct_change()`: Calcula el retorno simple: $(P_t / P_{t-1}) - 1$.
 - `.diff()`: Calcula la diferencia absoluta: $P_t - P_{t-1}$.
 
-### Tipos de Retornos
+### Tipos de retornos
 1. **Retorno Simple**: $R = (P_t / P_{t-1}) - 1$. Es aditivo entre activos en el mismo momento (el retorno de una cartera es el promedio ponderado de los retornos simples).
 2. **Retorno Logarítmico**: $r = \ln(P_t / P_{t-1})$. Es aditivo a lo largo del tiempo (el retorno de un año es la suma de los diarios) y simétrico.
 
@@ -392,10 +392,10 @@ print(f"\nRetorno medio diario:  {df_diario['Ret_Simple'].mean():.4%}")
 print(f"Volatilidad diaria:    {df_diario['Ret_Simple'].std():.4%}")
 ```
 
-Dos lecturas de la salida. Primero, la **primera fila tiene `NaN`**: el primer día no tiene "día anterior" con quien compararse — es el mismo desfasaje que manejaste a mano con `range(len - 1)` en el [Capítulo 2](../unidad1/cap02_iteraciones_estructuras.qmd), ahora automático. Segundo, el retorno simple y el logarítmico son casi idénticos: para movimientos diarios chicos (±1%) la diferencia es despreciable; se separa en movimientos grandes.
+Dos lecturas de la salida. Primero, la **primera fila tiene `NaN`**: el primer día no tiene "día anterior" con quien compararse. Es el mismo desfasaje que manejaste a mano con `range(len - 1)` en el [Capítulo 2](../unidad1/cap02_iteraciones_estructuras.qmd), ahora automático. Segundo, el retorno simple y el logarítmico son casi idénticos: para movimientos diarios chicos (±1%) la diferencia es despreciable; se separa en movimientos grandes.
 
-### Ventanas Móviles (Rolling)
-Una pregunta constante en finanzas: *¿cómo viene el activo **últimamente**?* No en toda su historia — en los últimos 20 días, 60 días. Las **ventanas móviles** (`rolling`) calculan una estadística sobre una ventana que se desliza por la serie: la base de las medias móviles y de la volatilidad histórica.
+### Ventanas móviles (*rolling*)
+Una pregunta constante en finanzas: *¿cómo viene el activo **últimamente**?* No en toda su historia, sino en los últimos 20 días, 60 días. Las **ventanas móviles** (`rolling`) calculan una estadística sobre una ventana que se desliza por la serie: la base de las medias móviles y de la volatilidad histórica.
 
 ```{python}
 #| label: rolling-indicators
@@ -409,11 +409,11 @@ print(df_diario[["Precio", "SMA_20", "Vol_20"]].iloc[18:23].round(3))
 print(f"\nVolatilidad anualizada al final de la muestra: {df_diario['Vol_20'].iloc[-1]:.1%}")
 ```
 
-Mirá las filas impresas: las primeras 19 observaciones de `SMA_20` son `NaN` — la ventana de 20 días recién se "llena" en la observación 20. Y la volatilidad final (~15%) es la lectura estándar del riesgo del activo: se anualizó multiplicando por $\sqrt{252}$, la regla que formalizamos en el [Capítulo 7](../unidad2/cap07_estadistica_optimizacion.qmd). Cuando en la práctica leas "vol histórica 20 ruedas", es exactamente esta cuenta.
+Mirá las filas impresas: las primeras 19 observaciones de `SMA_20` son `NaN`, porque la ventana de 20 días recién se "llena" en la observación 20. Y la volatilidad final (~15%) es la lectura estándar del riesgo del activo: se anualizó multiplicando por $\sqrt{252}$, la regla que formalizamos en el [Capítulo 7](../unidad2/cap07_estadistica_optimizacion.qmd). Cuando en la práctica leas "vol histórica 20 ruedas", es exactamente esta cuenta.
 
 ---
 
-## Agrupación (Groupby)
+## Agrupación (`groupby`)
 
 Sigue el mecanismo **Split-Apply-Combine**: dividimos el dataset por una categoría (Ticker, Sector), aplicamos una función y combinamos los resultados.
 
@@ -452,7 +452,7 @@ print(resumen_sector)
 
 ## Visualización: cómo graficar (mini-tutorial de Matplotlib)
 
-Llegó el momento de aprender a graficar en serio, porque **de acá al final del libro no hay capítulo sin gráficos**: fronteras eficientes, distribuciones de retornos, trayectorias simuladas, sonrisas de volatilidad. Un analista que no grafica sus datos está analizando a ciegas — el histograma que revela una cola pesada o el gráfico que delata un hueco en la serie valen más que diez tablas.
+Llegó el momento de aprender a graficar en serio, porque de acá al final del libro no hay capítulo sin gráficos: fronteras eficientes, distribuciones de retornos, trayectorias simuladas, sonrisas de volatilidad. Un analista que no grafica sus datos está analizando a ciegas: el histograma que revela una cola pesada o el gráfico que delata un hueco en la serie valen más que diez tablas.
 
 ### La anatomía: Figure y Axes
 
@@ -521,13 +521,13 @@ def _esquema():
 _esquema()
 ```
 
-De ahí el idioma que vas a ver en todo el libro — y en todo el código profesional:
+De ahí el idioma que vas a ver en todo el libro, y en todo el código profesional:
 
 ```python
 fig, ax = plt.subplots(figsize=(10, 5))   # un lienzo con un gráfico adentro
 ```
 
-`plt.subplots()` crea las dos piezas juntas, y a partir de ahí **todo se le pide al `ax`**: dibujar (`ax.plot`), etiquetar (`ax.set_xlabel`), etc. Construyamos un gráfico completo paso a paso, con la receta de cinco pasos que repite cada figura del libro (el resultado es la @fig-plantilla-grafico):
+`plt.subplots()` crea las dos piezas juntas, y a partir de ahí todo se le pide al `ax`: dibujar (`ax.plot`), etiquetar (`ax.set_xlabel`), etc. Construyamos un gráfico completo paso a paso, con la receta de cinco pasos que repite cada figura del libro (el resultado es la @fig-plantilla-grafico):
 
 ```{python}
 #| label: fig-plantilla-grafico
@@ -541,7 +541,7 @@ ax.plot(df_diario.index, df_diario["Precio"], linewidth=1.5, label="Precio de ci
 # 3. Etiquetar TODO: quien mira el gráfico no leyó tu código
 ax.set_xlabel("Fecha")
 ax.set_ylabel("Precio ($)")
-ax.set_title("Evolución del precio — la plantilla de todo gráfico del libro")
+ax.set_title("Evolución del precio: la plantilla de todo gráfico del libro")
 
 # 4. Leyenda y grilla (la grilla suave ayuda a leer valores)
 ax.legend()
@@ -558,9 +558,9 @@ Esos cinco pasos —crear, dibujar, etiquetar, leyenda/grilla, mostrar— son **
 
 Con la plantilla fija, cambiar de tipo de gráfico es cambiar una línea. Los tres que cubren el 95% del análisis financiero:
 
-- **Línea** (`ax.plot`): evolución en el tiempo — precios, curvas, trayectorias.
-- **Histograma** (`ax.hist`): la *distribución* de una variable — la herramienta central para mirar retornos.
-- **Dispersión** (`ax.scatter`): la *relación* entre dos variables — ¿se mueven juntas?
+- **Línea** (`ax.plot`): evolución en el tiempo (precios, curvas, trayectorias).
+- **Histograma** (`ax.hist`): la *distribución* de una variable, la herramienta central para mirar retornos.
+- **Dispersión** (`ax.scatter`): la *relación* entre dos variables (¿se mueven juntas?)
 
 ```{python}
 #| label: fig-tres-tipos
@@ -589,11 +589,11 @@ plt.tight_layout()
 plt.show()
 ```
 
-Dos novedades en este bloque. Primero, `plt.subplots(1, 2)` crea **dos gráficos en el mismo lienzo** (1 fila, 2 columnas) y devuelve un array de Axes — dibujás en cada uno por separado. Segundo, leé lo que los gráficos de la @fig-tres-tipos *dicen*: el histograma muestra retornos concentrados alrededor de cero con forma de campana, y la dispersión es una **nube sin patrón** — el retorno de ayer no predice el de hoy, tu primer vistazo a la eficiencia del mercado que formalizaremos en el [Capítulo 16](../unidad3/cap16_series_temporales_macro.qmd).
+Dos novedades en este bloque. Primero, `plt.subplots(1, 2)` crea dos gráficos en el mismo lienzo (1 fila, 2 columnas) y devuelve un array de Axes; dibujás en cada uno por separado. Segundo, leé lo que los gráficos de la @fig-tres-tipos *dicen*: el histograma muestra retornos concentrados alrededor de cero con forma de campana, y la dispersión es una **nube sin patrón**; el retorno de ayer no predice el de hoy, tu primer vistazo a la eficiencia del mercado que formalizaremos en el [Capítulo 16](../unidad3/cap16_series_temporales_macro.qmd).
 
 ### El atajo de pandas: `.plot()`
 
-Pandas trae un envoltorio de matplotlib incorporado: toda Serie y DataFrame tiene un método `.plot()` que dibuja usando **el índice como eje x** automáticamente — con fechas, esto es oro. Acepta `ax=` para dirigir el dibujo a un Axes que ya creaste, así que se combina perfecto con la plantilla:
+Pandas trae un envoltorio de matplotlib incorporado: toda Serie y DataFrame tiene un método `.plot()` que dibuja usando el índice como eje x automáticamente, algo muy cómodo cuando el índice son fechas. Acepta `ax=` para dirigir el dibujo a un Axes que ya creaste, así que se combina perfecto con la plantilla:
 
 ```{python}
 #| label: fig-panel-doble
@@ -620,7 +620,7 @@ plt.tight_layout()
 plt.show()
 ```
 
-El panel doble de la @fig-panel-doble es el formato clásico del análisis técnico: precio arriba, indicador abajo, **compartiendo el eje de fechas** (`sharex=True`) para poder leerlos en vertical: fijate cómo los períodos de precio "nervioso" en el panel superior coinciden con los picos de volatilidad en el inferior.
+El panel doble de la @fig-panel-doble es el formato clásico del análisis técnico: precio arriba, indicador abajo, compartiendo el eje de fechas (`sharex=True`) para poder leerlos en vertical: fijate cómo los períodos de precio "nervioso" en el panel superior coinciden con los picos de volatilidad en el inferior.
 
 ::: {.callout-tip title="El checklist de todo gráfico"}
 Antes de dar por terminada una figura, cuatro preguntas: ¿los **ejes** tienen etiqueta con unidades? ¿el **título** dice qué estoy mirando? ¿hay **leyenda** si conviven varias series? ¿alguien que no vio el código entiende el gráfico solo? Un gráfico sin etiquetas es un dibujo; con etiquetas, es un argumento.
@@ -660,11 +660,11 @@ print(resumen.sort_values("Vol. anual").round(3))
 
 # resample: de diario a mensual, y el mejor y el peor mes del S&P 500
 spy_mensual = precios["SPY"].resample("ME").last().pct_change().dropna()
-print(f"\nSPY — mejor mes: {spy_mensual.idxmax():%Y-%m} ({spy_mensual.max():+.1%}), "
+print(f"\nSPY, mejor mes: {spy_mensual.idxmax():%Y-%m} ({spy_mensual.max():+.1%}), "
       f"peor mes: {spy_mensual.idxmin():%Y-%m} ({spy_mensual.min():+.1%})")
 ```
 
-Leé la tabla de arriba abajo: las acciones defensivas (KO, JNJ) y el propio índice tienen la menor volatilidad, cerca del 17% anual; NVDA es otro planeta, con más del 50%. Y fijate que más volatilidad no garantiza más retorno: MSFT y DIS están en la mitad de arriba de la tabla de riesgo y rindieron menos que el índice (DIS, de hecho, perdió plata en los cinco años). La relación entre riesgo y retorno esperado es el tema del Módulo 2.
+Leé la tabla de arriba abajo: las acciones defensivas (KO, JNJ) y el propio índice tienen la menor volatilidad, cerca del 17% anual; NVDA es otro planeta, con más del 50%. Y fijate que más volatilidad no garantiza más retorno: MSFT y DIS están en la mitad de arriba de la tabla de riesgo y rindieron menos que el índice (DIS, de hecho, perdió valor en los cinco años). La relación entre riesgo y retorno esperado es el tema del Módulo 2.
 
 La @fig-datos-reales-base100 junta las dos herramientas de gráfico del capítulo: precios llevados a base 100 (para comparar activos de precios muy distintos en una misma escala) y la volatilidad móvil del índice.
 
@@ -680,7 +680,8 @@ fig, ax = plt.subplots(2, 1, figsize=(10, 7), sharex=True,
 base_100.plot(ax=ax[0], logy=True)        # escala log: subas iguales en % se ven iguales
 ax[0].axhline(100, color="#94a3b8", linewidth=1)
 ax[0].set_ylabel("Base 100 (escala log)")
-ax[0].set_title("Cinco años de mercado, en una misma escala")
+ax[0].set_yticks([50, 100, 200, 500, 1000], ["50", "100", "200", "500", "1000"])
+ax[0].minorticks_off()
 ax[0].grid(True, alpha=0.3)
 
 vol_spy.plot(ax=ax[1], color="#c2410c", label="Vol. 60 ruedas del SPY")
@@ -697,13 +698,13 @@ Dos detalles de código que vale la pena copiar. La división `precios / precios
 
 ---
 
-## Caso de Uso: Construcción de la Curva de Rendimientos
+## Caso de uso: construcción de la curva de rendimientos
 
-Este caso integra casi todo el capítulo —DataFrames, iteración, operaciones vectorizadas— para resolver un problema central de la renta fija: **construir la curva de tasas** a partir de precios de bonos que se cotizan en el mercado.
+Este caso integra casi todo el capítulo —DataFrames, iteración, operaciones vectorizadas— para resolver un problema central de la renta fija: construir la curva de tasas a partir de precios de bonos que se cotizan en el mercado.
 
 ### ¿Por qué necesitamos "construir" una curva?
 
-En el mercado no observamos directamente las tasas *spot* (la tasa de un instrumento que paga todo al vencimiento, sin cupones intermedios). Lo que observamos son **precios de bonos con cupón**, y cada uno mezcla tasas de muchos plazos a la vez. La técnica del **bootstrapping** desarma esa mezcla plazo por plazo: usa el bono a 1 año para despejar la tasa a 1 año, y con esa tasa ya conocida despeja la de 2 años del bono a 2 años, y así sucesivamente. Es como armar la curva "tirando del hilo".
+En el mercado no observamos directamente las tasas *spot* (la tasa de un instrumento que paga todo al vencimiento, sin cupones intermedios). Lo que observamos son precios de bonos con cupón, y cada uno mezcla tasas de muchos plazos a la vez. La técnica del **bootstrapping** desarma esa mezcla plazo por plazo: usa el bono a 1 año para despejar la tasa a 1 año, y con esa tasa ya conocida despeja la de 2 años del bono a 2 años, y así sucesivamente. Es como armar la curva "tirando del hilo".
 
 
 La @fig-bootstrapping muestra la cadena: cada tasa que se despeja se convierte en un insumo para el paso siguiente.
@@ -840,7 +841,6 @@ ax.plot(curva_interpolada.index, curva_interpolada * 100, ".-", alpha=0.7,
         label="Curva interpolada (cada 6 meses)")
 ax.set_xlabel("Plazo (años)")
 ax.set_ylabel("Tasa spot (%)")
-ax.set_title("Curva de Rendimientos: puntos observados vs. interpolación")
 ax.legend()
 ax.grid(True, alpha=0.3)
 plt.tight_layout()
@@ -853,13 +853,96 @@ Interpolar linealmente es simple y transparente, pero los operadores de renta fi
 
 ---
 
+## Entre dos cupones: precio sucio, precio limpio y cupón corrido
+
+Hasta acá valuamos los bonos parados en una fecha de pago, con todos los flujos a una distancia entera de años. En el mercado los bonos cambian de manos cualquier día, y entre dos cupones aparece una pregunta que la fórmula no contestaba: ¿a quién le corresponde el cupón que se está devengando?
+
+La convención es que se reparte en proporción al tiempo. Quien vende un bono cuatro meses después del último pago resignó cuatro meses de intereses que va a cobrar el comprador, y el comprador se los reconoce en el precio. Esa porción se llama **cupón corrido** (o intereses corridos), y da lugar a dos precios para el mismo bono [@fabozzi2015]:
+
+- El **precio sucio** es lo que efectivamente se paga: el valor presente de todos los flujos que faltan cobrar.
+- El **precio limpio** es el precio sucio menos el cupón corrido.
+
+Con fechas de Pandas el cálculo no requiere nada nuevo. Tomamos el bono de siempre (nominal 1000, cupón anual del 8%, cinco años, TIR del 10%) y le ponemos fecha de emisión.
+
+```{python}
+#| label: cupon-corrido
+emision = pd.Timestamp("2024-03-15")
+fechas_cupon = pd.date_range(emision, periods=6, freq=pd.DateOffset(years=1))[1:]   # 5 pagos anuales
+vn_b, tasa_cupon, tir_b = 1000, 0.08, 0.10
+montos = np.full(5, vn_b * tasa_cupon)
+montos[-1] += vn_b                           # el último pago incluye el nominal
+
+def precio_sucio(liquidacion):
+    """Valor presente de los flujos que faltan cobrar; plazos en años, contando días reales sobre 365."""
+    faltan = fechas_cupon > liquidacion
+    plazos = (fechas_cupon[faltan] - liquidacion).days.to_numpy() / 365
+    return (montos[faltan] / (1 + tir_b) ** plazos).sum()
+
+def cupon_corrido(liquidacion):
+    """Parte del próximo cupón devengada desde el último pago."""
+    anterior = max([emision] + [f for f in fechas_cupon if f <= liquidacion])
+    proximo = min(f for f in fechas_cupon if f > liquidacion)
+    return vn_b * tasa_cupon * (liquidacion - anterior).days / (proximo - anterior).days
+
+liquidacion = pd.Timestamp("2024-09-13")
+sucio, corrido = precio_sucio(liquidacion), cupon_corrido(liquidacion)
+
+print(f"Días desde la emisión: {(liquidacion - emision).days}")
+print(f"Precio sucio:   {sucio:8.2f}")
+print(f"Cupón corrido:  {corrido:8.2f}")
+print(f"Precio limpio:  {sucio - corrido:8.2f}")
+```
+
+A los 182 días de la emisión, el comprador paga 968.97. De ese monto, 39.89 corresponden a la mitad del cupón de 80 que ya se devengó, y el precio limpio es 929.08.
+
+La razón para distinguir los dos precios se ve en la @fig-precio-sucio-limpio, que recorre toda la vida del bono con la TIR fija en 10%.
+
+```{python}
+#| label: fig-precio-sucio-limpio
+#| fig-cap: "Precio sucio y precio limpio del bono a lo largo de su vida, con la TIR constante en 10%. El precio sucio sube mientras se devenga el cupón y cae el día del pago; el limpio converge al nominal sin saltos."
+dias_vida = pd.date_range(emision, fechas_cupon[-1] - pd.Timedelta(days=1), freq="D")
+serie_sucio = pd.Series([precio_sucio(d) for d in dias_vida], index=dias_vida)
+serie_corrido = pd.Series([cupon_corrido(d) for d in dias_vida], index=dias_vida)
+
+fig, ax = plt.subplots(figsize=(10, 5))
+serie_sucio.plot(ax=ax, color="#c2410c", linewidth=1.5, label="Precio sucio")
+(serie_sucio - serie_corrido).plot(ax=ax, color="#1e3a5f", linewidth=2, label="Precio limpio")
+ax.axhline(vn_b, color="#94a3b8", linestyle="--", linewidth=1, label="Valor nominal")
+ax.set_xlabel("Fecha")
+ax.set_ylabel("Precio ($)")
+ax.legend()
+ax.grid(True, alpha=0.3)
+plt.tight_layout()
+plt.show()
+```
+
+El precio sucio tiene forma de serrucho. Sube día a día mientras el cupón se devenga y cae el día del pago: el 14 de marzo de 2025 vale 1016.13 y al día siguiente, ya cobrado el cupón, 936.39. Esa caída de casi 80 no es una mala noticia, porque quien tenía el bono cobró exactamente eso en efectivo. El precio limpio descuenta ese efecto, y sus movimientos reflejan solo lo que le interesa a quien analiza el bono: los cambios en la tasa y el paso del tiempo.
+
+Qué precio se publica depende del mercado. En los mercados internacionales los bonos cotizan a precio limpio y el cupón corrido se suma al liquidar la operación. En el mercado argentino los títulos públicos se negocian habitualmente a precio sucio, y por eso su cotización cae el día en que pagan renta. Antes de comparar dos precios hay que saber de cuál de los dos se trata.
+
+::: {.callout-note title="Las convenciones de días"}
+El cupón corrido depende de cómo se cuenten los días, y cada mercado tiene su convención. Las tres más comunes dan resultados distintos para el mismo bono y la misma fecha:
+
+| Convención | Días transcurridos | Base | Cupón corrido |
+|---|:---:|:---:|:---:|
+| Actual/365 | 182 | 365 | 39.89 |
+| 30/360 | 178 | 360 | 39.56 |
+| Actual/360 | 182 | 360 | 40.44 |
+
+La convención 30/360 supone que todos los meses tienen 30 días; las otras dos cuentan días de calendario. La diferencia entre la más baja y la más alta es de 0.88 por cada 1000 de nominal, poco para un inversor individual y mucho en una cartera de cientos de millones. El prospecto de cada bono indica cuál se aplica.
+
+La misma elección explica un detalle del código: en la fecha de emisión `precio_sucio` da 923.99 y no los 924.18 del [Capítulo 2](../unidad1/cap02_iteraciones_estructuras.qmd), porque uno de los cinco años es bisiesto y, contando días reales sobre 365, los dos últimos flujos quedan un día más lejos.
+:::
+
+---
+
 ## Riesgo de tasa: duración y convexidad
 
-La curva dice a qué tasa descontar. La pregunta que sigue, la que se hace cualquiera que tenga bonos en cartera, es la inversa: **si las tasas se mueven, ¿cuánto pierdo?** En el [Capítulo 2](../unidad1/cap02_iteraciones_estructuras.qmd) viste que precio y tasa van en sentido contrario, y en el simulador de ese capítulo, que la relación no es una recta sino una curva. Esta sección le pone número a esa curva con las dos medidas que usa cualquier mesa de renta fija: la **duración**, que es la pendiente, y la **convexidad**, que es la curvatura.
+La curva dice a qué tasa descontar. La pregunta que sigue, la que se hace cualquiera que tenga bonos en cartera, es la inversa: si las tasas se mueven, ¿cuánto pierdo? En el [Capítulo 2](../unidad1/cap02_iteraciones_estructuras.qmd) viste que precio y tasa van en sentido contrario, y en el simulador de ese capítulo, que la relación no es una recta sino una curva. Esta sección le pone número a esa curva con las dos medidas que usa cualquier mesa de renta fija: la **duración**, que es la pendiente, y la **convexidad**, que es la curvatura.
 
 ### Duración de Macaulay: el plazo promedio de los flujos
 
-Un bono *bullet* a 5 años no "dura" 5 años: los cupones devuelven parte del capital antes del vencimiento. La **duración de Macaulay** es el plazo promedio de los flujos, ponderado por cuánto pesa cada uno en el precio:
+Un bono *bullet* a 5 años no "dura" 5 años: los cupones devuelven parte del capital antes del vencimiento. La **duración de Macaulay** [@fabozzi2015] es el plazo promedio de los flujos, ponderado por cuánto pesa cada uno en el precio:
 
 $$D = \sum_{t=1}^{n} t \cdot w_t, \qquad w_t = \frac{F_t / (1+y)^t}{P}$$
 
@@ -894,7 +977,7 @@ Lo valioso de la duración no es el plazo en sí, sino lo que dice sobre el ries
 
 $$D_{mod} = \frac{D}{1+y}, \qquad \frac{\Delta P}{P} \approx -D_{mod} \cdot \Delta y$$
 
-Para nuestro bono, $D_{mod} = 4.28 / 1.10 = 3.89$: si la tasa sube un punto porcentual, del 10% al 11%, el precio cae aproximadamente 3.89%. Las mesas suelen expresarlo en plata con el **DV01** (*dollar value of a basis point*): cuánto cambia el precio cuando la tasa se mueve un punto básico (0.01%).
+Para nuestro bono, $D_{mod} = 4.28 / 1.10 = 3.89$: si la tasa sube un punto porcentual, del 10% al 11%, el precio cae aproximadamente 3.89%. Las mesas suelen expresarlo en dinero con el **DV01** (*dollar value of a basis point*): cuánto cambia el precio cuando la tasa se mueve un punto básico (0.01%).
 
 ### Convexidad: la corrección de segundo orden
 
@@ -932,7 +1015,7 @@ print()
 print(comparacion.round(2))
 ```
 
-El DV01 de 0.36 dice que, por cada 1000 de nominal, un punto básico mueve el precio 36 centavos. En la tabla, con shocks de ±1 punto la duración sola se equivoca por menos de un peso. Con ±3 puntos el error llega a casi 9 pesos, y siempre en la misma dirección: **la recta subestima el precio**, tanto cuando la tasa baja como cuando sube. Sumando la convexidad, el error a ±3 puntos baja a medio peso. La @fig-duracion-convexidad muestra por qué.
+El DV01 de 0.36 dice que, por cada 1000 de nominal, un punto básico mueve el precio 36 centavos. En la tabla, con shocks de ±1 punto la duración sola se equivoca por menos de un peso. Con ±3 puntos el error llega a casi 9 pesos, y siempre en la misma dirección: la recta subestima el precio, tanto cuando la tasa baja como cuando sube. Sumando la convexidad, el error a ±3 puntos baja a medio peso. La @fig-duracion-convexidad muestra por qué.
 
 ```{python}
 #| label: fig-duracion-convexidad
@@ -950,7 +1033,6 @@ ax.plot(tires * 100, cuadratica, ":", lw=2.2, label="Duración + convexidad")
 ax.plot(10, r["precio"], "o", color="black", zorder=5)
 ax.set_xlabel("TIR (%)")
 ax.set_ylabel("Precio ($)")
-ax.set_title("La duración es la pendiente; la convexidad, la curvatura")
 ax.legend()
 plt.tight_layout()
 plt.show()
@@ -1014,11 +1096,12 @@ Si tenés que pagar una suma conocida dentro de $H$ años, como una aseguradora 
 ## Errores comunes
 
 ::: {.callout-warning title="Trampas frecuentes"}
-- **Fechas como texto**: si olvidás `parse_dates` (o `pd.to_datetime`), las fechas quedan como strings: se ordenan alfabéticamente, `resample` falla y los gráficos salen desordenados. Verificá con `df.index.dtype`.
+- **Fechas como texto**: si olvidás `parse_dates` (o `pd.to_datetime`), las fechas quedan como strings; se ordenan alfabéticamente, `resample` falla y los gráficos salen desordenados. Verificá con `df.index.dtype`.
 - **El `NaN` inicial de `pct_change()`**: la primera observación de cualquier serie de retornos es `NaN`. Si después calculás `mean()` no pasa nada (pandas lo ignora), pero si convertís a NumPy o lo pasás a otra librería, ese `NaN` propaga y arruina el cálculo. `dropna()` primero.
-- **`ffill` con huecos largos**: arrastrar un precio un día es razonable; arrastrarlo tres meses (un bono que dejó de cotizar) fabrica una serie plana con volatilidad cero — un activo "sin riesgo" que no existe. Poné un límite (`ffill(limit=5)`) o revisá los huecos antes.
+- **`ffill` con huecos largos**: arrastrar un precio un día es razonable; arrastrarlo tres meses (un bono que dejó de cotizar) fabrica una serie plana con volatilidad cero: un activo "sin riesgo" que no existe. Poné un límite (`ffill(limit=5)`) o revisá los huecos antes.
 - **Look-ahead con `shift` al revés**: `shift(-1)` trae el dato de *mañana* a la fila de hoy. Útil para armar targets de predicción, letal si se te cuela en una señal de trading: estarías operando con información del futuro (el tema central del [Capítulo 17](../unidad3/cap17_backtesting.qmd)).
 - **`SettingWithCopyWarning`**: asignar sobre un "recorte" de un DataFrame (`df[df.x > 0]["y"] = 1`) puede modificar una copia y no el original. La forma segura es una sola indexación con `.loc`: `df.loc[df.x > 0, "y"] = 1`.
+- **Comparar un precio limpio con uno sucio**: el sucio incluye el cupón corrido y cae el día del pago sin que haya cambiado nada. Antes de comparar dos cotizaciones, verificá cuál de los dos precios informa cada fuente.
 - **Confundir Macaulay con modificada**: la de Macaulay está en años; la modificada es la sensibilidad del precio. Usar la de Macaulay en $\Delta P / P \approx -D \cdot \Delta y$ sobreestima la caída en un factor $(1+y)$: con tasas del 10%, un 10% de error.
 - **Estirar la duración a shocks grandes**: la recta tangente sirve para movimientos de pocos puntos básicos. Para un shock de 300 puntos, el error ya es de casi 1% del precio; sumá la convexidad o, mejor, repreciá con la tasa nueva.
 - **Olvidar que se movió una sola tasa**: la duración de esta sección supone que todas las tasas se mueven igual (un desplazamiento paralelo). Si la curva se empina o se aplana, bonos con la misma duración reaccionan distinto.

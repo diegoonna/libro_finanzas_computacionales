@@ -15,9 +15,9 @@ nocite: |
 
 Este módulo trata de una pregunta: *¿cómo repartir el capital entre activos?* Para responderla con rigor necesitamos dos habilidades previas.
 
-La primera es **describir el comportamiento de los retornos**. "La acción rinde 10% anual" es una descripción pobre: ¿con cuánta variabilidad? ¿las sorpresas son simétricas o hay derrumbes ocasionales? ¿los extremos son raros o frecuentes? La estadística descriptiva pone números a esas preguntas.
+La primera es describir el comportamiento de los retornos. "La acción rinde 10% anual" es una descripción pobre: ¿con cuánta variabilidad? ¿las sorpresas son simétricas o hay derrumbes ocasionales? ¿los extremos son raros o frecuentes? La estadística descriptiva pone números a esas preguntas.
 
-La segunda es **optimizar**: dado un objetivo ("minimizar el riesgo", "maximizar la utilidad") y restricciones ("los pesos suman 1", "sin ventas en corto"), encontrar la mejor solución. Si venís del mundo Excel, esto es lo que hacía el *Solver* — pero programable, más rápido y reproducible.
+La segunda es **optimizar**: dado un objetivo ("minimizar el riesgo", "maximizar la utilidad") y restricciones ("los pesos suman 1", "sin ventas en corto"), encontrar la mejor solución. Si venís del mundo Excel, esto es lo que hacía el *Solver*, pero programable, más rápido y reproducible.
 
 ```{python}
 #| label: setup
@@ -42,7 +42,7 @@ aplicar_estilo()
 
 ### Los cuatro momentos
 
-Una distribución de retornos se resume, en primera aproximación, con cuatro números — los **momentos**:
+Una distribución de retornos se resume, en primera aproximación, con cuatro números, los **momentos**:
 
 1. **Media** ($\mu$): el retorno "típico". El centro de gravedad de la distribución.
 2. **Varianza / volatilidad** ($\sigma$): cuánto se dispersan los retornos alrededor de la media. Es la medida clásica de riesgo.
@@ -145,13 +145,13 @@ fig, axes = plt.subplots(1, 2, figsize=(11, 4), sharey=True)
 
 for ax, datos, titulo in [(axes[0], retornos, "Retornos ~normales"),
                           (axes[1], ret_real, "Retornos con días de crisis")]:
-    ax.hist(datos, bins=40, density=True, alpha=0.7,
+    ax.hist(datos * 100, bins=40, density=True, alpha=0.7,
             color="#94a3b8", edgecolor="white")
     x = np.linspace(datos.min(), datos.max(), 200)
-    ax.plot(x, stats.norm.pdf(x, datos.mean(), datos.std()),
+    ax.plot(x * 100, stats.norm.pdf(x, datos.mean(), datos.std()) / 100,
             color="#c2410c", linewidth=2, label="Normal teórica")
     ax.set_title(titulo)
-    ax.set_xlabel("Retorno diario")
+    ax.set_xlabel("Retorno diario (%)")
     ax.legend()
     ax.grid(True, alpha=0.3)
 
@@ -166,7 +166,7 @@ En el panel derecho de la @fig-histograma-crisis se ve la firma de los retornos 
 
 El ojo engaña; mejor un test formal. El test de **Jarque-Bera** pregunta exactamente lo que nos importa: *¿la asimetría y la curtosis de estos datos son compatibles con una distribución normal?* Su hipótesis nula ($H_0$) es "los datos son normales".
 
-La mecánica de decisión es la de cualquier test de hipótesis: si el **p-value** es menor que el nivel de significancia (típicamente $\alpha = 0.05$), rechazamos $H_0$ — los datos serían muy improbables si la normal fuera cierta.
+La mecánica de decisión es la de cualquier test de hipótesis: si el **p-value** es menor que el nivel de significancia (típicamente $\alpha = 0.05$), rechazamos $H_0$, porque los datos serían muy improbables si la normal fuera cierta.
 
 ```{python}
 #| label: jarque-bera
@@ -194,10 +194,10 @@ momentos = pd.DataFrame({
 print(momentos.sort_values("Curtosis (exceso)").round(3))
 ```
 
-La tabla separa lo universal de lo que depende de la muestra. **La curtosis es universal**: los diez activos tienen exceso de curtosis positivo, desde 1.3 (XOM) hasta más de 10 (WMT), y el test de Jarque-Bera rechaza la normalidad en todos, con p-values que se redondean a cero. Las colas pesadas no son una rareza de un activo: son la regla. **La asimetría, en cambio, no tiene un signo fijo**: en estos cinco años, mayormente alcistas, sale negativa en algunos activos y positiva en otros, incluido el propio S&P 500. Y ahí hay una lección: la asimetría positiva del índice la explica **un solo día**, el rebote de +10.5% del 9 de abril de 2025; si se saca ese día de la muestra, la asimetría pasa de +0.31 a −0.43. Un estimador basado en el cubo de los desvíos queda a merced de un puñado de días extremos, y esa fragilidad es otra cara de las colas pesadas. La asimetría negativa es un rasgo frecuente en muestras largas, pero conviene medirla con desconfianza.
+La tabla separa lo universal de lo que depende de la muestra. **La curtosis es universal**: los diez activos tienen exceso de curtosis positivo, desde 1.3 (XOM) hasta más de 10 (WMT), y el test de Jarque-Bera rechaza la normalidad en todos, con p-values que se redondean a cero. Las colas pesadas no son una rareza de un activo: son la regla. La asimetría, en cambio, no tiene un signo fijo: en estos cinco años, mayormente alcistas, sale negativa en algunos activos y positiva en otros, incluido el propio S&P 500. Y ahí hay una lección: la asimetría positiva del índice la explica **un solo día**, el rebote de +10.5% del 9 de abril de 2025; si se saca ese día de la muestra, la asimetría pasa de +0.31 a −0.43. Un estimador basado en el cubo de los desvíos queda a merced de un puñado de días extremos, y esa fragilidad es otra cara de las colas pesadas. La asimetría negativa es un rasgo frecuente en muestras largas, pero conviene medirla con desconfianza.
 
 ::: {.callout-warning title="¿Y entonces por qué usamos la normal?"}
-Si los retornos reales no son normales, ¿por qué media-varianza, Black-Scholes y media industria asumen normalidad? Porque es **tratable** y suele ser una aproximación razonable *en el centro* de la distribución. El problema aparece **en las colas** — justamente donde vive el riesgo extremo. Por eso el Módulo 3 dedica capítulos enteros (VaR, Expected Shortfall, procesos con saltos) a medir lo que la normal esconde. Usá la normal, pero sabiendo qué te está simplificando.
+Si los retornos reales no son normales, ¿por qué media-varianza, Black-Scholes y media industria asumen normalidad? Porque es **tratable** y suele ser una aproximación razonable *en el centro* de la distribución. El problema aparece **en las colas**, justamente donde vive el riesgo extremo. Por eso el Módulo 3 dedica capítulos enteros (VaR, Expected Shortfall, procesos con saltos) a medir lo que la normal esconde. Usá la normal, pero sabiendo qué te está simplificando.
 :::
 
 ---
@@ -326,7 +326,7 @@ flowchart LR
     class Q,V alerta
 ```
 
-Tres cosas para mirar siempre en el resultado: `x` (dónde está el óptimo), `fun` (cuánto vale la función ahí) y `success` (si el algoritmo convergió — **nunca uses un resultado sin chequearlo**).
+Tres cosas para mirar siempre en el resultado: `x` (dónde está el óptimo), `fun` (cuánto vale la función ahí) y `success` (si el algoritmo convergió; nunca uses un resultado sin chequearlo).
 
 ::: {.callout-tip title="Maximizar = minimizar el negativo"}
 `scipy` solo minimiza. Cuando quieras **maximizar** algo (utilidad, Sharpe), minimizá su negativo: max $f(x)$ ⟺ min $-f(x)$. Por eso vas a ver funciones llamadas `utilidad_negativa` o `neg_sharpe` en todo el libro.
@@ -365,7 +365,7 @@ for aversion in [1, 3, 10]:
           f" | E[r]={w @ mu:.2%} | vol={np.sqrt(w @ Sigma @ w):.2%}")
 ```
 
-El resultado cuenta una historia coherente: a medida que sube la aversión al riesgo, el óptimo **migra del activo agresivo al defensivo**, sacrificando retorno esperado a cambio de menos volatilidad. Tres inversores con la misma información y distinta tolerancia obtienen tres carteras distintas — y las tres son "óptimas" para quien las tiene.
+El resultado cuenta una historia coherente: a medida que sube la aversión al riesgo, el óptimo migra del activo agresivo al defensivo, sacrificando retorno esperado a cambio de menos volatilidad. Tres inversores con la misma información y distinta tolerancia obtienen tres carteras distintas, y las tres son "óptimas" para quien las tiene.
 
 La @fig-pesos-vs-aversion extiende la tabla a un barrido continuo de $\lambda$: con aversión muy baja, todo va al activo agresivo; a medida que $\lambda$ crece, el defensivo gana terreno rápido al principio y cada vez más lento después.
 
@@ -414,7 +414,7 @@ Este mecanismo —función objetivo + restricciones + `minimize`— es exactamen
 
 ::: {.callout-warning title="Trampas frecuentes"}
 - **No chequear `resultado.success`**: si el optimizador no convergió, `resultado.x` puede ser basura con aspecto respetable.
-- **Anualizar la volatilidad con ×252** en lugar de ×√252.
+- Anualizar la volatilidad con ×252 en lugar de ×√252.
 - **Comparar `np.std` con pandas `.std()`**: el primero usa `ddof=0` y el segundo `ddof=1`; con pocos datos la diferencia se nota.
 - **Confundir curtosis con "exceso de curtosis"**: `scipy.stats.kurtosis` devuelve el *exceso* (normal = 0). Otras librerías devuelven la curtosis cruda (normal = 3).
 - **Interpretar un p-value alto como prueba de normalidad**: "no rechazar $H_0$" no es "aceptar $H_0$"; con pocas observaciones, el test simplemente no tiene potencia para detectar la anormalidad.

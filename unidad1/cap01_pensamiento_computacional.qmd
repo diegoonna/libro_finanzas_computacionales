@@ -19,7 +19,7 @@ Recomendamos usar **Jupyter Notebooks** (local) o **Google Colab** (en la nube).
 ---
 
 
-## Concepto de Variable: Gestión de Memoria y Referencias
+## El concepto de variable: memoria y referencias
 
 Es importante no pensar en las variables simplemente como cajas abstractas, sino comprender cómo la computadora administra sus recursos físicos (RAM). Cuando procesamos miles de datos financieros o realizamos millones de iteraciones en una simulación, la gestión de la memoria se vuelve un factor crítico para el rendimiento (latencia y capacidad).
 
@@ -93,11 +93,11 @@ Algunos objetos pueden ser modificados después de su creación (**mutables**, c
 
 ---
 
-## Variables y Tipos de Datos Primitivos
+## Variables y tipos de datos primitivos
 
 Python utiliza **tipado dinámico**: no necesitamos declarar el tipo de dato explícitamente. A continuación, exploraremos algunos de los tipos de datos fundamentales que utilizaremos para modelar instrumentos y variables financieras.
 
-### Tipos Numéricos
+### Tipos numéricos
 
 #### Enteros (`int`)
 
@@ -117,7 +117,7 @@ print(f"Días al vencimiento: {dias_vencimiento} | Tipo: {type(dias_vencimiento)
 
 #### Punto Flotante (`float`)
 
-Representan números reales mediante el estándar **IEEE 754**. Es el tipo estándar para precios, tasas y rendimientos — y esconde una sorpresa que en finanzas no podés permitirte ignorar. Ejecutá esto:
+Representan números reales mediante el estándar **IEEE 754**. Es el tipo estándar para precios, tasas y rendimientos, y esconde una sorpresa que en finanzas no podés permitirte ignorar. Ejecutá esto:
 
 ```{pyodide-python}
 #| label: tipos-float
@@ -130,7 +130,7 @@ print(f"0.1 + 0.2 = {resultado}")
 print(f"¿Es exactamente 0.3? {resultado == 0.3}")
 ```
 
-**0.1 + 0.2 no da 0.3.** No es un bug de Python: es una consecuencia de cómo las computadoras representan los números. Internamente todo se guarda en **binario** (base 2), y así como 1/3 no tiene representación decimal exacta (0.3333... infinito), **0.1 no tiene representación binaria exacta**: la computadora guarda la aproximación más cercana que entra en 64 bits. Los errores son minúsculos (del orden de $10^{-17}$), pero existen, se acumulan al operar, y rompen las comparaciones con `==`.
+**0.1 + 0.2 no da 0.3.** No es un bug de Python: es una consecuencia de cómo las computadoras representan los números. Internamente todo se guarda en **binario** (base 2), y así como 1/3 no tiene representación decimal exacta (0.3333... infinito), 0.1 no tiene representación binaria exacta: la computadora guarda la aproximación más cercana que entra en 64 bits. Los errores son minúsculos (del orden de $10^{-17}$), pero existen, se acumulan al operar, y rompen las comparaciones con `==`.
 
 Las dos consecuencias prácticas, que valen para todo el libro:
 
@@ -154,7 +154,7 @@ print(f"¿Es exactamente 0.3? {suma_decimal == Decimal('0.3')}")
 ```
 
 ::: {.callout-warning title="La regla práctica: ¿float o decimal?"}
-**`float` para análisis** (retornos, volatilidades, simulaciones, optimización): el error de $10^{-17}$ es billones de veces menor que la incertidumbre de cualquier modelo financiero, y la velocidad importa. **`decimal` o centavos enteros para contabilidad** (saldos, liquidaciones, facturación): ahí cada centavo debe cerrar exacto. Todo este libro trabaja en el mundo del análisis, así que usaremos `float` — pero sabiendo lo que sacrificamos, y sin comparar jamás con `==`.
+**`float` para análisis** (retornos, volatilidades, simulaciones, optimización): el error de $10^{-17}$ es billones de veces menor que la incertidumbre de cualquier modelo financiero, y la velocidad importa. `decimal` o centavos enteros para contabilidad (saldos, liquidaciones, facturación): ahí cada centavo debe cerrar exacto. Todo este libro trabaja en el mundo del análisis, así que usaremos `float`, pero sabiendo lo que sacrificamos, y sin comparar jamás con `==`.
 :::
 
 ### Booleanos (`bool`)
@@ -171,7 +171,7 @@ señales_activas = True + True + False
 print(f"Señales de compra activas: {señales_activas}")
 ```
 
-### Cadenas de Texto (`str`)
+### Cadenas de texto (`str`)
 
 Secuencias inmutables de caracteres. Esenciales para tickers, códigos ISIN y limpieza de datos.
 
@@ -185,7 +185,7 @@ print(f"Instrumento: {instrumento}")
 
 ---
 
-## Conversión de Tipos (Casting)
+## Conversión de tipos (*casting*)
 
 Los datos del mundo real frecuentemente llegan como texto (desde CSVs o APIs), y lo mismo pasa con lo que ingresa el usuario. Por eso es necesario convertirlos explícitamente.
 
@@ -206,7 +206,7 @@ print(f"Monto operado: ${monto_operado:,.2f}")
 
 ## Operadores
 
-### Operadores Aritméticos
+### Operadores aritméticos
 
 ```{pyodide-python}
 #| label: operadores-aritmeticos
@@ -217,13 +217,13 @@ tasa = 0.08
 interes = capital * tasa
 print(f"Interés simple: ${interes:,.2f}")
 
-# Potencia (**) — útil para interés compuesto
+# Potencia (**): útil para interés compuesto
 periodos = 5
 valor_futuro = capital * (1 + tasa) ** periodos
 print(f"Valor futuro a {periodos} años: ${valor_futuro:,.2f}")
 ```
 
-### Operadores de Comparación y Lógicos
+### Operadores de comparación y lógicos
 
 | Operador | Significado |
 |----------|-------------|
@@ -243,9 +243,9 @@ print(f"¿Señal de compra? {señal_compra}")
 
 ---
 
-## Entrada y Salida de Datos
+## Entrada y salida de datos
 
-### F-Strings (Formato Moderno)
+### F-strings (formato moderno)
 
 ```{pyodide-python}
 #| label: f-strings
@@ -259,7 +259,7 @@ print(f"Capital: ${capital:,}")
 print(f"Interés generado: ${interes:,.2f}")
 ```
 
-### Input del Usuario
+### Entrada del usuario
 
 ::: {.callout-note}
 `input()` siempre devuelve un `str`. Debe combinarse con `float()` o `int()` para obtener números.
@@ -272,11 +272,11 @@ print(f"Interés generado: ${interes:,.2f}")
 
 ---
 
-## Estructuras de Control: `if` / `elif` / `else`
+## Estructuras de control: `if` / `elif` / `else`
 
 Los algoritmos financieros requieren tomar decisiones basadas en condiciones de mercado.
 
-Antes de leer el código, mirá su forma en la @fig-decision-inversion: las condiciones se evalúan **en orden, de arriba hacia abajo**, y apenas una se cumple se ejecuta su rama y se ignora el resto. El `else` es la red de seguridad: atrapa todo lo que no cumplió ninguna condición.
+Antes de leer el código, mirá su forma en la @fig-decision-inversion: las condiciones se evalúan en orden, de arriba hacia abajo, y apenas una se cumple se ejecuta su rama y se ignora el resto. El `else` es la red de seguridad: atrapa todo lo que no cumplió ninguna condición.
 
 ```{mermaid}
 %%| label: fig-decision-inversion
@@ -297,7 +297,7 @@ flowchart TD
 ```
 
 
-### Caso Práctico: Algoritmo de Decisión de Inversión
+### Caso práctico: un algoritmo de decisión de inversión
 
 ```{pyodide-python}
 #| label: decision-inversion
@@ -323,9 +323,9 @@ else:
 
 ---
 
-## Problemática Financiera: Valor Tiempo del Dinero (TVM)
+## Problema financiero: el valor tiempo del dinero (TVM)
 
-Todo el capítulo gira alrededor de una idea: **un peso hoy no vale lo mismo que un peso mañana**. La @fig-linea-tiempo-tvm la resume en una línea de tiempo: capitalizar es llevar plata hacia el futuro, y descontar es traerla al presente. Las tres secciones que siguen son variaciones de esas dos flechas.
+Todo el capítulo gira alrededor de una idea: un peso hoy no vale lo mismo que un peso mañana. La @fig-linea-tiempo-tvm la resume en una línea de tiempo: capitalizar es llevar dinero hacia el futuro, y descontar es traerlo al presente [@brealey2020]. Las tres secciones que siguen son variaciones de esas dos flechas.
 
 ```{python}
 #| label: fig-linea-tiempo-tvm
@@ -366,7 +366,7 @@ _esquema()
 ```
 
 
-### Interés Compuesto
+### Interés compuesto
 
 La fórmula fundamental:
 
@@ -396,7 +396,7 @@ print(f"Valor futuro:     ${valor_futuro:,.2f}")
 print(f"Interés ganado:   ${interes_ganado:,.2f}")
 ```
 
-### Conversión de Tasas
+### Conversión de tasas
 
 ```{pyodide-python}
 #| label: conversion-tasas
@@ -458,7 +458,36 @@ En la [versión web de este capítulo](https://diegoonna.github.io/libro_finanza
 :::
 :::
 
-### Valor Presente
+### Tasa real e inflación
+
+Todas las tasas de la sección anterior son **nominales**: dicen cuántos pesos más vamos a tener, pero no cuánto más vamos a poder comprar con ellos. Si los precios suben mientras el capital rinde, parte del rendimiento solo compensa esa suba. La **tasa real** mide lo que queda: el aumento del poder de compra.
+
+La relación entre las tres magnitudes es la ecuación de Fisher [@brealey2020]. Si $i$ es la tasa nominal y $\pi$ la inflación del mismo período,
+
+$$1 + r_{real} = \frac{1 + i}{1 + \pi}$$
+
+El razonamiento es directo. Al cabo del período tenemos $1 + i$ pesos por cada peso invertido, y lo que antes costaba un peso ahora cuesta $1 + \pi$. El cociente dice cuántas unidades de ese bien podemos comprar.
+
+```{pyodide-python}
+#| label: tasa-real
+# La TEA de la sección anterior, frente a dos escenarios de inflación anual
+tea = (1 + 0.48 / 12) ** 12 - 1
+
+for inflacion in [0.50, 0.70]:
+    tasa_real = (1 + tea) / (1 + inflacion) - 1
+    resta = tea - inflacion
+    print(f"Inflación {inflacion:.0%}: tasa real {tasa_real:+.2%}  (restando daría {resta:+.2%})")
+```
+
+Con una inflación del 50%, la TEA del 60.10% deja una tasa real de 6.74%, y no los 10.10 puntos que sugiere la resta. Con una inflación del 70% la tasa real es negativa, −5.82%: el capital crece en pesos y aun así compra menos que al principio.
+
+La resta $i - \pi$ es una aproximación que funciona cuando las dos tasas son chicas. Con una tasa del 10% y una inflación del 4%, la cuenta exacta da 5.77% y la resta, 6%. Con las tasas habituales en la Argentina el error es de varios puntos, y hay que dividir.
+
+::: {.callout-note title="Dónde aparece la tasa real"}
+Los bonos y los depósitos ajustados por inflación (en la Argentina, los que ajustan por CER o por UVA) se cotizan directamente en tasa real: el capital se actualiza con el índice de precios y la tasa que se informa es la que se gana por encima de esa actualización. Para comparar uno de esos instrumentos con otro de tasa fija en pesos hace falta una hipótesis de inflación y la ecuación de arriba. En el [Capítulo 8](../unidad2/cap08_markowitz.qmd) el tema vuelve al estimar retornos esperados.
+:::
+
+### Valor presente
 
 $$VP = \frac{VF}{(1 + r)^n}$$
 
@@ -484,6 +513,7 @@ print(f"equivale a ${valor_presente:,.2f} hoy (al {tasa:.0%})")
 - **La tasa en "puntos" en lugar de en decimal**: escribir `tasa = 8` cuando querías 8% hace que `(1 + tasa) ** 5` multiplique el capital por 59049 en vez de por 1.47. Las tasas van en decimal (`0.08`), y el formato `:.2%` se encarga de mostrarlas como porcentaje.
 - **Sumar un `str` que parece número**: lo que llega de `input()` o de un archivo es texto, y `"100" + "50"` da `"10050"`. Convertí con `float()` o `int()` antes de operar.
 - **Mezclar TNA y TEA**: una TNA del 48% con capitalización mensual no rinde 48% en el año, rinde más. Antes de comparar dos tasas o de usarlas en $(1+r)^n$, llevalas a la misma forma (la @fig-conversion-tasas).
+- **Restar la inflación para obtener la tasa real**: la cuenta correcta es $(1+i)/(1+\pi) - 1$. La resta solo sirve como aproximación con tasas de un dígito.
 - **`=` en lugar de `==` en un `if`**: `=` asigna y `==` compara. Python rechaza `if tasa = 0.05:` con un `SyntaxError`, que por lo menos avisa; leé el mensaje antes de tocar otra cosa.
 :::
 

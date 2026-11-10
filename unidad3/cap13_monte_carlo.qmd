@@ -15,7 +15,7 @@ nocite: |
 
 # Introducción {.unnumbered}
 
-Hay preguntas financieras que no tienen fórmula: *¿cuál es la distribución del valor de mi cartera en 5 años si rebalanceo cada mes? ¿cuánto vale una opción cuyo pago depende de la trayectoria del precio y no solo del valor final?* Para ese tipo de problemas existe el método de **Monte Carlo**, llamado así por el casino: en lugar de resolver el problema analíticamente, **tiramos los dados miles de veces** —simulamos miles de futuros posibles— y estudiamos la distribución de resultados.
+Hay preguntas financieras que no tienen fórmula: *¿cuál es la distribución del valor de mi cartera en 5 años si rebalanceo cada mes? ¿cuánto vale una opción cuyo pago depende de la trayectoria del precio y no solo del valor final?* Para ese tipo de problemas existe el método de **Monte Carlo** [@glasserman2003], llamado así por el casino: en lugar de resolver el problema analíticamente, tiramos los dados miles de veces —simulamos miles de futuros posibles— y estudiamos la distribución de resultados.
 
 La receta general tiene tres pasos:
 
@@ -56,7 +56,7 @@ aplicar_estilo()
 
 ---
 
-## El Movimiento Browniano Geométrico (GBM)
+## El movimiento browniano geométrico (GBM)
 
 ### La idea
 
@@ -121,12 +121,12 @@ _esquema()
 
 Dos propiedades del GBM que conviene tener presentes:
 
-- El precio **nunca se hace negativo** (es una exponencial) — realista para acciones.
+- El precio **nunca se hace negativo** (es una exponencial), realista para acciones.
 - Los retornos logarítmicos son normales, así que el precio final es **lognormal**: asimétrico, con una cola larga hacia arriba.
 
 ### Simulación vectorizada
 
-Simulamos **todas las trayectorias a la vez** con una matriz de shocks: filas = pasos de tiempo, columnas = simulaciones. El único bucle recorre el tiempo (cada precio depende del anterior); las 10.000 simulaciones avanzan en paralelo gracias a la vectorización del [Capítulo 5](../unidad1/cap05_numpy.qmd).
+Simulamos todas las trayectorias a la vez con una matriz de shocks: filas = pasos de tiempo, columnas = simulaciones. El único bucle recorre el tiempo (cada precio depende del anterior); las 10.000 simulaciones avanzan en paralelo gracias a la vectorización del [Capítulo 5](../unidad1/cap05_numpy.qmd).
 
 La @fig-matriz-shocks muestra la forma de los datos antes de escribir el código: una fila por día y una columna por futuro posible.
 
@@ -212,7 +212,7 @@ print(f"Precio mediano final: ${np.median(S[-1]):.2f}")
 print(f"Rango simulado:       ${S[-1].min():.2f} — ${S[-1].max():.2f}")
 ```
 
-Verificación de cordura: la media simulada coincide con la teórica $E[S_T] = S_0 e^{\mu T}$. Notá también que la **mediana está por debajo de la media**: es la asimetría lognormal en acción (unas pocas trayectorias excelentes tiran el promedio hacia arriba).
+Verificación de cordura: la media simulada coincide con la teórica $E[S_T] = S_0 e^{\mu T}$. Notá también que la mediana está por debajo de la media: es la asimetría lognormal en acción (unas pocas trayectorias excelentes tiran el promedio hacia arriba).
 
 ```{python}
 #| label: fig-caminos-gbm
@@ -252,7 +252,7 @@ El panel izquierdo de la @fig-caminos-gbm es el "abanico de futuros": todas las 
 
 ## VaR y Expected Shortfall por Monte Carlo
 
-En el [Capítulo 11](../unidad3/cap11_var_expected_shortfall.qmd) calculamos VaR y ES con dos métodos: paramétrico (asume normal) e histórico (usa el pasado). Monte Carlo es el **tercer método**, y el más flexible: la distribución de pérdidas sale de las trayectorias simuladas, con el modelo que queramos. Hoy el modelo es GBM; en el próximo capítulo será uno con saltos — y el código de abajo no cambia.
+En el [Capítulo 11](../unidad3/cap11_var_expected_shortfall.qmd) calculamos VaR y ES con dos métodos: paramétrico (asume normal) e histórico (usa el pasado). Monte Carlo es el **tercer método**, y el más flexible: la distribución de pérdidas sale de las trayectorias simuladas, con el modelo que queramos. Hoy el modelo es GBM; en el próximo capítulo será uno con saltos, y el código de abajo no cambia.
 
 ```{python}
 #| label: var-montecarlo
@@ -267,6 +267,81 @@ print(f"Sobre un portafolio de ${valor_portafolio/1e6:.0f}M, horizonte 1 año:")
 print(f"  VaR 95% (Monte Carlo): ${var_95:>12,.0f}")
 print(f"  ES  95% (Monte Carlo): ${es_95:>12,.0f}")
 ```
+
+---
+
+## Varios activos a la vez: shocks correlacionados
+
+Hasta acá simulamos un solo activo. Una cartera tiene varios, y sus precios no se mueven de manera independiente: si simulamos cada activo con sus propios shocks, sin relación con los de los demás, estamos suponiendo correlación cero, y el [Capítulo 8](../unidad2/cap08_markowitz.qmd) mostró que el riesgo de una cartera depende justamente de las correlaciones. Hace falta generar shocks que tengan la correlación que queremos.
+
+La herramienta estándar es la **descomposición de Cholesky** [@glasserman2003]. Toda matriz de correlaciones $\mathbf{C}$ se puede escribir como $\mathbf{C} = \mathbf{L}\mathbf{L}^\top$, con $\mathbf{L}$ triangular inferior. Si $\mathbf{Z}$ es un vector de normales estándar independientes, entonces
+
+$$\mathbf{X} = \mathbf{L}\,\mathbf{Z}$$
+
+es un vector de normales estándar con matriz de correlaciones $\mathbf{C}$. Con dos activos y correlación $\rho$ la cuenta se puede hacer a mano: $X_1 = Z_1$ y $X_2 = \rho Z_1 + \sqrt{1-\rho^2}\,Z_2$. El segundo shock toma una parte del primero y completa el resto con ruido propio, en la proporción justa para que su varianza siga siendo 1.
+
+```{python}
+#| label: cholesky
+rng_c = np.random.default_rng(7)             # generador propio: no altera el resto del capítulo
+
+mus = np.array([0.10, 0.06])                 # drift anual de cada activo
+sigmas = np.array([0.25, 0.12])              # volatilidad anual de cada activo
+rho = 0.6
+corr = np.array([[1.0, rho],
+                 [rho, 1.0]])
+
+L = np.linalg.cholesky(corr)                 # corr = L @ L.T
+Z_ind = rng_c.standard_normal((n_sims, 2))   # shocks independientes, una fila por simulación
+X = Z_ind @ L.T                              # shocks correlacionados
+
+print("L =")
+print(L.round(4))
+print(f"Correlación de los shocks independientes: {np.corrcoef(Z_ind.T)[0, 1]:+.3f}")
+print(f"Correlación de los shocks transformados:  {np.corrcoef(X.T)[0, 1]:+.3f}   (objetivo: {rho})")
+```
+
+La matriz $\mathbf{L}$ reproduce la fórmula de dos activos: su segunda fila es $(\rho, \sqrt{1-\rho^2}) = (0.6, 0.8)$. Y la correlación muestral de los shocks transformados, 0.609, queda cerca del objetivo; la diferencia es error de muestreo. La @fig-shocks-correlacionados muestra el efecto de la transformación sobre la nube de puntos.
+
+```{python}
+#| label: fig-shocks-correlacionados
+#| fig-cap: "Los primeros 2000 pares de shocks, antes y después de multiplicar por L. La transformación no cambia la dispersión de cada shock por separado; inclina la nube para que los dos se muevan juntos."
+fig, axes = plt.subplots(1, 2, figsize=(10, 4.6), sharex=True, sharey=True)
+
+for ax, datos, titulo in [(axes[0], Z_ind, "Independientes (Z)"),
+                          (axes[1], X, f"Correlacionados (X = LZ, ρ = {rho})")]:
+    ax.scatter(datos[:2000, 0], datos[:2000, 1], s=6, alpha=0.4, color="#1e3a5f")
+    ax.set_title(titulo)
+    ax.set_xlabel("Shock del activo 1")
+    ax.set_aspect("equal")
+    ax.grid(True, alpha=0.3)
+
+axes[0].set_ylabel("Shock del activo 2")
+plt.tight_layout()
+plt.show()
+```
+
+Con los shocks correlacionados, simular la cartera es repetir lo que ya hicimos, activo por activo. Como solo necesitamos el valor final, usamos la solución exacta del GBM en un único paso de un año. Para medir cuánto pesa la correlación calculamos el VaR de una cartera con la mitad del capital en cada activo, con tres valores de $\rho$ y los mismos shocks de base.
+
+```{python}
+#| label: var-cartera
+pesos = np.array([0.5, 0.5])
+
+def var_cartera(rho):
+    """VaR 95% a 1 año de la cartera para una correlación dada."""
+    L = np.linalg.cholesky(np.array([[1.0, rho], [rho, 1.0]]))
+    X = Z_ind @ L.T
+    # Valor final por cada peso invertido en cada activo: GBM exacto, un solo paso
+    crecimiento = np.exp((mus - 0.5 * sigmas**2) * T + sigmas * np.sqrt(T) * X)
+    ret_cartera = crecimiento @ pesos - 1
+    return -np.percentile(ret_cartera, 5) * valor_portafolio
+
+for r in [0.0, 0.6, 0.95]:
+    print(f"rho = {r:<4}  VaR 95% = ${var_cartera(r):>12,.0f}")
+```
+
+Los dos activos son los mismos en las tres filas; lo único que cambia es cuánto se mueven juntos. Pasar de correlación cero a 0.6 aumenta el VaR un 33%, y con 0.95 el aumento llega al 49%. Quien simula una cartera con shocks independientes informa el primer número cuando el correcto puede ser el tercero. Es el mecanismo de los dos casos del [Capítulo 12](../unidad3/cap12_riesgo_regulacion.qmd): modelos que suponían correlaciones bajas en mercados donde, en la crisis, todo se movió a la vez.
+
+El procedimiento se extiende sin cambios a más activos (la matriz de correlaciones es más grande y `np.linalg.cholesky` hace el resto) y a trayectorias completas, aplicando $\mathbf{L}$ a los shocks de cada paso.
 
 ---
 
@@ -293,7 +368,6 @@ ax.fill_between(ns, teorico - banda, teorico + banda, alpha=0.15, color="#c2410c
 ax.set_xscale("log")
 ax.set_xlabel("Número de simulaciones (escala log)")
 ax.set_ylabel("Precio medio final ($)")
-ax.set_title("Convergencia de Monte Carlo: el error cae como 1/√N")
 ax.legend()
 ax.grid(True, alpha=0.3)
 plt.tight_layout()
@@ -304,7 +378,7 @@ En la @fig-convergencia-mc, la estimación "baila" dentro de la banda teórica y
 
 ### Reducción de varianza: variables antitéticas
 
-¿Se puede lograr más precisión sin más simulaciones? Sí — hay toda una familia de técnicas de **reducción de varianza**. La más simple y elegante: las **variables antitéticas**. La idea: por cada shock $Z$ que uses, usá también $-Z$. Cada trayectoria "optimista" queda emparejada con su gemela "pesimista", los errores de ambas se compensan, y el promedio del par es mucho más estable que dos trayectorias independientes.
+¿Se puede lograr más precisión sin más simulaciones? Sí: hay toda una familia de técnicas de **reducción de varianza**. La más simple y elegante: las **variables antitéticas**. La idea: por cada shock $Z$ que uses, usá también $-Z$. Cada trayectoria "optimista" queda emparejada con su gemela "pesimista", los errores de ambas se compensan, y el promedio del par es mucho más estable que dos trayectorias independientes.
 
 La @fig-antiteticas muestra tres de esos pares: cada trayectoria tiene una gemela que recibe exactamente los shocks opuestos y queda reflejada del otro lado de la tendencia.
 
@@ -404,7 +478,7 @@ En la [versión web de este capítulo](https://diegoonna.github.io/libro_finanza
 
 ## Puente al Módulo 4: valuar una opción por Monte Carlo
 
-Cerremos con el uso más famoso de Monte Carlo en finanzas. Una **call europea** da derecho a comprar el activo a precio $K$ en la fecha $T$; su pago final es $\max(S_T - K, 0)$. Bajo valuación neutral al riesgo (lo desarrollamos en el [Capítulo 18](../unidad4/cap18_derivados_vol_implicita.qmd)), su precio es el pago esperado descontado, **simulando con drift igual a la tasa libre de riesgo** $r$:
+Cerremos con el uso más famoso de Monte Carlo en finanzas. Una **call europea** da derecho a comprar el activo a precio $K$ en la fecha $T$; su pago final es $\max(S_T - K, 0)$. Bajo valuación neutral al riesgo (lo desarrollamos en el [Capítulo 18](../unidad4/cap18_derivados_vol_implicita.qmd)), su precio es el pago esperado descontado, simulando con drift igual a la tasa libre de riesgo $r$:
 
 $$C = e^{-rT} \cdot E\big[\max(S_T - K, 0)\big]$$
 
@@ -472,7 +546,39 @@ def _esquema():
 _esquema()
 ```
 
-La simulación reproduce la fórmula cerrada — y esa es justamente la gracia: para una call europea Black-Scholes ya existe, pero para opciones **path-dependent** (asiáticas, barrera) o con modelos más ricos que el GBM, la fórmula no existe y **Monte Carlo es el camino**. Volveremos sobre esto en el Módulo 4.
+La simulación reproduce la fórmula cerrada, y esa es justamente la gracia: para una call europea Black-Scholes ya existe, pero para opciones **path-dependent** (asiáticas, barrera) o con modelos más ricos que el GBM, la fórmula no existe y Monte Carlo es el camino. Volveremos sobre esto en el Módulo 4.
+
+### Variables de control: usar lo que ya se sabe
+
+Las variables antitéticas reducen el error emparejando shocks. La segunda técnica clásica, las **variables de control**, aprovecha otra fuente de información: una cantidad relacionada con la que buscamos y cuyo valor esperado conocemos exactamente [@glasserman2003].
+
+En la valuación de la call hay una candidata evidente. El precio final descontado, $e^{-rT} S_T$, tiene esperanza $S_0$ en el mundo neutral al riesgo, sin necesidad de simular nada. La simulación también lo estima, y su estimación tiene un error que podemos medir: si en esta muestra el promedio de $e^{-rT} S_T$ quedó por encima de $S_0$, salieron demasiadas trayectorias altas, y el payoff de la call, que crece con $S_T$, también quedó sobreestimado. La corrección consiste en restarle al payoff una parte de ese error conocido:
+
+$$\hat{C}_{control} = \overline{X} - \beta\,\big(\overline{Y} - S_0\big), \qquad \beta = \frac{\text{Cov}(X, Y)}{\text{Var}(Y)}$$
+
+donde $X$ es el payoff descontado e $Y$ el precio final descontado. El coeficiente $\beta$ es la pendiente de una regresión de $X$ sobre $Y$, y es el que hace mínima la varianza del estimador.
+
+```{python}
+#| label: variable-control
+X_desc = np.exp(-r * T) * payoff          # lo que queremos promediar
+Y_desc = np.exp(-r * T) * ST_rn           # variable de control: su media exacta es S0
+
+beta = np.cov(X_desc, Y_desc)[0, 1] / Y_desc.var(ddof=1)
+X_ctrl = X_desc - beta * (Y_desc - S0)
+error_ctrl = X_ctrl.std() / np.sqrt(len(X_ctrl))
+
+print(f"Correlación entre el payoff y el precio final: {np.corrcoef(X_desc, Y_desc)[0, 1]:.3f}")
+print(f"Media simulada del control: {Y_desc.mean():.3f}   (exacta: {S0})")
+print(f"\nSin control:    ${X_desc.mean():.3f} ± {2 * error_mc:.3f}")
+print(f"Con control:    ${X_ctrl.mean():.3f} ± {2 * error_ctrl:.3f}")
+print(f"Black-Scholes:  ${precio_bs:.3f}")
+print(f"\nCociente de errores: {error_ctrl / error_mc:.2f}   "
+      f"(equivale a multiplicar las simulaciones por {(error_mc / error_ctrl) ** 2:.1f})")
+```
+
+En esta muestra los precios finales habían salido algo bajos: la media simulada del control es 99.949 contra un valor exacto de 100. La corrección lleva la estimación de 9.954 a 9.984, más cerca del 10.002 de Black-Scholes, y el intervalo de confianza se reduce de ±0.076 a ±0.033. El error estándar queda en el 44% del original, lo mismo que se obtendría multiplicando por 5.2 la cantidad de simulaciones, y el único costo adicional fue calcular una covarianza.
+
+La ganancia depende de la correlación entre lo que se estima y el control: el error se multiplica por $\sqrt{1-\rho^2}$, que con $\rho = 0.898$ da 0.44. Una call muy fuera del dinero, cuyo payoff es cero en casi todas las trayectorias, está menos correlacionada con $S_T$ y mejora menos. En la práctica se busca como control un producto parecido al que se valúa y que tenga fórmula cerrada. El ejemplo clásico es la opción asiática de media geométrica, que la tiene, como control de la asiática de media aritmética, que no.
 
 ---
 
@@ -482,7 +588,9 @@ La simulación reproduce la fórmula cerrada — y esa es justamente la gracia: 
 - **Olvidar el término $-\sigma^2/2$** en el exponente: infla sistemáticamente los precios simulados.
 - **Confundir mundo real y mundo neutral al riesgo**: para *proyectar* escenarios usá el drift real $\mu$; para *valuar* derivados usá $r$. Mezclarlos da precios de opciones sin sentido.
 - **Reportar la estimación sin su error estándar**: dos corridas con semillas distintas pueden diferir; el error estándar te dice cuánto es esperable.
-- **Reusar los mismos shocks para todo**: si comparás dos estrategias, simulalas sobre los mismos shocks (para aislar la diferencia) — pero si estimás la incertidumbre, necesitás muestras independientes. Saber cuál corresponde a cada caso es parte del oficio.
+- **Reusar los mismos shocks para todo**: si comparás dos estrategias, simulalas sobre los mismos shocks (para aislar la diferencia), pero si estimás la incertidumbre, necesitás muestras independientes. Saber cuál corresponde a cada caso es parte del oficio.
+- **Simular los activos de una cartera con shocks independientes**: equivale a suponer correlación cero y subestima el riesgo. Los shocks se correlacionan con la descomposición de Cholesky antes de simular.
+- **Elegir una variable de control poco correlacionada**: la reducción del error es $\sqrt{1-\rho^2}$. Con una correlación de 0.5 el error baja apenas un 13%; la técnica rinde cuando el control se parece mucho a lo que se estima.
 - **Escalar mal el tiempo**: $\sigma$ anual con pasos diarios exige $\sqrt{\Delta t} = \sqrt{1/252}$ en el ruido. Un $\Delta t$ inconsistente distorsiona toda la dinámica.
 :::
 

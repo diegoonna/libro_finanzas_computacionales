@@ -4,19 +4,32 @@
 
 # Bienvenida {.unnumbered}
 
-Este es el sitio web del libro **"Finanzas Computacionales con Python"**, desarrollado por la Cátedra de Finanzas Computacionales de la **Universidad Argentina de la Empresa (UADE)**.
+*Finanzas Computacionales con Python* es el libro de la Cátedra de Finanzas Computacionales de la Universidad Argentina de la Empresa (UADE). Recorre, en veinte capítulos, el camino que va de la primera línea de código a los modelos de volatilidad estocástica.
 
-La idea que organiza todo el libro es simple: **las finanzas cuantitativas se aprenden construyendo**. Acá no vas a encontrar fórmulas para memorizar, sino problemas reales —valuar un bono, armar un portafolio, medir un riesgo, cubrir una opción— resueltos con código que podés ejecutar, romper y modificar. Cada concepto de programación aparece cuando un problema financiero lo necesita, y cada modelo financiero llega con su implementación completa y con una discusión honesta de sus límites.
+El libro parte de una convicción: las finanzas cuantitativas se aprenden construyendo. Cada tema se presenta a partir de un problema concreto (valuar un bono, armar un portafolio, medir un riesgo, cubrir una opción) y se resuelve con código que se puede ejecutar y modificar. Los conceptos de programación aparecen cuando un problema financiero los necesita, y cada modelo llega con su implementación completa y con una discusión de sus límites.
 
-## Cómo leer este libro
+## A quién está dirigido
 
-El libro está pensado para leerse **en orden**: cada capítulo usa lo construido en los anteriores, y los cuatro módulos forman un arco que va de la primera variable de Python hasta los modelos de volatilidad estocástica. Los bloques de código son ejecutables — la mejor forma de estudiar es correrlos a medida que leés, ya sea en el propio navegador (los capítulos iniciales lo permiten), en Jupyter local o en Google Colab. Al final de cada capítulo vas a encontrar los **errores comunes** del tema (léelos: son los que vas a cometer) y, en los módulos 2 a 4, una celda para practicar con el código en el propio navegador.
+A estudiantes de finanzas, economía y carreras afines, y a profesionales del sector que quieran incorporar herramientas cuantitativas a su trabajo. No hace falta experiencia previa en programación: el primer módulo empieza desde cero.
+
+## Qué vas a encontrar
+
+- **Código ejecutable.** Todos los resultados y gráficos del libro salen de ejecutar el código que se muestra. En los tres primeros capítulos los ejemplos se pueden correr y editar en el navegador, sin instalar nada; del capítulo 7 en adelante, cada capítulo cierra con una celda para experimentar.
+- **Simuladores interactivos.** Dieciocho gráficos con controles permiten mover los parámetros de un modelo y ver cómo responde: el precio de un bono frente a la tasa, la frontera eficiente, el VaR con colas pesadas, las griegas de una opción. Están en la versión web, junto a la figura que generalizan.
+- **Datos reales.** Los capítulos de portafolios, riesgo y econometría repiten sus cálculos con cinco años de precios diarios de diez activos, un conjunto de datos que se distribuye con el libro (ver @sec-datos-financieros).
+- **Errores comunes.** Cada capítulo termina con los errores más frecuentes del tema y la manera de evitarlos.
+
+El libro completo se puede descargar en PDF desde el menú lateral.
+
+## Cómo leerlo
+
+El libro está pensado para leerse en orden: cada capítulo usa lo construido en los anteriores. La forma más provechosa de estudiarlo es ejecutar el código a medida que se avanza, en el navegador, en Jupyter o en Google Colab, y cambiarle algo para ver qué pasa. El @sec-python-intro explica cómo preparar el entorno de trabajo.
 
 ## Los cuatro módulos
 
-### Módulo 1: Fundamentos y Renta Fija (Capítulos 1–6)
+### Módulo 1: Fundamentos y renta fija (capítulos 1 a 6)
 
-Aprendés a programar desde cero, con problemas financieros como excusa y motor. El arco: variables y decisiones → estructuras y bucles → funciones → objetos → NumPy → Pandas, terminando con una librería de valuación de renta fija y la construcción de curvas de tasas hecha por vos.
+Programación desde cero, con problemas financieros como hilo conductor: variables y decisiones, estructuras y bucles, funciones, objetos, NumPy y Pandas. El módulo termina con una librería propia de valuación de renta fija, la construcción de una curva de tasas y el cálculo de duración y convexidad.
 
 1. [Pensamiento Computacional en Finanzas](unidad1/cap01_pensamiento_computacional.qmd)
 2. [Iteraciones y Estructuras de Datos](unidad1/cap02_iteraciones_estructuras.qmd)
@@ -24,17 +37,19 @@ Aprendés a programar desde cero, con problemas financieros como excusa y motor.
 4. [Programación Orientada a Objetos (POO)](unidad1/cap04_poo.qmd)
 5. [NumPy y Cálculo Vectorizado](unidad1/cap05_numpy.qmd)
 6. [Series de Tiempo con Pandas](unidad1/cap06_series_tiempo_pandas.qmd)
-### Módulo 2: Teoría de Portafolios y Optimización (Capítulos 7–10)
 
-La pregunta central de la inversión —¿cómo reparto el capital?— respondida en tres tiempos: el edificio clásico de Markowitz, sus fallas prácticas, y las dos respuestas modernas (HRP y Black-Litterman) que la industria usa para repararlas.
+### Módulo 2: Teoría de portafolios y optimización (capítulos 7 a 10)
+
+Cómo repartir el capital entre activos. El módulo presenta el modelo de Markowitz, muestra por qué falla cuando se lo aplica a datos reales y desarrolla las dos respuestas que usa la industria: Hierarchical Risk Parity y Black-Litterman.
 
 7. [Estadística Descriptiva y Optimización Matemática](unidad2/cap07_estadistica_optimizacion.qmd)
 8. [Teoría Moderna de Portafolios (Markowitz)](unidad2/cap08_markowitz.qmd)
 9. [Hierarchical Risk Parity (HRP)](unidad2/cap09_hrp.qmd)
 10. [El Modelo de Black-Litterman](unidad2/cap10_black_litterman.qmd)
-### Módulo 3: Riesgo, Simulación y Econometría (Capítulos 11–17)
 
-El oficio del análisis de riesgo completo: medir (VaR y Expected Shortfall), contextualizar (Basilea, stress testing y las lecciones de LTCM y 2008), simular (Monte Carlo y procesos con saltos), inferir (modelos lineales y series de tiempo) y validar (backtesting con walk-forward). El módulo donde se aprende a desconfiar de los modelos con método.
+### Módulo 3: Riesgo, simulación y econometría (capítulos 11 a 17)
+
+Las herramientas del análisis de riesgo: medir (VaR y Expected Shortfall), ubicar esas medidas en su marco regulatorio (Basilea, stress testing, las crisis de LTCM y de 2008), simular (Monte Carlo y procesos con saltos), inferir (modelos lineales y series de tiempo) y validar (backtesting con walk-forward).
 
 11. [Valor en Riesgo (VaR) y Expected Shortfall](unidad3/cap11_var_expected_shortfall.qmd)
 12. [Riesgo y Regulación](unidad3/cap12_riesgo_regulacion.qmd)
@@ -43,27 +58,15 @@ El oficio del análisis de riesgo completo: medir (VaR y Expected Shortfall), co
 15. [Econometría y Modelos Lineales](unidad3/cap15_econometria_modelos_lineales.qmd)
 16. [Series Temporales — ARIMA y VAR](unidad3/cap16_series_temporales_macro.qmd)
 17. [Backtesting de Estrategias](unidad3/cap17_backtesting.qmd)
-### Módulo 4: Derivados y Volatilidad (Capítulos 18–20)
 
-El examen integrador: los derivados usan todo el libro a la vez. Black-Scholes y la volatilidad implícita, la réplica puesta en práctica con delta hedging, y los modelos de volatilidad estocástica (Heston, SABR) que capturan lo que la sonrisa de volatilidad venía señalando.
+### Módulo 4: Derivados y volatilidad (capítulos 18 a 20)
+
+Los derivados ponen en juego todo lo anterior. El módulo cubre Black-Scholes y la volatilidad implícita, la réplica de una opción mediante cobertura dinámica y los modelos de volatilidad estocástica (Heston y SABR) que explican la sonrisa de volatilidad.
 
 18. [Valuación de Opciones y Volatilidad Implícita](unidad4/cap18_derivados_vol_implicita.qmd)
 19. [Gestión de Coberturas Dinámicas (Delta Hedging)](unidad4/cap19_delta_hedging.qmd)
 20. [Modelos de Volatilidad Estocástica](unidad4/cap20_volatilidad_estocastica.qmd)
-## ¿A quién va dirigido?
 
-Este libro está diseñado para estudiantes de finanzas, economía y profesionales del sector que deseen transicionar hacia un enfoque más cuantitativo y computacional. No se requiere experiencia previa en programación, ya que empezamos desde los fundamentos.
+## Un libro abierto
 
-## Convenciones
-
--   Los bloques de código son totalmente ejecutables.
--   Las fórmulas se presentan en LaTeX para mayor claridad.
--   Usamos **callouts** para resaltar tips, advertencias y conceptos clave.
-
-::: {.callout-tip appearance="simple"}
-Recomendamos seguir el libro de forma secuencial, ejecutando los ejemplos dentro del libro, en un entorno local o en Google Colab. En el apéndice encontrás la guía para poner a punto tu entorno.
-:::
-
----
-
-Este sitio es y será siempre gratuito. Si encontrás algún error o tenés alguna sugerencia, podés abrir un *issue* en nuestro repositorio de GitHub. En el caso que quieras contribuir o sugerir cambios al libro, no dudes en contactarnos.
+El sitio es gratuito y el código fuente es público. Si encontrás un error o tenés una sugerencia, podés abrir un *issue* en el [repositorio del libro](https://github.com/diegoonna/libro_finanzas_computacionales/issues) o proponer el cambio directamente con el botón de edición que aparece en cada página.

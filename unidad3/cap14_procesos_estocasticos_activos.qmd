@@ -14,15 +14,15 @@ nocite: |
 
 # Introducción {.unnumbered}
 
-En el capítulo anterior simulamos precios con el Movimiento Browniano Geométrico y todo funcionó de maravilla. Ahora toca la pregunta incómoda: **¿el GBM describe bien los precios reales?**
+En el capítulo anterior simulamos precios con el Movimiento Browniano Geométrico y todo funcionó de maravilla. Ahora toca la pregunta incómoda: ¿el GBM describe bien los precios reales?
 
-La respuesta corta es *no en las colas*. Los retornos reales exhiben tres características —los *hechos estilizados* que ya asomaron en el [Capítulo 7](../unidad2/cap07_estadistica_optimizacion.qmd)— que el GBM no puede producir:
+La respuesta corta es *no en las colas*. Los retornos reales exhiben tres características —los *hechos estilizados* [@cont2001] que ya asomaron en el [Capítulo 7](../unidad2/cap07_estadistica_optimizacion.qmd)— que el GBM no puede producir:
 
 1. **Colas pesadas**: los movimientos extremos ocurren muchísimo más seguido de lo que predice la normal. El crash de 1987 (−20% en un día) tiene, bajo normalidad, una probabilidad tan pequeña que no debería haber ocurrido ni una vez en la edad del universo. Ocurrió un martes.
-2. **Saltos**: los precios no se mueven solo en pasitos continuos; a veces **saltan** — un resultado electoral, un default, un anuncio de la Fed. El GBM, por construcción, tiene trayectorias continuas.
+2. **Saltos**: los precios no se mueven solo en pasitos continuos; a veces **saltan**: un resultado electoral, un default, un anuncio de la Fed. El GBM, por construcción, tiene trayectorias continuas.
 3. **Asimetría**: las caídas violentas son más frecuentes y más grandes que las subas violentas.
 
-Este capítulo construye modelos que sí capturan esto, quedándonos en el terreno de **modelar el precio del activo** (la volatilidad estocástica, que ataca otro hecho estilizado, llega en el [Capítulo 20](../unidad4/cap20_volatilidad_estocastica.qmd) con Heston y SABR).
+Este capítulo construye modelos que sí capturan esto, quedándonos en el terreno de modelar el precio del activo (la volatilidad estocástica, que ataca otro hecho estilizado, llega en el [Capítulo 20](../unidad4/cap20_volatilidad_estocastica.qmd) con Heston y SABR).
 
 ```{python}
 #| label: setup
@@ -66,7 +66,7 @@ print(f"{'Curtosis (exceso)':<22}{stats.kurtosis(ret_gbm):>10.2f}{stats.kurtosis
 print(f"{'Peor día':<22}{ret_gbm.min():>10.2%}{ret_real.min():>14.2%}")
 ```
 
-Misma volatilidad total, pero el "mercado real" tiene curtosis alta, asimetría negativa y días mucho peores. Un gestor de riesgo que use el GBM para estimar el VaR de esta serie va a **subestimar sistemáticamente las colas** — el pecado capital del [Capítulo 11](../unidad3/cap11_var_expected_shortfall.qmd).
+Misma volatilidad total, pero el "mercado real" tiene curtosis alta, asimetría negativa y días mucho peores. Un gestor de riesgo que use el GBM para estimar el VaR de esta serie va a **subestimar sistemáticamente las colas**, el pecado capital del [Capítulo 11](../unidad3/cap11_var_expected_shortfall.qmd).
 
 Las tablas de momentos resumen, pero la herramienta visual clásica para diagnosticar colas es el **gráfico Q-Q**: enfrenta cada cuantil observado con el que tendría una normal. Si los datos son normales, los puntos caen sobre la recta; si tienen colas pesadas, los extremos se despegan. La @fig-qq-colas lo aplica a las dos series.
 
@@ -104,18 +104,18 @@ _esquema()
 
 ## Jump-diffusion de Merton: difusión + saltos de Poisson
 
-En 1976, Robert Merton (sí, el mismo de Black-Scholes y de LTCM — la historia tiene ironías) propuso la extensión natural: superponer al Browniano un **proceso de saltos**. El precio evoluciona como un GBM *casi todo el tiempo*, pero en momentos aleatorios llega un shock discreto:
+En 1976, Robert Merton (sí, el mismo de Black-Scholes y de LTCM; la historia tiene ironías) [@merton1976] propuso la extensión natural: superponer al Browniano un **proceso de saltos**. El precio evoluciona como un GBM *casi todo el tiempo*, pero en momentos aleatorios llega un shock discreto:
 
 $$\frac{dS}{S} = \mu\, dt + \sigma\, dW + (J - 1)\, dN$$
 
 Los tres ingredientes:
 
 - $\mu\,dt + \sigma\,dW$: la difusión de siempre (tendencia + ruido fino).
-- $dN$: un **proceso de Poisson** con intensidad $\lambda$ — el "timbre" que suena en promedio $\lambda$ veces por año, avisando que llegó un salto.
+- $dN$: un **proceso de Poisson** con intensidad $\lambda$, el "timbre" que suena en promedio $\lambda$ veces por año, avisando que llegó un salto.
 - $J$: el **tamaño del salto**, aleatorio; Merton lo modela lognormal: $\ln J \sim N(\mu_J, \sigma_J^2)$. Con $\mu_J < 0$, los saltos son mayormente caídas.
 
 ::: {.callout-tip title="La intuición del Poisson"}
-El proceso de Poisson es el modelo matemático de "eventos raros que llegan de sorpresa": no sabés *cuándo* llega el próximo salto, pero sí *cada cuánto* llegan en promedio. Con $\lambda = 5$, esperás unos 5 saltos por año, quizás 2 este año y 8 el próximo. Es el mismo objeto que modela llegadas de clientes o fallas de máquinas — acá modela pánicos y sorpresas.
+El proceso de Poisson es el modelo matemático de "eventos raros que llegan de sorpresa": no sabés *cuándo* llega el próximo salto, pero sí *cada cuánto* llegan en promedio. Con $\lambda = 5$, esperás unos 5 saltos por año, quizás 2 este año y 8 el próximo. Es el mismo objeto que modela llegadas de clientes o fallas de máquinas; acá modela pánicos y sorpresas.
 :::
 
 La @fig-anatomia-merton desarma una trayectoria en sus piezas: la difusión de siempre, el "timbre" de Poisson que cuenta los saltos, y la suma de ambas.
@@ -199,7 +199,7 @@ T, n_pasos, n_sims = 1.0, 252, 5000
 
 S_merton = simular_merton(S0, mu, sigma, lam, mu_J, sigma_J, T, n_pasos, n_sims, rng)
 
-# GBM de referencia con la MISMA volatilidad total, para comparar peras con peras
+# GBM de referencia con la MISMA volatilidad total, para que la comparación sea justa
 var_saltos = lam * (mu_J**2 + sigma_J**2)
 sigma_total = np.sqrt(sigma**2 + var_saltos)
 
@@ -233,7 +233,7 @@ plt.tight_layout()
 plt.show()
 ```
 
-Se ve a simple vista en la @fig-merton-trayectorias: las trayectorias del GBM son "peludas pero suaves"; las de Merton muestran **escalones** — el precio de pronto está en otro lado, sin pasar por el medio. Así se ve un evento de riesgo real.
+Se ve a simple vista en la @fig-merton-trayectorias: las trayectorias del GBM son "peludas pero suaves"; las de Merton muestran **escalones**: el precio de pronto está en otro lado, sin pasar por el medio. Así se ve un evento de riesgo real.
 
 ### La firma en las distribuciones
 
@@ -252,7 +252,6 @@ ax.hist(ret_m, bins=bins, density=True, alpha=0.55, label="Merton", color="#c241
 ax.set_yscale("log")   # escala log para VER las colas
 ax.set_xlabel("Retorno logarítmico a 1 año")
 ax.set_ylabel("Densidad (escala log)")
-ax.set_title("Misma volatilidad total, colas muy distintas")
 ax.legend()
 ax.grid(True, alpha=0.3)
 plt.tight_layout()
@@ -267,7 +266,7 @@ print(f"{'Curtosis (exceso)':<24}{stats.kurtosis(ret_g):>10.2f}{stats.kurtosis(r
 print(f"{'Percentil 1%':<24}{np.percentile(ret_g, 1):>10.2%}{np.percentile(ret_m, 1):>10.2%}")
 ```
 
-En la @fig-merton-colas, la escala logarítmica del eje y revela lo que el histograma común esconde: la **cola izquierda de Merton se extiende mucho más lejos** con probabilidad no despreciable. Ambos modelos tienen la misma varianza — un optimizador de Markowitz los vería idénticos — pero el VaR y el ES del 1% son muy distintos. Esta es la materialización de la lección de 2008 del capítulo anterior: **media y varianza no cuentan la historia de las colas**.
+En la @fig-merton-colas, la escala logarítmica del eje y revela lo que el histograma común esconde: la cola izquierda de Merton se extiende mucho más lejos con probabilidad no despreciable. Ambos modelos tienen la misma varianza: un optimizador de Markowitz los vería idénticos, pero el VaR y el ES del 1% son muy distintos. Esta es la materialización de la lección de 2008 del capítulo anterior: media y varianza no cuentan la historia de las colas.
 
 ---
 
@@ -277,9 +276,9 @@ El Browniano y el Poisson comparten una propiedad estructural: **incrementos ind
 
 $$X_t = \underbrace{bt}_{\text{tendencia}} + \underbrace{\sigma W_t}_{\text{difusión}} + \underbrace{\text{saltos}}_{\text{grandes y pequeños}}$$
 
-Es decir: **tendencia + Browniano + saltos es todo lo que puede haber** (bajo incrementos independientes). El GBM usa solo las dos primeras piezas; Merton agrega saltos "raros y grandes"; y otros miembros de la familia usados en la industria empujan la idea más lejos:
+Es decir: tendencia + Browniano + saltos es todo lo que puede haber (bajo incrementos independientes). El GBM usa solo las dos primeras piezas; Merton agrega saltos "raros y grandes"; y otros miembros de la familia usados en la industria empujan la idea más lejos:
 
-- **Variance Gamma (VG)**: infinitos saltos pequeños y ninguna difusión — el precio se mueve *solo* por saltitos. Se construye elegantemente como un Browniano evaluado en un "reloj aleatorio" (subordinador Gamma): el tiempo del mercado corre más rápido en días agitados.
+- **Variance Gamma (VG)** [@madan1998]: infinitos saltos pequeños y ninguna difusión; el precio se mueve *solo* por saltitos. Se construye elegantemente como un Browniano evaluado en un "reloj aleatorio" (subordinador Gamma): el tiempo del mercado corre más rápido en días agitados.
 - **Normal Inverse Gaussian (NIG)**, **CGMY**: variantes con más control fino sobre el peso de cada cola.
 
 ```{python}
@@ -297,7 +296,7 @@ def simular_vg(theta, sigma_vg, nu, T, n_pasos, n_sims, rng):
 ret_vg = simular_vg(theta=-0.10, sigma_vg=0.18, nu=0.4, T=1.0,
                     n_pasos=252, n_sims=5000, rng=rng)
 
-print("Retornos a 1 año — Variance Gamma vs. GBM:")
+print("Retornos a 1 año, Variance Gamma vs. GBM:")
 print(f"{'':24}{'GBM':>10}{'VG':>10}")
 print(f"{'Asimetría':<24}{stats.skew(ret_g):>10.2f}{stats.skew(ret_vg):>10.2f}")
 print(f"{'Curtosis (exceso)':<24}{stats.kurtosis(ret_g):>10.2f}{stats.kurtosis(ret_vg):>10.2f}")
@@ -387,7 +386,7 @@ flowchart LR
 | **Variance Gamma / NIG** | Pesadas, control fino | Infinitos, pequeños | Medio | Calibración fina a opciones; alta frecuencia |
 | **Heston / SABR** ([Cap. 20](../unidad4/cap20_volatilidad_estocastica.qmd)) | Pesadas vía vol estocástica | Opcional | Medio-alto | Superficies de volatilidad; pricing de exóticos |
 
-La regla general del oficio: **el modelo correcto depende de la pregunta**. Para proyectar la jubilación a 30 años, el GBM alcanza. Para calcular el ES al 99% de un book de opciones vendidas, usar GBM es negligencia.
+La regla general del oficio: el modelo correcto depende de la pregunta. Para proyectar la jubilación a 30 años, el GBM alcanza. Para calcular el ES al 99% de un book de opciones vendidas, usar GBM es negligencia.
 
 ---
 
