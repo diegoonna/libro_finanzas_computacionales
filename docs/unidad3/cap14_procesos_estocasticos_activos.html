@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>14&nbsp; Capítulo 14: Procesos Estocásticos del Precio de un Activo – Finanzas Computacionales</title>
+<title>14&nbsp; Capítulo 14: Procesos Estocásticos del Precio de un Activo – Finanzas Computacionales con Python</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -293,7 +293,7 @@ globalThis.qpyodideCustomizedPyodideOptions = {
 }
 
 // Store cell data
-globalThis.qpyodideCellDetails = [{"code":"import numpy as np\n\nrng = np.random.default_rng(42)\n\n# Tu solución acá...","id":1,"options":{"autorun":"","classes":"","comment":"","context":"interactive","dpi":72,"fig-cap":"","fig-height":5,"fig-width":7,"label":"practica-navegador","message":"true","out-height":"","out-width":"700px","output":"true","read-only":"false","results":"markup","warning":"true"}}];
+globalThis.qpyodideCellDetails = [{"code":"import numpy as np\n\nrng = np.random.default_rng(42)\n\n# Tu código acá...","id":1,"options":{"autorun":"","classes":"","comment":"","context":"interactive","dpi":72,"fig-cap":"","fig-height":5,"fig-width":7,"label":"practica-navegador","message":"true","out-height":"","out-width":"700px","output":"true","read-only":"false","results":"markup","warning":"true"}}];
 
 
 </script>
@@ -540,10 +540,10 @@ window.Quarto = {
   <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation docked overflow-auto">
     <div class="pt-lg-2 mt-2 text-left sidebar-header">
     <div class="sidebar-title mb-0 py-0">
-      <a href="../">Finanzas Computacionales</a> 
+      <a href="../">Finanzas Computacionales con Python</a> 
         <div class="sidebar-tools-main tools-wide">
     <a href="https://github.com/diegoonna/libro_finanzas_computacionales" title="Source Code" class="quarto-navigation-tool px-1" aria-label="Source Code"><i class="bi bi-github"></i></a>
-    <a href="../Finanzas-Computacionales.pdf" title="Download PDF" class="quarto-navigation-tool px-1" aria-label="Download PDF"><i class="bi bi-file-pdf"></i></a>
+    <a href="../Finanzas-Computacionales-con-Python.pdf" title="Download PDF" class="quarto-navigation-tool px-1" aria-label="Download PDF"><i class="bi bi-file-pdf"></i></a>
   <a href="" class="quarto-reader-toggle quarto-navigation-tool px-1" onclick="window.quartoToggleReader(); return false;" title="Alternar modo lector">
   <div class="quarto-reader-toggle-btn">
   <i class="bi"></i>
@@ -797,7 +797,7 @@ window.Quarto = {
   <li><a href="#procesos-de-lévy-la-familia-general" id="toc-procesos-de-lévy-la-familia-general" class="nav-link" data-scroll-target="#procesos-de-lévy-la-familia-general"><span class="header-section-number">14.3</span> Procesos de Lévy: la familia general</a></li>
   <li><a href="#qué-modelo-usar-un-mapa" id="toc-qué-modelo-usar-un-mapa" class="nav-link" data-scroll-target="#qué-modelo-usar-un-mapa"><span class="header-section-number">14.4</span> ¿Qué modelo usar? Un mapa</a></li>
   <li><a href="#errores-comunes" id="toc-errores-comunes" class="nav-link" data-scroll-target="#errores-comunes"><span class="header-section-number">14.5</span> Errores comunes</a></li>
-  <li><a href="#ejercicios-propuestos" id="toc-ejercicios-propuestos" class="nav-link" data-scroll-target="#ejercicios-propuestos"><span class="header-section-number">14.6</span> Ejercicios Propuestos</a></li>
+  <li><a href="#practicá-en-el-navegador" id="toc-practicá-en-el-navegador" class="nav-link" data-scroll-target="#practicá-en-el-navegador"><span class="header-section-number">14.6</span> Practicá en el navegador</a></li>
   <li><a href="#referencias" id="toc-referencias" class="nav-link" data-scroll-target="#referencias"><span class="header-section-number">14.7</span> Referencias</a></li>
   </ul></li>
   </ul>
@@ -844,14 +844,14 @@ window.Quarto = {
 
 <section id="introducción" class="level1 unnumbered">
 <h1 class="unnumbered">Introducción</h1>
-<p>En el capítulo anterior simulamos precios con el Movimiento Browniano Geométrico y todo funcionó de maravilla. Ahora toca la pregunta incómoda: <strong>¿el GBM describe bien los precios reales?</strong></p>
-<p>La respuesta corta es <em>no en las colas</em>. Los retornos reales exhiben tres características —los <em>hechos estilizados</em> que ya asomaron en el Capítulo 7— que el GBM no puede producir:</p>
+<p>En el capítulo anterior simulamos precios con el Movimiento Browniano Geométrico y todo funcionó de maravilla. Ahora toca la pregunta incómoda: ¿el GBM describe bien los precios reales?</p>
+<p>La respuesta corta es <em>no en las colas</em>. Los retornos reales exhiben tres características —los <em>hechos estilizados</em> <span class="citation" data-cites="cont2001">(<a href="../unidad1/cap01_pensamiento_computacional.html#ref-cont2001" role="doc-biblioref">Cont 2001</a>)</span> que ya asomaron en el <a href="../unidad2/cap07_estadistica_optimizacion.html">Capítulo 7</a>— que el GBM no puede producir:</p>
 <ol type="1">
 <li><strong>Colas pesadas</strong>: los movimientos extremos ocurren muchísimo más seguido de lo que predice la normal. El crash de 1987 (−20% en un día) tiene, bajo normalidad, una probabilidad tan pequeña que no debería haber ocurrido ni una vez en la edad del universo. Ocurrió un martes.</li>
-<li><strong>Saltos</strong>: los precios no se mueven solo en pasitos continuos; a veces <strong>saltan</strong> — un resultado electoral, un default, un anuncio de la Fed. El GBM, por construcción, tiene trayectorias continuas.</li>
+<li><strong>Saltos</strong>: los precios no se mueven solo en pasitos continuos; a veces <strong>saltan</strong>: un resultado electoral, un default, un anuncio de la Fed. El GBM, por construcción, tiene trayectorias continuas.</li>
 <li><strong>Asimetría</strong>: las caídas violentas son más frecuentes y más grandes que las subas violentas.</li>
 </ol>
-<p>Este capítulo construye modelos que sí capturan esto, quedándonos en el terreno de <strong>modelar el precio del activo</strong> (la volatilidad estocástica, que ataca otro hecho estilizado, llega en el Capítulo 20 con Heston y SABR).</p>
+<p>Este capítulo construye modelos que sí capturan esto, quedándonos en el terreno de modelar el precio del activo (la volatilidad estocástica, que ataca otro hecho estilizado, llega en el <a href="../unidad4/cap20_volatilidad_estocastica.html">Capítulo 20</a> con Heston y SABR).</p>
 <div id="setup" class="cell" data-execution_count="1">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
@@ -888,8 +888,8 @@ Curtosis (exceso)           0.04         11.96
 Peor día                  -4.34%       -10.68%</code></pre>
 </div>
 </div>
-<p>Misma volatilidad total, pero el “mercado real” tiene curtosis alta, asimetría negativa y días mucho peores. Un gestor de riesgo que use el GBM para estimar el VaR de esta serie va a <strong>subestimar sistemáticamente las colas</strong> — el pecado capital del Capítulo 11.</p>
-<p>Las tablas de momentos resumen, pero la herramienta visual clásica para diagnosticar colas es el <strong>gráfico Q-Q</strong> (el del ejercicio del Capítulo 7): enfrenta cada cuantil observado con el que tendría una normal. Si los datos son normales, los puntos caen sobre la recta; si tienen colas pesadas, los extremos se despegan. La <a href="#fig-qq-colas" class="quarto-xref">Figura&nbsp;<span>14.1</span></a> lo aplica a las dos series.</p>
+<p>Misma volatilidad total, pero el “mercado real” tiene curtosis alta, asimetría negativa y días mucho peores. Un gestor de riesgo que use el GBM para estimar el VaR de esta serie va a <strong>subestimar sistemáticamente las colas</strong>, el pecado capital del <a href="../unidad3/cap11_var_expected_shortfall.html">Capítulo 11</a>.</p>
+<p>Las tablas de momentos resumen, pero la herramienta visual clásica para diagnosticar colas es el <strong>gráfico Q-Q</strong>: enfrenta cada cuantil observado con el que tendría una normal. Si los datos son normales, los puntos caen sobre la recta; si tienen colas pesadas, los extremos se despegan. La <a href="#fig-qq-colas" class="quarto-xref">Figura&nbsp;<span>14.1</span></a> lo aplica a las dos series.</p>
 <div id="cell-fig-qq-colas" class="cell" data-execution_count="4">
 <div class="cell-output cell-output-display">
 <div id="fig-qq-colas" class="quarto-float quarto-figure quarto-figure-center anchored">
@@ -908,12 +908,12 @@ Figura&nbsp;14.1: Gráficos Q-Q contra la normal. Los retornos del GBM caen sobr
 </section>
 <section id="jump-diffusion-de-merton-difusión-saltos-de-poisson" class="level2" data-number="14.2">
 <h2 data-number="14.2" class="anchored" data-anchor-id="jump-diffusion-de-merton-difusión-saltos-de-poisson"><span class="header-section-number">14.2</span> Jump-diffusion de Merton: difusión + saltos de Poisson</h2>
-<p>En 1976, Robert Merton (sí, el mismo de Black-Scholes y de LTCM — la historia tiene ironías) propuso la extensión natural: superponer al Browniano un <strong>proceso de saltos</strong>. El precio evoluciona como un GBM <em>casi todo el tiempo</em>, pero en momentos aleatorios llega un shock discreto:</p>
+<p>En 1976, Robert Merton (sí, el mismo de Black-Scholes y de LTCM; la historia tiene ironías) <span class="citation" data-cites="merton1976">(<a href="../unidad1/cap01_pensamiento_computacional.html#ref-merton1976" role="doc-biblioref">Merton 1976</a>)</span> propuso la extensión natural: superponer al Browniano un <strong>proceso de saltos</strong>. El precio evoluciona como un GBM <em>casi todo el tiempo</em>, pero en momentos aleatorios llega un shock discreto:</p>
 <p><span class="math display">\[\frac{dS}{S} = \mu\, dt + \sigma\, dW + (J - 1)\, dN\]</span></p>
 <p>Los tres ingredientes:</p>
 <ul>
 <li><span class="math inline">\(\mu\,dt + \sigma\,dW\)</span>: la difusión de siempre (tendencia + ruido fino).</li>
-<li><span class="math inline">\(dN\)</span>: un <strong>proceso de Poisson</strong> con intensidad <span class="math inline">\(\lambda\)</span> — el “timbre” que suena en promedio <span class="math inline">\(\lambda\)</span> veces por año, avisando que llegó un salto.</li>
+<li><span class="math inline">\(dN\)</span>: un <strong>proceso de Poisson</strong> con intensidad <span class="math inline">\(\lambda\)</span>, el “timbre” que suena en promedio <span class="math inline">\(\lambda\)</span> veces por año, avisando que llegó un salto.</li>
 <li><span class="math inline">\(J\)</span>: el <strong>tamaño del salto</strong>, aleatorio; Merton lo modela lognormal: <span class="math inline">\(\ln J \sim N(\mu_J, \sigma_J^2)\)</span>. Con <span class="math inline">\(\mu_J &lt; 0\)</span>, los saltos son mayormente caídas.</li>
 </ul>
 <div class="callout callout-style-simple callout-tip callout-titled" title="La intuición del Poisson">
@@ -926,7 +926,7 @@ Figura&nbsp;14.1: Gráficos Q-Q contra la normal. Los retornos del GBM caen sobr
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>El proceso de Poisson es el modelo matemático de “eventos raros que llegan de sorpresa”: no sabés <em>cuándo</em> llega el próximo salto, pero sí <em>cada cuánto</em> llegan en promedio. Con <span class="math inline">\(\lambda = 5\)</span>, esperás unos 5 saltos por año, quizás 2 este año y 8 el próximo. Es el mismo objeto que modela llegadas de clientes o fallas de máquinas — acá modela pánicos y sorpresas.</p>
+<p>El proceso de Poisson es el modelo matemático de “eventos raros que llegan de sorpresa”: no sabés <em>cuándo</em> llega el próximo salto, pero sí <em>cada cuánto</em> llegan en promedio. Con <span class="math inline">\(\lambda = 5\)</span>, esperás unos 5 saltos por año, quizás 2 este año y 8 el próximo. Es el mismo objeto que modela llegadas de clientes o fallas de máquinas; acá modela pánicos y sorpresas.</p>
 </div>
 </div>
 <p>La <a href="#fig-anatomia-merton" class="quarto-xref">Figura&nbsp;<span>14.2</span></a> desarma una trayectoria en sus piezas: la difusión de siempre, el “timbre” de Poisson que cuenta los saltos, y la suma de ambas.</p>
@@ -976,7 +976,7 @@ Figura&nbsp;14.2: Anatomía de una trayectoria de Merton (log-precio, un año). 
 <span id="cb4-26"><a href="#cb4-26" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb4-27"><a href="#cb4-27" aria-hidden="true" tabindex="-1"></a>S_merton <span class="op">=</span> simular_merton(S0, mu, sigma, lam, mu_J, sigma_J, T, n_pasos, n_sims, rng)</span>
 <span id="cb4-28"><a href="#cb4-28" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-29"><a href="#cb4-29" aria-hidden="true" tabindex="-1"></a><span class="co"># GBM de referencia con la MISMA volatilidad total, para comparar peras con peras</span></span>
+<span id="cb4-29"><a href="#cb4-29" aria-hidden="true" tabindex="-1"></a><span class="co"># GBM de referencia con la MISMA volatilidad total, para que la comparación sea justa</span></span>
 <span id="cb4-30"><a href="#cb4-30" aria-hidden="true" tabindex="-1"></a>var_saltos <span class="op">=</span> lam <span class="op">*</span> (mu_J<span class="op">**</span><span class="dv">2</span> <span class="op">+</span> sigma_J<span class="op">**</span><span class="dv">2</span>)</span>
 <span id="cb4-31"><a href="#cb4-31" aria-hidden="true" tabindex="-1"></a>sigma_total <span class="op">=</span> np.sqrt(sigma<span class="op">**</span><span class="dv">2</span> <span class="op">+</span> var_saltos)</span>
 <span id="cb4-32"><a href="#cb4-32" aria-hidden="true" tabindex="-1"></a></span>
@@ -1014,7 +1014,7 @@ Vol. total (ambos modelos):     19.0%</code></pre>
 <div id="fig-merton-trayectorias" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-merton-trayectorias-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="cap14_procesos_estocasticos_activos_files/figure-html/fig-merton-trayectorias-output-1.png" width="1141" height="420" class="figure-img">
+<img src="cap14_procesos_estocasticos_activos_files/figure-html/fig-merton-trayectorias-output-1.png" width="1141" height="421" class="figure-img">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-merton-trayectorias-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Figura&nbsp;14.3: Ocho trayectorias de cada modelo, con la misma volatilidad total. Las del GBM se mueven de a pasitos; las de Merton tienen escalones.
@@ -1023,7 +1023,7 @@ Figura&nbsp;14.3: Ocho trayectorias de cada modelo, con la misma volatilidad tot
 </div>
 </div>
 </div>
-<p>Se ve a simple vista en la <a href="#fig-merton-trayectorias" class="quarto-xref">Figura&nbsp;<span>14.3</span></a>: las trayectorias del GBM son “peludas pero suaves”; las de Merton muestran <strong>escalones</strong> — el precio de pronto está en otro lado, sin pasar por el medio. Así se ve un evento de riesgo real.</p>
+<p>Se ve a simple vista en la <a href="#fig-merton-trayectorias" class="quarto-xref">Figura&nbsp;<span>14.3</span></a>: las trayectorias del GBM son “peludas pero suaves”; las de Merton muestran <strong>escalones</strong>: el precio de pronto está en otro lado, sin pasar por el medio. Así se ve un evento de riesgo real.</p>
 </section>
 <section id="la-firma-en-las-distribuciones" class="level3" data-number="14.2.2">
 <h3 data-number="14.2.2" class="anchored" data-anchor-id="la-firma-en-las-distribuciones"><span class="header-section-number">14.2.2</span> La firma en las distribuciones</h3>
@@ -1039,11 +1039,10 @@ Figura&nbsp;14.3: Ocho trayectorias de cada modelo, con la misma volatilidad tot
 <span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>ax.set_yscale(<span class="st">"log"</span>)   <span class="co"># escala log para VER las colas</span></span>
 <span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>ax.set_xlabel(<span class="st">"Retorno logarítmico a 1 año"</span>)</span>
 <span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>ax.set_ylabel(<span class="st">"Densidad (escala log)"</span>)</span>
-<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>ax.set_title(<span class="st">"Misma volatilidad total, colas muy distintas"</span>)</span>
-<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>ax.legend()</span>
-<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>ax.grid(<span class="va">True</span>, alpha<span class="op">=</span><span class="fl">0.3</span>)</span>
-<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
-<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>ax.legend()</span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>ax.grid(<span class="va">True</span>, alpha<span class="op">=</span><span class="fl">0.3</span>)</span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display">
 <div id="fig-merton-colas" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
@@ -1069,7 +1068,7 @@ Curtosis (exceso)            -0.09      0.22
 Percentil 1%               -36.24%   -39.69%</code></pre>
 </div>
 </div>
-<p>En la <a href="#fig-merton-colas" class="quarto-xref">Figura&nbsp;<span>14.4</span></a>, la escala logarítmica del eje y revela lo que el histograma común esconde: la <strong>cola izquierda de Merton se extiende mucho más lejos</strong> con probabilidad no despreciable. Ambos modelos tienen la misma varianza — un optimizador de Markowitz los vería idénticos — pero el VaR y el ES del 1% son muy distintos. Esta es la materialización de la lección de 2008 del capítulo anterior: <strong>media y varianza no cuentan la historia de las colas</strong>.</p>
+<p>En la <a href="#fig-merton-colas" class="quarto-xref">Figura&nbsp;<span>14.4</span></a>, la escala logarítmica del eje y revela lo que el histograma común esconde: la cola izquierda de Merton se extiende mucho más lejos con probabilidad no despreciable. Ambos modelos tienen la misma varianza: un optimizador de Markowitz los vería idénticos, pero el VaR y el ES del 1% son muy distintos. Esta es la materialización de la lección de 2008 del capítulo anterior: media y varianza no cuentan la historia de las colas.</p>
 <hr>
 </section>
 </section>
@@ -1077,9 +1076,9 @@ Percentil 1%               -36.24%   -39.69%</code></pre>
 <h2 data-number="14.3" class="anchored" data-anchor-id="procesos-de-lévy-la-familia-general"><span class="header-section-number">14.3</span> Procesos de Lévy: la familia general</h2>
 <p>El Browniano y el Poisson comparten una propiedad estructural: <strong>incrementos independientes y estacionarios</strong> (lo que pasa hoy no depende de ayer, y las reglas del juego no cambian con el tiempo). La familia completa de procesos con esa propiedad son los <strong>procesos de Lévy</strong>, y hay un teorema hermoso (Lévy-Itô) que dice que <em>todo</em> proceso de Lévy se descompone en exactamente tres partes:</p>
 <p><span class="math display">\[X_t = \underbrace{bt}_{\text{tendencia}} + \underbrace{\sigma W_t}_{\text{difusión}} + \underbrace{\text{saltos}}_{\text{grandes y pequeños}}\]</span></p>
-<p>Es decir: <strong>tendencia + Browniano + saltos es todo lo que puede haber</strong> (bajo incrementos independientes). El GBM usa solo las dos primeras piezas; Merton agrega saltos “raros y grandes”; y otros miembros de la familia usados en la industria empujan la idea más lejos:</p>
+<p>Es decir: tendencia + Browniano + saltos es todo lo que puede haber (bajo incrementos independientes). El GBM usa solo las dos primeras piezas; Merton agrega saltos “raros y grandes”; y otros miembros de la familia usados en la industria empujan la idea más lejos:</p>
 <ul>
-<li><strong>Variance Gamma (VG)</strong>: infinitos saltos pequeños y ninguna difusión — el precio se mueve <em>solo</em> por saltitos. Se construye elegantemente como un Browniano evaluado en un “reloj aleatorio” (subordinador Gamma): el tiempo del mercado corre más rápido en días agitados.</li>
+<li><strong>Variance Gamma (VG)</strong> <span class="citation" data-cites="madan1998">(<a href="../unidad1/cap01_pensamiento_computacional.html#ref-madan1998" role="doc-biblioref">Madan, Carr, y Chang 1998</a>)</span>: infinitos saltos pequeños y ninguna difusión; el precio se mueve <em>solo</em> por saltitos. Se construye elegantemente como un Browniano evaluado en un “reloj aleatorio” (subordinador Gamma): el tiempo del mercado corre más rápido en días agitados.</li>
 <li><strong>Normal Inverse Gaussian (NIG)</strong>, <strong>CGMY</strong>: variantes con más control fino sobre el peso de cada cola.</li>
 </ul>
 <div id="variance-gamma" class="cell" data-execution_count="10">
@@ -1096,12 +1095,12 @@ Percentil 1%               -36.24%   -39.69%</code></pre>
 <span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>ret_vg <span class="op">=</span> simular_vg(theta<span class="op">=-</span><span class="fl">0.10</span>, sigma_vg<span class="op">=</span><span class="fl">0.18</span>, nu<span class="op">=</span><span class="fl">0.4</span>, T<span class="op">=</span><span class="fl">1.0</span>,</span>
 <span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a>                    n_pasos<span class="op">=</span><span class="dv">252</span>, n_sims<span class="op">=</span><span class="dv">5000</span>, rng<span class="op">=</span>rng)</span>
 <span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Retornos a 1 año — Variance Gamma vs. GBM:"</span>)</span>
+<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Retornos a 1 año, Variance Gamma vs. GBM:"</span>)</span>
 <span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span><span class="st">''</span><span class="sc">:24}{</span><span class="st">'GBM'</span><span class="sc">:&gt;10}{</span><span class="st">'VG'</span><span class="sc">:&gt;10}</span><span class="ss">"</span>)</span>
 <span id="cb10-16"><a href="#cb10-16" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span><span class="st">'Asimetría'</span><span class="sc">:&lt;24}{</span>stats<span class="sc">.</span>skew(ret_g)<span class="sc">:&gt;10.2f}{</span>stats<span class="sc">.</span>skew(ret_vg)<span class="sc">:&gt;10.2f}</span><span class="ss">"</span>)</span>
 <span id="cb10-17"><a href="#cb10-17" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span><span class="st">'Curtosis (exceso)'</span><span class="sc">:&lt;24}{</span>stats<span class="sc">.</span>kurtosis(ret_g)<span class="sc">:&gt;10.2f}{</span>stats<span class="sc">.</span>kurtosis(ret_vg)<span class="sc">:&gt;10.2f}</span><span class="ss">"</span>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Retornos a 1 año — Variance Gamma vs. GBM:
+<pre><code>Retornos a 1 año, Variance Gamma vs. GBM:
                                GBM        VG
 Asimetría                     0.01     -0.58
 Curtosis (exceso)            -0.09      1.43</code></pre>
@@ -1132,7 +1131,7 @@ Figura&nbsp;14.5: Variance Gamma por subordinación. Izquierda: el «tiempo de m
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>Porque el uso profesional los exige en dos frentes. <strong>Riesgo</strong>: un VaR/ES calculado con colas realistas (Capítulo 11 + este) es la diferencia entre estar preparado o no. <strong>Derivados</strong>: las opciones fuera del dinero cotizan “caras” respecto de Black-Scholes precisamente porque el mercado <em>sí</em> les pone precio a los saltos; los modelos de Lévy reproducen ese patrón (la <em>sonrisa</em> de volatilidad, que formalizamos en el Módulo 4).</p>
+<p>Porque el uso profesional los exige en dos frentes. <strong>Riesgo</strong>: un VaR/ES calculado con colas realistas (<a href="../unidad3/cap11_var_expected_shortfall.html">Capítulo 11</a> + este) es la diferencia entre estar preparado o no. <strong>Derivados</strong>: las opciones fuera del dinero cotizan “caras” respecto de Black-Scholes precisamente porque el mercado <em>sí</em> les pone precio a los saltos; los modelos de Lévy reproducen ese patrón (la <em>sonrisa</em> de volatilidad, que formalizamos en el Módulo 4).</p>
 </div>
 </div>
 <hr>
@@ -1175,13 +1174,6 @@ Figura&nbsp;14.6: Los modelos del capítulo como combinaciones de los tres ingre
 </div>
 </div>
 <table class="caption-top table">
-<colgroup>
-<col style="width: 20%">
-<col style="width: 20%">
-<col style="width: 20%">
-<col style="width: 20%">
-<col style="width: 20%">
-</colgroup>
 <thead>
 <tr class="header">
 <th>Modelo</th>
@@ -1214,7 +1206,7 @@ Figura&nbsp;14.6: Los modelos del capítulo como combinaciones de los tres ingre
 <td>Calibración fina a opciones; alta frecuencia</td>
 </tr>
 <tr class="even">
-<td><strong>Heston / SABR</strong> (Cap. 20)</td>
+<td><strong>Heston / SABR</strong> (<a href="../unidad4/cap20_volatilidad_estocastica.html">Cap. 20</a>)</td>
 <td>Pesadas vía vol estocástica</td>
 <td>Opcional</td>
 <td>Medio-alto</td>
@@ -1222,7 +1214,7 @@ Figura&nbsp;14.6: Los modelos del capítulo como combinaciones de los tres ingre
 </tr>
 </tbody>
 </table>
-<p>La regla general del oficio: <strong>el modelo correcto depende de la pregunta</strong>. Para proyectar la jubilación a 30 años, el GBM alcanza. Para calcular el ES al 99% de un book de opciones vendidas, usar GBM es negligencia.</p>
+<p>La regla general del oficio: el modelo correcto depende de la pregunta. Para proyectar la jubilación a 30 años, el GBM alcanza. Para calcular el ES al 99% de un book de opciones vendidas, usar GBM es negligencia.</p>
 <hr>
 </section>
 <section id="errores-comunes" class="level2" data-number="14.5">
@@ -1247,28 +1239,9 @@ Figura&nbsp;14.6: Los modelos del capítulo como combinaciones de los tres ingre
 </div>
 <hr>
 </section>
-<section id="ejercicios-propuestos" class="level2" data-number="14.6">
-<h2 data-number="14.6" class="anchored" data-anchor-id="ejercicios-propuestos"><span class="header-section-number">14.6</span> Ejercicios Propuestos</h2>
-<div class="callout callout-style-simple callout-important callout-titled" title="Ejercicios">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Importante</span>Ejercicios
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<ol type="1">
-<li><strong>ES bajo saltos</strong>: calculá el Expected Shortfall al 99% a 1 año bajo GBM y bajo Merton (misma varianza total). ¿Qué error porcentual comete el GBM?</li>
-<li><strong>Sensibilidad a λ</strong>: barré <span class="math inline">\(\lambda \in \{1, 4, 12\}\)</span> (manteniendo la varianza total constante ajustando <span class="math inline">\(\sigma\)</span>) y graficá la curtosis de los retornos resultantes.</li>
-<li><strong>Detección de saltos</strong>: con los retornos diarios simulados de Merton, proponé una regla simple para detectar los días de salto (p.&nbsp;ej., <span class="math inline">\(|r| &gt; 4\sigma_{\text{difusión}}\)</span>) y medí su tasa de aciertos contra los saltos verdaderos.</li>
-<li><strong>Datos reales</strong>: bajá 10 años de retornos diarios de un índice, calculá asimetría, curtosis y el peor día, y compará contra lo que produce un GBM calibrado a su media y varianza. ¿Cuántos “días imposibles” (&gt;4σ) encontrás?</li>
-<li><strong>VG vs.&nbsp;Merton</strong>: superponé los histogramas (en escala log) de retornos a 1 año de VG y Merton calibrados a la misma varianza. ¿En qué se diferencian sus colas?</li>
-</ol>
-</div>
-</div>
-<p>Podés resolver estos ejercicios acá mismo: la celda ejecuta Python <strong>en tu navegador</strong>, sin instalar nada (la primera ejecución tarda unos segundos mientras carga el entorno; los paquetes que importes se instalan solos).</p>
+<section id="practicá-en-el-navegador" class="level2" data-number="14.6">
+<h2 data-number="14.6" class="anchored" data-anchor-id="practicá-en-el-navegador"><span class="header-section-number">14.6</span> Practicá en el navegador</h2>
+<p>Podés experimentar con el código del capítulo acá mismo: la celda ejecuta Python <strong>en tu navegador</strong>, sin instalar nada (la primera ejecución tarda unos segundos mientras carga el entorno; los paquetes que importes se instalan solos).</p>
 <div id="qpyodide-insertion-location-1"></div>
 <noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
 <hr>
@@ -1276,6 +1249,9 @@ Figura&nbsp;14.6: Los modelos del capítulo como combinaciones de los tres ingre
 <section id="referencias" class="level2" data-number="14.7">
 <h2 data-number="14.7" class="anchored" data-anchor-id="referencias"><span class="header-section-number">14.7</span> Referencias</h2>
 <div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list" style="display: none">
+<div id="ref-cont2001" class="csl-entry" role="listitem">
+Cont, Rama. 2001. <span>«Empirical Properties of Asset Returns: Stylized Facts and Statistical Issues»</span>. <em>Quantitative Finance</em> 1 (2): 223-36.
+</div>
 <div id="ref-cont2004" class="csl-entry" role="listitem">
 Cont, Rama, y Peter Tankov. 2004. <em>Financial Modelling with Jump Processes</em>. Chapman &amp; Hall/CRC.
 </div>
@@ -1781,15 +1757,15 @@ Merton, Robert C. 1976. <span>«Option Pricing when Underlying Stock Returns Are
 <span id="cb12-14"><a href="#cb12-14" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb12-15"><a href="#cb12-15" aria-hidden="true" tabindex="-1"></a><span class="fu"># Introducción {.unnumbered}</span></span>
 <span id="cb12-16"><a href="#cb12-16" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-17"><a href="#cb12-17" aria-hidden="true" tabindex="-1"></a>En el capítulo anterior simulamos precios con el Movimiento Browniano Geométrico y todo funcionó de maravilla. Ahora toca la pregunta incómoda: **¿el GBM describe bien los precios reales?**</span>
+<span id="cb12-17"><a href="#cb12-17" aria-hidden="true" tabindex="-1"></a>En el capítulo anterior simulamos precios con el Movimiento Browniano Geométrico y todo funcionó de maravilla. Ahora toca la pregunta incómoda: ¿el GBM describe bien los precios reales?</span>
 <span id="cb12-18"><a href="#cb12-18" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-19"><a href="#cb12-19" aria-hidden="true" tabindex="-1"></a>La respuesta corta es *no en las colas*. Los retornos reales exhiben tres características —los *hechos estilizados* que ya asomaron en el Capítulo 7— que el GBM no puede producir:</span>
+<span id="cb12-19"><a href="#cb12-19" aria-hidden="true" tabindex="-1"></a>La respuesta corta es *no en las colas*. Los retornos reales exhiben tres características —los *hechos estilizados* <span class="co">[</span><span class="ot">@cont2001</span><span class="co">]</span> que ya asomaron en el <span class="co">[</span><span class="ot">Capítulo 7</span><span class="co">](../unidad2/cap07_estadistica_optimizacion.qmd)</span>— que el GBM no puede producir:</span>
 <span id="cb12-20"><a href="#cb12-20" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb12-21"><a href="#cb12-21" aria-hidden="true" tabindex="-1"></a><span class="ss">1. </span>**Colas pesadas**: los movimientos extremos ocurren muchísimo más seguido de lo que predice la normal. El crash de 1987 (−20% en un día) tiene, bajo normalidad, una probabilidad tan pequeña que no debería haber ocurrido ni una vez en la edad del universo. Ocurrió un martes.</span>
-<span id="cb12-22"><a href="#cb12-22" aria-hidden="true" tabindex="-1"></a><span class="ss">2. </span>**Saltos**: los precios no se mueven solo en pasitos continuos; a veces **saltan** — un resultado electoral, un default, un anuncio de la Fed. El GBM, por construcción, tiene trayectorias continuas.</span>
+<span id="cb12-22"><a href="#cb12-22" aria-hidden="true" tabindex="-1"></a><span class="ss">2. </span>**Saltos**: los precios no se mueven solo en pasitos continuos; a veces **saltan**: un resultado electoral, un default, un anuncio de la Fed. El GBM, por construcción, tiene trayectorias continuas.</span>
 <span id="cb12-23"><a href="#cb12-23" aria-hidden="true" tabindex="-1"></a><span class="ss">3. </span>**Asimetría**: las caídas violentas son más frecuentes y más grandes que las subas violentas.</span>
 <span id="cb12-24"><a href="#cb12-24" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-25"><a href="#cb12-25" aria-hidden="true" tabindex="-1"></a>Este capítulo construye modelos que sí capturan esto, quedándonos en el terreno de **modelar el precio del activo** (la volatilidad estocástica, que ataca otro hecho estilizado, llega en el Capítulo 20 con Heston y SABR).</span>
+<span id="cb12-25"><a href="#cb12-25" aria-hidden="true" tabindex="-1"></a>Este capítulo construye modelos que sí capturan esto, quedándonos en el terreno de modelar el precio del activo (la volatilidad estocástica, que ataca otro hecho estilizado, llega en el <span class="co">[</span><span class="ot">Capítulo 20</span><span class="co">](../unidad4/cap20_volatilidad_estocastica.qmd)</span> con Heston y SABR).</span>
 <span id="cb12-26"><a href="#cb12-26" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb12-29"><a href="#cb12-29" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
 <span id="cb12-30"><a href="#cb12-30" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: setup</span></span>
@@ -1833,9 +1809,9 @@ Merton, Robert C. 1976. <span>«Option Pricing when Underlying Stock Returns Are
 <span id="cb12-72"><a href="#cb12-72" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span><span class="st">'Peor día'</span><span class="sc">:&lt;22}{</span>ret_gbm<span class="sc">.</span><span class="bu">min</span>()<span class="sc">:&gt;10.2%}{</span>ret_real<span class="sc">.</span><span class="bu">min</span>()<span class="sc">:&gt;14.2%}</span><span class="ss">"</span>)</span>
 <span id="cb12-73"><a href="#cb12-73" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb12-74"><a href="#cb12-74" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-75"><a href="#cb12-75" aria-hidden="true" tabindex="-1"></a>Misma volatilidad total, pero el "mercado real" tiene curtosis alta, asimetría negativa y días mucho peores. Un gestor de riesgo que use el GBM para estimar el VaR de esta serie va a **subestimar sistemáticamente las colas** — el pecado capital del Capítulo 11.</span>
+<span id="cb12-75"><a href="#cb12-75" aria-hidden="true" tabindex="-1"></a>Misma volatilidad total, pero el "mercado real" tiene curtosis alta, asimetría negativa y días mucho peores. Un gestor de riesgo que use el GBM para estimar el VaR de esta serie va a **subestimar sistemáticamente las colas**, el pecado capital del <span class="co">[</span><span class="ot">Capítulo 11</span><span class="co">](../unidad3/cap11_var_expected_shortfall.qmd)</span>.</span>
 <span id="cb12-76"><a href="#cb12-76" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-77"><a href="#cb12-77" aria-hidden="true" tabindex="-1"></a>Las tablas de momentos resumen, pero la herramienta visual clásica para diagnosticar colas es el **gráfico Q-Q** (el del ejercicio del Capítulo 7): enfrenta cada cuantil observado con el que tendría una normal. Si los datos son normales, los puntos caen sobre la recta; si tienen colas pesadas, los extremos se despegan. La @fig-qq-colas lo aplica a las dos series.</span>
+<span id="cb12-77"><a href="#cb12-77" aria-hidden="true" tabindex="-1"></a>Las tablas de momentos resumen, pero la herramienta visual clásica para diagnosticar colas es el **gráfico Q-Q**: enfrenta cada cuantil observado con el que tendría una normal. Si los datos son normales, los puntos caen sobre la recta; si tienen colas pesadas, los extremos se despegan. La @fig-qq-colas lo aplica a las dos series.</span>
 <span id="cb12-78"><a href="#cb12-78" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb12-81"><a href="#cb12-81" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
 <span id="cb12-82"><a href="#cb12-82" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: fig-qq-colas</span></span>
@@ -1871,18 +1847,18 @@ Merton, Robert C. 1976. <span>«Option Pricing when Underlying Stock Returns Are
 <span id="cb12-112"><a href="#cb12-112" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb12-113"><a href="#cb12-113" aria-hidden="true" tabindex="-1"></a><span class="fu">## Jump-diffusion de Merton: difusión + saltos de Poisson</span></span>
 <span id="cb12-114"><a href="#cb12-114" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-115"><a href="#cb12-115" aria-hidden="true" tabindex="-1"></a>En 1976, Robert Merton (sí, el mismo de Black-Scholes y de LTCM — la historia tiene ironías) propuso la extensión natural: superponer al Browniano un **proceso de saltos**. El precio evoluciona como un GBM *casi todo el tiempo*, pero en momentos aleatorios llega un shock discreto:</span>
+<span id="cb12-115"><a href="#cb12-115" aria-hidden="true" tabindex="-1"></a>En 1976, Robert Merton (sí, el mismo de Black-Scholes y de LTCM; la historia tiene ironías) <span class="co">[</span><span class="ot">@merton1976</span><span class="co">]</span> propuso la extensión natural: superponer al Browniano un **proceso de saltos**. El precio evoluciona como un GBM *casi todo el tiempo*, pero en momentos aleatorios llega un shock discreto:</span>
 <span id="cb12-116"><a href="#cb12-116" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb12-117"><a href="#cb12-117" aria-hidden="true" tabindex="-1"></a>$$\frac{dS}{S} = \mu\, dt + \sigma\, dW + (J - 1)\, dN$$</span>
 <span id="cb12-118"><a href="#cb12-118" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb12-119"><a href="#cb12-119" aria-hidden="true" tabindex="-1"></a>Los tres ingredientes:</span>
 <span id="cb12-120"><a href="#cb12-120" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb12-121"><a href="#cb12-121" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>$\mu\,dt + \sigma\,dW$: la difusión de siempre (tendencia + ruido fino).</span>
-<span id="cb12-122"><a href="#cb12-122" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>$dN$: un **proceso de Poisson** con intensidad $\lambda$ — el "timbre" que suena en promedio $\lambda$ veces por año, avisando que llegó un salto.</span>
+<span id="cb12-122"><a href="#cb12-122" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>$dN$: un **proceso de Poisson** con intensidad $\lambda$, el "timbre" que suena en promedio $\lambda$ veces por año, avisando que llegó un salto.</span>
 <span id="cb12-123"><a href="#cb12-123" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>$J$: el **tamaño del salto**, aleatorio; Merton lo modela lognormal: $\ln J \sim N(\mu_J, \sigma_J^2)$. Con $\mu_J &lt; 0$, los saltos son mayormente caídas.</span>
 <span id="cb12-124"><a href="#cb12-124" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb12-125"><a href="#cb12-125" aria-hidden="true" tabindex="-1"></a>::: {.callout-tip title="La intuición del Poisson"}</span>
-<span id="cb12-126"><a href="#cb12-126" aria-hidden="true" tabindex="-1"></a>El proceso de Poisson es el modelo matemático de "eventos raros que llegan de sorpresa": no sabés *cuándo* llega el próximo salto, pero sí *cada cuánto* llegan en promedio. Con $\lambda = 5$, esperás unos 5 saltos por año, quizás 2 este año y 8 el próximo. Es el mismo objeto que modela llegadas de clientes o fallas de máquinas — acá modela pánicos y sorpresas.</span>
+<span id="cb12-126"><a href="#cb12-126" aria-hidden="true" tabindex="-1"></a>El proceso de Poisson es el modelo matemático de "eventos raros que llegan de sorpresa": no sabés *cuándo* llega el próximo salto, pero sí *cada cuánto* llegan en promedio. Con $\lambda = 5$, esperás unos 5 saltos por año, quizás 2 este año y 8 el próximo. Es el mismo objeto que modela llegadas de clientes o fallas de máquinas; acá modela pánicos y sorpresas.</span>
 <span id="cb12-127"><a href="#cb12-127" aria-hidden="true" tabindex="-1"></a>:::</span>
 <span id="cb12-128"><a href="#cb12-128" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb12-129"><a href="#cb12-129" aria-hidden="true" tabindex="-1"></a>La @fig-anatomia-merton desarma una trayectoria en sus piezas: la difusión de siempre, el "timbre" de Poisson que cuenta los saltos, y la suma de ambas.</span>
@@ -1966,7 +1942,7 @@ Merton, Robert C. 1976. <span>«Option Pricing when Underlying Stock Returns Are
 <span id="cb12-211"><a href="#cb12-211" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb12-212"><a href="#cb12-212" aria-hidden="true" tabindex="-1"></a>S_merton <span class="op">=</span> simular_merton(S0, mu, sigma, lam, mu_J, sigma_J, T, n_pasos, n_sims, rng)</span>
 <span id="cb12-213"><a href="#cb12-213" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-214"><a href="#cb12-214" aria-hidden="true" tabindex="-1"></a><span class="co"># GBM de referencia con la MISMA volatilidad total, para comparar peras con peras</span></span>
+<span id="cb12-214"><a href="#cb12-214" aria-hidden="true" tabindex="-1"></a><span class="co"># GBM de referencia con la MISMA volatilidad total, para que la comparación sea justa</span></span>
 <span id="cb12-215"><a href="#cb12-215" aria-hidden="true" tabindex="-1"></a>var_saltos <span class="op">=</span> lam <span class="op">*</span> (mu_J<span class="op">**</span><span class="dv">2</span> <span class="op">+</span> sigma_J<span class="op">**</span><span class="dv">2</span>)</span>
 <span id="cb12-216"><a href="#cb12-216" aria-hidden="true" tabindex="-1"></a>sigma_total <span class="op">=</span> np.sqrt(sigma<span class="op">**</span><span class="dv">2</span> <span class="op">+</span> var_saltos)</span>
 <span id="cb12-217"><a href="#cb12-217" aria-hidden="true" tabindex="-1"></a></span>
@@ -2000,7 +1976,7 @@ Merton, Robert C. 1976. <span>«Option Pricing when Underlying Stock Returns Are
 <span id="cb12-247"><a href="#cb12-247" aria-hidden="true" tabindex="-1"></a>plt.show()</span>
 <span id="cb12-248"><a href="#cb12-248" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb12-249"><a href="#cb12-249" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-250"><a href="#cb12-250" aria-hidden="true" tabindex="-1"></a>Se ve a simple vista en la @fig-merton-trayectorias: las trayectorias del GBM son "peludas pero suaves"; las de Merton muestran **escalones** — el precio de pronto está en otro lado, sin pasar por el medio. Así se ve un evento de riesgo real.</span>
+<span id="cb12-250"><a href="#cb12-250" aria-hidden="true" tabindex="-1"></a>Se ve a simple vista en la @fig-merton-trayectorias: las trayectorias del GBM son "peludas pero suaves"; las de Merton muestran **escalones**: el precio de pronto está en otro lado, sin pasar por el medio. Así se ve un evento de riesgo real.</span>
 <span id="cb12-251"><a href="#cb12-251" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb12-252"><a href="#cb12-252" aria-hidden="true" tabindex="-1"></a><span class="fu">### La firma en las distribuciones</span></span>
 <span id="cb12-253"><a href="#cb12-253" aria-hidden="true" tabindex="-1"></a></span>
@@ -2019,192 +1995,182 @@ Merton, Robert C. 1976. <span>«Option Pricing when Underlying Stock Returns Are
 <span id="cb12-268"><a href="#cb12-268" aria-hidden="true" tabindex="-1"></a>ax.set_yscale(<span class="st">"log"</span>)   <span class="co"># escala log para VER las colas</span></span>
 <span id="cb12-269"><a href="#cb12-269" aria-hidden="true" tabindex="-1"></a>ax.set_xlabel(<span class="st">"Retorno logarítmico a 1 año"</span>)</span>
 <span id="cb12-270"><a href="#cb12-270" aria-hidden="true" tabindex="-1"></a>ax.set_ylabel(<span class="st">"Densidad (escala log)"</span>)</span>
-<span id="cb12-271"><a href="#cb12-271" aria-hidden="true" tabindex="-1"></a>ax.set_title(<span class="st">"Misma volatilidad total, colas muy distintas"</span>)</span>
-<span id="cb12-272"><a href="#cb12-272" aria-hidden="true" tabindex="-1"></a>ax.legend()</span>
-<span id="cb12-273"><a href="#cb12-273" aria-hidden="true" tabindex="-1"></a>ax.grid(<span class="va">True</span>, alpha<span class="op">=</span><span class="fl">0.3</span>)</span>
-<span id="cb12-274"><a href="#cb12-274" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
-<span id="cb12-275"><a href="#cb12-275" aria-hidden="true" tabindex="-1"></a>plt.show()</span>
-<span id="cb12-276"><a href="#cb12-276" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb12-277"><a href="#cb12-277" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-280"><a href="#cb12-280" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
-<span id="cb12-281"><a href="#cb12-281" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: merton-momentos</span></span>
-<span id="cb12-282"><a href="#cb12-282" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span><span class="st">''</span><span class="sc">:24}{</span><span class="st">'GBM'</span><span class="sc">:&gt;10}{</span><span class="st">'Merton'</span><span class="sc">:&gt;10}</span><span class="ss">"</span>)</span>
-<span id="cb12-283"><a href="#cb12-283" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span><span class="st">'Asimetría'</span><span class="sc">:&lt;24}{</span>stats<span class="sc">.</span>skew(ret_g)<span class="sc">:&gt;10.2f}{</span>stats<span class="sc">.</span>skew(ret_m)<span class="sc">:&gt;10.2f}</span><span class="ss">"</span>)</span>
-<span id="cb12-284"><a href="#cb12-284" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span><span class="st">'Curtosis (exceso)'</span><span class="sc">:&lt;24}{</span>stats<span class="sc">.</span>kurtosis(ret_g)<span class="sc">:&gt;10.2f}{</span>stats<span class="sc">.</span>kurtosis(ret_m)<span class="sc">:&gt;10.2f}</span><span class="ss">"</span>)</span>
-<span id="cb12-285"><a href="#cb12-285" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span><span class="st">'Percentil 1%'</span><span class="sc">:&lt;24}{</span>np<span class="sc">.</span>percentile(ret_g, <span class="dv">1</span>)<span class="sc">:&gt;10.2%}{</span>np<span class="sc">.</span>percentile(ret_m, <span class="dv">1</span>)<span class="sc">:&gt;10.2%}</span><span class="ss">"</span>)</span>
-<span id="cb12-286"><a href="#cb12-286" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb12-287"><a href="#cb12-287" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-288"><a href="#cb12-288" aria-hidden="true" tabindex="-1"></a>En la @fig-merton-colas, la escala logarítmica del eje y revela lo que el histograma común esconde: la **cola izquierda de Merton se extiende mucho más lejos** con probabilidad no despreciable. Ambos modelos tienen la misma varianza — un optimizador de Markowitz los vería idénticos — pero el VaR y el ES del 1% son muy distintos. Esta es la materialización de la lección de 2008 del capítulo anterior: **media y varianza no cuentan la historia de las colas**.</span>
-<span id="cb12-289"><a href="#cb12-289" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-290"><a href="#cb12-290" aria-hidden="true" tabindex="-1"></a>---</span>
-<span id="cb12-291"><a href="#cb12-291" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-292"><a href="#cb12-292" aria-hidden="true" tabindex="-1"></a><span class="fu">## Procesos de Lévy: la familia general</span></span>
-<span id="cb12-293"><a href="#cb12-293" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-294"><a href="#cb12-294" aria-hidden="true" tabindex="-1"></a>El Browniano y el Poisson comparten una propiedad estructural: **incrementos independientes y estacionarios** (lo que pasa hoy no depende de ayer, y las reglas del juego no cambian con el tiempo). La familia completa de procesos con esa propiedad son los **procesos de Lévy**, y hay un teorema hermoso (Lévy-Itô) que dice que *todo* proceso de Lévy se descompone en exactamente tres partes:</span>
-<span id="cb12-295"><a href="#cb12-295" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-296"><a href="#cb12-296" aria-hidden="true" tabindex="-1"></a>$$X_t = \underbrace{bt}_{\text{tendencia}} + \underbrace{\sigma W_t}_{\text{difusión}} + \underbrace{\text{saltos}}_{\text{grandes y pequeños}}$$</span>
-<span id="cb12-297"><a href="#cb12-297" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-298"><a href="#cb12-298" aria-hidden="true" tabindex="-1"></a>Es decir: **tendencia + Browniano + saltos es todo lo que puede haber** (bajo incrementos independientes). El GBM usa solo las dos primeras piezas; Merton agrega saltos "raros y grandes"; y otros miembros de la familia usados en la industria empujan la idea más lejos:</span>
-<span id="cb12-299"><a href="#cb12-299" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-300"><a href="#cb12-300" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Variance Gamma (VG)**: infinitos saltos pequeños y ninguna difusión — el precio se mueve *solo* por saltitos. Se construye elegantemente como un Browniano evaluado en un "reloj aleatorio" (subordinador Gamma): el tiempo del mercado corre más rápido en días agitados.</span>
-<span id="cb12-301"><a href="#cb12-301" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Normal Inverse Gaussian (NIG)**, **CGMY**: variantes con más control fino sobre el peso de cada cola.</span>
-<span id="cb12-302"><a href="#cb12-302" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-305"><a href="#cb12-305" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
-<span id="cb12-306"><a href="#cb12-306" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: variance-gamma</span></span>
-<span id="cb12-307"><a href="#cb12-307" aria-hidden="true" tabindex="-1"></a><span class="co"># Variance Gamma por subordinación: Browniano en "tiempo de mercado" aleatorio</span></span>
-<span id="cb12-308"><a href="#cb12-308" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> simular_vg(theta, sigma_vg, nu, T, n_pasos, n_sims, rng):</span>
-<span id="cb12-309"><a href="#cb12-309" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""Retornos log acumulados de un proceso Variance Gamma."""</span></span>
-<span id="cb12-310"><a href="#cb12-310" aria-hidden="true" tabindex="-1"></a>    dt <span class="op">=</span> T <span class="op">/</span> n_pasos</span>
-<span id="cb12-311"><a href="#cb12-311" aria-hidden="true" tabindex="-1"></a>    <span class="co"># El reloj aleatorio: incrementos Gamma con media dt y varianza nu*dt</span></span>
-<span id="cb12-312"><a href="#cb12-312" aria-hidden="true" tabindex="-1"></a>    dG <span class="op">=</span> rng.gamma(shape<span class="op">=</span>dt <span class="op">/</span> nu, scale<span class="op">=</span>nu, size<span class="op">=</span>(n_pasos, n_sims))</span>
-<span id="cb12-313"><a href="#cb12-313" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Browniano con drift evaluado en ese reloj</span></span>
-<span id="cb12-314"><a href="#cb12-314" aria-hidden="true" tabindex="-1"></a>    dX <span class="op">=</span> theta <span class="op">*</span> dG <span class="op">+</span> sigma_vg <span class="op">*</span> np.sqrt(dG) <span class="op">*</span> rng.standard_normal((n_pasos, n_sims))</span>
-<span id="cb12-315"><a href="#cb12-315" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> dX.<span class="bu">sum</span>(axis<span class="op">=</span><span class="dv">0</span>)</span>
-<span id="cb12-316"><a href="#cb12-316" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-317"><a href="#cb12-317" aria-hidden="true" tabindex="-1"></a>ret_vg <span class="op">=</span> simular_vg(theta<span class="op">=-</span><span class="fl">0.10</span>, sigma_vg<span class="op">=</span><span class="fl">0.18</span>, nu<span class="op">=</span><span class="fl">0.4</span>, T<span class="op">=</span><span class="fl">1.0</span>,</span>
-<span id="cb12-318"><a href="#cb12-318" aria-hidden="true" tabindex="-1"></a>                    n_pasos<span class="op">=</span><span class="dv">252</span>, n_sims<span class="op">=</span><span class="dv">5000</span>, rng<span class="op">=</span>rng)</span>
-<span id="cb12-319"><a href="#cb12-319" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-320"><a href="#cb12-320" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Retornos a 1 año — Variance Gamma vs. GBM:"</span>)</span>
-<span id="cb12-321"><a href="#cb12-321" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span><span class="st">''</span><span class="sc">:24}{</span><span class="st">'GBM'</span><span class="sc">:&gt;10}{</span><span class="st">'VG'</span><span class="sc">:&gt;10}</span><span class="ss">"</span>)</span>
-<span id="cb12-322"><a href="#cb12-322" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span><span class="st">'Asimetría'</span><span class="sc">:&lt;24}{</span>stats<span class="sc">.</span>skew(ret_g)<span class="sc">:&gt;10.2f}{</span>stats<span class="sc">.</span>skew(ret_vg)<span class="sc">:&gt;10.2f}</span><span class="ss">"</span>)</span>
-<span id="cb12-323"><a href="#cb12-323" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span><span class="st">'Curtosis (exceso)'</span><span class="sc">:&lt;24}{</span>stats<span class="sc">.</span>kurtosis(ret_g)<span class="sc">:&gt;10.2f}{</span>stats<span class="sc">.</span>kurtosis(ret_vg)<span class="sc">:&gt;10.2f}</span><span class="ss">"</span>)</span>
-<span id="cb12-324"><a href="#cb12-324" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb12-325"><a href="#cb12-325" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-326"><a href="#cb12-326" aria-hidden="true" tabindex="-1"></a>La idea del "reloj aleatorio" es más fácil de ver que de leer. En la @fig-reloj-vg, el reloj de mercado avanza en promedio igual que el calendario, pero a tirones: a veces casi se detiene y a veces corre. El precio solo se mueve cuando corre ese reloj.</span>
-<span id="cb12-327"><a href="#cb12-327" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-330"><a href="#cb12-330" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
-<span id="cb12-331"><a href="#cb12-331" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: fig-reloj-vg</span></span>
-<span id="cb12-332"><a href="#cb12-332" aria-hidden="true" tabindex="-1"></a><span class="co">#| echo: false</span></span>
-<span id="cb12-333"><a href="#cb12-333" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-cap: "Variance Gamma por subordinación. Izquierda: el «tiempo de mercado» G_t (incrementos Gamma) contra el tiempo calendario; en promedio coinciden, pero G_t avanza a saltos. Derecha: un Browniano evaluado en ese reloj. Los tramos donde el reloj corre son los días agitados; donde se frena, el precio casi no se mueve."</span></span>
-<span id="cb12-334"><a href="#cb12-334" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> sys<span class="op">;</span> sys.path.insert(<span class="dv">0</span>, <span class="st">".."</span>)</span>
-<span id="cb12-335"><a href="#cb12-335" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> _esquemas <span class="im">import</span> <span class="op">*</span></span>
-<span id="cb12-336"><a href="#cb12-336" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
-<span id="cb12-337"><a href="#cb12-337" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-338"><a href="#cb12-338" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> _esquema():</span>
-<span id="cb12-339"><a href="#cb12-339" aria-hidden="true" tabindex="-1"></a>    g <span class="op">=</span> np.random.default_rng(<span class="dv">5</span>)</span>
-<span id="cb12-340"><a href="#cb12-340" aria-hidden="true" tabindex="-1"></a>    n, nu <span class="op">=</span> <span class="dv">252</span>, <span class="fl">0.4</span></span>
-<span id="cb12-341"><a href="#cb12-341" aria-hidden="true" tabindex="-1"></a>    dt <span class="op">=</span> <span class="dv">1</span> <span class="op">/</span> n</span>
-<span id="cb12-342"><a href="#cb12-342" aria-hidden="true" tabindex="-1"></a>    t <span class="op">=</span> np.arange(n <span class="op">+</span> <span class="dv">1</span>) <span class="op">*</span> dt</span>
-<span id="cb12-343"><a href="#cb12-343" aria-hidden="true" tabindex="-1"></a>    dG <span class="op">=</span> g.gamma(shape<span class="op">=</span>dt <span class="op">/</span> nu, scale<span class="op">=</span>nu, size<span class="op">=</span>n)</span>
-<span id="cb12-344"><a href="#cb12-344" aria-hidden="true" tabindex="-1"></a>    G <span class="op">=</span> np.concatenate([[<span class="dv">0</span>], np.cumsum(dG)])</span>
-<span id="cb12-345"><a href="#cb12-345" aria-hidden="true" tabindex="-1"></a>    X <span class="op">=</span> np.concatenate([[<span class="dv">0</span>], np.cumsum(<span class="op">-</span><span class="fl">0.10</span> <span class="op">*</span> dG <span class="op">+</span> <span class="fl">0.18</span> <span class="op">*</span> np.sqrt(dG) <span class="op">*</span> g.standard_normal(n))])</span>
-<span id="cb12-346"><a href="#cb12-346" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-347"><a href="#cb12-347" aria-hidden="true" tabindex="-1"></a>    fig, (izq, der) <span class="op">=</span> plt.subplots(<span class="dv">1</span>, <span class="dv">2</span>, figsize<span class="op">=</span>(<span class="dv">11</span>, <span class="fl">4.2</span>))</span>
-<span id="cb12-348"><a href="#cb12-348" aria-hidden="true" tabindex="-1"></a>    izq.plot(t, t, color<span class="op">=</span>GRIS, ls<span class="op">=</span><span class="st">"--"</span>, lw<span class="op">=</span><span class="fl">1.2</span>, label<span class="op">=</span><span class="st">"calendario (t)"</span>)</span>
-<span id="cb12-349"><a href="#cb12-349" aria-hidden="true" tabindex="-1"></a>    izq.step(t, G, where<span class="op">=</span><span class="st">"post"</span>, color<span class="op">=</span>ACENTO, lw<span class="op">=</span><span class="fl">1.6</span>, label<span class="op">=</span><span class="st">"reloj de mercado G_t"</span>)</span>
-<span id="cb12-350"><a href="#cb12-350" aria-hidden="true" tabindex="-1"></a>    izq.set_xlabel(<span class="st">"Tiempo calendario (años)"</span>)</span>
-<span id="cb12-351"><a href="#cb12-351" aria-hidden="true" tabindex="-1"></a>    izq.set_ylabel(<span class="st">"Tiempo transcurrido (años)"</span>)</span>
-<span id="cb12-352"><a href="#cb12-352" aria-hidden="true" tabindex="-1"></a>    izq.legend(frameon<span class="op">=</span><span class="va">False</span>, fontsize<span class="op">=</span><span class="dv">9</span>)</span>
-<span id="cb12-353"><a href="#cb12-353" aria-hidden="true" tabindex="-1"></a>    izq.set_title(<span class="st">"El reloj aleatorio"</span>, fontsize<span class="op">=</span><span class="dv">11</span>, color<span class="op">=</span>PRIMARIO, fontweight<span class="op">=</span><span class="st">"bold"</span>)</span>
-<span id="cb12-354"><a href="#cb12-354" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-355"><a href="#cb12-355" aria-hidden="true" tabindex="-1"></a>    der.plot(t, X <span class="op">*</span> <span class="dv">100</span>, color<span class="op">=</span>PRIMARIO, lw<span class="op">=</span><span class="fl">1.3</span>)</span>
-<span id="cb12-356"><a href="#cb12-356" aria-hidden="true" tabindex="-1"></a>    rapidos <span class="op">=</span> np.argsort(dG)[<span class="op">-</span><span class="dv">4</span>:]</span>
-<span id="cb12-357"><a href="#cb12-357" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> i <span class="kw">in</span> rapidos:</span>
-<span id="cb12-358"><a href="#cb12-358" aria-hidden="true" tabindex="-1"></a>        der.axvspan(t[i], t[i <span class="op">+</span> <span class="dv">1</span>] <span class="op">+</span> <span class="fl">0.004</span>, color<span class="op">=</span>ACENTO, alpha<span class="op">=</span><span class="fl">0.25</span>, lw<span class="op">=</span><span class="dv">0</span>)</span>
-<span id="cb12-359"><a href="#cb12-359" aria-hidden="true" tabindex="-1"></a>        izq.axvspan(t[i], t[i <span class="op">+</span> <span class="dv">1</span>] <span class="op">+</span> <span class="fl">0.004</span>, color<span class="op">=</span>ACENTO, alpha<span class="op">=</span><span class="fl">0.25</span>, lw<span class="op">=</span><span class="dv">0</span>)</span>
-<span id="cb12-360"><a href="#cb12-360" aria-hidden="true" tabindex="-1"></a>    der.set_xlabel(<span class="st">"Tiempo calendario (años)"</span>)</span>
-<span id="cb12-361"><a href="#cb12-361" aria-hidden="true" tabindex="-1"></a>    der.set_ylabel(<span class="st">"Retorno log acumulado (%)"</span>)</span>
-<span id="cb12-362"><a href="#cb12-362" aria-hidden="true" tabindex="-1"></a>    der.set_title(<span class="st">"El precio, en ese reloj"</span>, fontsize<span class="op">=</span><span class="dv">11</span>, color<span class="op">=</span>PRIMARIO, fontweight<span class="op">=</span><span class="st">"bold"</span>)</span>
-<span id="cb12-363"><a href="#cb12-363" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> ax <span class="kw">in</span> (izq, der):</span>
-<span id="cb12-364"><a href="#cb12-364" aria-hidden="true" tabindex="-1"></a>        ax.grid(alpha<span class="op">=</span><span class="fl">0.3</span>)</span>
-<span id="cb12-365"><a href="#cb12-365" aria-hidden="true" tabindex="-1"></a>        ax.spines[[<span class="st">"top"</span>, <span class="st">"right"</span>]].set_visible(<span class="va">False</span>)</span>
-<span id="cb12-366"><a href="#cb12-366" aria-hidden="true" tabindex="-1"></a>    plt.tight_layout()</span>
-<span id="cb12-367"><a href="#cb12-367" aria-hidden="true" tabindex="-1"></a>    plt.show()</span>
-<span id="cb12-368"><a href="#cb12-368" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-369"><a href="#cb12-369" aria-hidden="true" tabindex="-1"></a>_esquema()</span>
-<span id="cb12-370"><a href="#cb12-370" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb12-371"><a href="#cb12-371" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-372"><a href="#cb12-372" aria-hidden="true" tabindex="-1"></a>::: {.callout-note title="¿Por qué molestarse con estos modelos?"}</span>
-<span id="cb12-373"><a href="#cb12-373" aria-hidden="true" tabindex="-1"></a>Porque el uso profesional los exige en dos frentes. **Riesgo**: un VaR/ES calculado con colas realistas (Capítulo 11 + este) es la diferencia entre estar preparado o no. **Derivados**: las opciones fuera del dinero cotizan "caras" respecto de Black-Scholes precisamente porque el mercado *sí* les pone precio a los saltos; los modelos de Lévy reproducen ese patrón (la *sonrisa* de volatilidad, que formalizamos en el Módulo 4).</span>
-<span id="cb12-374"><a href="#cb12-374" aria-hidden="true" tabindex="-1"></a>:::</span>
-<span id="cb12-375"><a href="#cb12-375" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-376"><a href="#cb12-376" aria-hidden="true" tabindex="-1"></a>---</span>
-<span id="cb12-377"><a href="#cb12-377" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-378"><a href="#cb12-378" aria-hidden="true" tabindex="-1"></a><span class="fu">## ¿Qué modelo usar? Un mapa</span></span>
-<span id="cb12-379"><a href="#cb12-379" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-380"><a href="#cb12-380" aria-hidden="true" tabindex="-1"></a>La descomposición de Lévy-Itô funciona como un menú: cada modelo es una elección de qué ingredientes poner en la olla. La @fig-levy-ingredientes muestra qué toma cada uno.</span>
-<span id="cb12-381"><a href="#cb12-381" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-384"><a href="#cb12-384" aria-hidden="true" tabindex="-1"></a><span class="in">```{mermaid}</span></span>
-<span id="cb12-385"><a href="#cb12-385" aria-hidden="true" tabindex="-1"></a>%%| label: fig-levy-ingredientes</span>
-<span id="cb12-386"><a href="#cb12-386" aria-hidden="true" tabindex="-1"></a>%%| fig-cap: <span class="ot">"</span><span class="st">Los modelos del capítulo como combinaciones de los tres ingredientes de Lévy-Itô. El GBM usa solo tendencia y difusión; Merton agrega saltos raros y grandes; Variance Gamma reemplaza la difusión por infinitos saltos chicos.</span><span class="ot">"</span></span>
-<span id="cb12-387"><a href="#cb12-387" aria-hidden="true" tabindex="-1"></a>flowchart LR</span>
-<span id="cb12-388"><a href="#cb12-388" aria-hidden="true" tabindex="-1"></a>    T[<span class="ot">"</span><span class="st">Tendencia&lt;br/&gt;&lt;i&gt;bt&lt;/i&gt;</span><span class="ot">"</span>]</span>
-<span id="cb12-389"><a href="#cb12-389" aria-hidden="true" tabindex="-1"></a>    D[<span class="ot">"</span><span class="st">Difusión&lt;br/&gt;&lt;i&gt;σW_t&lt;/i&gt;</span><span class="ot">"</span>]</span>
-<span id="cb12-390"><a href="#cb12-390" aria-hidden="true" tabindex="-1"></a>    SG[<span class="ot">"</span><span class="st">Saltos raros&lt;br/&gt;y grandes&lt;br/&gt;&lt;i&gt;Poisson&lt;/i&gt;</span><span class="ot">"</span>]</span>
-<span id="cb12-391"><a href="#cb12-391" aria-hidden="true" tabindex="-1"></a>    SC[<span class="ot">"</span><span class="st">Infinitos saltos&lt;br/&gt;chicos&lt;br/&gt;&lt;i&gt;reloj Gamma&lt;/i&gt;</span><span class="ot">"</span>]</span>
-<span id="cb12-392"><a href="#cb12-392" aria-hidden="true" tabindex="-1"></a>    T --&gt; GBM([<span class="ot">"</span><span class="st">&lt;b&gt;GBM&lt;/b&gt;&lt;br/&gt;colas finas</span><span class="ot">"</span>])</span>
-<span id="cb12-393"><a href="#cb12-393" aria-hidden="true" tabindex="-1"></a>    D --&gt; GBM</span>
-<span id="cb12-394"><a href="#cb12-394" aria-hidden="true" tabindex="-1"></a>    T --&gt; M([<span class="ot">"</span><span class="st">&lt;b&gt;Merton&lt;/b&gt;&lt;br/&gt;colas pesadas,&lt;br/&gt;eventos discretos</span><span class="ot">"</span>])</span>
-<span id="cb12-395"><a href="#cb12-395" aria-hidden="true" tabindex="-1"></a>    D --&gt; M</span>
-<span id="cb12-396"><a href="#cb12-396" aria-hidden="true" tabindex="-1"></a>    SG --&gt; M</span>
-<span id="cb12-397"><a href="#cb12-397" aria-hidden="true" tabindex="-1"></a>    T --&gt; VG([<span class="ot">"</span><span class="st">&lt;b&gt;Variance Gamma&lt;/b&gt;&lt;br/&gt;colas pesadas,&lt;br/&gt;sin difusión</span><span class="ot">"</span>])</span>
-<span id="cb12-398"><a href="#cb12-398" aria-hidden="true" tabindex="-1"></a>    SC --&gt; VG</span>
-<span id="cb12-399"><a href="#cb12-399" aria-hidden="true" tabindex="-1"></a>    classDef ing fill:<span class="co">#e0e9f4,stroke:#1e3a5f,color:#1f2937</span></span>
-<span id="cb12-400"><a href="#cb12-400" aria-hidden="true" tabindex="-1"></a>    classDef salto fill:<span class="co">#fde8dc,stroke:#c2410c,color:#1f2937</span></span>
-<span id="cb12-401"><a href="#cb12-401" aria-hidden="true" tabindex="-1"></a>    classDef mod fill:<span class="co">#eef2e3,stroke:#637238,color:#1f2937</span></span>
-<span id="cb12-402"><a href="#cb12-402" aria-hidden="true" tabindex="-1"></a>    class T,D ing</span>
-<span id="cb12-403"><a href="#cb12-403" aria-hidden="true" tabindex="-1"></a>    class SG,SC salto</span>
-<span id="cb12-404"><a href="#cb12-404" aria-hidden="true" tabindex="-1"></a>    class GBM,M,VG mod</span>
-<span id="cb12-405"><a href="#cb12-405" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb12-406"><a href="#cb12-406" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-407"><a href="#cb12-407" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Modelo <span class="pp">|</span> Colas <span class="pp">|</span> Saltos <span class="pp">|</span> Costo <span class="pp">|</span> Cuándo usarlo <span class="pp">|</span></span>
-<span id="cb12-408"><a href="#cb12-408" aria-hidden="true" tabindex="-1"></a><span class="pp">|---|---|---|---|---|</span></span>
-<span id="cb12-409"><a href="#cb12-409" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> **GBM** <span class="pp">|</span> Finas (normal) <span class="pp">|</span> No <span class="pp">|</span> Trivial <span class="pp">|</span> Primer boceto; horizontes largos donde el promedio manda <span class="pp">|</span></span>
-<span id="cb12-410"><a href="#cb12-410" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> **Merton** <span class="pp">|</span> Pesadas <span class="pp">|</span> Sí, raros y grandes <span class="pp">|</span> Bajo <span class="pp">|</span> Riesgo de eventos; activos expuestos a anuncios/default <span class="pp">|</span></span>
-<span id="cb12-411"><a href="#cb12-411" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> **Variance Gamma / NIG** <span class="pp">|</span> Pesadas, control fino <span class="pp">|</span> Infinitos, pequeños <span class="pp">|</span> Medio <span class="pp">|</span> Calibración fina a opciones; alta frecuencia <span class="pp">|</span></span>
-<span id="cb12-412"><a href="#cb12-412" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> **Heston / SABR** (Cap. 20) <span class="pp">|</span> Pesadas vía vol estocástica <span class="pp">|</span> Opcional <span class="pp">|</span> Medio-alto <span class="pp">|</span> Superficies de volatilidad; pricing de exóticos <span class="pp">|</span></span>
-<span id="cb12-413"><a href="#cb12-413" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-414"><a href="#cb12-414" aria-hidden="true" tabindex="-1"></a>La regla general del oficio: **el modelo correcto depende de la pregunta**. Para proyectar la jubilación a 30 años, el GBM alcanza. Para calcular el ES al 99% de un book de opciones vendidas, usar GBM es negligencia.</span>
-<span id="cb12-415"><a href="#cb12-415" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-416"><a href="#cb12-416" aria-hidden="true" tabindex="-1"></a>---</span>
-<span id="cb12-417"><a href="#cb12-417" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-418"><a href="#cb12-418" aria-hidden="true" tabindex="-1"></a><span class="fu">## Errores comunes</span></span>
-<span id="cb12-419"><a href="#cb12-419" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-420"><a href="#cb12-420" aria-hidden="true" tabindex="-1"></a>::: {.callout-warning title="Trampas frecuentes"}</span>
-<span id="cb12-421"><a href="#cb12-421" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Olvidar el compensador** ($-\lambda k\, dt$) en Merton: sin él, los saltos negativos sesgan el drift y la media simulada no coincide con la teórica.</span>
-<span id="cb12-422"><a href="#cb12-422" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Calibrar los saltos con datos tranquilos**: si la muestra histórica no contiene crisis, el estimador de $\lambda$ será ~0 y el modelo degenera en GBM. Los parámetros de salto suelen calibrarse con opciones (forward-looking), no solo con historia.</span>
-<span id="cb12-423"><a href="#cb12-423" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Comparar modelos con distinta varianza total**: para aislar el efecto de *forma* (colas, asimetría), igualá la varianza como hicimos acá; si no, confundís "más riesgo" con "riesgo distinto".</span>
-<span id="cb12-424"><a href="#cb12-424" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Confundir curtosis muestral con poblacional**: la curtosis estimada con pocas observaciones de un proceso con saltos es tremendamente ruidosa (¡depende de cuántos saltos cayeron en tu muestra!).</span>
-<span id="cb12-425"><a href="#cb12-425" aria-hidden="true" tabindex="-1"></a>:::</span>
-<span id="cb12-426"><a href="#cb12-426" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-427"><a href="#cb12-427" aria-hidden="true" tabindex="-1"></a>---</span>
-<span id="cb12-428"><a href="#cb12-428" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-429"><a href="#cb12-429" aria-hidden="true" tabindex="-1"></a><span class="fu">## Ejercicios Propuestos</span></span>
-<span id="cb12-430"><a href="#cb12-430" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-431"><a href="#cb12-431" aria-hidden="true" tabindex="-1"></a>::: {.callout-important title="Ejercicios"}</span>
-<span id="cb12-432"><a href="#cb12-432" aria-hidden="true" tabindex="-1"></a><span class="ss">1. </span>**ES bajo saltos**: calculá el Expected Shortfall al 99% a 1 año bajo GBM y bajo Merton (misma varianza total). ¿Qué error porcentual comete el GBM?</span>
-<span id="cb12-433"><a href="#cb12-433" aria-hidden="true" tabindex="-1"></a><span class="ss">2. </span>**Sensibilidad a λ**: barré $\lambda \in <span class="sc">\{</span>1, 4, 12<span class="sc">\}</span>$ (manteniendo la varianza total constante ajustando $\sigma$) y graficá la curtosis de los retornos resultantes.</span>
-<span id="cb12-434"><a href="#cb12-434" aria-hidden="true" tabindex="-1"></a><span class="ss">3. </span>**Detección de saltos**: con los retornos diarios simulados de Merton, proponé una regla simple para detectar los días de salto (p. ej., $|r| &gt; 4\sigma_{\text{difusión}}$) y medí su tasa de aciertos contra los saltos verdaderos.</span>
-<span id="cb12-435"><a href="#cb12-435" aria-hidden="true" tabindex="-1"></a><span class="ss">4. </span>**Datos reales**: bajá 10 años de retornos diarios de un índice, calculá asimetría, curtosis y el peor día, y compará contra lo que produce un GBM calibrado a su media y varianza. ¿Cuántos "días imposibles" (&gt;4σ) encontrás?</span>
-<span id="cb12-436"><a href="#cb12-436" aria-hidden="true" tabindex="-1"></a><span class="ss">5. </span>**VG vs. Merton**: superponé los histogramas (en escala log) de retornos a 1 año de VG y Merton calibrados a la misma varianza. ¿En qué se diferencian sus colas?</span>
-<span id="cb12-437"><a href="#cb12-437" aria-hidden="true" tabindex="-1"></a>:::</span>
-<span id="cb12-438"><a href="#cb12-438" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-439"><a href="#cb12-439" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-440"><a href="#cb12-440" aria-hidden="true" tabindex="-1"></a>Podés resolver estos ejercicios acá mismo: la celda ejecuta Python **en tu navegador**, sin instalar nada (la primera ejecución tarda unos segundos mientras carga el entorno; los paquetes que importes se instalan solos).</span>
-<span id="cb12-441"><a href="#cb12-441" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-442"><a href="#cb12-442" aria-hidden="true" tabindex="-1"></a><span class="in">```{pyodide-python}</span></span>
-<span id="cb12-443"><a href="#cb12-443" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: practica-navegador</span></span>
-<span id="cb12-444"><a href="#cb12-444" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb12-271"><a href="#cb12-271" aria-hidden="true" tabindex="-1"></a>ax.legend()</span>
+<span id="cb12-272"><a href="#cb12-272" aria-hidden="true" tabindex="-1"></a>ax.grid(<span class="va">True</span>, alpha<span class="op">=</span><span class="fl">0.3</span>)</span>
+<span id="cb12-273"><a href="#cb12-273" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
+<span id="cb12-274"><a href="#cb12-274" aria-hidden="true" tabindex="-1"></a>plt.show()</span>
+<span id="cb12-275"><a href="#cb12-275" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb12-276"><a href="#cb12-276" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-279"><a href="#cb12-279" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb12-280"><a href="#cb12-280" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: merton-momentos</span></span>
+<span id="cb12-281"><a href="#cb12-281" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span><span class="st">''</span><span class="sc">:24}{</span><span class="st">'GBM'</span><span class="sc">:&gt;10}{</span><span class="st">'Merton'</span><span class="sc">:&gt;10}</span><span class="ss">"</span>)</span>
+<span id="cb12-282"><a href="#cb12-282" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span><span class="st">'Asimetría'</span><span class="sc">:&lt;24}{</span>stats<span class="sc">.</span>skew(ret_g)<span class="sc">:&gt;10.2f}{</span>stats<span class="sc">.</span>skew(ret_m)<span class="sc">:&gt;10.2f}</span><span class="ss">"</span>)</span>
+<span id="cb12-283"><a href="#cb12-283" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span><span class="st">'Curtosis (exceso)'</span><span class="sc">:&lt;24}{</span>stats<span class="sc">.</span>kurtosis(ret_g)<span class="sc">:&gt;10.2f}{</span>stats<span class="sc">.</span>kurtosis(ret_m)<span class="sc">:&gt;10.2f}</span><span class="ss">"</span>)</span>
+<span id="cb12-284"><a href="#cb12-284" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span><span class="st">'Percentil 1%'</span><span class="sc">:&lt;24}{</span>np<span class="sc">.</span>percentile(ret_g, <span class="dv">1</span>)<span class="sc">:&gt;10.2%}{</span>np<span class="sc">.</span>percentile(ret_m, <span class="dv">1</span>)<span class="sc">:&gt;10.2%}</span><span class="ss">"</span>)</span>
+<span id="cb12-285"><a href="#cb12-285" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb12-286"><a href="#cb12-286" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-287"><a href="#cb12-287" aria-hidden="true" tabindex="-1"></a>En la @fig-merton-colas, la escala logarítmica del eje y revela lo que el histograma común esconde: la cola izquierda de Merton se extiende mucho más lejos con probabilidad no despreciable. Ambos modelos tienen la misma varianza: un optimizador de Markowitz los vería idénticos, pero el VaR y el ES del 1% son muy distintos. Esta es la materialización de la lección de 2008 del capítulo anterior: media y varianza no cuentan la historia de las colas.</span>
+<span id="cb12-288"><a href="#cb12-288" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-289"><a href="#cb12-289" aria-hidden="true" tabindex="-1"></a>---</span>
+<span id="cb12-290"><a href="#cb12-290" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-291"><a href="#cb12-291" aria-hidden="true" tabindex="-1"></a><span class="fu">## Procesos de Lévy: la familia general</span></span>
+<span id="cb12-292"><a href="#cb12-292" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-293"><a href="#cb12-293" aria-hidden="true" tabindex="-1"></a>El Browniano y el Poisson comparten una propiedad estructural: **incrementos independientes y estacionarios** (lo que pasa hoy no depende de ayer, y las reglas del juego no cambian con el tiempo). La familia completa de procesos con esa propiedad son los **procesos de Lévy**, y hay un teorema hermoso (Lévy-Itô) que dice que *todo* proceso de Lévy se descompone en exactamente tres partes:</span>
+<span id="cb12-294"><a href="#cb12-294" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-295"><a href="#cb12-295" aria-hidden="true" tabindex="-1"></a>$$X_t = \underbrace{bt}_{\text{tendencia}} + \underbrace{\sigma W_t}_{\text{difusión}} + \underbrace{\text{saltos}}_{\text{grandes y pequeños}}$$</span>
+<span id="cb12-296"><a href="#cb12-296" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-297"><a href="#cb12-297" aria-hidden="true" tabindex="-1"></a>Es decir: tendencia + Browniano + saltos es todo lo que puede haber (bajo incrementos independientes). El GBM usa solo las dos primeras piezas; Merton agrega saltos "raros y grandes"; y otros miembros de la familia usados en la industria empujan la idea más lejos:</span>
+<span id="cb12-298"><a href="#cb12-298" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-299"><a href="#cb12-299" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Variance Gamma (VG)** <span class="co">[</span><span class="ot">@madan1998</span><span class="co">]</span>: infinitos saltos pequeños y ninguna difusión; el precio se mueve *solo* por saltitos. Se construye elegantemente como un Browniano evaluado en un "reloj aleatorio" (subordinador Gamma): el tiempo del mercado corre más rápido en días agitados.</span>
+<span id="cb12-300"><a href="#cb12-300" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Normal Inverse Gaussian (NIG)**, **CGMY**: variantes con más control fino sobre el peso de cada cola.</span>
+<span id="cb12-301"><a href="#cb12-301" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-304"><a href="#cb12-304" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb12-305"><a href="#cb12-305" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: variance-gamma</span></span>
+<span id="cb12-306"><a href="#cb12-306" aria-hidden="true" tabindex="-1"></a><span class="co"># Variance Gamma por subordinación: Browniano en "tiempo de mercado" aleatorio</span></span>
+<span id="cb12-307"><a href="#cb12-307" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> simular_vg(theta, sigma_vg, nu, T, n_pasos, n_sims, rng):</span>
+<span id="cb12-308"><a href="#cb12-308" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""Retornos log acumulados de un proceso Variance Gamma."""</span></span>
+<span id="cb12-309"><a href="#cb12-309" aria-hidden="true" tabindex="-1"></a>    dt <span class="op">=</span> T <span class="op">/</span> n_pasos</span>
+<span id="cb12-310"><a href="#cb12-310" aria-hidden="true" tabindex="-1"></a>    <span class="co"># El reloj aleatorio: incrementos Gamma con media dt y varianza nu*dt</span></span>
+<span id="cb12-311"><a href="#cb12-311" aria-hidden="true" tabindex="-1"></a>    dG <span class="op">=</span> rng.gamma(shape<span class="op">=</span>dt <span class="op">/</span> nu, scale<span class="op">=</span>nu, size<span class="op">=</span>(n_pasos, n_sims))</span>
+<span id="cb12-312"><a href="#cb12-312" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Browniano con drift evaluado en ese reloj</span></span>
+<span id="cb12-313"><a href="#cb12-313" aria-hidden="true" tabindex="-1"></a>    dX <span class="op">=</span> theta <span class="op">*</span> dG <span class="op">+</span> sigma_vg <span class="op">*</span> np.sqrt(dG) <span class="op">*</span> rng.standard_normal((n_pasos, n_sims))</span>
+<span id="cb12-314"><a href="#cb12-314" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> dX.<span class="bu">sum</span>(axis<span class="op">=</span><span class="dv">0</span>)</span>
+<span id="cb12-315"><a href="#cb12-315" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-316"><a href="#cb12-316" aria-hidden="true" tabindex="-1"></a>ret_vg <span class="op">=</span> simular_vg(theta<span class="op">=-</span><span class="fl">0.10</span>, sigma_vg<span class="op">=</span><span class="fl">0.18</span>, nu<span class="op">=</span><span class="fl">0.4</span>, T<span class="op">=</span><span class="fl">1.0</span>,</span>
+<span id="cb12-317"><a href="#cb12-317" aria-hidden="true" tabindex="-1"></a>                    n_pasos<span class="op">=</span><span class="dv">252</span>, n_sims<span class="op">=</span><span class="dv">5000</span>, rng<span class="op">=</span>rng)</span>
+<span id="cb12-318"><a href="#cb12-318" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-319"><a href="#cb12-319" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Retornos a 1 año, Variance Gamma vs. GBM:"</span>)</span>
+<span id="cb12-320"><a href="#cb12-320" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span><span class="st">''</span><span class="sc">:24}{</span><span class="st">'GBM'</span><span class="sc">:&gt;10}{</span><span class="st">'VG'</span><span class="sc">:&gt;10}</span><span class="ss">"</span>)</span>
+<span id="cb12-321"><a href="#cb12-321" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span><span class="st">'Asimetría'</span><span class="sc">:&lt;24}{</span>stats<span class="sc">.</span>skew(ret_g)<span class="sc">:&gt;10.2f}{</span>stats<span class="sc">.</span>skew(ret_vg)<span class="sc">:&gt;10.2f}</span><span class="ss">"</span>)</span>
+<span id="cb12-322"><a href="#cb12-322" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span><span class="st">'Curtosis (exceso)'</span><span class="sc">:&lt;24}{</span>stats<span class="sc">.</span>kurtosis(ret_g)<span class="sc">:&gt;10.2f}{</span>stats<span class="sc">.</span>kurtosis(ret_vg)<span class="sc">:&gt;10.2f}</span><span class="ss">"</span>)</span>
+<span id="cb12-323"><a href="#cb12-323" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb12-324"><a href="#cb12-324" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-325"><a href="#cb12-325" aria-hidden="true" tabindex="-1"></a>La idea del "reloj aleatorio" es más fácil de ver que de leer. En la @fig-reloj-vg, el reloj de mercado avanza en promedio igual que el calendario, pero a tirones: a veces casi se detiene y a veces corre. El precio solo se mueve cuando corre ese reloj.</span>
+<span id="cb12-326"><a href="#cb12-326" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-329"><a href="#cb12-329" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb12-330"><a href="#cb12-330" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: fig-reloj-vg</span></span>
+<span id="cb12-331"><a href="#cb12-331" aria-hidden="true" tabindex="-1"></a><span class="co">#| echo: false</span></span>
+<span id="cb12-332"><a href="#cb12-332" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-cap: "Variance Gamma por subordinación. Izquierda: el «tiempo de mercado» G_t (incrementos Gamma) contra el tiempo calendario; en promedio coinciden, pero G_t avanza a saltos. Derecha: un Browniano evaluado en ese reloj. Los tramos donde el reloj corre son los días agitados; donde se frena, el precio casi no se mueve."</span></span>
+<span id="cb12-333"><a href="#cb12-333" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> sys<span class="op">;</span> sys.path.insert(<span class="dv">0</span>, <span class="st">".."</span>)</span>
+<span id="cb12-334"><a href="#cb12-334" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> _esquemas <span class="im">import</span> <span class="op">*</span></span>
+<span id="cb12-335"><a href="#cb12-335" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb12-336"><a href="#cb12-336" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-337"><a href="#cb12-337" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> _esquema():</span>
+<span id="cb12-338"><a href="#cb12-338" aria-hidden="true" tabindex="-1"></a>    g <span class="op">=</span> np.random.default_rng(<span class="dv">5</span>)</span>
+<span id="cb12-339"><a href="#cb12-339" aria-hidden="true" tabindex="-1"></a>    n, nu <span class="op">=</span> <span class="dv">252</span>, <span class="fl">0.4</span></span>
+<span id="cb12-340"><a href="#cb12-340" aria-hidden="true" tabindex="-1"></a>    dt <span class="op">=</span> <span class="dv">1</span> <span class="op">/</span> n</span>
+<span id="cb12-341"><a href="#cb12-341" aria-hidden="true" tabindex="-1"></a>    t <span class="op">=</span> np.arange(n <span class="op">+</span> <span class="dv">1</span>) <span class="op">*</span> dt</span>
+<span id="cb12-342"><a href="#cb12-342" aria-hidden="true" tabindex="-1"></a>    dG <span class="op">=</span> g.gamma(shape<span class="op">=</span>dt <span class="op">/</span> nu, scale<span class="op">=</span>nu, size<span class="op">=</span>n)</span>
+<span id="cb12-343"><a href="#cb12-343" aria-hidden="true" tabindex="-1"></a>    G <span class="op">=</span> np.concatenate([[<span class="dv">0</span>], np.cumsum(dG)])</span>
+<span id="cb12-344"><a href="#cb12-344" aria-hidden="true" tabindex="-1"></a>    X <span class="op">=</span> np.concatenate([[<span class="dv">0</span>], np.cumsum(<span class="op">-</span><span class="fl">0.10</span> <span class="op">*</span> dG <span class="op">+</span> <span class="fl">0.18</span> <span class="op">*</span> np.sqrt(dG) <span class="op">*</span> g.standard_normal(n))])</span>
+<span id="cb12-345"><a href="#cb12-345" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-346"><a href="#cb12-346" aria-hidden="true" tabindex="-1"></a>    fig, (izq, der) <span class="op">=</span> plt.subplots(<span class="dv">1</span>, <span class="dv">2</span>, figsize<span class="op">=</span>(<span class="dv">11</span>, <span class="fl">4.2</span>))</span>
+<span id="cb12-347"><a href="#cb12-347" aria-hidden="true" tabindex="-1"></a>    izq.plot(t, t, color<span class="op">=</span>GRIS, ls<span class="op">=</span><span class="st">"--"</span>, lw<span class="op">=</span><span class="fl">1.2</span>, label<span class="op">=</span><span class="st">"calendario (t)"</span>)</span>
+<span id="cb12-348"><a href="#cb12-348" aria-hidden="true" tabindex="-1"></a>    izq.step(t, G, where<span class="op">=</span><span class="st">"post"</span>, color<span class="op">=</span>ACENTO, lw<span class="op">=</span><span class="fl">1.6</span>, label<span class="op">=</span><span class="st">"reloj de mercado G_t"</span>)</span>
+<span id="cb12-349"><a href="#cb12-349" aria-hidden="true" tabindex="-1"></a>    izq.set_xlabel(<span class="st">"Tiempo calendario (años)"</span>)</span>
+<span id="cb12-350"><a href="#cb12-350" aria-hidden="true" tabindex="-1"></a>    izq.set_ylabel(<span class="st">"Tiempo transcurrido (años)"</span>)</span>
+<span id="cb12-351"><a href="#cb12-351" aria-hidden="true" tabindex="-1"></a>    izq.legend(frameon<span class="op">=</span><span class="va">False</span>, fontsize<span class="op">=</span><span class="dv">9</span>)</span>
+<span id="cb12-352"><a href="#cb12-352" aria-hidden="true" tabindex="-1"></a>    izq.set_title(<span class="st">"El reloj aleatorio"</span>, fontsize<span class="op">=</span><span class="dv">11</span>, color<span class="op">=</span>PRIMARIO, fontweight<span class="op">=</span><span class="st">"bold"</span>)</span>
+<span id="cb12-353"><a href="#cb12-353" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-354"><a href="#cb12-354" aria-hidden="true" tabindex="-1"></a>    der.plot(t, X <span class="op">*</span> <span class="dv">100</span>, color<span class="op">=</span>PRIMARIO, lw<span class="op">=</span><span class="fl">1.3</span>)</span>
+<span id="cb12-355"><a href="#cb12-355" aria-hidden="true" tabindex="-1"></a>    rapidos <span class="op">=</span> np.argsort(dG)[<span class="op">-</span><span class="dv">4</span>:]</span>
+<span id="cb12-356"><a href="#cb12-356" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> i <span class="kw">in</span> rapidos:</span>
+<span id="cb12-357"><a href="#cb12-357" aria-hidden="true" tabindex="-1"></a>        der.axvspan(t[i], t[i <span class="op">+</span> <span class="dv">1</span>] <span class="op">+</span> <span class="fl">0.004</span>, color<span class="op">=</span>ACENTO, alpha<span class="op">=</span><span class="fl">0.25</span>, lw<span class="op">=</span><span class="dv">0</span>)</span>
+<span id="cb12-358"><a href="#cb12-358" aria-hidden="true" tabindex="-1"></a>        izq.axvspan(t[i], t[i <span class="op">+</span> <span class="dv">1</span>] <span class="op">+</span> <span class="fl">0.004</span>, color<span class="op">=</span>ACENTO, alpha<span class="op">=</span><span class="fl">0.25</span>, lw<span class="op">=</span><span class="dv">0</span>)</span>
+<span id="cb12-359"><a href="#cb12-359" aria-hidden="true" tabindex="-1"></a>    der.set_xlabel(<span class="st">"Tiempo calendario (años)"</span>)</span>
+<span id="cb12-360"><a href="#cb12-360" aria-hidden="true" tabindex="-1"></a>    der.set_ylabel(<span class="st">"Retorno log acumulado (%)"</span>)</span>
+<span id="cb12-361"><a href="#cb12-361" aria-hidden="true" tabindex="-1"></a>    der.set_title(<span class="st">"El precio, en ese reloj"</span>, fontsize<span class="op">=</span><span class="dv">11</span>, color<span class="op">=</span>PRIMARIO, fontweight<span class="op">=</span><span class="st">"bold"</span>)</span>
+<span id="cb12-362"><a href="#cb12-362" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> ax <span class="kw">in</span> (izq, der):</span>
+<span id="cb12-363"><a href="#cb12-363" aria-hidden="true" tabindex="-1"></a>        ax.grid(alpha<span class="op">=</span><span class="fl">0.3</span>)</span>
+<span id="cb12-364"><a href="#cb12-364" aria-hidden="true" tabindex="-1"></a>        ax.spines[[<span class="st">"top"</span>, <span class="st">"right"</span>]].set_visible(<span class="va">False</span>)</span>
+<span id="cb12-365"><a href="#cb12-365" aria-hidden="true" tabindex="-1"></a>    plt.tight_layout()</span>
+<span id="cb12-366"><a href="#cb12-366" aria-hidden="true" tabindex="-1"></a>    plt.show()</span>
+<span id="cb12-367"><a href="#cb12-367" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-368"><a href="#cb12-368" aria-hidden="true" tabindex="-1"></a>_esquema()</span>
+<span id="cb12-369"><a href="#cb12-369" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb12-370"><a href="#cb12-370" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-371"><a href="#cb12-371" aria-hidden="true" tabindex="-1"></a>::: {.callout-note title="¿Por qué molestarse con estos modelos?"}</span>
+<span id="cb12-372"><a href="#cb12-372" aria-hidden="true" tabindex="-1"></a>Porque el uso profesional los exige en dos frentes. **Riesgo**: un VaR/ES calculado con colas realistas ([Capítulo 11](../unidad3/cap11_var_expected_shortfall.qmd) + este) es la diferencia entre estar preparado o no. **Derivados**: las opciones fuera del dinero cotizan "caras" respecto de Black-Scholes precisamente porque el mercado *sí* les pone precio a los saltos; los modelos de Lévy reproducen ese patrón (la *sonrisa* de volatilidad, que formalizamos en el Módulo 4).</span>
+<span id="cb12-373"><a href="#cb12-373" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb12-374"><a href="#cb12-374" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-375"><a href="#cb12-375" aria-hidden="true" tabindex="-1"></a>---</span>
+<span id="cb12-376"><a href="#cb12-376" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-377"><a href="#cb12-377" aria-hidden="true" tabindex="-1"></a><span class="fu">## ¿Qué modelo usar? Un mapa</span></span>
+<span id="cb12-378"><a href="#cb12-378" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-379"><a href="#cb12-379" aria-hidden="true" tabindex="-1"></a>La descomposición de Lévy-Itô funciona como un menú: cada modelo es una elección de qué ingredientes poner en la olla. La @fig-levy-ingredientes muestra qué toma cada uno.</span>
+<span id="cb12-380"><a href="#cb12-380" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-383"><a href="#cb12-383" aria-hidden="true" tabindex="-1"></a><span class="in">```{mermaid}</span></span>
+<span id="cb12-384"><a href="#cb12-384" aria-hidden="true" tabindex="-1"></a>%%| label: fig-levy-ingredientes</span>
+<span id="cb12-385"><a href="#cb12-385" aria-hidden="true" tabindex="-1"></a>%%| fig-cap: <span class="ot">"</span><span class="st">Los modelos del capítulo como combinaciones de los tres ingredientes de Lévy-Itô. El GBM usa solo tendencia y difusión; Merton agrega saltos raros y grandes; Variance Gamma reemplaza la difusión por infinitos saltos chicos.</span><span class="ot">"</span></span>
+<span id="cb12-386"><a href="#cb12-386" aria-hidden="true" tabindex="-1"></a>flowchart LR</span>
+<span id="cb12-387"><a href="#cb12-387" aria-hidden="true" tabindex="-1"></a>    T[<span class="ot">"</span><span class="st">Tendencia&lt;br/&gt;&lt;i&gt;bt&lt;/i&gt;</span><span class="ot">"</span>]</span>
+<span id="cb12-388"><a href="#cb12-388" aria-hidden="true" tabindex="-1"></a>    D[<span class="ot">"</span><span class="st">Difusión&lt;br/&gt;&lt;i&gt;σW_t&lt;/i&gt;</span><span class="ot">"</span>]</span>
+<span id="cb12-389"><a href="#cb12-389" aria-hidden="true" tabindex="-1"></a>    SG[<span class="ot">"</span><span class="st">Saltos raros&lt;br/&gt;y grandes&lt;br/&gt;&lt;i&gt;Poisson&lt;/i&gt;</span><span class="ot">"</span>]</span>
+<span id="cb12-390"><a href="#cb12-390" aria-hidden="true" tabindex="-1"></a>    SC[<span class="ot">"</span><span class="st">Infinitos saltos&lt;br/&gt;chicos&lt;br/&gt;&lt;i&gt;reloj Gamma&lt;/i&gt;</span><span class="ot">"</span>]</span>
+<span id="cb12-391"><a href="#cb12-391" aria-hidden="true" tabindex="-1"></a>    T --&gt; GBM([<span class="ot">"</span><span class="st">&lt;b&gt;GBM&lt;/b&gt;&lt;br/&gt;colas finas</span><span class="ot">"</span>])</span>
+<span id="cb12-392"><a href="#cb12-392" aria-hidden="true" tabindex="-1"></a>    D --&gt; GBM</span>
+<span id="cb12-393"><a href="#cb12-393" aria-hidden="true" tabindex="-1"></a>    T --&gt; M([<span class="ot">"</span><span class="st">&lt;b&gt;Merton&lt;/b&gt;&lt;br/&gt;colas pesadas,&lt;br/&gt;eventos discretos</span><span class="ot">"</span>])</span>
+<span id="cb12-394"><a href="#cb12-394" aria-hidden="true" tabindex="-1"></a>    D --&gt; M</span>
+<span id="cb12-395"><a href="#cb12-395" aria-hidden="true" tabindex="-1"></a>    SG --&gt; M</span>
+<span id="cb12-396"><a href="#cb12-396" aria-hidden="true" tabindex="-1"></a>    T --&gt; VG([<span class="ot">"</span><span class="st">&lt;b&gt;Variance Gamma&lt;/b&gt;&lt;br/&gt;colas pesadas,&lt;br/&gt;sin difusión</span><span class="ot">"</span>])</span>
+<span id="cb12-397"><a href="#cb12-397" aria-hidden="true" tabindex="-1"></a>    SC --&gt; VG</span>
+<span id="cb12-398"><a href="#cb12-398" aria-hidden="true" tabindex="-1"></a>    classDef ing fill:<span class="co">#e0e9f4,stroke:#1e3a5f,color:#1f2937</span></span>
+<span id="cb12-399"><a href="#cb12-399" aria-hidden="true" tabindex="-1"></a>    classDef salto fill:<span class="co">#fde8dc,stroke:#c2410c,color:#1f2937</span></span>
+<span id="cb12-400"><a href="#cb12-400" aria-hidden="true" tabindex="-1"></a>    classDef mod fill:<span class="co">#eef2e3,stroke:#637238,color:#1f2937</span></span>
+<span id="cb12-401"><a href="#cb12-401" aria-hidden="true" tabindex="-1"></a>    class T,D ing</span>
+<span id="cb12-402"><a href="#cb12-402" aria-hidden="true" tabindex="-1"></a>    class SG,SC salto</span>
+<span id="cb12-403"><a href="#cb12-403" aria-hidden="true" tabindex="-1"></a>    class GBM,M,VG mod</span>
+<span id="cb12-404"><a href="#cb12-404" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb12-405"><a href="#cb12-405" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-406"><a href="#cb12-406" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Modelo <span class="pp">|</span> Colas <span class="pp">|</span> Saltos <span class="pp">|</span> Costo <span class="pp">|</span> Cuándo usarlo <span class="pp">|</span></span>
+<span id="cb12-407"><a href="#cb12-407" aria-hidden="true" tabindex="-1"></a><span class="pp">|---|---|---|---|---|</span></span>
+<span id="cb12-408"><a href="#cb12-408" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> **GBM** <span class="pp">|</span> Finas (normal) <span class="pp">|</span> No <span class="pp">|</span> Trivial <span class="pp">|</span> Primer boceto; horizontes largos donde el promedio manda <span class="pp">|</span></span>
+<span id="cb12-409"><a href="#cb12-409" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> **Merton** <span class="pp">|</span> Pesadas <span class="pp">|</span> Sí, raros y grandes <span class="pp">|</span> Bajo <span class="pp">|</span> Riesgo de eventos; activos expuestos a anuncios/default <span class="pp">|</span></span>
+<span id="cb12-410"><a href="#cb12-410" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> **Variance Gamma / NIG** <span class="pp">|</span> Pesadas, control fino <span class="pp">|</span> Infinitos, pequeños <span class="pp">|</span> Medio <span class="pp">|</span> Calibración fina a opciones; alta frecuencia <span class="pp">|</span></span>
+<span id="cb12-411"><a href="#cb12-411" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> **Heston / SABR** (<span class="co">[</span><span class="ot">Cap. 20</span><span class="co">](../unidad4/cap20_volatilidad_estocastica.qmd)</span>) <span class="pp">|</span> Pesadas vía vol estocástica <span class="pp">|</span> Opcional <span class="pp">|</span> Medio-alto <span class="pp">|</span> Superficies de volatilidad; pricing de exóticos <span class="pp">|</span></span>
+<span id="cb12-412"><a href="#cb12-412" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-413"><a href="#cb12-413" aria-hidden="true" tabindex="-1"></a>La regla general del oficio: el modelo correcto depende de la pregunta. Para proyectar la jubilación a 30 años, el GBM alcanza. Para calcular el ES al 99% de un book de opciones vendidas, usar GBM es negligencia.</span>
+<span id="cb12-414"><a href="#cb12-414" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-415"><a href="#cb12-415" aria-hidden="true" tabindex="-1"></a>---</span>
+<span id="cb12-416"><a href="#cb12-416" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-417"><a href="#cb12-417" aria-hidden="true" tabindex="-1"></a><span class="fu">## Errores comunes</span></span>
+<span id="cb12-418"><a href="#cb12-418" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-419"><a href="#cb12-419" aria-hidden="true" tabindex="-1"></a>::: {.callout-warning title="Trampas frecuentes"}</span>
+<span id="cb12-420"><a href="#cb12-420" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Olvidar el compensador** ($-\lambda k\, dt$) en Merton: sin él, los saltos negativos sesgan el drift y la media simulada no coincide con la teórica.</span>
+<span id="cb12-421"><a href="#cb12-421" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Calibrar los saltos con datos tranquilos**: si la muestra histórica no contiene crisis, el estimador de $\lambda$ será ~0 y el modelo degenera en GBM. Los parámetros de salto suelen calibrarse con opciones (forward-looking), no solo con historia.</span>
+<span id="cb12-422"><a href="#cb12-422" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Comparar modelos con distinta varianza total**: para aislar el efecto de *forma* (colas, asimetría), igualá la varianza como hicimos acá; si no, confundís "más riesgo" con "riesgo distinto".</span>
+<span id="cb12-423"><a href="#cb12-423" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Confundir curtosis muestral con poblacional**: la curtosis estimada con pocas observaciones de un proceso con saltos es tremendamente ruidosa (¡depende de cuántos saltos cayeron en tu muestra!).</span>
+<span id="cb12-424"><a href="#cb12-424" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb12-425"><a href="#cb12-425" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-426"><a href="#cb12-426" aria-hidden="true" tabindex="-1"></a>---</span>
+<span id="cb12-427"><a href="#cb12-427" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-428"><a href="#cb12-428" aria-hidden="true" tabindex="-1"></a><span class="fu">## Practicá en el navegador</span></span>
+<span id="cb12-429"><a href="#cb12-429" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-430"><a href="#cb12-430" aria-hidden="true" tabindex="-1"></a>Podés experimentar con el código del capítulo acá mismo: la celda ejecuta Python **en tu navegador**, sin instalar nada (la primera ejecución tarda unos segundos mientras carga el entorno; los paquetes que importes se instalan solos).</span>
+<span id="cb12-431"><a href="#cb12-431" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-432"><a href="#cb12-432" aria-hidden="true" tabindex="-1"></a><span class="in">```{pyodide-python}</span></span>
+<span id="cb12-433"><a href="#cb12-433" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: practica-navegador</span></span>
+<span id="cb12-434"><a href="#cb12-434" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb12-435"><a href="#cb12-435" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-436"><a href="#cb12-436" aria-hidden="true" tabindex="-1"></a>rng <span class="op">=</span> np.random.default_rng(<span class="dv">42</span>)</span>
+<span id="cb12-437"><a href="#cb12-437" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-438"><a href="#cb12-438" aria-hidden="true" tabindex="-1"></a><span class="co"># Tu código acá...</span></span>
+<span id="cb12-439"><a href="#cb12-439" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb12-440"><a href="#cb12-440" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-441"><a href="#cb12-441" aria-hidden="true" tabindex="-1"></a>---</span>
+<span id="cb12-442"><a href="#cb12-442" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-443"><a href="#cb12-443" aria-hidden="true" tabindex="-1"></a><span class="fu">## Referencias</span></span>
+<span id="cb12-444"><a href="#cb12-444" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb12-445"><a href="#cb12-445" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-446"><a href="#cb12-446" aria-hidden="true" tabindex="-1"></a>rng <span class="op">=</span> np.random.default_rng(<span class="dv">42</span>)</span>
-<span id="cb12-447"><a href="#cb12-447" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-448"><a href="#cb12-448" aria-hidden="true" tabindex="-1"></a><span class="co"># Tu solución acá...</span></span>
-<span id="cb12-449"><a href="#cb12-449" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb12-450"><a href="#cb12-450" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-451"><a href="#cb12-451" aria-hidden="true" tabindex="-1"></a>---</span>
-<span id="cb12-452"><a href="#cb12-452" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-453"><a href="#cb12-453" aria-hidden="true" tabindex="-1"></a><span class="fu">## Referencias</span></span>
-<span id="cb12-454"><a href="#cb12-454" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-455"><a href="#cb12-455" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-456"><a href="#cb12-456" aria-hidden="true" tabindex="-1"></a>::: {#refs}</span>
-<span id="cb12-457"><a href="#cb12-457" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb12-446"><a href="#cb12-446" aria-hidden="true" tabindex="-1"></a>::: {#refs}</span>
+<span id="cb12-447"><a href="#cb12-447" aria-hidden="true" tabindex="-1"></a>:::</span>
 </code></pre></div><button title="Copiar al portapapeles" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></div>
 </div></div></div></div></div>
 </div> <!-- /content -->
 <footer class="footer">
   <div class="nav-footer">
     <div class="nav-footer-left">
-<p>Finanzas Computacionales con Python fue escrito por la Cátedra de Finanzas Computacionales — UADE.</p>
+<p>Finanzas Computacionales con Python fue escrito por la Cátedra de Finanzas Computacionales de la UADE.</p>
 </div>   
     <div class="nav-footer-center">
       &nbsp;

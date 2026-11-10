@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>7&nbsp; Capítulo 7: Estadística Descriptiva y Optimización Matemática – Finanzas Computacionales</title>
+<title>7&nbsp; Capítulo 7: Estadística Descriptiva y Optimización Matemática – Finanzas Computacionales con Python</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -293,7 +293,7 @@ globalThis.qpyodideCustomizedPyodideOptions = {
 }
 
 // Store cell data
-globalThis.qpyodideCellDetails = [{"code":"import numpy as np\nfrom scipy.optimize import minimize\nfrom scipy import stats\n\n# Tu solución acá...","id":1,"options":{"autorun":"","classes":"","comment":"","context":"interactive","dpi":72,"fig-cap":"","fig-height":5,"fig-width":7,"label":"practica-navegador","message":"true","out-height":"","out-width":"700px","output":"true","read-only":"false","results":"markup","warning":"true"}}];
+globalThis.qpyodideCellDetails = [{"code":"import numpy as np\nfrom scipy.optimize import minimize\nfrom scipy import stats\n\n# Tu código acá...","id":1,"options":{"autorun":"","classes":"","comment":"","context":"interactive","dpi":72,"fig-cap":"","fig-height":5,"fig-width":7,"label":"practica-navegador","message":"true","out-height":"","out-width":"700px","output":"true","read-only":"false","results":"markup","warning":"true"}}];
 
 
 </script>
@@ -540,10 +540,10 @@ window.Quarto = {
   <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation docked overflow-auto">
     <div class="pt-lg-2 mt-2 text-left sidebar-header">
     <div class="sidebar-title mb-0 py-0">
-      <a href="../">Finanzas Computacionales</a> 
+      <a href="../">Finanzas Computacionales con Python</a> 
         <div class="sidebar-tools-main tools-wide">
     <a href="https://github.com/diegoonna/libro_finanzas_computacionales" title="Source Code" class="quarto-navigation-tool px-1" aria-label="Source Code"><i class="bi bi-github"></i></a>
-    <a href="../Finanzas-Computacionales.pdf" title="Download PDF" class="quarto-navigation-tool px-1" aria-label="Download PDF"><i class="bi bi-file-pdf"></i></a>
+    <a href="../Finanzas-Computacionales-con-Python.pdf" title="Download PDF" class="quarto-navigation-tool px-1" aria-label="Download PDF"><i class="bi bi-file-pdf"></i></a>
   <a href="" class="quarto-reader-toggle quarto-navigation-tool px-1" onclick="window.quartoToggleReader(); return false;" title="Alternar modo lector">
   <div class="quarto-reader-toggle-btn">
   <i class="bi"></i>
@@ -802,7 +802,7 @@ window.Quarto = {
   <li><a href="#optimización-con-restricciones-primer-portafolio-óptimo" id="toc-optimización-con-restricciones-primer-portafolio-óptimo" class="nav-link" data-scroll-target="#optimización-con-restricciones-primer-portafolio-óptimo"><span class="header-section-number">7.3.2</span> Optimización con restricciones: primer portafolio óptimo</a></li>
   </ul></li>
   <li><a href="#errores-comunes" id="toc-errores-comunes" class="nav-link" data-scroll-target="#errores-comunes"><span class="header-section-number">7.4</span> Errores comunes</a></li>
-  <li><a href="#ejercicios-propuestos" id="toc-ejercicios-propuestos" class="nav-link" data-scroll-target="#ejercicios-propuestos"><span class="header-section-number">7.5</span> Ejercicios Propuestos</a></li>
+  <li><a href="#practicá-en-el-navegador" id="toc-practicá-en-el-navegador" class="nav-link" data-scroll-target="#practicá-en-el-navegador"><span class="header-section-number">7.5</span> Practicá en el navegador</a></li>
   <li><a href="#referencias" id="toc-referencias" class="nav-link" data-scroll-target="#referencias"><span class="header-section-number">7.6</span> Referencias</a></li>
   </ul></li>
   </ul>
@@ -850,8 +850,8 @@ window.Quarto = {
 <section id="introducción" class="level1 unnumbered">
 <h1 class="unnumbered">Introducción</h1>
 <p>Este módulo trata de una pregunta: <em>¿cómo repartir el capital entre activos?</em> Para responderla con rigor necesitamos dos habilidades previas.</p>
-<p>La primera es <strong>describir el comportamiento de los retornos</strong>. “La acción rinde 10% anual” es una descripción pobre: ¿con cuánta variabilidad? ¿las sorpresas son simétricas o hay derrumbes ocasionales? ¿los extremos son raros o frecuentes? La estadística descriptiva pone números a esas preguntas.</p>
-<p>La segunda es <strong>optimizar</strong>: dado un objetivo (“minimizar el riesgo”, “maximizar la utilidad”) y restricciones (“los pesos suman 1”, “sin ventas en corto”), encontrar la mejor solución. Si venís del mundo Excel, esto es lo que hacía el <em>Solver</em> — pero programable, más rápido y reproducible.</p>
+<p>La primera es describir el comportamiento de los retornos. “La acción rinde 10% anual” es una descripción pobre: ¿con cuánta variabilidad? ¿las sorpresas son simétricas o hay derrumbes ocasionales? ¿los extremos son raros o frecuentes? La estadística descriptiva pone números a esas preguntas.</p>
+<p>La segunda es <strong>optimizar</strong>: dado un objetivo (“minimizar el riesgo”, “maximizar la utilidad”) y restricciones (“los pesos suman 1”, “sin ventas en corto”), encontrar la mejor solución. Si venís del mundo Excel, esto es lo que hacía el <em>Solver</em>, pero programable, más rápido y reproducible.</p>
 <div id="setup" class="cell" data-execution_count="1">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
@@ -865,7 +865,7 @@ window.Quarto = {
 <h2 data-number="7.1" class="anchored" data-anchor-id="estadística-descriptiva-de-retornos"><span class="header-section-number">7.1</span> Estadística descriptiva de retornos</h2>
 <section id="los-cuatro-momentos" class="level3" data-number="7.1.1">
 <h3 data-number="7.1.1" class="anchored" data-anchor-id="los-cuatro-momentos"><span class="header-section-number">7.1.1</span> Los cuatro momentos</h3>
-<p>Una distribución de retornos se resume, en primera aproximación, con cuatro números — los <strong>momentos</strong>:</p>
+<p>Una distribución de retornos se resume, en primera aproximación, con cuatro números, los <strong>momentos</strong>:</p>
 <ol type="1">
 <li><strong>Media</strong> (<span class="math inline">\(\mu\)</span>): el retorno “típico”. El centro de gravedad de la distribución.</li>
 <li><strong>Varianza / volatilidad</strong> (<span class="math inline">\(\sigma\)</span>): cuánto se dispersan los retornos alrededor de la media. Es la medida clásica de riesgo.</li>
@@ -961,13 +961,13 @@ Curtosis (exceso)                0.154       3.804</code></pre>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> ax, datos, titulo <span class="kw">in</span> [(axes[<span class="dv">0</span>], retornos, <span class="st">"Retornos ~normales"</span>),</span>
 <span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>                          (axes[<span class="dv">1</span>], ret_real, <span class="st">"Retornos con días de crisis"</span>)]:</span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>    ax.hist(datos, bins<span class="op">=</span><span class="dv">40</span>, density<span class="op">=</span><span class="va">True</span>, alpha<span class="op">=</span><span class="fl">0.7</span>,</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>    ax.hist(datos <span class="op">*</span> <span class="dv">100</span>, bins<span class="op">=</span><span class="dv">40</span>, density<span class="op">=</span><span class="va">True</span>, alpha<span class="op">=</span><span class="fl">0.7</span>,</span>
 <span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>            color<span class="op">=</span><span class="st">"#94a3b8"</span>, edgecolor<span class="op">=</span><span class="st">"white"</span>)</span>
 <span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>    x <span class="op">=</span> np.linspace(datos.<span class="bu">min</span>(), datos.<span class="bu">max</span>(), <span class="dv">200</span>)</span>
-<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>    ax.plot(x, stats.norm.pdf(x, datos.mean(), datos.std()),</span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>    ax.plot(x <span class="op">*</span> <span class="dv">100</span>, stats.norm.pdf(x, datos.mean(), datos.std()) <span class="op">/</span> <span class="dv">100</span>,</span>
 <span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>            color<span class="op">=</span><span class="st">"#c2410c"</span>, linewidth<span class="op">=</span><span class="dv">2</span>, label<span class="op">=</span><span class="st">"Normal teórica"</span>)</span>
 <span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>    ax.set_title(titulo)</span>
-<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>    ax.set_xlabel(<span class="st">"Retorno diario"</span>)</span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>    ax.set_xlabel(<span class="st">"Retorno diario (%)"</span>)</span>
 <span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>    ax.legend()</span>
 <span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>    ax.grid(<span class="va">True</span>, alpha<span class="op">=</span><span class="fl">0.3</span>)</span>
 <span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a></span>
@@ -978,7 +978,7 @@ Curtosis (exceso)                0.154       3.804</code></pre>
 <div id="fig-histograma-crisis" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-histograma-crisis-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="cap07_estadistica_optimizacion_files/figure-html/fig-histograma-crisis-output-1.png" width="1045" height="372" class="figure-img">
+<img src="cap07_estadistica_optimizacion_files/figure-html/fig-histograma-crisis-output-1.png" width="1045" height="373" class="figure-img">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-histograma-crisis-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Figura&nbsp;7.2: Histogramas de los dos conjuntos de retornos simulados con la normal ajustada encima. Con días de crisis (derecha), aparece una cola izquierda que la campana no cubre.
@@ -992,7 +992,7 @@ Figura&nbsp;7.2: Histogramas de los dos conjuntos de retornos simulados con la n
 <section id="test-de-normalidad-jarque-bera" class="level3" data-number="7.1.3">
 <h3 data-number="7.1.3" class="anchored" data-anchor-id="test-de-normalidad-jarque-bera"><span class="header-section-number">7.1.3</span> Test de normalidad: Jarque-Bera</h3>
 <p>El ojo engaña; mejor un test formal. El test de <strong>Jarque-Bera</strong> pregunta exactamente lo que nos importa: <em>¿la asimetría y la curtosis de estos datos son compatibles con una distribución normal?</em> Su hipótesis nula (<span class="math inline">\(H_0\)</span>) es “los datos son normales”.</p>
-<p>La mecánica de decisión es la de cualquier test de hipótesis: si el <strong>p-value</strong> es menor que el nivel de significancia (típicamente <span class="math inline">\(\alpha = 0.05\)</span>), rechazamos <span class="math inline">\(H_0\)</span> — los datos serían muy improbables si la normal fuera cierta.</p>
+<p>La mecánica de decisión es la de cualquier test de hipótesis: si el <strong>p-value</strong> es menor que el nivel de significancia (típicamente <span class="math inline">\(\alpha = 0.05\)</span>), rechazamos <span class="math inline">\(H_0\)</span>, porque los datos serían muy improbables si la normal fuera cierta.</p>
 <div id="jarque-bera" class="cell" data-execution_count="7">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> nombre, datos <span class="kw">in</span> [(<span class="st">"Simulados normales"</span>, retornos),</span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>                      (<span class="st">"Con días de crisis"</span>, ret_real)]:</span>
@@ -1032,7 +1032,7 @@ SPY       0.312              8.965         0.0
 WMT      -0.468             10.282         0.0</code></pre>
 </div>
 </div>
-<p>La tabla separa lo universal de lo que depende de la muestra. <strong>La curtosis es universal</strong>: los diez activos tienen exceso de curtosis positivo, desde 1.3 (XOM) hasta más de 10 (WMT), y el test de Jarque-Bera rechaza la normalidad en todos, con p-values que se redondean a cero. Las colas pesadas no son una rareza de un activo: son la regla. <strong>La asimetría, en cambio, no tiene un signo fijo</strong>: en estos cinco años, mayormente alcistas, sale negativa en algunos activos y positiva en otros, incluido el propio S&amp;P 500. Y ahí hay una lección: la asimetría positiva del índice la explica <strong>un solo día</strong>, el rebote de +10.5% del 9 de abril de 2025; si se saca ese día de la muestra, la asimetría pasa de +0.31 a −0.43. Un estimador basado en el cubo de los desvíos queda a merced de un puñado de días extremos, y esa fragilidad es otra cara de las colas pesadas. La asimetría negativa es un rasgo frecuente en muestras largas, pero conviene medirla con desconfianza.</p>
+<p>La tabla separa lo universal de lo que depende de la muestra. <strong>La curtosis es universal</strong>: los diez activos tienen exceso de curtosis positivo, desde 1.3 (XOM) hasta más de 10 (WMT), y el test de Jarque-Bera rechaza la normalidad en todos, con p-values que se redondean a cero. Las colas pesadas no son una rareza de un activo: son la regla. La asimetría, en cambio, no tiene un signo fijo: en estos cinco años, mayormente alcistas, sale negativa en algunos activos y positiva en otros, incluido el propio S&amp;P 500. Y ahí hay una lección: la asimetría positiva del índice la explica <strong>un solo día</strong>, el rebote de +10.5% del 9 de abril de 2025; si se saca ese día de la muestra, la asimetría pasa de +0.31 a −0.43. Un estimador basado en el cubo de los desvíos queda a merced de un puñado de días extremos, y esa fragilidad es otra cara de las colas pesadas. La asimetría negativa es un rasgo frecuente en muestras largas, pero conviene medirla con desconfianza.</p>
 <div class="callout callout-style-simple callout-warning callout-titled" title="¿Y entonces por qué usamos la normal?">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -1043,7 +1043,7 @@ WMT      -0.468             10.282         0.0</code></pre>
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>Si los retornos reales no son normales, ¿por qué media-varianza, Black-Scholes y media industria asumen normalidad? Porque es <strong>tratable</strong> y suele ser una aproximación razonable <em>en el centro</em> de la distribución. El problema aparece <strong>en las colas</strong> — justamente donde vive el riesgo extremo. Por eso el Módulo 3 dedica capítulos enteros (VaR, Expected Shortfall, procesos con saltos) a medir lo que la normal esconde. Usá la normal, pero sabiendo qué te está simplificando.</p>
+<p>Si los retornos reales no son normales, ¿por qué media-varianza, Black-Scholes y media industria asumen normalidad? Porque es <strong>tratable</strong> y suele ser una aproximación razonable <em>en el centro</em> de la distribución. El problema aparece <strong>en las colas</strong>, justamente donde vive el riesgo extremo. Por eso el Módulo 3 dedica capítulos enteros (VaR, Expected Shortfall, procesos con saltos) a medir lo que la normal esconde. Usá la normal, pero sabiendo qué te está simplificando.</p>
 </div>
 </div>
 <hr>
@@ -1157,7 +1157,7 @@ Figura&nbsp;7.4: Anatomía de <code>scipy.optimize.minimize</code>: qué le pasa
 </div>
 </div>
 </div>
-<p>Tres cosas para mirar siempre en el resultado: <code>x</code> (dónde está el óptimo), <code>fun</code> (cuánto vale la función ahí) y <code>success</code> (si el algoritmo convergió — <strong>nunca uses un resultado sin chequearlo</strong>).</p>
+<p>Tres cosas para mirar siempre en el resultado: <code>x</code> (dónde está el óptimo), <code>fun</code> (cuánto vale la función ahí) y <code>success</code> (si el algoritmo convergió; nunca uses un resultado sin chequearlo).</p>
 <div class="callout callout-style-simple callout-tip callout-titled" title="Maximizar = minimizar el negativo">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -1205,7 +1205,7 @@ Figura&nbsp;7.4: Anatomía de <code>scipy.optimize.minimize</code>: qué le pasa
 λ=10: agresivo  22.5% | defensivo  77.5% | E[r]=6.90% | vol=9.89%</code></pre>
 </div>
 </div>
-<p>El resultado cuenta una historia coherente: a medida que sube la aversión al riesgo, el óptimo <strong>migra del activo agresivo al defensivo</strong>, sacrificando retorno esperado a cambio de menos volatilidad. Tres inversores con la misma información y distinta tolerancia obtienen tres carteras distintas — y las tres son “óptimas” para quien las tiene.</p>
+<p>El resultado cuenta una historia coherente: a medida que sube la aversión al riesgo, el óptimo migra del activo agresivo al defensivo, sacrificando retorno esperado a cambio de menos volatilidad. Tres inversores con la misma información y distinta tolerancia obtienen tres carteras distintas, y las tres son “óptimas” para quien las tiene.</p>
 <p>La <a href="#fig-pesos-vs-aversion" class="quarto-xref">Figura&nbsp;<span>7.5</span></a> extiende la tabla a un barrido continuo de <span class="math inline">\(\lambda\)</span>: con aversión muy baja, todo va al activo agresivo; a medida que <span class="math inline">\(\lambda\)</span> crece, el defensivo gana terreno rápido al principio y cada vez más lento después.</p>
 <div id="cell-fig-pesos-vs-aversion" class="cell" data-execution_count="13">
 <div class="cell-output cell-output-display">
@@ -1239,7 +1239,7 @@ Figura&nbsp;7.5: Pesos óptimos de media-varianza según la aversión al riesgo 
 <div class="callout-body-container callout-body">
 <ul>
 <li><strong>No chequear <code>resultado.success</code></strong>: si el optimizador no convergió, <code>resultado.x</code> puede ser basura con aspecto respetable.</li>
-<li><strong>Anualizar la volatilidad con ×252</strong> en lugar de ×√252.</li>
+<li>Anualizar la volatilidad con ×252 en lugar de ×√252.</li>
 <li><strong>Comparar <code>np.std</code> con pandas <code>.std()</code></strong>: el primero usa <code>ddof=0</code> y el segundo <code>ddof=1</code>; con pocos datos la diferencia se nota.</li>
 <li><strong>Confundir curtosis con “exceso de curtosis”</strong>: <code>scipy.stats.kurtosis</code> devuelve el <em>exceso</em> (normal = 0). Otras librerías devuelven la curtosis cruda (normal = 3).</li>
 <li><strong>Interpretar un p-value alto como prueba de normalidad</strong>: “no rechazar <span class="math inline">\(H_0\)</span>” no es “aceptar <span class="math inline">\(H_0\)</span>”; con pocas observaciones, el test simplemente no tiene potencia para detectar la anormalidad.</li>
@@ -1249,28 +1249,9 @@ Figura&nbsp;7.5: Pesos óptimos de media-varianza según la aversión al riesgo 
 </div>
 <hr>
 </section>
-<section id="ejercicios-propuestos" class="level2" data-number="7.5">
-<h2 data-number="7.5" class="anchored" data-anchor-id="ejercicios-propuestos"><span class="header-section-number">7.5</span> Ejercicios Propuestos</h2>
-<div class="callout callout-style-simple callout-important callout-titled" title="Ejercicios">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Importante</span>Ejercicios
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<ol type="1">
-<li><strong>Análisis comparado</strong>: simulá (o descargá) retornos de 3 activos y armá una tabla con los cuatro momentos de cada uno. ¿Cuál elegirías por Sharpe? ¿Cambia tu respuesta al mirar la asimetría?</li>
-<li><strong>Q-Q plot</strong>: graficá un Q-Q plot (<code>stats.probplot</code>) de los retornos “con crisis” del capítulo. ¿Dónde se despegan los puntos de la recta?</li>
-<li><strong>Shapiro-Wilk</strong>: aplicá <code>stats.shapiro</code> además de Jarque-Bera a las dos series. ¿Coinciden los veredictos?</li>
-<li><strong>Utilidad con 3 activos</strong>: extendé el ejemplo de maximización de utilidad a 3 activos con una matriz de covarianzas 3×3, y barré <span class="math inline">\(\lambda\)</span> de 1 a 10 graficando cómo evolucionan los pesos.</li>
-<li><strong>Restricción extra</strong>: agregá al problema anterior la restricción de que ningún activo supere el 50% de la cartera y compará las soluciones.</li>
-</ol>
-</div>
-</div>
-<p>Podés resolver estos ejercicios acá mismo: la celda ejecuta Python <strong>en tu navegador</strong>, sin instalar nada (la primera ejecución tarda unos segundos mientras carga el entorno; los paquetes que importes se instalan solos).</p>
+<section id="practicá-en-el-navegador" class="level2" data-number="7.5">
+<h2 data-number="7.5" class="anchored" data-anchor-id="practicá-en-el-navegador"><span class="header-section-number">7.5</span> Practicá en el navegador</h2>
+<p>Podés experimentar con el código del capítulo acá mismo: la celda ejecuta Python <strong>en tu navegador</strong>, sin instalar nada (la primera ejecución tarda unos segundos mientras carga el entorno; los paquetes que importes se instalan solos).</p>
 <div id="qpyodide-insertion-location-1"></div>
 <noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
 <hr>
@@ -1781,9 +1762,9 @@ Virtanen, Pauli, Ralf Gommers, Travis E. Oliphant, et&nbsp;al. 2020. <span>«<sp
 <span id="cb18-15"><a href="#cb18-15" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb18-16"><a href="#cb18-16" aria-hidden="true" tabindex="-1"></a>Este módulo trata de una pregunta: *¿cómo repartir el capital entre activos?* Para responderla con rigor necesitamos dos habilidades previas.</span>
 <span id="cb18-17"><a href="#cb18-17" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb18-18"><a href="#cb18-18" aria-hidden="true" tabindex="-1"></a>La primera es **describir el comportamiento de los retornos**. "La acción rinde 10% anual" es una descripción pobre: ¿con cuánta variabilidad? ¿las sorpresas son simétricas o hay derrumbes ocasionales? ¿los extremos son raros o frecuentes? La estadística descriptiva pone números a esas preguntas.</span>
+<span id="cb18-18"><a href="#cb18-18" aria-hidden="true" tabindex="-1"></a>La primera es describir el comportamiento de los retornos. "La acción rinde 10% anual" es una descripción pobre: ¿con cuánta variabilidad? ¿las sorpresas son simétricas o hay derrumbes ocasionales? ¿los extremos son raros o frecuentes? La estadística descriptiva pone números a esas preguntas.</span>
 <span id="cb18-19"><a href="#cb18-19" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb18-20"><a href="#cb18-20" aria-hidden="true" tabindex="-1"></a>La segunda es **optimizar**: dado un objetivo ("minimizar el riesgo", "maximizar la utilidad") y restricciones ("los pesos suman 1", "sin ventas en corto"), encontrar la mejor solución. Si venís del mundo Excel, esto es lo que hacía el *Solver* — pero programable, más rápido y reproducible.</span>
+<span id="cb18-20"><a href="#cb18-20" aria-hidden="true" tabindex="-1"></a>La segunda es **optimizar**: dado un objetivo ("minimizar el riesgo", "maximizar la utilidad") y restricciones ("los pesos suman 1", "sin ventas en corto"), encontrar la mejor solución. Si venís del mundo Excel, esto es lo que hacía el *Solver*, pero programable, más rápido y reproducible.</span>
 <span id="cb18-21"><a href="#cb18-21" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb18-24"><a href="#cb18-24" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
 <span id="cb18-25"><a href="#cb18-25" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: setup</span></span>
@@ -1808,7 +1789,7 @@ Virtanen, Pauli, Ralf Gommers, Travis E. Oliphant, et&nbsp;al. 2020. <span>«<sp
 <span id="cb18-46"><a href="#cb18-46" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb18-47"><a href="#cb18-47" aria-hidden="true" tabindex="-1"></a><span class="fu">### Los cuatro momentos</span></span>
 <span id="cb18-48"><a href="#cb18-48" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb18-49"><a href="#cb18-49" aria-hidden="true" tabindex="-1"></a>Una distribución de retornos se resume, en primera aproximación, con cuatro números — los **momentos**:</span>
+<span id="cb18-49"><a href="#cb18-49" aria-hidden="true" tabindex="-1"></a>Una distribución de retornos se resume, en primera aproximación, con cuatro números, los **momentos**:</span>
 <span id="cb18-50"><a href="#cb18-50" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb18-51"><a href="#cb18-51" aria-hidden="true" tabindex="-1"></a><span class="ss">1. </span>**Media** ($\mu$): el retorno "típico". El centro de gravedad de la distribución.</span>
 <span id="cb18-52"><a href="#cb18-52" aria-hidden="true" tabindex="-1"></a><span class="ss">2. </span>**Varianza / volatilidad** ($\sigma$): cuánto se dispersan los retornos alrededor de la media. Es la medida clásica de riesgo.</span>
@@ -1911,13 +1892,13 @@ Virtanen, Pauli, Ralf Gommers, Travis E. Oliphant, et&nbsp;al. 2020. <span>«<sp
 <span id="cb18-157"><a href="#cb18-157" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb18-158"><a href="#cb18-158" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> ax, datos, titulo <span class="kw">in</span> [(axes[<span class="dv">0</span>], retornos, <span class="st">"Retornos ~normales"</span>),</span>
 <span id="cb18-159"><a href="#cb18-159" aria-hidden="true" tabindex="-1"></a>                          (axes[<span class="dv">1</span>], ret_real, <span class="st">"Retornos con días de crisis"</span>)]:</span>
-<span id="cb18-160"><a href="#cb18-160" aria-hidden="true" tabindex="-1"></a>    ax.hist(datos, bins<span class="op">=</span><span class="dv">40</span>, density<span class="op">=</span><span class="va">True</span>, alpha<span class="op">=</span><span class="fl">0.7</span>,</span>
+<span id="cb18-160"><a href="#cb18-160" aria-hidden="true" tabindex="-1"></a>    ax.hist(datos <span class="op">*</span> <span class="dv">100</span>, bins<span class="op">=</span><span class="dv">40</span>, density<span class="op">=</span><span class="va">True</span>, alpha<span class="op">=</span><span class="fl">0.7</span>,</span>
 <span id="cb18-161"><a href="#cb18-161" aria-hidden="true" tabindex="-1"></a>            color<span class="op">=</span><span class="st">"#94a3b8"</span>, edgecolor<span class="op">=</span><span class="st">"white"</span>)</span>
 <span id="cb18-162"><a href="#cb18-162" aria-hidden="true" tabindex="-1"></a>    x <span class="op">=</span> np.linspace(datos.<span class="bu">min</span>(), datos.<span class="bu">max</span>(), <span class="dv">200</span>)</span>
-<span id="cb18-163"><a href="#cb18-163" aria-hidden="true" tabindex="-1"></a>    ax.plot(x, stats.norm.pdf(x, datos.mean(), datos.std()),</span>
+<span id="cb18-163"><a href="#cb18-163" aria-hidden="true" tabindex="-1"></a>    ax.plot(x <span class="op">*</span> <span class="dv">100</span>, stats.norm.pdf(x, datos.mean(), datos.std()) <span class="op">/</span> <span class="dv">100</span>,</span>
 <span id="cb18-164"><a href="#cb18-164" aria-hidden="true" tabindex="-1"></a>            color<span class="op">=</span><span class="st">"#c2410c"</span>, linewidth<span class="op">=</span><span class="dv">2</span>, label<span class="op">=</span><span class="st">"Normal teórica"</span>)</span>
 <span id="cb18-165"><a href="#cb18-165" aria-hidden="true" tabindex="-1"></a>    ax.set_title(titulo)</span>
-<span id="cb18-166"><a href="#cb18-166" aria-hidden="true" tabindex="-1"></a>    ax.set_xlabel(<span class="st">"Retorno diario"</span>)</span>
+<span id="cb18-166"><a href="#cb18-166" aria-hidden="true" tabindex="-1"></a>    ax.set_xlabel(<span class="st">"Retorno diario (%)"</span>)</span>
 <span id="cb18-167"><a href="#cb18-167" aria-hidden="true" tabindex="-1"></a>    ax.legend()</span>
 <span id="cb18-168"><a href="#cb18-168" aria-hidden="true" tabindex="-1"></a>    ax.grid(<span class="va">True</span>, alpha<span class="op">=</span><span class="fl">0.3</span>)</span>
 <span id="cb18-169"><a href="#cb18-169" aria-hidden="true" tabindex="-1"></a></span>
@@ -1932,7 +1913,7 @@ Virtanen, Pauli, Ralf Gommers, Travis E. Oliphant, et&nbsp;al. 2020. <span>«<sp
 <span id="cb18-178"><a href="#cb18-178" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb18-179"><a href="#cb18-179" aria-hidden="true" tabindex="-1"></a>El ojo engaña; mejor un test formal. El test de **Jarque-Bera** pregunta exactamente lo que nos importa: *¿la asimetría y la curtosis de estos datos son compatibles con una distribución normal?* Su hipótesis nula ($H_0$) es "los datos son normales".</span>
 <span id="cb18-180"><a href="#cb18-180" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb18-181"><a href="#cb18-181" aria-hidden="true" tabindex="-1"></a>La mecánica de decisión es la de cualquier test de hipótesis: si el **p-value** es menor que el nivel de significancia (típicamente $\alpha = 0.05$), rechazamos $H_0$ — los datos serían muy improbables si la normal fuera cierta.</span>
+<span id="cb18-181"><a href="#cb18-181" aria-hidden="true" tabindex="-1"></a>La mecánica de decisión es la de cualquier test de hipótesis: si el **p-value** es menor que el nivel de significancia (típicamente $\alpha = 0.05$), rechazamos $H_0$, porque los datos serían muy improbables si la normal fuera cierta.</span>
 <span id="cb18-182"><a href="#cb18-182" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb18-185"><a href="#cb18-185" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
 <span id="cb18-186"><a href="#cb18-186" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: jarque-bera</span></span>
@@ -1960,10 +1941,10 @@ Virtanen, Pauli, Ralf Gommers, Travis E. Oliphant, et&nbsp;al. 2020. <span>«<sp
 <span id="cb18-210"><a href="#cb18-210" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(momentos.sort_values(<span class="st">"Curtosis (exceso)"</span>).<span class="bu">round</span>(<span class="dv">3</span>))</span>
 <span id="cb18-211"><a href="#cb18-211" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb18-212"><a href="#cb18-212" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb18-213"><a href="#cb18-213" aria-hidden="true" tabindex="-1"></a>La tabla separa lo universal de lo que depende de la muestra. **La curtosis es universal**: los diez activos tienen exceso de curtosis positivo, desde 1.3 (XOM) hasta más de 10 (WMT), y el test de Jarque-Bera rechaza la normalidad en todos, con p-values que se redondean a cero. Las colas pesadas no son una rareza de un activo: son la regla. **La asimetría, en cambio, no tiene un signo fijo**: en estos cinco años, mayormente alcistas, sale negativa en algunos activos y positiva en otros, incluido el propio S&amp;P 500. Y ahí hay una lección: la asimetría positiva del índice la explica **un solo día**, el rebote de +10.5% del 9 de abril de 2025; si se saca ese día de la muestra, la asimetría pasa de +0.31 a −0.43. Un estimador basado en el cubo de los desvíos queda a merced de un puñado de días extremos, y esa fragilidad es otra cara de las colas pesadas. La asimetría negativa es un rasgo frecuente en muestras largas, pero conviene medirla con desconfianza.</span>
+<span id="cb18-213"><a href="#cb18-213" aria-hidden="true" tabindex="-1"></a>La tabla separa lo universal de lo que depende de la muestra. **La curtosis es universal**: los diez activos tienen exceso de curtosis positivo, desde 1.3 (XOM) hasta más de 10 (WMT), y el test de Jarque-Bera rechaza la normalidad en todos, con p-values que se redondean a cero. Las colas pesadas no son una rareza de un activo: son la regla. La asimetría, en cambio, no tiene un signo fijo: en estos cinco años, mayormente alcistas, sale negativa en algunos activos y positiva en otros, incluido el propio S&amp;P 500. Y ahí hay una lección: la asimetría positiva del índice la explica **un solo día**, el rebote de +10.5% del 9 de abril de 2025; si se saca ese día de la muestra, la asimetría pasa de +0.31 a −0.43. Un estimador basado en el cubo de los desvíos queda a merced de un puñado de días extremos, y esa fragilidad es otra cara de las colas pesadas. La asimetría negativa es un rasgo frecuente en muestras largas, pero conviene medirla con desconfianza.</span>
 <span id="cb18-214"><a href="#cb18-214" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb18-215"><a href="#cb18-215" aria-hidden="true" tabindex="-1"></a>::: {.callout-warning title="¿Y entonces por qué usamos la normal?"}</span>
-<span id="cb18-216"><a href="#cb18-216" aria-hidden="true" tabindex="-1"></a>Si los retornos reales no son normales, ¿por qué media-varianza, Black-Scholes y media industria asumen normalidad? Porque es **tratable** y suele ser una aproximación razonable *en el centro* de la distribución. El problema aparece **en las colas** — justamente donde vive el riesgo extremo. Por eso el Módulo 3 dedica capítulos enteros (VaR, Expected Shortfall, procesos con saltos) a medir lo que la normal esconde. Usá la normal, pero sabiendo qué te está simplificando.</span>
+<span id="cb18-216"><a href="#cb18-216" aria-hidden="true" tabindex="-1"></a>Si los retornos reales no son normales, ¿por qué media-varianza, Black-Scholes y media industria asumen normalidad? Porque es **tratable** y suele ser una aproximación razonable *en el centro* de la distribución. El problema aparece **en las colas**, justamente donde vive el riesgo extremo. Por eso el Módulo 3 dedica capítulos enteros (VaR, Expected Shortfall, procesos con saltos) a medir lo que la normal esconde. Usá la normal, pero sabiendo qué te está simplificando.</span>
 <span id="cb18-217"><a href="#cb18-217" aria-hidden="true" tabindex="-1"></a>:::</span>
 <span id="cb18-218"><a href="#cb18-218" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb18-219"><a href="#cb18-219" aria-hidden="true" tabindex="-1"></a>---</span>
@@ -2092,7 +2073,7 @@ Virtanen, Pauli, Ralf Gommers, Travis E. Oliphant, et&nbsp;al. 2020. <span>«<sp
 <span id="cb18-350"><a href="#cb18-350" aria-hidden="true" tabindex="-1"></a>    class Q,V alerta</span>
 <span id="cb18-351"><a href="#cb18-351" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb18-352"><a href="#cb18-352" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb18-353"><a href="#cb18-353" aria-hidden="true" tabindex="-1"></a>Tres cosas para mirar siempre en el resultado: <span class="in">`x`</span> (dónde está el óptimo), <span class="in">`fun`</span> (cuánto vale la función ahí) y <span class="in">`success`</span> (si el algoritmo convergió — **nunca uses un resultado sin chequearlo**).</span>
+<span id="cb18-353"><a href="#cb18-353" aria-hidden="true" tabindex="-1"></a>Tres cosas para mirar siempre en el resultado: <span class="in">`x`</span> (dónde está el óptimo), <span class="in">`fun`</span> (cuánto vale la función ahí) y <span class="in">`success`</span> (si el algoritmo convergió; nunca uses un resultado sin chequearlo).</span>
 <span id="cb18-354"><a href="#cb18-354" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb18-355"><a href="#cb18-355" aria-hidden="true" tabindex="-1"></a>::: {.callout-tip title="Maximizar = minimizar el negativo"}</span>
 <span id="cb18-356"><a href="#cb18-356" aria-hidden="true" tabindex="-1"></a><span class="in">`scipy`</span> solo minimiza. Cuando quieras **maximizar** algo (utilidad, Sharpe), minimizá su negativo: max $f(x)$ ⟺ min $-f(x)$. Por eso vas a ver funciones llamadas <span class="in">`utilidad_negativa`</span> o <span class="in">`neg_sharpe`</span> en todo el libro.</span>
@@ -2131,7 +2112,7 @@ Virtanen, Pauli, Ralf Gommers, Travis E. Oliphant, et&nbsp;al. 2020. <span>«<sp
 <span id="cb18-391"><a href="#cb18-391" aria-hidden="true" tabindex="-1"></a>          <span class="ss">f" | E[r]=</span><span class="sc">{</span>w <span class="op">@</span> mu<span class="sc">:.2%}</span><span class="ss"> | vol=</span><span class="sc">{</span>np<span class="sc">.</span>sqrt(w <span class="op">@</span> Sigma <span class="op">@</span> w)<span class="sc">:.2%}</span><span class="ss">"</span>)</span>
 <span id="cb18-392"><a href="#cb18-392" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb18-393"><a href="#cb18-393" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb18-394"><a href="#cb18-394" aria-hidden="true" tabindex="-1"></a>El resultado cuenta una historia coherente: a medida que sube la aversión al riesgo, el óptimo **migra del activo agresivo al defensivo**, sacrificando retorno esperado a cambio de menos volatilidad. Tres inversores con la misma información y distinta tolerancia obtienen tres carteras distintas — y las tres son "óptimas" para quien las tiene.</span>
+<span id="cb18-394"><a href="#cb18-394" aria-hidden="true" tabindex="-1"></a>El resultado cuenta una historia coherente: a medida que sube la aversión al riesgo, el óptimo migra del activo agresivo al defensivo, sacrificando retorno esperado a cambio de menos volatilidad. Tres inversores con la misma información y distinta tolerancia obtienen tres carteras distintas, y las tres son "óptimas" para quien las tiene.</span>
 <span id="cb18-395"><a href="#cb18-395" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb18-396"><a href="#cb18-396" aria-hidden="true" tabindex="-1"></a>La @fig-pesos-vs-aversion extiende la tabla a un barrido continuo de $\lambda$: con aversión muy baja, todo va al activo agresivo; a medida que $\lambda$ crece, el defensivo gana terreno rápido al principio y cada vez más lento después.</span>
 <span id="cb18-397"><a href="#cb18-397" aria-hidden="true" tabindex="-1"></a></span>
@@ -2180,7 +2161,7 @@ Virtanen, Pauli, Ralf Gommers, Travis E. Oliphant, et&nbsp;al. 2020. <span>«<sp
 <span id="cb18-442"><a href="#cb18-442" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb18-443"><a href="#cb18-443" aria-hidden="true" tabindex="-1"></a>::: {.callout-warning title="Trampas frecuentes"}</span>
 <span id="cb18-444"><a href="#cb18-444" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**No chequear `resultado.success`**: si el optimizador no convergió, <span class="in">`resultado.x`</span> puede ser basura con aspecto respetable.</span>
-<span id="cb18-445"><a href="#cb18-445" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Anualizar la volatilidad con ×252** en lugar de ×√252.</span>
+<span id="cb18-445"><a href="#cb18-445" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Anualizar la volatilidad con ×252 en lugar de ×√252.</span>
 <span id="cb18-446"><a href="#cb18-446" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Comparar `np.std` con pandas `.std()`**: el primero usa <span class="in">`ddof=0`</span> y el segundo <span class="in">`ddof=1`</span>; con pocos datos la diferencia se nota.</span>
 <span id="cb18-447"><a href="#cb18-447" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Confundir curtosis con "exceso de curtosis"**: <span class="in">`scipy.stats.kurtosis`</span> devuelve el *exceso* (normal = 0). Otras librerías devuelven la curtosis cruda (normal = 3).</span>
 <span id="cb18-448"><a href="#cb18-448" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Interpretar un p-value alto como prueba de normalidad**: "no rechazar $H_0$" no es "aceptar $H_0$"; con pocas observaciones, el test simplemente no tiene potencia para detectar la anormalidad.</span>
@@ -2189,42 +2170,33 @@ Virtanen, Pauli, Ralf Gommers, Travis E. Oliphant, et&nbsp;al. 2020. <span>«<sp
 <span id="cb18-451"><a href="#cb18-451" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb18-452"><a href="#cb18-452" aria-hidden="true" tabindex="-1"></a>---</span>
 <span id="cb18-453"><a href="#cb18-453" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb18-454"><a href="#cb18-454" aria-hidden="true" tabindex="-1"></a><span class="fu">## Ejercicios Propuestos</span></span>
+<span id="cb18-454"><a href="#cb18-454" aria-hidden="true" tabindex="-1"></a><span class="fu">## Practicá en el navegador</span></span>
 <span id="cb18-455"><a href="#cb18-455" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb18-456"><a href="#cb18-456" aria-hidden="true" tabindex="-1"></a>::: {.callout-important title="Ejercicios"}</span>
-<span id="cb18-457"><a href="#cb18-457" aria-hidden="true" tabindex="-1"></a><span class="ss">1. </span>**Análisis comparado**: simulá (o descargá) retornos de 3 activos y armá una tabla con los cuatro momentos de cada uno. ¿Cuál elegirías por Sharpe? ¿Cambia tu respuesta al mirar la asimetría?</span>
-<span id="cb18-458"><a href="#cb18-458" aria-hidden="true" tabindex="-1"></a><span class="ss">2. </span>**Q-Q plot**: graficá un Q-Q plot (<span class="in">`stats.probplot`</span>) de los retornos "con crisis" del capítulo. ¿Dónde se despegan los puntos de la recta?</span>
-<span id="cb18-459"><a href="#cb18-459" aria-hidden="true" tabindex="-1"></a><span class="ss">3. </span>**Shapiro-Wilk**: aplicá <span class="in">`stats.shapiro`</span> además de Jarque-Bera a las dos series. ¿Coinciden los veredictos?</span>
-<span id="cb18-460"><a href="#cb18-460" aria-hidden="true" tabindex="-1"></a><span class="ss">4. </span>**Utilidad con 3 activos**: extendé el ejemplo de maximización de utilidad a 3 activos con una matriz de covarianzas 3×3, y barré $\lambda$ de 1 a 10 graficando cómo evolucionan los pesos.</span>
-<span id="cb18-461"><a href="#cb18-461" aria-hidden="true" tabindex="-1"></a><span class="ss">5. </span>**Restricción extra**: agregá al problema anterior la restricción de que ningún activo supere el 50% de la cartera y compará las soluciones.</span>
-<span id="cb18-462"><a href="#cb18-462" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb18-456"><a href="#cb18-456" aria-hidden="true" tabindex="-1"></a>Podés experimentar con el código del capítulo acá mismo: la celda ejecuta Python **en tu navegador**, sin instalar nada (la primera ejecución tarda unos segundos mientras carga el entorno; los paquetes que importes se instalan solos).</span>
+<span id="cb18-457"><a href="#cb18-457" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-458"><a href="#cb18-458" aria-hidden="true" tabindex="-1"></a><span class="in">```{pyodide-python}</span></span>
+<span id="cb18-459"><a href="#cb18-459" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: practica-navegador</span></span>
+<span id="cb18-460"><a href="#cb18-460" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb18-461"><a href="#cb18-461" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> scipy.optimize <span class="im">import</span> minimize</span>
+<span id="cb18-462"><a href="#cb18-462" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> scipy <span class="im">import</span> stats</span>
 <span id="cb18-463"><a href="#cb18-463" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb18-464"><a href="#cb18-464" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb18-465"><a href="#cb18-465" aria-hidden="true" tabindex="-1"></a>Podés resolver estos ejercicios acá mismo: la celda ejecuta Python **en tu navegador**, sin instalar nada (la primera ejecución tarda unos segundos mientras carga el entorno; los paquetes que importes se instalan solos).</span>
+<span id="cb18-464"><a href="#cb18-464" aria-hidden="true" tabindex="-1"></a><span class="co"># Tu código acá...</span></span>
+<span id="cb18-465"><a href="#cb18-465" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb18-466"><a href="#cb18-466" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb18-467"><a href="#cb18-467" aria-hidden="true" tabindex="-1"></a><span class="in">```{pyodide-python}</span></span>
-<span id="cb18-468"><a href="#cb18-468" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: practica-navegador</span></span>
-<span id="cb18-469"><a href="#cb18-469" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
-<span id="cb18-470"><a href="#cb18-470" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> scipy.optimize <span class="im">import</span> minimize</span>
-<span id="cb18-471"><a href="#cb18-471" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> scipy <span class="im">import</span> stats</span>
-<span id="cb18-472"><a href="#cb18-472" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb18-473"><a href="#cb18-473" aria-hidden="true" tabindex="-1"></a><span class="co"># Tu solución acá...</span></span>
-<span id="cb18-474"><a href="#cb18-474" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb18-475"><a href="#cb18-475" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb18-476"><a href="#cb18-476" aria-hidden="true" tabindex="-1"></a>---</span>
-<span id="cb18-477"><a href="#cb18-477" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb18-478"><a href="#cb18-478" aria-hidden="true" tabindex="-1"></a><span class="fu">## Referencias</span></span>
-<span id="cb18-479"><a href="#cb18-479" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb18-480"><a href="#cb18-480" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb18-481"><a href="#cb18-481" aria-hidden="true" tabindex="-1"></a>::: {#refs}</span>
-<span id="cb18-482"><a href="#cb18-482" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb18-467"><a href="#cb18-467" aria-hidden="true" tabindex="-1"></a>---</span>
+<span id="cb18-468"><a href="#cb18-468" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-469"><a href="#cb18-469" aria-hidden="true" tabindex="-1"></a><span class="fu">## Referencias</span></span>
+<span id="cb18-470"><a href="#cb18-470" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-471"><a href="#cb18-471" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-472"><a href="#cb18-472" aria-hidden="true" tabindex="-1"></a>::: {#refs}</span>
+<span id="cb18-473"><a href="#cb18-473" aria-hidden="true" tabindex="-1"></a>:::</span>
 </code></pre></div><button title="Copiar al portapapeles" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></div>
 </div></div></div></div></div>
 </div> <!-- /content -->
 <footer class="footer">
   <div class="nav-footer">
     <div class="nav-footer-left">
-<p>Finanzas Computacionales con Python fue escrito por la Cátedra de Finanzas Computacionales — UADE.</p>
+<p>Finanzas Computacionales con Python fue escrito por la Cátedra de Finanzas Computacionales de la UADE.</p>
 </div>   
     <div class="nav-footer-center">
       &nbsp;

@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>1&nbsp; Capítulo 1: Pensamiento Computacional en Finanzas – Finanzas Computacionales</title>
+<title>1&nbsp; Capítulo 1: Pensamiento Computacional en Finanzas – Finanzas Computacionales con Python</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -293,7 +293,7 @@ globalThis.qpyodideCustomizedPyodideOptions = {
 }
 
 // Store cell data
-globalThis.qpyodideCellDetails = [{"code":"# Definimos una variable con un precio inicial\nprecio = 150.50\nprint(f\"Precio inicial: {precio} | Dirección de memoria: {id(precio)}\")\n\n# Reasignamos el valor (simulando un cambio de mercado)\nprecio = 150.75\nprint(f\"Precio nuevo:   {precio} | Dirección de memoria: {id(precio)}\")","id":1,"options":{"autorun":"","classes":"","comment":"","context":"interactive","dpi":72,"fig-cap":"","fig-height":5,"fig-width":7,"label":"concepto-variable-memoria","message":"true","out-height":"","out-width":"700px","output":"true","read-only":"false","results":"markup","warning":"true"}},{"code":"# Cantidades discretas típicas de finanzas: no admiten decimales\ndias_vencimiento = 365\ncantidad_bonos = 100\nlotes = 10\n\nprint(f\"Días al vencimiento: {dias_vencimiento} | Tipo: {type(dias_vencimiento)}\")","id":2,"options":{"autorun":"","classes":"","comment":"","context":"interactive","dpi":72,"fig-cap":"","fig-height":5,"fig-width":7,"label":"tipos-int","message":"true","out-height":"","out-width":"700px","output":"true","read-only":"false","results":"markup","warning":"true"}},{"code":"# La suma más famosa de la computación\nprecio_a = 0.1\nprecio_b = 0.2\nresultado = precio_a + precio_b\n\nprint(f\"0.1 + 0.2 = {resultado}\")\nprint(f\"¿Es exactamente 0.3? {resultado == 0.3}\")","id":3,"options":{"autorun":"","classes":"","comment":"","context":"interactive","dpi":72,"fig-cap":"","fig-height":5,"fig-width":7,"label":"tipos-float","message":"true","out-height":"","out-width":"700px","output":"true","read-only":"false","results":"markup","warning":"true"}},{"code":"import math\nfrom decimal import Decimal\n\n# Comparación correcta entre floats: con tolerancia\nresultado = 0.1 + 0.2\nprint(f\"resultado == 0.3          → {resultado == 0.3}\")\nprint(f\"math.isclose(resultado, 0.3) → {math.isclose(resultado, 0.3)}\")\n\n# Para contabilidad: decimal calcula en base 10 exacta\nsuma_decimal = Decimal(\"0.1\") + Decimal(\"0.2\")\nprint(f\"\\nDecimal('0.1') + Decimal('0.2') = {suma_decimal}\")\nprint(f\"¿Es exactamente 0.3? {suma_decimal == Decimal('0.3')}\")","id":4,"options":{"autorun":"","classes":"","comment":"","context":"interactive","dpi":72,"fig-cap":"","fig-height":5,"fig-width":7,"label":"float-comparacion","message":"true","out-height":"","out-width":"700px","output":"true","read-only":"false","results":"markup","warning":"true"}},{"code":"mercado_abierto = True\nvolatilidad_alta = False\n\n# True se comporta como 1, False como 0\nseñales_activas = True + True + False\nprint(f\"Señales de compra activas: {señales_activas}\")","id":5,"options":{"autorun":"","classes":"","comment":"","context":"interactive","dpi":72,"fig-cap":"","fig-height":5,"fig-width":7,"label":"tipos-bool","message":"true","out-height":"","out-width":"700px","output":"true","read-only":"false","results":"markup","warning":"true"}},{"code":"ticker = \"GGAL\"\nmercado = \"BYMA\"\ninstrumento = f\"{ticker}.{mercado}\"\nprint(f\"Instrumento: {instrumento}\")","id":6,"options":{"autorun":"","classes":"","comment":"","context":"interactive","dpi":72,"fig-cap":"","fig-height":5,"fig-width":7,"label":"tipos-str","message":"true","out-height":"","out-width":"700px","output":"true","read-only":"false","results":"markup","warning":"true"}},{"code":"# Dato que llega como string desde una fuente externa\nvolumen_str = \"5000\"\nprecio_cierre = 150.50\n\n# Conversión y operación\nvolumen = int(volumen_str)\nmonto_operado = volumen * precio_cierre\n\nprint(f\"Monto operado: ${monto_operado:,.2f}\")","id":7,"options":{"autorun":"","classes":"","comment":"","context":"interactive","dpi":72,"fig-cap":"","fig-height":5,"fig-width":7,"label":"casting","message":"true","out-height":"","out-width":"700px","output":"true","read-only":"false","results":"markup","warning":"true"}},{"code":"capital = 1_000_000\ntasa = 0.08\n\n# Operadores básicos\ninteres = capital * tasa\nprint(f\"Interés simple: ${interes:,.2f}\")\n\n# Potencia (**) — útil para interés compuesto\nperiodos = 5\nvalor_futuro = capital * (1 + tasa) ** periodos\nprint(f\"Valor futuro a {periodos} años: ${valor_futuro:,.2f}\")","id":8,"options":{"autorun":"","classes":"","comment":"","context":"interactive","dpi":72,"fig-cap":"","fig-height":5,"fig-width":7,"label":"operadores-aritmeticos","message":"true","out-height":"","out-width":"700px","output":"true","read-only":"false","results":"markup","warning":"true"}},{"code":"precio = 150\nmedia_movil = 140\nrsi = 65\n\nseñal_compra = precio > media_movil and rsi < 70\nprint(f\"¿Señal de compra? {señal_compra}\")","id":9,"options":{"autorun":"","classes":"","comment":"","context":"interactive","dpi":72,"fig-cap":"","fig-height":5,"fig-width":7,"label":"operadores-logicos","message":"true","out-height":"","out-width":"700px","output":"true","read-only":"false","results":"markup","warning":"true"}},{"code":"tasa = 0.05238\ncapital = 1_000_000\ninteres = capital * tasa\n\n# Formatos: :.2% (porcentaje), :, (miles), :,.2f (decimal con miles)\nprint(f\"Tasa: {tasa:.2%}\")\nprint(f\"Capital: ${capital:,}\")\nprint(f\"Interés generado: ${interes:,.2f}\")","id":10,"options":{"autorun":"","classes":"","comment":"","context":"interactive","dpi":72,"fig-cap":"","fig-height":5,"fig-width":7,"label":"f-strings","message":"true","out-height":"","out-width":"700px","output":"true","read-only":"false","results":"markup","warning":"true"}},{"code":"# --- Parámetros de dos proyectos ---\nvpn_proyecto_a = 150_000\nvpn_proyecto_b = 120_000\nriesgo_a = \"alto\"\nriesgo_b = \"bajo\"\n\nprint(\"=\" * 50)\nprint(\"ALGORITMO DE DECISIÓN DE INVERSIÓN\")\nprint(\"=\" * 50)\n\n# La decisión combina rentabilidad (VPN) y tolerancia al riesgo.\n# Fijate qué pasaría si ambos VPN fueran negativos: cae al else.\nif vpn_proyecto_a > vpn_proyecto_b and riesgo_a != \"alto\":\n    print(f\"→ Invertir en Proyecto A (VPN: ${vpn_proyecto_a:,})\")\nelif vpn_proyecto_b > 0:\n    print(f\"→ Invertir en Proyecto B (VPN: ${vpn_proyecto_b:,}, riesgo {riesgo_b})\")\nelse:\n    print(\"→ No invertir en ningún proyecto\")","id":11,"options":{"autorun":"","classes":"","comment":"","context":"interactive","dpi":72,"fig-cap":"","fig-height":5,"fig-width":7,"label":"decision-inversion","message":"true","out-height":"","out-width":"700px","output":"true","read-only":"false","results":"markup","warning":"true"}},{"code":"# Cada año, los intereses se reinvierten y generan nuevos intereses\ncapital_inicial = 100_000\ntasa_anual = 0.10\naños = 10\n\nvalor_futuro = capital_inicial * (1 + tasa_anual) ** años\ninteres_ganado = valor_futuro - capital_inicial\n\nprint(f\"Capital inicial:  ${capital_inicial:,.2f}\")\nprint(f\"Tasa anual:       {tasa_anual:.2%}\")\nprint(f\"Plazo:            {años} años\")\nprint(f\"Valor futuro:     ${valor_futuro:,.2f}\")\nprint(f\"Interés ganado:   ${interes_ganado:,.2f}\")","id":12,"options":{"autorun":"","classes":"","comment":"","context":"interactive","dpi":72,"fig-cap":"","fig-height":5,"fig-width":7,"label":"interes-compuesto","message":"true","out-height":"","out-width":"700px","output":"true","read-only":"false","results":"markup","warning":"true"}},{"code":"# Convertimos entre las formas de expresar una misma tasa: TNA, TEA y continua\ntna = 0.48  # Tasa Nominal Anual\nn = 12      # capitalización mensual\n\n# TNA a TEA\ntea = (1 + tna / n) ** n - 1\nprint(f\"TNA: {tna:.2%} → TEA: {tea:.2%}\")\n\n# TEA a tasa continua\nimport math\ntasa_continua = math.log(1 + tea)\nprint(f\"TEA: {tea:.2%} → Tasa continua: {tasa_continua:.4f}\")","id":13,"options":{"autorun":"","classes":"","comment":"","context":"interactive","dpi":72,"fig-cap":"","fig-height":5,"fig-width":7,"label":"conversion-tasas","message":"true","out-height":"","out-width":"700px","output":"true","read-only":"false","results":"markup","warning":"true"}},{"code":"# El valor presente \"trae a hoy\" un flujo que cobraremos en el futuro\nflujo_futuro = 1_000_000\ntasa = 0.08\naños = 5\n\nvalor_presente = flujo_futuro / (1 + tasa) ** años\nprint(f\"Recibir ${flujo_futuro:,} en {años} años\")\nprint(f\"equivale a ${valor_presente:,.2f} hoy (al {tasa:.0%})\")","id":14,"options":{"autorun":"","classes":"","comment":"","context":"interactive","dpi":72,"fig-cap":"","fig-height":5,"fig-width":7,"label":"valor-presente","message":"true","out-height":"","out-width":"700px","output":"true","read-only":"false","results":"markup","warning":"true"}}];
+globalThis.qpyodideCellDetails = [{"code":"# Definimos una variable con un precio inicial\nprecio = 150.50\nprint(f\"Precio inicial: {precio} | Dirección de memoria: {id(precio)}\")\n\n# Reasignamos el valor (simulando un cambio de mercado)\nprecio = 150.75\nprint(f\"Precio nuevo:   {precio} | Dirección de memoria: {id(precio)}\")","id":1,"options":{"autorun":"","classes":"","comment":"","context":"interactive","dpi":72,"fig-cap":"","fig-height":5,"fig-width":7,"label":"concepto-variable-memoria","message":"true","out-height":"","out-width":"700px","output":"true","read-only":"false","results":"markup","warning":"true"}},{"code":"# Cantidades discretas típicas de finanzas: no admiten decimales\ndias_vencimiento = 365\ncantidad_bonos = 100\nlotes = 10\n\nprint(f\"Días al vencimiento: {dias_vencimiento} | Tipo: {type(dias_vencimiento)}\")","id":2,"options":{"autorun":"","classes":"","comment":"","context":"interactive","dpi":72,"fig-cap":"","fig-height":5,"fig-width":7,"label":"tipos-int","message":"true","out-height":"","out-width":"700px","output":"true","read-only":"false","results":"markup","warning":"true"}},{"code":"# La suma más famosa de la computación\nprecio_a = 0.1\nprecio_b = 0.2\nresultado = precio_a + precio_b\n\nprint(f\"0.1 + 0.2 = {resultado}\")\nprint(f\"¿Es exactamente 0.3? {resultado == 0.3}\")","id":3,"options":{"autorun":"","classes":"","comment":"","context":"interactive","dpi":72,"fig-cap":"","fig-height":5,"fig-width":7,"label":"tipos-float","message":"true","out-height":"","out-width":"700px","output":"true","read-only":"false","results":"markup","warning":"true"}},{"code":"import math\nfrom decimal import Decimal\n\n# Comparación correcta entre floats: con tolerancia\nresultado = 0.1 + 0.2\nprint(f\"resultado == 0.3          → {resultado == 0.3}\")\nprint(f\"math.isclose(resultado, 0.3) → {math.isclose(resultado, 0.3)}\")\n\n# Para contabilidad: decimal calcula en base 10 exacta\nsuma_decimal = Decimal(\"0.1\") + Decimal(\"0.2\")\nprint(f\"\\nDecimal('0.1') + Decimal('0.2') = {suma_decimal}\")\nprint(f\"¿Es exactamente 0.3? {suma_decimal == Decimal('0.3')}\")","id":4,"options":{"autorun":"","classes":"","comment":"","context":"interactive","dpi":72,"fig-cap":"","fig-height":5,"fig-width":7,"label":"float-comparacion","message":"true","out-height":"","out-width":"700px","output":"true","read-only":"false","results":"markup","warning":"true"}},{"code":"mercado_abierto = True\nvolatilidad_alta = False\n\n# True se comporta como 1, False como 0\nseñales_activas = True + True + False\nprint(f\"Señales de compra activas: {señales_activas}\")","id":5,"options":{"autorun":"","classes":"","comment":"","context":"interactive","dpi":72,"fig-cap":"","fig-height":5,"fig-width":7,"label":"tipos-bool","message":"true","out-height":"","out-width":"700px","output":"true","read-only":"false","results":"markup","warning":"true"}},{"code":"ticker = \"GGAL\"\nmercado = \"BYMA\"\ninstrumento = f\"{ticker}.{mercado}\"\nprint(f\"Instrumento: {instrumento}\")","id":6,"options":{"autorun":"","classes":"","comment":"","context":"interactive","dpi":72,"fig-cap":"","fig-height":5,"fig-width":7,"label":"tipos-str","message":"true","out-height":"","out-width":"700px","output":"true","read-only":"false","results":"markup","warning":"true"}},{"code":"# Dato que llega como string desde una fuente externa\nvolumen_str = \"5000\"\nprecio_cierre = 150.50\n\n# Conversión y operación\nvolumen = int(volumen_str)\nmonto_operado = volumen * precio_cierre\n\nprint(f\"Monto operado: ${monto_operado:,.2f}\")","id":7,"options":{"autorun":"","classes":"","comment":"","context":"interactive","dpi":72,"fig-cap":"","fig-height":5,"fig-width":7,"label":"casting","message":"true","out-height":"","out-width":"700px","output":"true","read-only":"false","results":"markup","warning":"true"}},{"code":"capital = 1_000_000\ntasa = 0.08\n\n# Operadores básicos\ninteres = capital * tasa\nprint(f\"Interés simple: ${interes:,.2f}\")\n\n# Potencia (**): útil para interés compuesto\nperiodos = 5\nvalor_futuro = capital * (1 + tasa) ** periodos\nprint(f\"Valor futuro a {periodos} años: ${valor_futuro:,.2f}\")","id":8,"options":{"autorun":"","classes":"","comment":"","context":"interactive","dpi":72,"fig-cap":"","fig-height":5,"fig-width":7,"label":"operadores-aritmeticos","message":"true","out-height":"","out-width":"700px","output":"true","read-only":"false","results":"markup","warning":"true"}},{"code":"precio = 150\nmedia_movil = 140\nrsi = 65\n\nseñal_compra = precio > media_movil and rsi < 70\nprint(f\"¿Señal de compra? {señal_compra}\")","id":9,"options":{"autorun":"","classes":"","comment":"","context":"interactive","dpi":72,"fig-cap":"","fig-height":5,"fig-width":7,"label":"operadores-logicos","message":"true","out-height":"","out-width":"700px","output":"true","read-only":"false","results":"markup","warning":"true"}},{"code":"tasa = 0.05238\ncapital = 1_000_000\ninteres = capital * tasa\n\n# Formatos: :.2% (porcentaje), :, (miles), :,.2f (decimal con miles)\nprint(f\"Tasa: {tasa:.2%}\")\nprint(f\"Capital: ${capital:,}\")\nprint(f\"Interés generado: ${interes:,.2f}\")","id":10,"options":{"autorun":"","classes":"","comment":"","context":"interactive","dpi":72,"fig-cap":"","fig-height":5,"fig-width":7,"label":"f-strings","message":"true","out-height":"","out-width":"700px","output":"true","read-only":"false","results":"markup","warning":"true"}},{"code":"# --- Parámetros de dos proyectos ---\nvpn_proyecto_a = 150_000\nvpn_proyecto_b = 120_000\nriesgo_a = \"alto\"\nriesgo_b = \"bajo\"\n\nprint(\"=\" * 50)\nprint(\"ALGORITMO DE DECISIÓN DE INVERSIÓN\")\nprint(\"=\" * 50)\n\n# La decisión combina rentabilidad (VPN) y tolerancia al riesgo.\n# Fijate qué pasaría si ambos VPN fueran negativos: cae al else.\nif vpn_proyecto_a > vpn_proyecto_b and riesgo_a != \"alto\":\n    print(f\"→ Invertir en Proyecto A (VPN: ${vpn_proyecto_a:,})\")\nelif vpn_proyecto_b > 0:\n    print(f\"→ Invertir en Proyecto B (VPN: ${vpn_proyecto_b:,}, riesgo {riesgo_b})\")\nelse:\n    print(\"→ No invertir en ningún proyecto\")","id":11,"options":{"autorun":"","classes":"","comment":"","context":"interactive","dpi":72,"fig-cap":"","fig-height":5,"fig-width":7,"label":"decision-inversion","message":"true","out-height":"","out-width":"700px","output":"true","read-only":"false","results":"markup","warning":"true"}},{"code":"# Cada año, los intereses se reinvierten y generan nuevos intereses\ncapital_inicial = 100_000\ntasa_anual = 0.10\naños = 10\n\nvalor_futuro = capital_inicial * (1 + tasa_anual) ** años\ninteres_ganado = valor_futuro - capital_inicial\n\nprint(f\"Capital inicial:  ${capital_inicial:,.2f}\")\nprint(f\"Tasa anual:       {tasa_anual:.2%}\")\nprint(f\"Plazo:            {años} años\")\nprint(f\"Valor futuro:     ${valor_futuro:,.2f}\")\nprint(f\"Interés ganado:   ${interes_ganado:,.2f}\")","id":12,"options":{"autorun":"","classes":"","comment":"","context":"interactive","dpi":72,"fig-cap":"","fig-height":5,"fig-width":7,"label":"interes-compuesto","message":"true","out-height":"","out-width":"700px","output":"true","read-only":"false","results":"markup","warning":"true"}},{"code":"# Convertimos entre las formas de expresar una misma tasa: TNA, TEA y continua\ntna = 0.48  # Tasa Nominal Anual\nn = 12      # capitalización mensual\n\n# TNA a TEA\ntea = (1 + tna / n) ** n - 1\nprint(f\"TNA: {tna:.2%} → TEA: {tea:.2%}\")\n\n# TEA a tasa continua\nimport math\ntasa_continua = math.log(1 + tea)\nprint(f\"TEA: {tea:.2%} → Tasa continua: {tasa_continua:.4f}\")","id":13,"options":{"autorun":"","classes":"","comment":"","context":"interactive","dpi":72,"fig-cap":"","fig-height":5,"fig-width":7,"label":"conversion-tasas","message":"true","out-height":"","out-width":"700px","output":"true","read-only":"false","results":"markup","warning":"true"}},{"code":"# La TEA de la sección anterior, frente a dos escenarios de inflación anual\ntea = (1 + 0.48 / 12) ** 12 - 1\n\nfor inflacion in [0.50, 0.70]:\n    tasa_real = (1 + tea) / (1 + inflacion) - 1\n    resta = tea - inflacion\n    print(f\"Inflación {inflacion:.0%}: tasa real {tasa_real:+.2%}  (restando daría {resta:+.2%})\")","id":14,"options":{"autorun":"","classes":"","comment":"","context":"interactive","dpi":72,"fig-cap":"","fig-height":5,"fig-width":7,"label":"tasa-real","message":"true","out-height":"","out-width":"700px","output":"true","read-only":"false","results":"markup","warning":"true"}},{"code":"# El valor presente \"trae a hoy\" un flujo que cobraremos en el futuro\nflujo_futuro = 1_000_000\ntasa = 0.08\naños = 5\n\nvalor_presente = flujo_futuro / (1 + tasa) ** años\nprint(f\"Recibir ${flujo_futuro:,} en {años} años\")\nprint(f\"equivale a ${valor_presente:,.2f} hoy (al {tasa:.0%})\")","id":15,"options":{"autorun":"","classes":"","comment":"","context":"interactive","dpi":72,"fig-cap":"","fig-height":5,"fig-width":7,"label":"valor-presente","message":"true","out-height":"","out-width":"700px","output":"true","read-only":"false","results":"markup","warning":"true"}}];
 
 
 </script>
@@ -540,10 +540,10 @@ window.Quarto = {
   <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation docked overflow-auto">
     <div class="pt-lg-2 mt-2 text-left sidebar-header">
     <div class="sidebar-title mb-0 py-0">
-      <a href="../">Finanzas Computacionales</a> 
+      <a href="../">Finanzas Computacionales con Python</a> 
         <div class="sidebar-tools-main tools-wide">
     <a href="https://github.com/diegoonna/libro_finanzas_computacionales" title="Source Code" class="quarto-navigation-tool px-1" aria-label="Source Code"><i class="bi bi-github"></i></a>
-    <a href="../Finanzas-Computacionales.pdf" title="Download PDF" class="quarto-navigation-tool px-1" aria-label="Download PDF"><i class="bi bi-file-pdf"></i></a>
+    <a href="../Finanzas-Computacionales-con-Python.pdf" title="Download PDF" class="quarto-navigation-tool px-1" aria-label="Download PDF"><i class="bi bi-file-pdf"></i></a>
   <a href="" class="quarto-reader-toggle quarto-navigation-tool px-1" onclick="window.quartoToggleReader(); return false;" title="Alternar modo lector">
   <div class="quarto-reader-toggle-btn">
   <i class="bi"></i>
@@ -788,35 +788,36 @@ window.Quarto = {
   <ul>
   <li><a href="#introducción" id="toc-introducción" class="nav-link active" data-scroll-target="#introducción">Introducción</a>
   <ul class="collapse">
-  <li><a href="#concepto-de-variable-gestión-de-memoria-y-referencias" id="toc-concepto-de-variable-gestión-de-memoria-y-referencias" class="nav-link" data-scroll-target="#concepto-de-variable-gestión-de-memoria-y-referencias"><span class="header-section-number">1.1</span> Concepto de Variable: Gestión de Memoria y Referencias</a></li>
-  <li><a href="#variables-y-tipos-de-datos-primitivos" id="toc-variables-y-tipos-de-datos-primitivos" class="nav-link" data-scroll-target="#variables-y-tipos-de-datos-primitivos"><span class="header-section-number">1.2</span> Variables y Tipos de Datos Primitivos</a>
+  <li><a href="#el-concepto-de-variable-memoria-y-referencias" id="toc-el-concepto-de-variable-memoria-y-referencias" class="nav-link" data-scroll-target="#el-concepto-de-variable-memoria-y-referencias"><span class="header-section-number">1.1</span> El concepto de variable: memoria y referencias</a></li>
+  <li><a href="#variables-y-tipos-de-datos-primitivos" id="toc-variables-y-tipos-de-datos-primitivos" class="nav-link" data-scroll-target="#variables-y-tipos-de-datos-primitivos"><span class="header-section-number">1.2</span> Variables y tipos de datos primitivos</a>
   <ul class="collapse">
-  <li><a href="#tipos-numéricos" id="toc-tipos-numéricos" class="nav-link" data-scroll-target="#tipos-numéricos"><span class="header-section-number">1.2.1</span> Tipos Numéricos</a></li>
+  <li><a href="#tipos-numéricos" id="toc-tipos-numéricos" class="nav-link" data-scroll-target="#tipos-numéricos"><span class="header-section-number">1.2.1</span> Tipos numéricos</a></li>
   <li><a href="#booleanos-bool" id="toc-booleanos-bool" class="nav-link" data-scroll-target="#booleanos-bool"><span class="header-section-number">1.2.2</span> Booleanos (<code>bool</code>)</a></li>
-  <li><a href="#cadenas-de-texto-str" id="toc-cadenas-de-texto-str" class="nav-link" data-scroll-target="#cadenas-de-texto-str"><span class="header-section-number">1.2.3</span> Cadenas de Texto (<code>str</code>)</a></li>
+  <li><a href="#cadenas-de-texto-str" id="toc-cadenas-de-texto-str" class="nav-link" data-scroll-target="#cadenas-de-texto-str"><span class="header-section-number">1.2.3</span> Cadenas de texto (<code>str</code>)</a></li>
   </ul></li>
-  <li><a href="#conversión-de-tipos-casting" id="toc-conversión-de-tipos-casting" class="nav-link" data-scroll-target="#conversión-de-tipos-casting"><span class="header-section-number">1.3</span> Conversión de Tipos (Casting)</a></li>
+  <li><a href="#conversión-de-tipos-casting" id="toc-conversión-de-tipos-casting" class="nav-link" data-scroll-target="#conversión-de-tipos-casting"><span class="header-section-number">1.3</span> Conversión de tipos (<em>casting</em>)</a></li>
   <li><a href="#operadores" id="toc-operadores" class="nav-link" data-scroll-target="#operadores"><span class="header-section-number">1.4</span> Operadores</a>
   <ul class="collapse">
-  <li><a href="#operadores-aritméticos" id="toc-operadores-aritméticos" class="nav-link" data-scroll-target="#operadores-aritméticos"><span class="header-section-number">1.4.1</span> Operadores Aritméticos</a></li>
-  <li><a href="#operadores-de-comparación-y-lógicos" id="toc-operadores-de-comparación-y-lógicos" class="nav-link" data-scroll-target="#operadores-de-comparación-y-lógicos"><span class="header-section-number">1.4.2</span> Operadores de Comparación y Lógicos</a></li>
+  <li><a href="#operadores-aritméticos" id="toc-operadores-aritméticos" class="nav-link" data-scroll-target="#operadores-aritméticos"><span class="header-section-number">1.4.1</span> Operadores aritméticos</a></li>
+  <li><a href="#operadores-de-comparación-y-lógicos" id="toc-operadores-de-comparación-y-lógicos" class="nav-link" data-scroll-target="#operadores-de-comparación-y-lógicos"><span class="header-section-number">1.4.2</span> Operadores de comparación y lógicos</a></li>
   </ul></li>
-  <li><a href="#entrada-y-salida-de-datos" id="toc-entrada-y-salida-de-datos" class="nav-link" data-scroll-target="#entrada-y-salida-de-datos"><span class="header-section-number">1.5</span> Entrada y Salida de Datos</a>
+  <li><a href="#entrada-y-salida-de-datos" id="toc-entrada-y-salida-de-datos" class="nav-link" data-scroll-target="#entrada-y-salida-de-datos"><span class="header-section-number">1.5</span> Entrada y salida de datos</a>
   <ul class="collapse">
-  <li><a href="#f-strings-formato-moderno" id="toc-f-strings-formato-moderno" class="nav-link" data-scroll-target="#f-strings-formato-moderno"><span class="header-section-number">1.5.1</span> F-Strings (Formato Moderno)</a></li>
-  <li><a href="#input-del-usuario" id="toc-input-del-usuario" class="nav-link" data-scroll-target="#input-del-usuario"><span class="header-section-number">1.5.2</span> Input del Usuario</a></li>
+  <li><a href="#f-strings-formato-moderno" id="toc-f-strings-formato-moderno" class="nav-link" data-scroll-target="#f-strings-formato-moderno"><span class="header-section-number">1.5.1</span> F-strings (formato moderno)</a></li>
+  <li><a href="#entrada-del-usuario" id="toc-entrada-del-usuario" class="nav-link" data-scroll-target="#entrada-del-usuario"><span class="header-section-number">1.5.2</span> Entrada del usuario</a></li>
   </ul></li>
-  <li><a href="#estructuras-de-control-if-elif-else" id="toc-estructuras-de-control-if-elif-else" class="nav-link" data-scroll-target="#estructuras-de-control-if-elif-else"><span class="header-section-number">1.6</span> Estructuras de Control: <code>if</code> / <code>elif</code> / <code>else</code></a>
+  <li><a href="#estructuras-de-control-if-elif-else" id="toc-estructuras-de-control-if-elif-else" class="nav-link" data-scroll-target="#estructuras-de-control-if-elif-else"><span class="header-section-number">1.6</span> Estructuras de control: <code>if</code> / <code>elif</code> / <code>else</code></a>
   <ul class="collapse">
-  <li><a href="#caso-práctico-algoritmo-de-decisión-de-inversión" id="toc-caso-práctico-algoritmo-de-decisión-de-inversión" class="nav-link" data-scroll-target="#caso-práctico-algoritmo-de-decisión-de-inversión"><span class="header-section-number">1.6.1</span> Caso Práctico: Algoritmo de Decisión de Inversión</a></li>
+  <li><a href="#caso-práctico-un-algoritmo-de-decisión-de-inversión" id="toc-caso-práctico-un-algoritmo-de-decisión-de-inversión" class="nav-link" data-scroll-target="#caso-práctico-un-algoritmo-de-decisión-de-inversión"><span class="header-section-number">1.6.1</span> Caso práctico: un algoritmo de decisión de inversión</a></li>
   </ul></li>
-  <li><a href="#problemática-financiera-valor-tiempo-del-dinero-tvm" id="toc-problemática-financiera-valor-tiempo-del-dinero-tvm" class="nav-link" data-scroll-target="#problemática-financiera-valor-tiempo-del-dinero-tvm"><span class="header-section-number">1.7</span> Problemática Financiera: Valor Tiempo del Dinero (TVM)</a>
+  <li><a href="#problema-financiero-el-valor-tiempo-del-dinero-tvm" id="toc-problema-financiero-el-valor-tiempo-del-dinero-tvm" class="nav-link" data-scroll-target="#problema-financiero-el-valor-tiempo-del-dinero-tvm"><span class="header-section-number">1.7</span> Problema financiero: el valor tiempo del dinero (TVM)</a>
   <ul class="collapse">
-  <li><a href="#interés-compuesto" id="toc-interés-compuesto" class="nav-link" data-scroll-target="#interés-compuesto"><span class="header-section-number">1.7.1</span> Interés Compuesto</a></li>
-  <li><a href="#conversión-de-tasas" id="toc-conversión-de-tasas" class="nav-link" data-scroll-target="#conversión-de-tasas"><span class="header-section-number">1.7.2</span> Conversión de Tasas</a></li>
-  <li><a href="#valor-presente" id="toc-valor-presente" class="nav-link" data-scroll-target="#valor-presente"><span class="header-section-number">1.7.3</span> Valor Presente</a></li>
+  <li><a href="#interés-compuesto" id="toc-interés-compuesto" class="nav-link" data-scroll-target="#interés-compuesto"><span class="header-section-number">1.7.1</span> Interés compuesto</a></li>
+  <li><a href="#conversión-de-tasas" id="toc-conversión-de-tasas" class="nav-link" data-scroll-target="#conversión-de-tasas"><span class="header-section-number">1.7.2</span> Conversión de tasas</a></li>
+  <li><a href="#tasa-real-e-inflación" id="toc-tasa-real-e-inflación" class="nav-link" data-scroll-target="#tasa-real-e-inflación"><span class="header-section-number">1.7.3</span> Tasa real e inflación</a></li>
+  <li><a href="#valor-presente" id="toc-valor-presente" class="nav-link" data-scroll-target="#valor-presente"><span class="header-section-number">1.7.4</span> Valor presente</a></li>
   </ul></li>
-  <li><a href="#ejercicios-propuestos" id="toc-ejercicios-propuestos" class="nav-link" data-scroll-target="#ejercicios-propuestos"><span class="header-section-number">1.8</span> Ejercicios Propuestos</a></li>
+  <li><a href="#errores-comunes" id="toc-errores-comunes" class="nav-link" data-scroll-target="#errores-comunes"><span class="header-section-number">1.8</span> Errores comunes</a></li>
   <li><a href="#referencias" id="toc-referencias" class="nav-link" data-scroll-target="#referencias"><span class="header-section-number">1.9</span> Referencias</a></li>
   </ul></li>
   </ul>
@@ -878,8 +879,8 @@ window.Quarto = {
 </div>
 </div>
 <hr>
-<section id="concepto-de-variable-gestión-de-memoria-y-referencias" class="level2" data-number="1.1">
-<h2 data-number="1.1" class="anchored" data-anchor-id="concepto-de-variable-gestión-de-memoria-y-referencias"><span class="header-section-number">1.1</span> Concepto de Variable: Gestión de Memoria y Referencias</h2>
+<section id="el-concepto-de-variable-memoria-y-referencias" class="level2" data-number="1.1">
+<h2 data-number="1.1" class="anchored" data-anchor-id="el-concepto-de-variable-memoria-y-referencias"><span class="header-section-number">1.1</span> El concepto de variable: memoria y referencias</h2>
 <p>Es importante no pensar en las variables simplemente como cajas abstractas, sino comprender cómo la computadora administra sus recursos físicos (RAM). Cuando procesamos miles de datos financieros o realizamos millones de iteraciones en una simulación, la gestión de la memoria se vuelve un factor crítico para el rendimiento (latencia y capacidad).</p>
 <p>Una variable se define a través de tres componentes fundamentales:</p>
 <ol type="1">
@@ -921,10 +922,10 @@ Figura&nbsp;1.1: Las variables son etiquetas. Reasignar <code>precio</code> no m
 <hr>
 </section>
 <section id="variables-y-tipos-de-datos-primitivos" class="level2" data-number="1.2">
-<h2 data-number="1.2" class="anchored" data-anchor-id="variables-y-tipos-de-datos-primitivos"><span class="header-section-number">1.2</span> Variables y Tipos de Datos Primitivos</h2>
+<h2 data-number="1.2" class="anchored" data-anchor-id="variables-y-tipos-de-datos-primitivos"><span class="header-section-number">1.2</span> Variables y tipos de datos primitivos</h2>
 <p>Python utiliza <strong>tipado dinámico</strong>: no necesitamos declarar el tipo de dato explícitamente. A continuación, exploraremos algunos de los tipos de datos fundamentales que utilizaremos para modelar instrumentos y variables financieras.</p>
 <section id="tipos-numéricos" class="level3" data-number="1.2.1">
-<h3 data-number="1.2.1" class="anchored" data-anchor-id="tipos-numéricos"><span class="header-section-number">1.2.1</span> Tipos Numéricos</h3>
+<h3 data-number="1.2.1" class="anchored" data-anchor-id="tipos-numéricos"><span class="header-section-number">1.2.1</span> Tipos numéricos</h3>
 <section id="enteros-int" class="level4" data-number="1.2.1.1">
 <h4 data-number="1.2.1.1" class="anchored" data-anchor-id="enteros-int"><span class="header-section-number">1.2.1.1</span> Enteros (<code>int</code>)</h4>
 <p>Representan números del conjunto <span class="math inline">\(\mathbb{Z}\)</span> y tienen precisión arbitraria.</p>
@@ -934,10 +935,10 @@ Figura&nbsp;1.1: Las variables son etiquetas. Reasignar <code>precio</code> no m
 </section>
 <section id="punto-flotante-float" class="level4" data-number="1.2.1.2">
 <h4 data-number="1.2.1.2" class="anchored" data-anchor-id="punto-flotante-float"><span class="header-section-number">1.2.1.2</span> Punto Flotante (<code>float</code>)</h4>
-<p>Representan números reales mediante el estándar <strong>IEEE 754</strong>. Es el tipo estándar para precios, tasas y rendimientos — y esconde una sorpresa que en finanzas no podés permitirte ignorar. Ejecutá esto:</p>
+<p>Representan números reales mediante el estándar <strong>IEEE 754</strong>. Es el tipo estándar para precios, tasas y rendimientos, y esconde una sorpresa que en finanzas no podés permitirte ignorar. Ejecutá esto:</p>
 <div id="qpyodide-insertion-location-3"></div>
 <noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
-<p><strong>0.1 + 0.2 no da 0.3.</strong> No es un bug de Python: es una consecuencia de cómo las computadoras representan los números. Internamente todo se guarda en <strong>binario</strong> (base 2), y así como 1/3 no tiene representación decimal exacta (0.3333… infinito), <strong>0.1 no tiene representación binaria exacta</strong>: la computadora guarda la aproximación más cercana que entra en 64 bits. Los errores son minúsculos (del orden de <span class="math inline">\(10^{-17}\)</span>), pero existen, se acumulan al operar, y rompen las comparaciones con <code>==</code>.</p>
+<p><strong>0.1 + 0.2 no da 0.3.</strong> No es un bug de Python: es una consecuencia de cómo las computadoras representan los números. Internamente todo se guarda en <strong>binario</strong> (base 2), y así como 1/3 no tiene representación decimal exacta (0.3333… infinito), 0.1 no tiene representación binaria exacta: la computadora guarda la aproximación más cercana que entra en 64 bits. Los errores son minúsculos (del orden de <span class="math inline">\(10^{-17}\)</span>), pero existen, se acumulan al operar, y rompen las comparaciones con <code>==</code>.</p>
 <p>Las dos consecuencias prácticas, que valen para todo el libro:</p>
 <ol type="1">
 <li><strong>Nunca compares floats con <code>==</code></strong>: preguntá si están <em>suficientemente cerca</em>, con una tolerancia. Python trae <code>math.isclose()</code> exactamente para esto (y NumPy, su análogo <code>np.isclose</code>).</li>
@@ -955,7 +956,7 @@ Figura&nbsp;1.1: Las variables son etiquetas. Reasignar <code>precio</code> no m
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p><strong><code>float</code> para análisis</strong> (retornos, volatilidades, simulaciones, optimización): el error de <span class="math inline">\(10^{-17}\)</span> es billones de veces menor que la incertidumbre de cualquier modelo financiero, y la velocidad importa. <strong><code>decimal</code> o centavos enteros para contabilidad</strong> (saldos, liquidaciones, facturación): ahí cada centavo debe cerrar exacto. Todo este libro trabaja en el mundo del análisis, así que usaremos <code>float</code> — pero sabiendo lo que sacrificamos, y sin comparar jamás con <code>==</code>.</p>
+<p><strong><code>float</code> para análisis</strong> (retornos, volatilidades, simulaciones, optimización): el error de <span class="math inline">\(10^{-17}\)</span> es billones de veces menor que la incertidumbre de cualquier modelo financiero, y la velocidad importa. <code>decimal</code> o centavos enteros para contabilidad (saldos, liquidaciones, facturación): ahí cada centavo debe cerrar exacto. Todo este libro trabaja en el mundo del análisis, así que usaremos <code>float</code>, pero sabiendo lo que sacrificamos, y sin comparar jamás con <code>==</code>.</p>
 </div>
 </div>
 </section>
@@ -967,7 +968,7 @@ Figura&nbsp;1.1: Las variables son etiquetas. Reasignar <code>precio</code> no m
 <noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
 </section>
 <section id="cadenas-de-texto-str" class="level3" data-number="1.2.3">
-<h3 data-number="1.2.3" class="anchored" data-anchor-id="cadenas-de-texto-str"><span class="header-section-number">1.2.3</span> Cadenas de Texto (<code>str</code>)</h3>
+<h3 data-number="1.2.3" class="anchored" data-anchor-id="cadenas-de-texto-str"><span class="header-section-number">1.2.3</span> Cadenas de texto (<code>str</code>)</h3>
 <p>Secuencias inmutables de caracteres. Esenciales para tickers, códigos ISIN y limpieza de datos.</p>
 <div id="qpyodide-insertion-location-6"></div>
 <noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
@@ -975,7 +976,7 @@ Figura&nbsp;1.1: Las variables son etiquetas. Reasignar <code>precio</code> no m
 </section>
 </section>
 <section id="conversión-de-tipos-casting" class="level2" data-number="1.3">
-<h2 data-number="1.3" class="anchored" data-anchor-id="conversión-de-tipos-casting"><span class="header-section-number">1.3</span> Conversión de Tipos (Casting)</h2>
+<h2 data-number="1.3" class="anchored" data-anchor-id="conversión-de-tipos-casting"><span class="header-section-number">1.3</span> Conversión de tipos (<em>casting</em>)</h2>
 <p>Los datos del mundo real frecuentemente llegan como texto (desde CSVs o APIs), y lo mismo pasa con lo que ingresa el usuario. Por eso es necesario convertirlos explícitamente.</p>
 <div id="qpyodide-insertion-location-7"></div>
 <noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
@@ -984,12 +985,12 @@ Figura&nbsp;1.1: Las variables son etiquetas. Reasignar <code>precio</code> no m
 <section id="operadores" class="level2" data-number="1.4">
 <h2 data-number="1.4" class="anchored" data-anchor-id="operadores"><span class="header-section-number">1.4</span> Operadores</h2>
 <section id="operadores-aritméticos" class="level3" data-number="1.4.1">
-<h3 data-number="1.4.1" class="anchored" data-anchor-id="operadores-aritméticos"><span class="header-section-number">1.4.1</span> Operadores Aritméticos</h3>
+<h3 data-number="1.4.1" class="anchored" data-anchor-id="operadores-aritméticos"><span class="header-section-number">1.4.1</span> Operadores aritméticos</h3>
 <div id="qpyodide-insertion-location-8"></div>
 <noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
 </section>
 <section id="operadores-de-comparación-y-lógicos" class="level3" data-number="1.4.2">
-<h3 data-number="1.4.2" class="anchored" data-anchor-id="operadores-de-comparación-y-lógicos"><span class="header-section-number">1.4.2</span> Operadores de Comparación y Lógicos</h3>
+<h3 data-number="1.4.2" class="anchored" data-anchor-id="operadores-de-comparación-y-lógicos"><span class="header-section-number">1.4.2</span> Operadores de comparación y lógicos</h3>
 <table class="caption-top table">
 <thead>
 <tr class="header">
@@ -1018,14 +1019,14 @@ Figura&nbsp;1.1: Las variables son etiquetas. Reasignar <code>precio</code> no m
 </section>
 </section>
 <section id="entrada-y-salida-de-datos" class="level2" data-number="1.5">
-<h2 data-number="1.5" class="anchored" data-anchor-id="entrada-y-salida-de-datos"><span class="header-section-number">1.5</span> Entrada y Salida de Datos</h2>
+<h2 data-number="1.5" class="anchored" data-anchor-id="entrada-y-salida-de-datos"><span class="header-section-number">1.5</span> Entrada y salida de datos</h2>
 <section id="f-strings-formato-moderno" class="level3" data-number="1.5.1">
-<h3 data-number="1.5.1" class="anchored" data-anchor-id="f-strings-formato-moderno"><span class="header-section-number">1.5.1</span> F-Strings (Formato Moderno)</h3>
+<h3 data-number="1.5.1" class="anchored" data-anchor-id="f-strings-formato-moderno"><span class="header-section-number">1.5.1</span> F-strings (formato moderno)</h3>
 <div id="qpyodide-insertion-location-10"></div>
 <noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
 </section>
-<section id="input-del-usuario" class="level3" data-number="1.5.2">
-<h3 data-number="1.5.2" class="anchored" data-anchor-id="input-del-usuario"><span class="header-section-number">1.5.2</span> Input del Usuario</h3>
+<section id="entrada-del-usuario" class="level3" data-number="1.5.2">
+<h3 data-number="1.5.2" class="anchored" data-anchor-id="entrada-del-usuario"><span class="header-section-number">1.5.2</span> Entrada del usuario</h3>
 <div class="callout callout-style-simple callout-note">
 <div class="callout-body d-flex">
 <div class="callout-icon-container">
@@ -1042,9 +1043,9 @@ Figura&nbsp;1.1: Las variables son etiquetas. Reasignar <code>precio</code> no m
 </section>
 </section>
 <section id="estructuras-de-control-if-elif-else" class="level2" data-number="1.6">
-<h2 data-number="1.6" class="anchored" data-anchor-id="estructuras-de-control-if-elif-else"><span class="header-section-number">1.6</span> Estructuras de Control: <code>if</code> / <code>elif</code> / <code>else</code></h2>
+<h2 data-number="1.6" class="anchored" data-anchor-id="estructuras-de-control-if-elif-else"><span class="header-section-number">1.6</span> Estructuras de control: <code>if</code> / <code>elif</code> / <code>else</code></h2>
 <p>Los algoritmos financieros requieren tomar decisiones basadas en condiciones de mercado.</p>
-<p>Antes de leer el código, mirá su forma en la <a href="#fig-decision-inversion" class="quarto-xref">Figura&nbsp;<span>1.2</span></a>: las condiciones se evalúan <strong>en orden, de arriba hacia abajo</strong>, y apenas una se cumple se ejecuta su rama y se ignora el resto. El <code>else</code> es la red de seguridad: atrapa todo lo que no cumplió ninguna condición.</p>
+<p>Antes de leer el código, mirá su forma en la <a href="#fig-decision-inversion" class="quarto-xref">Figura&nbsp;<span>1.2</span></a>: las condiciones se evalúan en orden, de arriba hacia abajo, y apenas una se cumple se ejecuta su rama y se ignora el resto. El <code>else</code> es la red de seguridad: atrapa todo lo que no cumplió ninguna condición.</p>
 <div class="cell" data-layout-align="center">
 <div class="cell-output-display">
 <div id="fig-decision-inversion" class="quarto-float quarto-figure quarto-figure-center anchored">
@@ -1074,16 +1075,16 @@ Figura&nbsp;1.2: El algoritmo de decisión como diagrama de flujo: <code>if</cod
 </div>
 </div>
 </div>
-<section id="caso-práctico-algoritmo-de-decisión-de-inversión" class="level3" data-number="1.6.1">
-<h3 data-number="1.6.1" class="anchored" data-anchor-id="caso-práctico-algoritmo-de-decisión-de-inversión"><span class="header-section-number">1.6.1</span> Caso Práctico: Algoritmo de Decisión de Inversión</h3>
+<section id="caso-práctico-un-algoritmo-de-decisión-de-inversión" class="level3" data-number="1.6.1">
+<h3 data-number="1.6.1" class="anchored" data-anchor-id="caso-práctico-un-algoritmo-de-decisión-de-inversión"><span class="header-section-number">1.6.1</span> Caso práctico: un algoritmo de decisión de inversión</h3>
 <div id="qpyodide-insertion-location-11"></div>
 <noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
 <hr>
 </section>
 </section>
-<section id="problemática-financiera-valor-tiempo-del-dinero-tvm" class="level2" data-number="1.7">
-<h2 data-number="1.7" class="anchored" data-anchor-id="problemática-financiera-valor-tiempo-del-dinero-tvm"><span class="header-section-number">1.7</span> Problemática Financiera: Valor Tiempo del Dinero (TVM)</h2>
-<p>Todo el capítulo gira alrededor de una idea: <strong>un peso hoy no vale lo mismo que un peso mañana</strong>. La <a href="#fig-linea-tiempo-tvm" class="quarto-xref">Figura&nbsp;<span>1.3</span></a> la resume en una línea de tiempo: capitalizar es llevar plata hacia el futuro, y descontar es traerla al presente. Las tres secciones que siguen son variaciones de esas dos flechas.</p>
+<section id="problema-financiero-el-valor-tiempo-del-dinero-tvm" class="level2" data-number="1.7">
+<h2 data-number="1.7" class="anchored" data-anchor-id="problema-financiero-el-valor-tiempo-del-dinero-tvm"><span class="header-section-number">1.7</span> Problema financiero: el valor tiempo del dinero (TVM)</h2>
+<p>Todo el capítulo gira alrededor de una idea: un peso hoy no vale lo mismo que un peso mañana. La <a href="#fig-linea-tiempo-tvm" class="quarto-xref">Figura&nbsp;<span>1.3</span></a> la resume en una línea de tiempo: capitalizar es llevar dinero hacia el futuro, y descontar es traerlo al presente <span class="citation" data-cites="brealey2020">(<a href="cap01_pensamiento_computacional.html#ref-brealey2020" role="doc-biblioref">Brealey, Myers, y Allen 2020</a>)</span>. Las tres secciones que siguen son variaciones de esas dos flechas.</p>
 <div id="cell-fig-linea-tiempo-tvm" class="cell" data-execution_count="2">
 <div class="cell-output cell-output-display">
 <div id="fig-linea-tiempo-tvm" class="quarto-float quarto-figure quarto-figure-center anchored">
@@ -1099,7 +1100,7 @@ Figura&nbsp;1.3: Valor tiempo del dinero: capitalizar lleva un monto de hoy (VP)
 </div>
 </div>
 <section id="interés-compuesto" class="level3" data-number="1.7.1">
-<h3 data-number="1.7.1" class="anchored" data-anchor-id="interés-compuesto"><span class="header-section-number">1.7.1</span> Interés Compuesto</h3>
+<h3 data-number="1.7.1" class="anchored" data-anchor-id="interés-compuesto"><span class="header-section-number">1.7.1</span> Interés compuesto</h3>
 <p>La fórmula fundamental:</p>
 <p><span class="math display">\[VF = VP \cdot (1 + r)^n\]</span></p>
 <p>Donde:</p>
@@ -1113,7 +1114,7 @@ Figura&nbsp;1.3: Valor tiempo del dinero: capitalizar lleva un monto de hoy (VP)
 <noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
 </section>
 <section id="conversión-de-tasas" class="level3" data-number="1.7.2">
-<h3 data-number="1.7.2" class="anchored" data-anchor-id="conversión-de-tasas"><span class="header-section-number">1.7.2</span> Conversión de Tasas</h3>
+<h3 data-number="1.7.2" class="anchored" data-anchor-id="conversión-de-tasas"><span class="header-section-number">1.7.2</span> Conversión de tasas</h3>
 <div id="qpyodide-insertion-location-13"></div>
 <noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
 <p>Las tres tasas describen <strong>el mismo rendimiento</strong> expresado de formas distintas. La <a href="#fig-conversion-tasas" class="quarto-xref">Figura&nbsp;<span>1.4</span></a> muestra el mapa de conversiones: conviene tenerlo a mano, porque en Argentina las tasas se publican como TNA y casi todos los modelos piden TEA o tasa continua.</p>
@@ -1140,48 +1141,286 @@ Figura&nbsp;1.4: Mapa de conversión de tasas. Todas expresan el mismo rendimien
 </div>
 </div>
 </div>
+<div class="simulador">
+<p><span class="simulador-titulo">Simulador · Valor tiempo del dinero</span></p>
+<p>El capital crece con la tasa nominal anual que elijas, capitalizada cada cuánto quieras. La línea azul es esa capitalización (con escalones: los intereses se acreditan al final de cada período), la gris es el interés simple, que nunca reinvierte, y la verde punteada la capitalización continua, el techo al que se acerca cualquier frecuencia. Arranca con el ejemplo del capítulo.</p>
+<div id="sim-tvm"></div>
+<script type="module">
+  import { montar } from "../simuladores/tvm.js";
+  montar(document.getElementById("sim-tvm"));
+</script>
+<div class="probar">
+<p><strong>Probá esto</strong></p>
+<ol type="1">
+<li>Con los valores iniciales el valor futuro es $259,374.25, el del bloque de interés compuesto. Pasá la capitalización a continua: sube a $271,828.18 y la TEA a 10.52%. Con una tasa del 10%, capitalizar más seguido agrega apenas medio punto de TEA.</li>
+<li>Poné la TNA en 48% y la capitalización mensual: la TEA da 60.10%, la del bloque de conversión de tasas. Con capitalización diaria llega a 61.56%. Con tasas altas la frecuencia sí pesa: de anual a mensual son doce puntos de TEA.</li>
+<li>Volvé al 10% anual y llevá el plazo a 30 años: el interés simple llega a $400,000 y el compuesto a $1,744,940.23. El extra de $1,344,940.23 es interés sobre interés. Y el capital se duplica en 7.27 años: la “regla del 72” de los operadores (72 / 10 = 7.2) es este mismo cálculo aproximado.</li>
+</ol>
+</div>
+</div>
 </section>
-<section id="valor-presente" class="level3" data-number="1.7.3">
-<h3 data-number="1.7.3" class="anchored" data-anchor-id="valor-presente"><span class="header-section-number">1.7.3</span> Valor Presente</h3>
-<p><span class="math display">\[VP = \frac{VF}{(1 + r)^n}\]</span></p>
+<section id="tasa-real-e-inflación" class="level3" data-number="1.7.3">
+<h3 data-number="1.7.3" class="anchored" data-anchor-id="tasa-real-e-inflación"><span class="header-section-number">1.7.3</span> Tasa real e inflación</h3>
+<p>Todas las tasas de la sección anterior son <strong>nominales</strong>: dicen cuántos pesos más vamos a tener, pero no cuánto más vamos a poder comprar con ellos. Si los precios suben mientras el capital rinde, parte del rendimiento solo compensa esa suba. La <strong>tasa real</strong> mide lo que queda: el aumento del poder de compra.</p>
+<p>La relación entre las tres magnitudes es la ecuación de Fisher <span class="citation" data-cites="brealey2020">(<a href="cap01_pensamiento_computacional.html#ref-brealey2020" role="doc-biblioref">Brealey, Myers, y Allen 2020</a>)</span>. Si <span class="math inline">\(i\)</span> es la tasa nominal y <span class="math inline">\(\pi\)</span> la inflación del mismo período,</p>
+<p><span class="math display">\[1 + r_{real} = \frac{1 + i}{1 + \pi}\]</span></p>
+<p>El razonamiento es directo. Al cabo del período tenemos <span class="math inline">\(1 + i\)</span> pesos por cada peso invertido, y lo que antes costaba un peso ahora cuesta <span class="math inline">\(1 + \pi\)</span>. El cociente dice cuántas unidades de ese bien podemos comprar.</p>
 <div id="qpyodide-insertion-location-14"></div>
 <noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
-<hr>
-</section>
-</section>
-<section id="ejercicios-propuestos" class="level2" data-number="1.8">
-<h2 data-number="1.8" class="anchored" data-anchor-id="ejercicios-propuestos"><span class="header-section-number">1.8</span> Ejercicios Propuestos</h2>
-<div class="callout callout-style-simple callout-important callout-titled" title="Ejercicios">
+<p>Con una inflación del 50%, la TEA del 60.10% deja una tasa real de 6.74%, y no los 10.10 puntos que sugiere la resta. Con una inflación del 70% la tasa real es negativa, −5.82%: el capital crece en pesos y aun así compra menos que al principio.</p>
+<p>La resta <span class="math inline">\(i - \pi\)</span> es una aproximación que funciona cuando las dos tasas son chicas. Con una tasa del 10% y una inflación del 4%, la cuenta exacta da 5.77% y la resta, 6%. Con las tasas habituales en la Argentina el error es de varios puntos, y hay que dividir.</p>
+<div class="callout callout-style-simple callout-note callout-titled" title="Dónde aparece la tasa real">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Importante</span>Ejercicios
+<span class="screen-reader-only">Nota</span>Dónde aparece la tasa real
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<ol type="1">
-<li><p><strong>Interés compuesto con capitalización variable</strong>: Escribir un programa que calcule el valor futuro para capitalización anual, semestral, trimestral, mensual y diaria. Comparar los resultados.</p></li>
-<li><p><strong>Algoritmo de decisión</strong>: Dado un bono con TIR del 8% y un plazo fijo con tasa del 6%, crear un algoritmo que recomiende la inversión considerando también el horizonte temporal y la tolerancia al riesgo del inversor.</p></li>
-<li><p><strong>Conversión de tasas</strong>: Crear un programa que convierta entre TNA, TEA, tasa efectiva mensual y tasa continua. El usuario debe poder elegir qué conversión realizar.</p></li>
-<li><p><strong>Valor presente neto simple</strong>: Dados tres flujos futuros de $10,000, $15,000 y $20,000 a recibir en los años 1, 2 y 3 respectivamente, calcular el VPN con una tasa de descuento del 10%.</p></li>
-</ol>
+<p>Los bonos y los depósitos ajustados por inflación (en la Argentina, los que ajustan por CER o por UVA) se cotizan directamente en tasa real: el capital se actualiza con el índice de precios y la tasa que se informa es la que se gana por encima de esa actualización. Para comparar uno de esos instrumentos con otro de tasa fija en pesos hace falta una hipótesis de inflación y la ecuación de arriba. En el <a href="../unidad2/cap08_markowitz.html">Capítulo 8</a> el tema vuelve al estimar retornos esperados.</p>
+</div>
+</div>
+</section>
+<section id="valor-presente" class="level3" data-number="1.7.4">
+<h3 data-number="1.7.4" class="anchored" data-anchor-id="valor-presente"><span class="header-section-number">1.7.4</span> Valor presente</h3>
+<p><span class="math display">\[VP = \frac{VF}{(1 + r)^n}\]</span></p>
+<div id="qpyodide-insertion-location-15"></div>
+<noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
+<hr>
+</section>
+</section>
+<section id="errores-comunes" class="level2" data-number="1.8">
+<h2 data-number="1.8" class="anchored" data-anchor-id="errores-comunes"><span class="header-section-number">1.8</span> Errores comunes</h2>
+<div class="callout callout-style-simple callout-warning callout-titled" title="Trampas frecuentes">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Advertencia</span>Trampas frecuentes
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ul>
+<li><strong>Comparar floats con <code>==</code></strong>: <code>0.1 + 0.2 == 0.3</code> da <code>False</code>. Para preguntar si dos montos calculados son iguales, usá <code>math.isclose()</code>; para contabilidad al centavo, <code>Decimal</code>.</li>
+<li><strong>Usar <code>^</code> para potencias</strong>: en Python, <code>1.08 ^ 5</code> no eleva a la quinta (es una operación sobre bits, y con floats directamente da error). La potencia es <code>**</code>: <code>1.08 ** 5</code>.</li>
+<li><strong>La tasa en “puntos” en lugar de en decimal</strong>: escribir <code>tasa = 8</code> cuando querías 8% hace que <code>(1 + tasa) ** 5</code> multiplique el capital por 59049 en vez de por 1.47. Las tasas van en decimal (<code>0.08</code>), y el formato <code>:.2%</code> se encarga de mostrarlas como porcentaje.</li>
+<li><strong>Sumar un <code>str</code> que parece número</strong>: lo que llega de <code>input()</code> o de un archivo es texto, y <code>"100" + "50"</code> da <code>"10050"</code>. Convertí con <code>float()</code> o <code>int()</code> antes de operar.</li>
+<li><strong>Mezclar TNA y TEA</strong>: una TNA del 48% con capitalización mensual no rinde 48% en el año, rinde más. Antes de comparar dos tasas o de usarlas en <span class="math inline">\((1+r)^n\)</span>, llevalas a la misma forma (la <a href="#fig-conversion-tasas" class="quarto-xref">Figura&nbsp;<span>1.4</span></a>).</li>
+<li><strong>Restar la inflación para obtener la tasa real</strong>: la cuenta correcta es <span class="math inline">\((1+i)/(1+\pi) - 1\)</span>. La resta solo sirve como aproximación con tasas de un dígito.</li>
+<li><strong><code>=</code> en lugar de <code>==</code> en un <code>if</code></strong>: <code>=</code> asigna y <code>==</code> compara. Python rechaza <code>if tasa = 0.05:</code> con un <code>SyntaxError</code>, que por lo menos avisa; leé el mensaje antes de tocar otra cosa.</li>
+</ul>
 </div>
 </div>
 <hr>
 </section>
 <section id="referencias" class="level2" data-number="1.9">
 <h2 data-number="1.9" class="anchored" data-anchor-id="referencias"><span class="header-section-number">1.9</span> Referencias</h2>
-<div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list" style="display: none">
-<div id="ref-benninga2014" class="csl-entry" role="listitem">
-Benninga, Simon. 2014. <em>Financial Modeling</em>. 4.ª ed. MIT Press.
+<div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list">
+<div id="ref-andersen2008" class="csl-entry" role="listitem">
+Andersen, Leif. 2008. <span>“Simple and Efficient Simulation of the
+<span>Heston</span> Stochastic Volatility Model.”</span> <em>Journal of
+Computational Finance</em> 11 (3): 1–42.
+</div>
+<div id="ref-artzner1999" class="csl-entry" role="listitem">
+Artzner, Philippe, Freddy Delbaen, Jean-Marc Eber, and David Heath.
+1999. <span>“Coherent Measures of Risk.”</span> <em>Mathematical
+Finance</em> 9 (3): 203–28.
+</div>
+<div id="ref-bailey2014" class="csl-entry" role="listitem">
+Bailey, David, Jonathan Borwein, Marcos López de Prado, and Qiji Zhu.
+2014. <span>“Pseudo-Mathematics and Financial Charlatanism: The Effects
+of Backtest Overfitting on Out-of-Sample Performance.”</span>
+<em>Notices of the AMS</em> 61 (5): 458–71.
+</div>
+<div id="ref-bis2011" class="csl-entry" role="listitem">
+Basel Committee on Banking Supervision. 2011. <span>“Basel
+<span>III</span>: A Global Regulatory Framework for More Resilient Banks
+and Banking Systems.”</span> Bank for International Settlements. <a href="https://www.bis.org/publ/bcbs189.htm">https://www.bis.org/publ/bcbs189.htm</a>.
+</div>
+<div id="ref-bcbs2019" class="csl-entry" role="listitem">
+———. 2019. <span>“Minimum Capital Requirements for Market Risk.”</span>
+Bank for International Settlements. <a href="https://www.bis.org/bcbs/publ/d457.htm">https://www.bis.org/bcbs/publ/d457.htm</a>.
+</div>
+<div id="ref-black1992" class="csl-entry" role="listitem">
+Black, Fischer, and Robert Litterman. 1992. <span>“Global Portfolio
+Optimization.”</span> <em>Financial Analysts Journal</em> 48 (5): 28–43.
+</div>
+<div id="ref-black1973" class="csl-entry" role="listitem">
+Black, Fischer, and Myron Scholes. 1973. <span>“The Pricing of Options
+and Corporate Liabilities.”</span> <em>Journal of Political Economy</em>
+81 (3): 637–54.
+</div>
+<div id="ref-box2015" class="csl-entry" role="listitem">
+Box, George, Gwilym Jenkins, Gregory Reinsel, and Greta Ljung. 2015.
+<em>Time Series Analysis: Forecasting and Control</em>. 5th ed. Wiley.
 </div>
 <div id="ref-brealey2020" class="csl-entry" role="listitem">
-Brealey, Richard, Stewart Myers, y Franklin Allen. 2020. <em>Principles of Corporate Finance</em>. 13.ª ed. McGraw-Hill.
+Brealey, Richard, Stewart Myers, and Franklin Allen. 2020.
+<em>Principles of Corporate Finance</em>. 13th ed. McGraw-Hill.
 </div>
-<div id="ref-vanrossum2009" class="csl-entry" role="listitem">
-Van Rossum, Guido, y Fred L. Drake. 2009. <em>Python 3 Reference Manual</em>. CreateSpace.
+<div id="ref-christoffersen1998" class="csl-entry" role="listitem">
+Christoffersen, Peter F. 1998. <span>“Evaluating Interval
+Forecasts.”</span> <em>International Economic Review</em> 39 (4):
+841–62.
+</div>
+<div id="ref-cont2001" class="csl-entry" role="listitem">
+Cont, Rama. 2001. <span>“Empirical Properties of Asset Returns: Stylized
+Facts and Statistical Issues.”</span> <em>Quantitative Finance</em> 1
+(2): 223–36.
+</div>
+<div id="ref-derman2016" class="csl-entry" role="listitem">
+Derman, Emanuel, and Michael Miller. 2016. <em>The Volatility
+Smile</em>. Wiley.
+</div>
+<div id="ref-efron1993" class="csl-entry" role="listitem">
+Efron, Bradley, and Robert J. Tibshirani. 1993. <em>An Introduction to
+the Bootstrap</em>. Chapman &amp; Hall.
+</div>
+<div id="ref-fabozzi2015" class="csl-entry" role="listitem">
+Fabozzi, Frank J. 2015. <em>Bond Markets, Analysis, and Strategies</em>.
+9th ed. Pearson.
+</div>
+<div id="ref-fama1993" class="csl-entry" role="listitem">
+Fama, Eugene, and Kenneth French. 1993. <span>“Common Risk Factors in
+the Returns on Stocks and Bonds.”</span> <em>Journal of Financial
+Economics</em> 33 (1): 3–56.
+</div>
+<div id="ref-glasserman2003" class="csl-entry" role="listitem">
+Glasserman, Paul. 2003. <em>Monte Carlo Methods in Financial
+Engineering</em>. Springer.
+</div>
+<div id="ref-granger1974" class="csl-entry" role="listitem">
+Granger, Clive, and Paul Newbold. 1974. <span>“Spurious Regressions in
+Econometrics.”</span> <em>Journal of Econometrics</em> 2 (2): 111–20.
+</div>
+<div id="ref-hagan2002" class="csl-entry" role="listitem">
+Hagan, Patrick, Deep Kumar, Andrew Lesniewski, and Diana Woodward. 2002.
+<span>“Managing Smile Risk.”</span> <em>Wilmott Magazine</em>, 84–108.
+</div>
+<div id="ref-harris2020" class="csl-entry" role="listitem">
+Harris, Charles R., K. Jarrod Millman, Stéfan J. van der Walt, et al.
+2020. <span>“Array Programming with <span>NumPy</span>.”</span>
+<em>Nature</em> 585: 357–62. <a href="https://doi.org/10.1038/s41586-020-2649-2">https://doi.org/10.1038/s41586-020-2649-2</a>.
+</div>
+<div id="ref-he1999" class="csl-entry" role="listitem">
+He, Guangliang, and Robert Litterman. 1999. <span>“The Intuition Behind
+<span>Black-Litterman</span> Model Portfolios.”</span> Goldman Sachs
+Investment Management Research.
+</div>
+<div id="ref-heston1993" class="csl-entry" role="listitem">
+Heston, Steven. 1993. <span>“A Closed-Form Solution for Options with
+Stochastic Volatility with Applications to Bond and Currency
+Options.”</span> <em>Review of Financial Studies</em> 6 (2): 327–43.
+</div>
+<div id="ref-hull2018options" class="csl-entry" role="listitem">
+Hull, John. 2018. <em>Options, Futures, and Other Derivatives</em>. 10th
+ed. Pearson.
+</div>
+<div id="ref-idzorek2007" class="csl-entry" role="listitem">
+Idzorek, Thomas. 2007. <span>“A Step-by-Step Guide to the
+<span>Black-Litterman</span> Model.”</span> In <em>Forecasting Expected
+Returns in the Financial Markets</em>. Academic Press.
+</div>
+<div id="ref-jarque1987" class="csl-entry" role="listitem">
+Jarque, Carlos M., and Anil K. Bera. 1987. <span>“A Test for Normality
+of Observations and Regression Residuals.”</span> <em>International
+Statistical Review</em> 55 (2): 163–72.
+</div>
+<div id="ref-jorion2006" class="csl-entry" role="listitem">
+Jorion, Philippe. 2006. <em>Value at Risk: The New Benchmark for
+Managing Financial Risk</em>. 3rd ed. McGraw-Hill.
+</div>
+<div id="ref-riskmetrics1996" class="csl-entry" role="listitem">
+J.P. Morgan and Reuters. 1996. <span>“<span>RiskMetrics</span>:
+Technical Document.”</span> 4th ed. New York: J.P. Morgan.
+</div>
+<div id="ref-kupiec1995" class="csl-entry" role="listitem">
+Kupiec, Paul H. 1995. <span>“Techniques for Verifying the Accuracy of
+Risk Measurement Models.”</span> <em>Journal of Derivatives</em> 3 (2):
+73–84.
+</div>
+<div id="ref-li2000" class="csl-entry" role="listitem">
+Li, David. 2000. <span>“On Default Correlation: A Copula Function
+Approach.”</span> <em>Journal of Fixed Income</em> 9 (4): 43–54.
+</div>
+<div id="ref-litterman1991" class="csl-entry" role="listitem">
+Litterman, Robert, and José Scheinkman. 1991. <span>“Common Factors
+Affecting Bond Returns.”</span> <em>The Journal of Fixed Income</em> 1
+(1): 54–61.
+</div>
+<div id="ref-lopezdeprado2016" class="csl-entry" role="listitem">
+López de Prado, Marcos. 2016. <span>“Building Diversified Portfolios
+That Outperform Out of Sample.”</span> <em>The Journal of Portfolio
+Management</em> 42 (4): 59–69.
+</div>
+<div id="ref-lowenstein2000" class="csl-entry" role="listitem">
+Lowenstein, Roger. 2000. <em>When Genius Failed: The Rise and Fall of
+Long-Term Capital Management</em>. Random House.
+</div>
+<div id="ref-madan1998" class="csl-entry" role="listitem">
+Madan, Dilip, Peter Carr, and Eric Chang. 1998. <span>“The Variance
+Gamma Process and Option Pricing.”</span> <em>European Finance
+Review</em> 2 (1): 79–105.
+</div>
+<div id="ref-markowitz1952" class="csl-entry" role="listitem">
+Markowitz, Harry. 1952. <span>“Portfolio Selection.”</span> <em>The
+Journal of Finance</em> 7 (1): 77–91.
+</div>
+<div id="ref-mckinney2017" class="csl-entry" role="listitem">
+McKinney, Wes. 2017. <em>Python for Data Analysis</em>. 2nd ed. O’Reilly
+Media.
+</div>
+<div id="ref-mcneil2015" class="csl-entry" role="listitem">
+McNeil, Alexander, Rüdiger Frey, and Paul Embrechts. 2015.
+<em>Quantitative Risk Management: Concepts, Techniques and Tools</em>.
+Princeton University Press.
+</div>
+<div id="ref-merton1973" class="csl-entry" role="listitem">
+Merton, Robert C. 1973. <span>“Theory of Rational Option
+Pricing.”</span> <em>Bell Journal of Economics</em> 4 (1): 141–83.
+</div>
+<div id="ref-merton1976" class="csl-entry" role="listitem">
+———. 1976. <span>“Option Pricing When Underlying Stock Returns Are
+Discontinuous.”</span> <em>Journal of Financial Economics</em> 3 (1-2):
+125–44.
+</div>
+<div id="ref-newey1987" class="csl-entry" role="listitem">
+Newey, Whitney, and Kenneth West. 1987. <span>“A Simple, Positive
+Semi-Definite, Heteroskedasticity and Autocorrelation Consistent
+Covariance Matrix.”</span> <em>Econometrica</em> 55 (3): 703–8.
+</div>
+<div id="ref-phillips2018" class="csl-entry" role="listitem">
+Phillips, Dusty. 2018. <em>Python 3 Object-Oriented Programming</em>.
+3rd ed. Packt.
+</div>
+<div id="ref-sharpe1964" class="csl-entry" role="listitem">
+Sharpe, William F. 1964. <span>“Capital Asset Prices: A Theory of Market
+Equilibrium Under Conditions of Risk.”</span> <em>The Journal of
+Finance</em> 19 (3): 425–42.
+</div>
+<div id="ref-sharpe1966" class="csl-entry" role="listitem">
+———. 1966. <span>“Mutual Fund Performance.”</span> <em>The Journal of
+Business</em> 39 (1): 119–38.
+</div>
+<div id="ref-sims1980" class="csl-entry" role="listitem">
+Sims, Christopher. 1980. <span>“Macroeconomics and Reality.”</span>
+<em>Econometrica</em> 48 (1): 1–48.
+</div>
+<div id="ref-sortino1991" class="csl-entry" role="listitem">
+Sortino, Frank, and Robert van der Meer. 1991. <span>“Downside
+Risk.”</span> <em>The Journal of Portfolio Management</em> 17 (4):
+27–31.
+</div>
+<div id="ref-taleb1997" class="csl-entry" role="listitem">
+Taleb, Nassim Nicholas. 1997. <em>Dynamic Hedging: Managing Vanilla and
+Exotic Options</em>. Wiley.
+</div>
+<div id="ref-white2000" class="csl-entry" role="listitem">
+White, Halbert. 2000. <span>“A Reality Check for Data Snooping.”</span>
+<em>Econometrica</em> 68 (5): 1097–1126.
 </div>
 </div>
 
@@ -1681,7 +1920,7 @@ Van Rossum, Guido, y Fred L. Drake. 2009. <em>Python 3 Reference Manual</em>. Cr
 <span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>---</span>
 <span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a><span class="fu">## Concepto de Variable: Gestión de Memoria y Referencias</span></span>
+<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a><span class="fu">## El concepto de variable: memoria y referencias</span></span>
 <span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a>Es importante no pensar en las variables simplemente como cajas abstractas, sino comprender cómo la computadora administra sus recursos físicos (RAM). Cuando procesamos miles de datos financieros o realizamos millones de iteraciones en una simulación, la gestión de la memoria se vuelve un factor crítico para el rendimiento (latencia y capacidad).</span>
 <span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a></span>
@@ -1755,11 +1994,11 @@ Van Rossum, Guido, y Fred L. Drake. 2009. <em>Python 3 Reference Manual</em>. Cr
 <span id="cb2-95"><a href="#cb2-95" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb2-96"><a href="#cb2-96" aria-hidden="true" tabindex="-1"></a>---</span>
 <span id="cb2-97"><a href="#cb2-97" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-98"><a href="#cb2-98" aria-hidden="true" tabindex="-1"></a><span class="fu">## Variables y Tipos de Datos Primitivos</span></span>
+<span id="cb2-98"><a href="#cb2-98" aria-hidden="true" tabindex="-1"></a><span class="fu">## Variables y tipos de datos primitivos</span></span>
 <span id="cb2-99"><a href="#cb2-99" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb2-100"><a href="#cb2-100" aria-hidden="true" tabindex="-1"></a>Python utiliza **tipado dinámico**: no necesitamos declarar el tipo de dato explícitamente. A continuación, exploraremos algunos de los tipos de datos fundamentales que utilizaremos para modelar instrumentos y variables financieras.</span>
 <span id="cb2-101"><a href="#cb2-101" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-102"><a href="#cb2-102" aria-hidden="true" tabindex="-1"></a><span class="fu">### Tipos Numéricos</span></span>
+<span id="cb2-102"><a href="#cb2-102" aria-hidden="true" tabindex="-1"></a><span class="fu">### Tipos numéricos</span></span>
 <span id="cb2-103"><a href="#cb2-103" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb2-104"><a href="#cb2-104" aria-hidden="true" tabindex="-1"></a><span class="fu">#### Enteros (`int`)</span></span>
 <span id="cb2-105"><a href="#cb2-105" aria-hidden="true" tabindex="-1"></a></span>
@@ -1779,7 +2018,7 @@ Van Rossum, Guido, y Fred L. Drake. 2009. <em>Python 3 Reference Manual</em>. Cr
 <span id="cb2-119"><a href="#cb2-119" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb2-120"><a href="#cb2-120" aria-hidden="true" tabindex="-1"></a><span class="fu">#### Punto Flotante (`float`)</span></span>
 <span id="cb2-121"><a href="#cb2-121" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-122"><a href="#cb2-122" aria-hidden="true" tabindex="-1"></a>Representan números reales mediante el estándar **IEEE 754**. Es el tipo estándar para precios, tasas y rendimientos — y esconde una sorpresa que en finanzas no podés permitirte ignorar. Ejecutá esto:</span>
+<span id="cb2-122"><a href="#cb2-122" aria-hidden="true" tabindex="-1"></a>Representan números reales mediante el estándar **IEEE 754**. Es el tipo estándar para precios, tasas y rendimientos, y esconde una sorpresa que en finanzas no podés permitirte ignorar. Ejecutá esto:</span>
 <span id="cb2-123"><a href="#cb2-123" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb2-124"><a href="#cb2-124" aria-hidden="true" tabindex="-1"></a><span class="in">```{pyodide-python}</span></span>
 <span id="cb2-125"><a href="#cb2-125" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: tipos-float</span></span>
@@ -1792,7 +2031,7 @@ Van Rossum, Guido, y Fred L. Drake. 2009. <em>Python 3 Reference Manual</em>. Cr
 <span id="cb2-132"><a href="#cb2-132" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"¿Es exactamente 0.3? </span><span class="sc">{</span>resultado <span class="op">==</span> <span class="fl">0.3</span><span class="sc">}</span><span class="ss">"</span>)</span>
 <span id="cb2-133"><a href="#cb2-133" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb2-134"><a href="#cb2-134" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-135"><a href="#cb2-135" aria-hidden="true" tabindex="-1"></a>**0.1 + 0.2 no da 0.3.** No es un bug de Python: es una consecuencia de cómo las computadoras representan los números. Internamente todo se guarda en **binario** (base 2), y así como 1/3 no tiene representación decimal exacta (0.3333... infinito), **0.1 no tiene representación binaria exacta**: la computadora guarda la aproximación más cercana que entra en 64 bits. Los errores son minúsculos (del orden de $10^{-17}$), pero existen, se acumulan al operar, y rompen las comparaciones con <span class="in">`==`</span>.</span>
+<span id="cb2-135"><a href="#cb2-135" aria-hidden="true" tabindex="-1"></a>**0.1 + 0.2 no da 0.3.** No es un bug de Python: es una consecuencia de cómo las computadoras representan los números. Internamente todo se guarda en **binario** (base 2), y así como 1/3 no tiene representación decimal exacta (0.3333... infinito), 0.1 no tiene representación binaria exacta: la computadora guarda la aproximación más cercana que entra en 64 bits. Los errores son minúsculos (del orden de $10^{-17}$), pero existen, se acumulan al operar, y rompen las comparaciones con <span class="in">`==`</span>.</span>
 <span id="cb2-136"><a href="#cb2-136" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb2-137"><a href="#cb2-137" aria-hidden="true" tabindex="-1"></a>Las dos consecuencias prácticas, que valen para todo el libro:</span>
 <span id="cb2-138"><a href="#cb2-138" aria-hidden="true" tabindex="-1"></a></span>
@@ -1816,7 +2055,7 @@ Van Rossum, Guido, y Fred L. Drake. 2009. <em>Python 3 Reference Manual</em>. Cr
 <span id="cb2-156"><a href="#cb2-156" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb2-157"><a href="#cb2-157" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb2-158"><a href="#cb2-158" aria-hidden="true" tabindex="-1"></a>::: {.callout-warning title="La regla práctica: ¿float o decimal?"}</span>
-<span id="cb2-159"><a href="#cb2-159" aria-hidden="true" tabindex="-1"></a>**`float` para análisis** (retornos, volatilidades, simulaciones, optimización): el error de $10^{-17}$ es billones de veces menor que la incertidumbre de cualquier modelo financiero, y la velocidad importa. **`decimal` o centavos enteros para contabilidad** (saldos, liquidaciones, facturación): ahí cada centavo debe cerrar exacto. Todo este libro trabaja en el mundo del análisis, así que usaremos <span class="in">`float`</span> — pero sabiendo lo que sacrificamos, y sin comparar jamás con <span class="in">`==`</span>.</span>
+<span id="cb2-159"><a href="#cb2-159" aria-hidden="true" tabindex="-1"></a>**`float` para análisis** (retornos, volatilidades, simulaciones, optimización): el error de $10^{-17}$ es billones de veces menor que la incertidumbre de cualquier modelo financiero, y la velocidad importa. <span class="in">`decimal`</span> o centavos enteros para contabilidad (saldos, liquidaciones, facturación): ahí cada centavo debe cerrar exacto. Todo este libro trabaja en el mundo del análisis, así que usaremos <span class="in">`float`</span>, pero sabiendo lo que sacrificamos, y sin comparar jamás con <span class="in">`==`</span>.</span>
 <span id="cb2-160"><a href="#cb2-160" aria-hidden="true" tabindex="-1"></a>:::</span>
 <span id="cb2-161"><a href="#cb2-161" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb2-162"><a href="#cb2-162" aria-hidden="true" tabindex="-1"></a><span class="fu">### Booleanos (`bool`)</span></span>
@@ -1833,7 +2072,7 @@ Van Rossum, Guido, y Fred L. Drake. 2009. <em>Python 3 Reference Manual</em>. Cr
 <span id="cb2-173"><a href="#cb2-173" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Señales de compra activas: </span><span class="sc">{</span>se<span class="sc">ñ</span>ales_activas<span class="sc">}</span><span class="ss">"</span>)</span>
 <span id="cb2-174"><a href="#cb2-174" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb2-175"><a href="#cb2-175" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-176"><a href="#cb2-176" aria-hidden="true" tabindex="-1"></a><span class="fu">### Cadenas de Texto (`str`)</span></span>
+<span id="cb2-176"><a href="#cb2-176" aria-hidden="true" tabindex="-1"></a><span class="fu">### Cadenas de texto (`str`)</span></span>
 <span id="cb2-177"><a href="#cb2-177" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb2-178"><a href="#cb2-178" aria-hidden="true" tabindex="-1"></a>Secuencias inmutables de caracteres. Esenciales para tickers, códigos ISIN y limpieza de datos.</span>
 <span id="cb2-179"><a href="#cb2-179" aria-hidden="true" tabindex="-1"></a></span>
@@ -1847,7 +2086,7 @@ Van Rossum, Guido, y Fred L. Drake. 2009. <em>Python 3 Reference Manual</em>. Cr
 <span id="cb2-187"><a href="#cb2-187" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb2-188"><a href="#cb2-188" aria-hidden="true" tabindex="-1"></a>---</span>
 <span id="cb2-189"><a href="#cb2-189" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-190"><a href="#cb2-190" aria-hidden="true" tabindex="-1"></a><span class="fu">## Conversión de Tipos (Casting)</span></span>
+<span id="cb2-190"><a href="#cb2-190" aria-hidden="true" tabindex="-1"></a><span class="fu">## Conversión de tipos (*casting*)</span></span>
 <span id="cb2-191"><a href="#cb2-191" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb2-192"><a href="#cb2-192" aria-hidden="true" tabindex="-1"></a>Los datos del mundo real frecuentemente llegan como texto (desde CSVs o APIs), y lo mismo pasa con lo que ingresa el usuario. Por eso es necesario convertirlos explícitamente.</span>
 <span id="cb2-193"><a href="#cb2-193" aria-hidden="true" tabindex="-1"></a></span>
@@ -1868,7 +2107,7 @@ Van Rossum, Guido, y Fred L. Drake. 2009. <em>Python 3 Reference Manual</em>. Cr
 <span id="cb2-208"><a href="#cb2-208" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb2-209"><a href="#cb2-209" aria-hidden="true" tabindex="-1"></a><span class="fu">## Operadores</span></span>
 <span id="cb2-210"><a href="#cb2-210" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-211"><a href="#cb2-211" aria-hidden="true" tabindex="-1"></a><span class="fu">### Operadores Aritméticos</span></span>
+<span id="cb2-211"><a href="#cb2-211" aria-hidden="true" tabindex="-1"></a><span class="fu">### Operadores aritméticos</span></span>
 <span id="cb2-212"><a href="#cb2-212" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb2-213"><a href="#cb2-213" aria-hidden="true" tabindex="-1"></a><span class="in">```{pyodide-python}</span></span>
 <span id="cb2-214"><a href="#cb2-214" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: operadores-aritmeticos</span></span>
@@ -1879,13 +2118,13 @@ Van Rossum, Guido, y Fred L. Drake. 2009. <em>Python 3 Reference Manual</em>. Cr
 <span id="cb2-219"><a href="#cb2-219" aria-hidden="true" tabindex="-1"></a>interes <span class="op">=</span> capital <span class="op">*</span> tasa</span>
 <span id="cb2-220"><a href="#cb2-220" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Interés simple: $</span><span class="sc">{</span>interes<span class="sc">:,.2f}</span><span class="ss">"</span>)</span>
 <span id="cb2-221"><a href="#cb2-221" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-222"><a href="#cb2-222" aria-hidden="true" tabindex="-1"></a><span class="co"># Potencia (**) — útil para interés compuesto</span></span>
+<span id="cb2-222"><a href="#cb2-222" aria-hidden="true" tabindex="-1"></a><span class="co"># Potencia (**): útil para interés compuesto</span></span>
 <span id="cb2-223"><a href="#cb2-223" aria-hidden="true" tabindex="-1"></a>periodos <span class="op">=</span> <span class="dv">5</span></span>
 <span id="cb2-224"><a href="#cb2-224" aria-hidden="true" tabindex="-1"></a>valor_futuro <span class="op">=</span> capital <span class="op">*</span> (<span class="dv">1</span> <span class="op">+</span> tasa) <span class="op">**</span> periodos</span>
 <span id="cb2-225"><a href="#cb2-225" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Valor futuro a </span><span class="sc">{</span>periodos<span class="sc">}</span><span class="ss"> años: $</span><span class="sc">{</span>valor_futuro<span class="sc">:,.2f}</span><span class="ss">"</span>)</span>
 <span id="cb2-226"><a href="#cb2-226" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb2-227"><a href="#cb2-227" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-228"><a href="#cb2-228" aria-hidden="true" tabindex="-1"></a><span class="fu">### Operadores de Comparación y Lógicos</span></span>
+<span id="cb2-228"><a href="#cb2-228" aria-hidden="true" tabindex="-1"></a><span class="fu">### Operadores de comparación y lógicos</span></span>
 <span id="cb2-229"><a href="#cb2-229" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb2-230"><a href="#cb2-230" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Operador <span class="pp">|</span> Significado <span class="pp">|</span></span>
 <span id="cb2-231"><a href="#cb2-231" aria-hidden="true" tabindex="-1"></a><span class="pp">|----------|-------------|</span></span>
@@ -1905,9 +2144,9 @@ Van Rossum, Guido, y Fred L. Drake. 2009. <em>Python 3 Reference Manual</em>. Cr
 <span id="cb2-245"><a href="#cb2-245" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb2-246"><a href="#cb2-246" aria-hidden="true" tabindex="-1"></a>---</span>
 <span id="cb2-247"><a href="#cb2-247" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-248"><a href="#cb2-248" aria-hidden="true" tabindex="-1"></a><span class="fu">## Entrada y Salida de Datos</span></span>
+<span id="cb2-248"><a href="#cb2-248" aria-hidden="true" tabindex="-1"></a><span class="fu">## Entrada y salida de datos</span></span>
 <span id="cb2-249"><a href="#cb2-249" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-250"><a href="#cb2-250" aria-hidden="true" tabindex="-1"></a><span class="fu">### F-Strings (Formato Moderno)</span></span>
+<span id="cb2-250"><a href="#cb2-250" aria-hidden="true" tabindex="-1"></a><span class="fu">### F-strings (formato moderno)</span></span>
 <span id="cb2-251"><a href="#cb2-251" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb2-252"><a href="#cb2-252" aria-hidden="true" tabindex="-1"></a><span class="in">```{pyodide-python}</span></span>
 <span id="cb2-253"><a href="#cb2-253" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: f-strings</span></span>
@@ -1921,7 +2160,7 @@ Van Rossum, Guido, y Fred L. Drake. 2009. <em>Python 3 Reference Manual</em>. Cr
 <span id="cb2-261"><a href="#cb2-261" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Interés generado: $</span><span class="sc">{</span>interes<span class="sc">:,.2f}</span><span class="ss">"</span>)</span>
 <span id="cb2-262"><a href="#cb2-262" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb2-263"><a href="#cb2-263" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-264"><a href="#cb2-264" aria-hidden="true" tabindex="-1"></a><span class="fu">### Input del Usuario</span></span>
+<span id="cb2-264"><a href="#cb2-264" aria-hidden="true" tabindex="-1"></a><span class="fu">### Entrada del usuario</span></span>
 <span id="cb2-265"><a href="#cb2-265" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb2-266"><a href="#cb2-266" aria-hidden="true" tabindex="-1"></a>::: {.callout-note}</span>
 <span id="cb2-267"><a href="#cb2-267" aria-hidden="true" tabindex="-1"></a><span class="in">`input()`</span> siempre devuelve un <span class="in">`str`</span>. Debe combinarse con <span class="in">`float()`</span> o <span class="in">`int()`</span> para obtener números.</span>
@@ -1934,11 +2173,11 @@ Van Rossum, Guido, y Fred L. Drake. 2009. <em>Python 3 Reference Manual</em>. Cr
 <span id="cb2-274"><a href="#cb2-274" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb2-275"><a href="#cb2-275" aria-hidden="true" tabindex="-1"></a>---</span>
 <span id="cb2-276"><a href="#cb2-276" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-277"><a href="#cb2-277" aria-hidden="true" tabindex="-1"></a><span class="fu">## Estructuras de Control: `if` / `elif` / `else`</span></span>
+<span id="cb2-277"><a href="#cb2-277" aria-hidden="true" tabindex="-1"></a><span class="fu">## Estructuras de control: `if` / `elif` / `else`</span></span>
 <span id="cb2-278"><a href="#cb2-278" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb2-279"><a href="#cb2-279" aria-hidden="true" tabindex="-1"></a>Los algoritmos financieros requieren tomar decisiones basadas en condiciones de mercado.</span>
 <span id="cb2-280"><a href="#cb2-280" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-281"><a href="#cb2-281" aria-hidden="true" tabindex="-1"></a>Antes de leer el código, mirá su forma en la @fig-decision-inversion: las condiciones se evalúan **en orden, de arriba hacia abajo**, y apenas una se cumple se ejecuta su rama y se ignora el resto. El <span class="in">`else`</span> es la red de seguridad: atrapa todo lo que no cumplió ninguna condición.</span>
+<span id="cb2-281"><a href="#cb2-281" aria-hidden="true" tabindex="-1"></a>Antes de leer el código, mirá su forma en la @fig-decision-inversion: las condiciones se evalúan en orden, de arriba hacia abajo, y apenas una se cumple se ejecuta su rama y se ignora el resto. El <span class="in">`else`</span> es la red de seguridad: atrapa todo lo que no cumplió ninguna condición.</span>
 <span id="cb2-282"><a href="#cb2-282" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb2-285"><a href="#cb2-285" aria-hidden="true" tabindex="-1"></a><span class="in">```{mermaid}</span></span>
 <span id="cb2-286"><a href="#cb2-286" aria-hidden="true" tabindex="-1"></a>%%| label: fig-decision-inversion</span>
@@ -1959,7 +2198,7 @@ Van Rossum, Guido, y Fred L. Drake. 2009. <em>Python 3 Reference Manual</em>. Cr
 <span id="cb2-301"><a href="#cb2-301" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb2-302"><a href="#cb2-302" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb2-303"><a href="#cb2-303" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-304"><a href="#cb2-304" aria-hidden="true" tabindex="-1"></a><span class="fu">### Caso Práctico: Algoritmo de Decisión de Inversión</span></span>
+<span id="cb2-304"><a href="#cb2-304" aria-hidden="true" tabindex="-1"></a><span class="fu">### Caso práctico: un algoritmo de decisión de inversión</span></span>
 <span id="cb2-305"><a href="#cb2-305" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb2-306"><a href="#cb2-306" aria-hidden="true" tabindex="-1"></a><span class="in">```{pyodide-python}</span></span>
 <span id="cb2-307"><a href="#cb2-307" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: decision-inversion</span></span>
@@ -1985,9 +2224,9 @@ Van Rossum, Guido, y Fred L. Drake. 2009. <em>Python 3 Reference Manual</em>. Cr
 <span id="cb2-327"><a href="#cb2-327" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb2-328"><a href="#cb2-328" aria-hidden="true" tabindex="-1"></a>---</span>
 <span id="cb2-329"><a href="#cb2-329" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-330"><a href="#cb2-330" aria-hidden="true" tabindex="-1"></a><span class="fu">## Problemática Financiera: Valor Tiempo del Dinero (TVM)</span></span>
+<span id="cb2-330"><a href="#cb2-330" aria-hidden="true" tabindex="-1"></a><span class="fu">## Problema financiero: el valor tiempo del dinero (TVM)</span></span>
 <span id="cb2-331"><a href="#cb2-331" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-332"><a href="#cb2-332" aria-hidden="true" tabindex="-1"></a>Todo el capítulo gira alrededor de una idea: **un peso hoy no vale lo mismo que un peso mañana**. La @fig-linea-tiempo-tvm la resume en una línea de tiempo: capitalizar es llevar plata hacia el futuro, y descontar es traerla al presente. Las tres secciones que siguen son variaciones de esas dos flechas.</span>
+<span id="cb2-332"><a href="#cb2-332" aria-hidden="true" tabindex="-1"></a>Todo el capítulo gira alrededor de una idea: un peso hoy no vale lo mismo que un peso mañana. La @fig-linea-tiempo-tvm la resume en una línea de tiempo: capitalizar es llevar dinero hacia el futuro, y descontar es traerlo al presente <span class="co">[</span><span class="ot">@brealey2020</span><span class="co">]</span>. Las tres secciones que siguen son variaciones de esas dos flechas.</span>
 <span id="cb2-333"><a href="#cb2-333" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb2-336"><a href="#cb2-336" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
 <span id="cb2-337"><a href="#cb2-337" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: fig-linea-tiempo-tvm</span></span>
@@ -2028,7 +2267,7 @@ Van Rossum, Guido, y Fred L. Drake. 2009. <em>Python 3 Reference Manual</em>. Cr
 <span id="cb2-372"><a href="#cb2-372" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb2-373"><a href="#cb2-373" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb2-374"><a href="#cb2-374" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-375"><a href="#cb2-375" aria-hidden="true" tabindex="-1"></a><span class="fu">### Interés Compuesto</span></span>
+<span id="cb2-375"><a href="#cb2-375" aria-hidden="true" tabindex="-1"></a><span class="fu">### Interés compuesto</span></span>
 <span id="cb2-376"><a href="#cb2-376" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb2-377"><a href="#cb2-377" aria-hidden="true" tabindex="-1"></a>La fórmula fundamental:</span>
 <span id="cb2-378"><a href="#cb2-378" aria-hidden="true" tabindex="-1"></a></span>
@@ -2058,7 +2297,7 @@ Van Rossum, Guido, y Fred L. Drake. 2009. <em>Python 3 Reference Manual</em>. Cr
 <span id="cb2-402"><a href="#cb2-402" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Interés ganado:   $</span><span class="sc">{</span>interes_ganado<span class="sc">:,.2f}</span><span class="ss">"</span>)</span>
 <span id="cb2-403"><a href="#cb2-403" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb2-404"><a href="#cb2-404" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-405"><a href="#cb2-405" aria-hidden="true" tabindex="-1"></a><span class="fu">### Conversión de Tasas</span></span>
+<span id="cb2-405"><a href="#cb2-405" aria-hidden="true" tabindex="-1"></a><span class="fu">### Conversión de tasas</span></span>
 <span id="cb2-406"><a href="#cb2-406" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb2-407"><a href="#cb2-407" aria-hidden="true" tabindex="-1"></a><span class="in">```{pyodide-python}</span></span>
 <span id="cb2-408"><a href="#cb2-408" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: conversion-tasas</span></span>
@@ -2090,50 +2329,109 @@ Van Rossum, Guido, y Fred L. Drake. 2009. <em>Python 3 Reference Manual</em>. Cr
 <span id="cb2-436"><a href="#cb2-436" aria-hidden="true" tabindex="-1"></a>    class TNA,TEA,TC,TEM tasa</span>
 <span id="cb2-437"><a href="#cb2-437" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb2-438"><a href="#cb2-438" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-439"><a href="#cb2-439" aria-hidden="true" tabindex="-1"></a><span class="fu">### Valor Presente</span></span>
-<span id="cb2-440"><a href="#cb2-440" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-441"><a href="#cb2-441" aria-hidden="true" tabindex="-1"></a>$$VP = \frac{VF}{(1 + r)^n}$$</span>
+<span id="cb2-439"><a href="#cb2-439" aria-hidden="true" tabindex="-1"></a>::: {.content-visible when-format="html"}</span>
+<span id="cb2-440"><a href="#cb2-440" aria-hidden="true" tabindex="-1"></a>::: {.simulador}</span>
+<span id="cb2-441"><a href="#cb2-441" aria-hidden="true" tabindex="-1"></a><span class="co">[</span><span class="ot">Simulador · Valor tiempo del dinero</span><span class="co">]</span>{.simulador-titulo}</span>
 <span id="cb2-442"><a href="#cb2-442" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-443"><a href="#cb2-443" aria-hidden="true" tabindex="-1"></a><span class="in">```{pyodide-python}</span></span>
-<span id="cb2-444"><a href="#cb2-444" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: valor-presente</span></span>
-<span id="cb2-445"><a href="#cb2-445" aria-hidden="true" tabindex="-1"></a><span class="co"># El valor presente "trae a hoy" un flujo que cobraremos en el futuro</span></span>
-<span id="cb2-446"><a href="#cb2-446" aria-hidden="true" tabindex="-1"></a>flujo_futuro <span class="op">=</span> <span class="dv">1_000_000</span></span>
-<span id="cb2-447"><a href="#cb2-447" aria-hidden="true" tabindex="-1"></a>tasa <span class="op">=</span> <span class="fl">0.08</span></span>
-<span id="cb2-448"><a href="#cb2-448" aria-hidden="true" tabindex="-1"></a>años <span class="op">=</span> <span class="dv">5</span></span>
-<span id="cb2-449"><a href="#cb2-449" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-450"><a href="#cb2-450" aria-hidden="true" tabindex="-1"></a>valor_presente <span class="op">=</span> flujo_futuro <span class="op">/</span> (<span class="dv">1</span> <span class="op">+</span> tasa) <span class="op">**</span> años</span>
-<span id="cb2-451"><a href="#cb2-451" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Recibir $</span><span class="sc">{</span>flujo_futuro<span class="sc">:,}</span><span class="ss"> en </span><span class="sc">{</span>a<span class="sc">ñ</span>os<span class="sc">}</span><span class="ss"> años"</span>)</span>
-<span id="cb2-452"><a href="#cb2-452" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"equivale a $</span><span class="sc">{</span>valor_presente<span class="sc">:,.2f}</span><span class="ss"> hoy (al </span><span class="sc">{</span>tasa<span class="sc">:.0%}</span><span class="ss">)"</span>)</span>
-<span id="cb2-453"><a href="#cb2-453" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb2-454"><a href="#cb2-454" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-455"><a href="#cb2-455" aria-hidden="true" tabindex="-1"></a>---</span>
-<span id="cb2-456"><a href="#cb2-456" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-457"><a href="#cb2-457" aria-hidden="true" tabindex="-1"></a><span class="fu">## Ejercicios Propuestos</span></span>
-<span id="cb2-458"><a href="#cb2-458" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-459"><a href="#cb2-459" aria-hidden="true" tabindex="-1"></a>::: {.callout-important title="Ejercicios"}</span>
-<span id="cb2-460"><a href="#cb2-460" aria-hidden="true" tabindex="-1"></a><span class="ss">1. </span>**Interés compuesto con capitalización variable**: Escribir un programa que calcule el valor futuro para capitalización anual, semestral, trimestral, mensual y diaria. Comparar los resultados.</span>
-<span id="cb2-461"><a href="#cb2-461" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-462"><a href="#cb2-462" aria-hidden="true" tabindex="-1"></a><span class="ss">2. </span>**Algoritmo de decisión**: Dado un bono con TIR del 8% y un plazo fijo con tasa del 6%, crear un algoritmo que recomiende la inversión considerando también el horizonte temporal y la tolerancia al riesgo del inversor.</span>
-<span id="cb2-463"><a href="#cb2-463" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-464"><a href="#cb2-464" aria-hidden="true" tabindex="-1"></a><span class="ss">3. </span>**Conversión de tasas**: Crear un programa que convierta entre TNA, TEA, tasa efectiva mensual y tasa continua. El usuario debe poder elegir qué conversión realizar.</span>
-<span id="cb2-465"><a href="#cb2-465" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-466"><a href="#cb2-466" aria-hidden="true" tabindex="-1"></a><span class="ss">4. </span>**Valor presente neto simple**: Dados tres flujos futuros de $10,000, $15,000 y $20,000 a recibir en los años 1, 2 y 3 respectivamente, calcular el VPN con una tasa de descuento del 10%.</span>
+<span id="cb2-443"><a href="#cb2-443" aria-hidden="true" tabindex="-1"></a>El capital crece con la tasa nominal anual que elijas, capitalizada cada cuánto quieras. La línea azul es esa capitalización (con escalones: los intereses se acreditan al final de cada período), la gris es el interés simple, que nunca reinvierte, y la verde punteada la capitalización continua, el techo al que se acerca cualquier frecuencia. Arranca con el ejemplo del capítulo.</span>
+<span id="cb2-444"><a href="#cb2-444" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-445"><a href="#cb2-445" aria-hidden="true" tabindex="-1"></a><span class="in">```{=html}</span></span>
+<span id="cb2-446"><a href="#cb2-446" aria-hidden="true" tabindex="-1"></a><span class="in">&lt;div id="sim-tvm"&gt;&lt;/div&gt;</span></span>
+<span id="cb2-447"><a href="#cb2-447" aria-hidden="true" tabindex="-1"></a><span class="in">&lt;script type="module"&gt;</span></span>
+<span id="cb2-448"><a href="#cb2-448" aria-hidden="true" tabindex="-1"></a><span class="in">  import { montar } from "../simuladores/tvm.js";</span></span>
+<span id="cb2-449"><a href="#cb2-449" aria-hidden="true" tabindex="-1"></a><span class="in">  montar(document.getElementById("sim-tvm"));</span></span>
+<span id="cb2-450"><a href="#cb2-450" aria-hidden="true" tabindex="-1"></a><span class="in">&lt;/script&gt;</span></span>
+<span id="cb2-451"><a href="#cb2-451" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb2-452"><a href="#cb2-452" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-453"><a href="#cb2-453" aria-hidden="true" tabindex="-1"></a>::: {.probar}</span>
+<span id="cb2-454"><a href="#cb2-454" aria-hidden="true" tabindex="-1"></a>**Probá esto**</span>
+<span id="cb2-455"><a href="#cb2-455" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-456"><a href="#cb2-456" aria-hidden="true" tabindex="-1"></a><span class="ss">1. </span>Con los valores iniciales el valor futuro es $259,374.25, el del bloque de interés compuesto. Pasá la capitalización a continua: sube a $271,828.18 y la TEA a 10.52%. Con una tasa del 10%, capitalizar más seguido agrega apenas medio punto de TEA.</span>
+<span id="cb2-457"><a href="#cb2-457" aria-hidden="true" tabindex="-1"></a><span class="ss">2. </span>Poné la TNA en 48% y la capitalización mensual: la TEA da 60.10%, la del bloque de conversión de tasas. Con capitalización diaria llega a 61.56%. Con tasas altas la frecuencia sí pesa: de anual a mensual son doce puntos de TEA.</span>
+<span id="cb2-458"><a href="#cb2-458" aria-hidden="true" tabindex="-1"></a><span class="ss">3. </span>Volvé al 10% anual y llevá el plazo a 30 años: el interés simple llega a $400,000 y el compuesto a $1,744,940.23. El extra de $1,344,940.23 es interés sobre interés. Y el capital se duplica en 7.27 años: la "regla del 72" de los operadores (72 / 10 = 7.2) es este mismo cálculo aproximado.</span>
+<span id="cb2-459"><a href="#cb2-459" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb2-460"><a href="#cb2-460" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb2-461"><a href="#cb2-461" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb2-462"><a href="#cb2-462" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-463"><a href="#cb2-463" aria-hidden="true" tabindex="-1"></a>::: {.content-visible when-format="pdf"}</span>
+<span id="cb2-464"><a href="#cb2-464" aria-hidden="true" tabindex="-1"></a>::: {.callout-note title="Simulador interactivo"}</span>
+<span id="cb2-465"><a href="#cb2-465" aria-hidden="true" tabindex="-1"></a>En la <span class="co">[</span><span class="ot">versión web de este capítulo</span><span class="co">](https://diegoonna.github.io/libro_finanzas_computacionales/unidad1/cap01_pensamiento_computacional.html)</span> hay un simulador donde podés mover el capital, la tasa nominal, el plazo y la frecuencia de capitalización, y comparar el interés compuesto con el simple y con el continuo.</span>
+<span id="cb2-466"><a href="#cb2-466" aria-hidden="true" tabindex="-1"></a>:::</span>
 <span id="cb2-467"><a href="#cb2-467" aria-hidden="true" tabindex="-1"></a>:::</span>
 <span id="cb2-468"><a href="#cb2-468" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-469"><a href="#cb2-469" aria-hidden="true" tabindex="-1"></a>---</span>
+<span id="cb2-469"><a href="#cb2-469" aria-hidden="true" tabindex="-1"></a><span class="fu">### Tasa real e inflación</span></span>
 <span id="cb2-470"><a href="#cb2-470" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-471"><a href="#cb2-471" aria-hidden="true" tabindex="-1"></a><span class="fu">## Referencias</span></span>
+<span id="cb2-471"><a href="#cb2-471" aria-hidden="true" tabindex="-1"></a>Todas las tasas de la sección anterior son **nominales**: dicen cuántos pesos más vamos a tener, pero no cuánto más vamos a poder comprar con ellos. Si los precios suben mientras el capital rinde, parte del rendimiento solo compensa esa suba. La **tasa real** mide lo que queda: el aumento del poder de compra.</span>
 <span id="cb2-472"><a href="#cb2-472" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-473"><a href="#cb2-473" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-474"><a href="#cb2-474" aria-hidden="true" tabindex="-1"></a>::: {#refs}</span>
-<span id="cb2-475"><a href="#cb2-475" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb2-473"><a href="#cb2-473" aria-hidden="true" tabindex="-1"></a>La relación entre las tres magnitudes es la ecuación de Fisher <span class="co">[</span><span class="ot">@brealey2020</span><span class="co">]</span>. Si $i$ es la tasa nominal y $\pi$ la inflación del mismo período,</span>
+<span id="cb2-474"><a href="#cb2-474" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-475"><a href="#cb2-475" aria-hidden="true" tabindex="-1"></a>$$1 + r_{real} = \frac{1 + i}{1 + \pi}$$</span>
+<span id="cb2-476"><a href="#cb2-476" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-477"><a href="#cb2-477" aria-hidden="true" tabindex="-1"></a>El razonamiento es directo. Al cabo del período tenemos $1 + i$ pesos por cada peso invertido, y lo que antes costaba un peso ahora cuesta $1 + \pi$. El cociente dice cuántas unidades de ese bien podemos comprar.</span>
+<span id="cb2-478"><a href="#cb2-478" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-479"><a href="#cb2-479" aria-hidden="true" tabindex="-1"></a><span class="in">```{pyodide-python}</span></span>
+<span id="cb2-480"><a href="#cb2-480" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: tasa-real</span></span>
+<span id="cb2-481"><a href="#cb2-481" aria-hidden="true" tabindex="-1"></a><span class="co"># La TEA de la sección anterior, frente a dos escenarios de inflación anual</span></span>
+<span id="cb2-482"><a href="#cb2-482" aria-hidden="true" tabindex="-1"></a>tea <span class="op">=</span> (<span class="dv">1</span> <span class="op">+</span> <span class="fl">0.48</span> <span class="op">/</span> <span class="dv">12</span>) <span class="op">**</span> <span class="dv">12</span> <span class="op">-</span> <span class="dv">1</span></span>
+<span id="cb2-483"><a href="#cb2-483" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-484"><a href="#cb2-484" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> inflacion <span class="kw">in</span> [<span class="fl">0.50</span>, <span class="fl">0.70</span>]:</span>
+<span id="cb2-485"><a href="#cb2-485" aria-hidden="true" tabindex="-1"></a>    tasa_real <span class="op">=</span> (<span class="dv">1</span> <span class="op">+</span> tea) <span class="op">/</span> (<span class="dv">1</span> <span class="op">+</span> inflacion) <span class="op">-</span> <span class="dv">1</span></span>
+<span id="cb2-486"><a href="#cb2-486" aria-hidden="true" tabindex="-1"></a>    resta <span class="op">=</span> tea <span class="op">-</span> inflacion</span>
+<span id="cb2-487"><a href="#cb2-487" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"Inflación </span><span class="sc">{</span>inflacion<span class="sc">:.0%}</span><span class="ss">: tasa real </span><span class="sc">{</span>tasa_real<span class="sc">:+.2%}</span><span class="ss">  (restando daría </span><span class="sc">{</span>resta<span class="sc">:+.2%}</span><span class="ss">)"</span>)</span>
+<span id="cb2-488"><a href="#cb2-488" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb2-489"><a href="#cb2-489" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-490"><a href="#cb2-490" aria-hidden="true" tabindex="-1"></a>Con una inflación del 50%, la TEA del 60.10% deja una tasa real de 6.74%, y no los 10.10 puntos que sugiere la resta. Con una inflación del 70% la tasa real es negativa, −5.82%: el capital crece en pesos y aun así compra menos que al principio.</span>
+<span id="cb2-491"><a href="#cb2-491" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-492"><a href="#cb2-492" aria-hidden="true" tabindex="-1"></a>La resta $i - \pi$ es una aproximación que funciona cuando las dos tasas son chicas. Con una tasa del 10% y una inflación del 4%, la cuenta exacta da 5.77% y la resta, 6%. Con las tasas habituales en la Argentina el error es de varios puntos, y hay que dividir.</span>
+<span id="cb2-493"><a href="#cb2-493" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-494"><a href="#cb2-494" aria-hidden="true" tabindex="-1"></a>::: {.callout-note title="Dónde aparece la tasa real"}</span>
+<span id="cb2-495"><a href="#cb2-495" aria-hidden="true" tabindex="-1"></a>Los bonos y los depósitos ajustados por inflación (en la Argentina, los que ajustan por CER o por UVA) se cotizan directamente en tasa real: el capital se actualiza con el índice de precios y la tasa que se informa es la que se gana por encima de esa actualización. Para comparar uno de esos instrumentos con otro de tasa fija en pesos hace falta una hipótesis de inflación y la ecuación de arriba. En el <span class="co">[</span><span class="ot">Capítulo 8</span><span class="co">](../unidad2/cap08_markowitz.qmd)</span> el tema vuelve al estimar retornos esperados.</span>
+<span id="cb2-496"><a href="#cb2-496" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb2-497"><a href="#cb2-497" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-498"><a href="#cb2-498" aria-hidden="true" tabindex="-1"></a><span class="fu">### Valor presente</span></span>
+<span id="cb2-499"><a href="#cb2-499" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-500"><a href="#cb2-500" aria-hidden="true" tabindex="-1"></a>$$VP = \frac{VF}{(1 + r)^n}$$</span>
+<span id="cb2-501"><a href="#cb2-501" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-502"><a href="#cb2-502" aria-hidden="true" tabindex="-1"></a><span class="in">```{pyodide-python}</span></span>
+<span id="cb2-503"><a href="#cb2-503" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: valor-presente</span></span>
+<span id="cb2-504"><a href="#cb2-504" aria-hidden="true" tabindex="-1"></a><span class="co"># El valor presente "trae a hoy" un flujo que cobraremos en el futuro</span></span>
+<span id="cb2-505"><a href="#cb2-505" aria-hidden="true" tabindex="-1"></a>flujo_futuro <span class="op">=</span> <span class="dv">1_000_000</span></span>
+<span id="cb2-506"><a href="#cb2-506" aria-hidden="true" tabindex="-1"></a>tasa <span class="op">=</span> <span class="fl">0.08</span></span>
+<span id="cb2-507"><a href="#cb2-507" aria-hidden="true" tabindex="-1"></a>años <span class="op">=</span> <span class="dv">5</span></span>
+<span id="cb2-508"><a href="#cb2-508" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-509"><a href="#cb2-509" aria-hidden="true" tabindex="-1"></a>valor_presente <span class="op">=</span> flujo_futuro <span class="op">/</span> (<span class="dv">1</span> <span class="op">+</span> tasa) <span class="op">**</span> años</span>
+<span id="cb2-510"><a href="#cb2-510" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Recibir $</span><span class="sc">{</span>flujo_futuro<span class="sc">:,}</span><span class="ss"> en </span><span class="sc">{</span>a<span class="sc">ñ</span>os<span class="sc">}</span><span class="ss"> años"</span>)</span>
+<span id="cb2-511"><a href="#cb2-511" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"equivale a $</span><span class="sc">{</span>valor_presente<span class="sc">:,.2f}</span><span class="ss"> hoy (al </span><span class="sc">{</span>tasa<span class="sc">:.0%}</span><span class="ss">)"</span>)</span>
+<span id="cb2-512"><a href="#cb2-512" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb2-513"><a href="#cb2-513" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-514"><a href="#cb2-514" aria-hidden="true" tabindex="-1"></a>---</span>
+<span id="cb2-515"><a href="#cb2-515" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-516"><a href="#cb2-516" aria-hidden="true" tabindex="-1"></a><span class="fu">## Errores comunes</span></span>
+<span id="cb2-517"><a href="#cb2-517" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-518"><a href="#cb2-518" aria-hidden="true" tabindex="-1"></a>::: {.callout-warning title="Trampas frecuentes"}</span>
+<span id="cb2-519"><a href="#cb2-519" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Comparar floats con `==`**: <span class="in">`0.1 + 0.2 == 0.3`</span> da <span class="in">`False`</span>. Para preguntar si dos montos calculados son iguales, usá <span class="in">`math.isclose()`</span>; para contabilidad al centavo, <span class="in">`Decimal`</span>.</span>
+<span id="cb2-520"><a href="#cb2-520" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Usar `^` para potencias**: en Python, `1.08 ^ 5` no eleva a la quinta (es una operación sobre bits, y con floats directamente da error). La potencia es `**<span class="in">`: `</span>1.08 ** 5`.</span>
+<span id="cb2-521"><a href="#cb2-521" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**La tasa en "puntos" en lugar de en decimal**: escribir <span class="in">`tasa = 8`</span> cuando querías 8% hace que <span class="in">`(1 + tasa) ** 5`</span> multiplique el capital por 59049 en vez de por 1.47. Las tasas van en decimal (<span class="in">`0.08`</span>), y el formato <span class="in">`:.2%`</span> se encarga de mostrarlas como porcentaje.</span>
+<span id="cb2-522"><a href="#cb2-522" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Sumar un `str` que parece número**: lo que llega de <span class="in">`input()`</span> o de un archivo es texto, y <span class="in">`"100" + "50"`</span> da <span class="in">`"10050"`</span>. Convertí con <span class="in">`float()`</span> o <span class="in">`int()`</span> antes de operar.</span>
+<span id="cb2-523"><a href="#cb2-523" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Mezclar TNA y TEA**: una TNA del 48% con capitalización mensual no rinde 48% en el año, rinde más. Antes de comparar dos tasas o de usarlas en $(1+r)^n$, llevalas a la misma forma (la @fig-conversion-tasas).</span>
+<span id="cb2-524"><a href="#cb2-524" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Restar la inflación para obtener la tasa real**: la cuenta correcta es $(1+i)/(1+\pi) - 1$. La resta solo sirve como aproximación con tasas de un dígito.</span>
+<span id="cb2-525"><a href="#cb2-525" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**`=` en lugar de `==` en un `if`**: <span class="in">`=`</span> asigna y <span class="in">`==`</span> compara. Python rechaza <span class="in">`if tasa = 0.05:`</span> con un <span class="in">`SyntaxError`</span>, que por lo menos avisa; leé el mensaje antes de tocar otra cosa.</span>
+<span id="cb2-526"><a href="#cb2-526" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb2-527"><a href="#cb2-527" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-528"><a href="#cb2-528" aria-hidden="true" tabindex="-1"></a>---</span>
+<span id="cb2-529"><a href="#cb2-529" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-530"><a href="#cb2-530" aria-hidden="true" tabindex="-1"></a><span class="fu">## Referencias</span></span>
+<span id="cb2-531"><a href="#cb2-531" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-532"><a href="#cb2-532" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-533"><a href="#cb2-533" aria-hidden="true" tabindex="-1"></a>::: {#refs}</span>
+<span id="cb2-534"><a href="#cb2-534" aria-hidden="true" tabindex="-1"></a>:::</span>
 </code></pre></div><button title="Copiar al portapapeles" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></div>
 </div></div></div></div></div>
 </div> <!-- /content -->
 <footer class="footer">
   <div class="nav-footer">
     <div class="nav-footer-left">
-<p>Finanzas Computacionales con Python fue escrito por la Cátedra de Finanzas Computacionales — UADE.</p>
+<p>Finanzas Computacionales con Python fue escrito por la Cátedra de Finanzas Computacionales de la UADE.</p>
 </div>   
     <div class="nav-footer-center">
       &nbsp;

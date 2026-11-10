@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>5&nbsp; Capítulo 5: NumPy y Cálculo Vectorizado – Finanzas Computacionales</title>
+<title>5&nbsp; Capítulo 5: NumPy y Cálculo Vectorizado – Finanzas Computacionales con Python</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -184,10 +184,10 @@ window.Quarto = {
   <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation docked overflow-auto">
     <div class="pt-lg-2 mt-2 text-left sidebar-header">
     <div class="sidebar-title mb-0 py-0">
-      <a href="../">Finanzas Computacionales</a> 
+      <a href="../">Finanzas Computacionales con Python</a> 
         <div class="sidebar-tools-main tools-wide">
     <a href="https://github.com/diegoonna/libro_finanzas_computacionales" title="Source Code" class="quarto-navigation-tool px-1" aria-label="Source Code"><i class="bi bi-github"></i></a>
-    <a href="../Finanzas-Computacionales.pdf" title="Download PDF" class="quarto-navigation-tool px-1" aria-label="Download PDF"><i class="bi bi-file-pdf"></i></a>
+    <a href="../Finanzas-Computacionales-con-Python.pdf" title="Download PDF" class="quarto-navigation-tool px-1" aria-label="Download PDF"><i class="bi bi-file-pdf"></i></a>
   <a href="" class="quarto-reader-toggle quarto-navigation-tool px-1" onclick="window.quartoToggleReader(); return false;" title="Alternar modo lector">
   <div class="quarto-reader-toggle-btn">
   <i class="bi"></i>
@@ -456,8 +456,7 @@ window.Quarto = {
   <li><a href="#álgebra-lineal-la-antesala-de-markowitz" id="toc-álgebra-lineal-la-antesala-de-markowitz" class="nav-link" data-scroll-target="#álgebra-lineal-la-antesala-de-markowitz"><span class="header-section-number">5.8</span> Álgebra lineal: la antesala de Markowitz</a></li>
   <li><a href="#de-numpy-a-pandas" id="toc-de-numpy-a-pandas" class="nav-link" data-scroll-target="#de-numpy-a-pandas"><span class="header-section-number">5.9</span> De NumPy a Pandas</a></li>
   <li><a href="#errores-comunes" id="toc-errores-comunes" class="nav-link" data-scroll-target="#errores-comunes"><span class="header-section-number">5.10</span> Errores comunes</a></li>
-  <li><a href="#ejercicios-propuestos" id="toc-ejercicios-propuestos" class="nav-link" data-scroll-target="#ejercicios-propuestos"><span class="header-section-number">5.11</span> Ejercicios Propuestos</a></li>
-  <li><a href="#referencias" id="toc-referencias" class="nav-link" data-scroll-target="#referencias"><span class="header-section-number">5.12</span> Referencias</a></li>
+  <li><a href="#referencias" id="toc-referencias" class="nav-link" data-scroll-target="#referencias"><span class="header-section-number">5.11</span> Referencias</a></li>
   </ul></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/diegoonna/libro_finanzas_computacionales/edit/main/unidad1/cap05_numpy.qmd" class="toc-action"><i class="bi bi-github"></i>Editar esta página</a></li><li><a href="https://github.com/diegoonna/libro_finanzas_computacionales/issues/new" class="toc-action"><i class="bi empty"></i>Informar sobre problema</a></li></ul></div></nav>
@@ -494,7 +493,7 @@ window.Quarto = {
 <section id="introducción" class="level1 unnumbered">
 <h1 class="unnumbered">Introducción</h1>
 <p>Hasta ahora venimos representando datos financieros con <strong>listas</strong> y <strong>diccionarios</strong> de Python. Nos sirvieron para aprender a programar, pero tienen un problema serio: son lentas y verbosas cuando hay que hacer cuentas sobre miles de números. Y en finanzas, <em>siempre</em> hay miles de números: años de cotizaciones diarias, paneles de cientos de activos, millones de trayectorias en una simulación.</p>
-<p>Acá entra <strong>NumPy</strong> (de <em>Numerical Python</em>). Es la librería que le da a Python la capacidad de hacer cálculo numérico a la velocidad de un lenguaje compilado como C, pero con la comodidad de escribir Python. No es una librería más: es la base sobre la que están construidos Pandas, SciPy, scikit-learn y prácticamente todo lo que vas a usar de acá en adelante. Cuando en el Capítulo 6 hagas <code>pd.DataFrame</code>, por debajo hay arrays de NumPy; cuando en el Capítulo 8 optimices un portafolio de Markowitz, vas a estar multiplicando matrices de NumPy.</p>
+<p>Acá entra <strong>NumPy</strong> (de <em>Numerical Python</em>) <span class="citation" data-cites="harris2020">(<a href="cap01_pensamiento_computacional.html#ref-harris2020" role="doc-biblioref">Harris et&nbsp;al. 2020</a>)</span>. Es la librería que le da a Python la capacidad de hacer cálculo numérico a la velocidad de un lenguaje compilado como C, pero con la comodidad de escribir Python. No es una librería más: es la base sobre la que están construidos Pandas, SciPy, scikit-learn y prácticamente todo lo que vas a usar de acá en adelante. Cuando en el <a href="../unidad1/cap06_series_tiempo_pandas.html">Capítulo 6</a> hagas <code>pd.DataFrame</code>, por debajo hay arrays de NumPy; cuando en el <a href="../unidad2/cap08_markowitz.html">Capítulo 8</a> optimices un portafolio de Markowitz, vas a estar multiplicando matrices de NumPy.</p>
 <div class="callout callout-style-simple callout-tip callout-titled" title="La idea de fondo">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -505,7 +504,7 @@ window.Quarto = {
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>Programar con NumPy es cambiar el chip: en vez de pensar <em>“recorré la lista elemento por elemento y hacé la cuenta”</em>, pensás <em>“aplicá esta operación a todo el vector de una”</em>. Eso se llama <strong>vectorización</strong>, y es la habilidad central de este capítulo.</p>
+<p>Programar con NumPy es cambiar el chip: en vez de pensar <em>“recorré la lista elemento por elemento y hacé la cuenta”</em>, pensás <em>“aplicá esta operación a todo el vector de una vez”</em>. Eso se llama <strong>vectorización</strong>, y es la habilidad central de este capítulo.</p>
 </div>
 </div>
 <div id="setup" class="cell" data-execution_count="1">
@@ -539,7 +538,7 @@ window.Quarto = {
 <pre><code>[ 0.025      -0.01463415  0.02475248  0.01449275]</code></pre>
 </div>
 </div>
-<p><code>precios[1:]</code> es “todos los precios desde el segundo” (<span class="math inline">\(P_t\)</span>) y <code>precios[:-1]</code> es “todos menos el último” (<span class="math inline">\(P_{t-1}\)</span>). NumPy divide los dos vectores <strong>elemento a elemento</strong> automáticamente. Sin bucles, sin índices, sin listas vacías. Esto no es solo más corto: sobre datos reales es <strong>decenas o cientos de veces más rápido</strong>, porque la operación corre en código C optimizado en lugar de un bucle interpretado de Python.</p>
+<p><code>precios[1:]</code> es “todos los precios desde el segundo” (<span class="math inline">\(P_t\)</span>) y <code>precios[:-1]</code> es “todos menos el último” (<span class="math inline">\(P_{t-1}\)</span>). NumPy divide los dos vectores <strong>elemento a elemento</strong> automáticamente. Sin bucles, sin índices, sin listas vacías. Esto no es solo más corto: sobre datos reales es decenas o cientos de veces más rápido, porque la operación corre en código C optimizado en lugar de un bucle interpretado de Python.</p>
 <p>La <a href="#fig-slicing-retornos" class="quarto-xref">Figura&nbsp;<span>5.1</span></a> muestra el truco: los dos recortes son el mismo array <strong>desfasado una posición</strong>, así que al ponerlos uno sobre otro cada precio queda alineado con el del día anterior.</p>
 <div id="cell-fig-slicing-retornos" class="cell" data-execution_count="4">
 <div class="cell-output cell-output-display">
@@ -755,7 +754,7 @@ Días con pérdida: 3 de 6
 Pérdida promedio: -1.10%</code></pre>
 </div>
 </div>
-<p>Fijate el truco de <code>mascara_perdidas.sum()</code>: como <code>True</code> vale 1 y <code>False</code> vale 0, sumar una máscara booleana <strong>cuenta cuántas condiciones se cumplen</strong>. Es un patrón que vas a repetir mil veces (¿cuántos días superaron el VaR?, ¿cuántos activos rindieron más que el mercado?, etc.).</p>
+<p>Fijate el truco de <code>mascara_perdidas.sum()</code>: como <code>True</code> vale 1 y <code>False</code> vale 0, sumar una máscara booleana cuenta cuántas condiciones se cumplen. Es un patrón que vas a repetir mil veces (¿cuántos días superaron el VaR?, ¿cuántos activos rindieron más que el mercado?, etc.).</p>
 <hr>
 </section>
 </section>
@@ -769,7 +768,7 @@ Pérdida promedio: -1.10%</code></pre>
 <span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>ret_log <span class="op">=</span> np.log(precios[<span class="dv">1</span>:] <span class="op">/</span> precios[:<span class="op">-</span><span class="dv">1</span>])</span>
 <span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Retornos log:"</span>, ret_log)</span>
 <span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Convertir un vector entero de tasas anuales a mensuales, todo de una</span></span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Convertir un vector entero de tasas anuales a mensuales, todo de una vez</span></span>
 <span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a>tasas_anuales <span class="op">=</span> np.array([<span class="fl">0.40</span>, <span class="fl">0.35</span>, <span class="fl">0.50</span>, <span class="fl">0.45</span>])</span>
 <span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a>tasas_mensuales <span class="op">=</span> (<span class="dv">1</span> <span class="op">+</span> tasas_anuales) <span class="op">**</span> (<span class="dv">1</span><span class="op">/</span><span class="dv">12</span>) <span class="op">-</span> <span class="dv">1</span></span>
 <span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Tasas mensuales equivalentes:"</span>, np.<span class="bu">round</span>(tasas_mensuales, <span class="dv">4</span>))</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
@@ -815,13 +814,13 @@ Tasas mensuales equivalentes: [0.0284 0.0253 0.0344 0.0314]</code></pre>
 <span id="cb20-18"><a href="#cb20-18" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"NumPy:         </span><span class="sc">{</span>t_numpy<span class="op">*</span><span class="dv">1000</span><span class="sc">:7.1f}</span><span class="ss"> ms"</span>)</span>
 <span id="cb20-19"><a href="#cb20-19" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"NumPy es ~</span><span class="sc">{</span>t_bucle<span class="op">/</span>t_numpy<span class="sc">:.0f}</span><span class="ss">x más rápido"</span>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Bucle Python:    493.8 ms
+<pre><code>Bucle Python:    232.8 ms
 NumPy:             3.3 ms
-NumPy es ~148x más rápido</code></pre>
+NumPy es ~71x más rápido</code></pre>
 </div>
 </div>
-<p>Sobre un millón de datos la diferencia es de uno a dos órdenes de magnitud. En una simulación de Monte Carlo con millones de trayectorias (Capítulo 13), esto es la diferencia entre que tu código termine en segundos o en horas.</p>
-<p>¿De dónde sale esa diferencia? Del <strong>trabajo repetido que hace el intérprete</strong>. En el bucle de Python, <em>cada una</em> del millón de vueltas repite la misma burocracia: mirar qué tipo tiene <code>x</code> (¿es int? ¿float? ¿string?), desempaquetar el valor del objeto que lo envuelve, decidir qué operación “elevar al cuadrado” corresponde a ese tipo, ejecutarla, y volver a empaquetar el resultado en un objeto nuevo. Un millón de elementos, un millón de veces la misma verificación. NumPy hace esa burocracia <strong>una sola vez</strong>: como el array es homogéneo (todos <code>float64</code>, gracias al <code>dtype</code>), sabe de antemano qué operación aplicar a todos, y delega el recorrido a un bucle compilado en C que barre la memoria contigua a toda velocidad — incluso procesando varios elementos por instrucción del procesador (SIMD). No es que Python “sea lento”: es que le pedimos que vuelva a deducir lo obvio un millón de veces. La vectorización es, en el fondo, <strong>mover la decisión fuera del bucle</strong>.</p>
+<p>Sobre un millón de datos la diferencia es de uno a dos órdenes de magnitud. En una simulación de Monte Carlo con millones de trayectorias (<a href="../unidad3/cap13_monte_carlo.html">Capítulo 13</a>), esto es la diferencia entre que tu código termine en segundos o en horas.</p>
+<p>¿De dónde sale esa diferencia? Del trabajo repetido que hace el intérprete. En el bucle de Python, <em>cada una</em> del millón de vueltas repite la misma burocracia: mirar qué tipo tiene <code>x</code> (¿es int? ¿float? ¿string?), desempaquetar el valor del objeto que lo envuelve, decidir qué operación “elevar al cuadrado” corresponde a ese tipo, ejecutarla, y volver a empaquetar el resultado en un objeto nuevo. Un millón de elementos, un millón de veces la misma verificación. NumPy hace esa burocracia <strong>una sola vez</strong>: como el array es homogéneo (todos <code>float64</code>, gracias al <code>dtype</code>), sabe de antemano qué operación aplicar a todos, y delega el recorrido a un bucle compilado en C que barre la memoria contigua a toda velocidad, incluso procesando varios elementos por instrucción del procesador (SIMD). No es que Python “sea lento”: es que le pedimos que vuelva a deducir lo obvio un millón de veces. La vectorización es, en el fondo, mover la decisión fuera del bucle.</p>
 <hr>
 </section>
 </section>
@@ -984,7 +983,7 @@ Figura&nbsp;5.4: Broadcasting en <code>R - medias</code>: el vector de forma (3,
 <section id="álgebra-lineal-la-antesala-de-markowitz" class="level2" data-number="5.8">
 <h2 data-number="5.8" class="anchored" data-anchor-id="álgebra-lineal-la-antesala-de-markowitz"><span class="header-section-number">5.8</span> Álgebra lineal: la antesala de Markowitz</h2>
 <p>Acá NumPy muestra para qué fue diseñado. La optimización de portafolios del Módulo 2 se escribe entera en lenguaje matricial, y NumPy lo implementa directo.</p>
-<p>El <strong>producto matricial</strong> se hace con el operador <code>@</code> (no con <code>*</code>, que es elemento a elemento). Veamos el cálculo más importante de toda la teoría de portafolios: el <strong>retorno esperado de un portafolio</strong>, que es el producto entre el vector de pesos <span class="math inline">\(\mathbf{w}\)</span> y el vector de retornos esperados <span class="math inline">\(\boldsymbol{\mu}\)</span>.</p>
+<p>El <strong>producto matricial</strong> se hace con el operador <code>@</code> (no con <code>*</code>, que es elemento a elemento). Veamos el cálculo más importante de toda la teoría de portafolios: el retorno esperado de un portafolio, que es el producto entre el vector de pesos <span class="math inline">\(\mathbf{w}\)</span> y el vector de retornos esperados <span class="math inline">\(\boldsymbol{\mu}\)</span>.</p>
 <div id="producto-portafolio" class="cell" data-execution_count="20">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb30"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Pesos del portafolio (40% activo 1, 35% activo 2, 25% activo 3)</span></span>
 <span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>w <span class="op">=</span> np.array([<span class="fl">0.40</span>, <span class="fl">0.35</span>, <span class="fl">0.25</span>])</span>
@@ -1026,7 +1025,7 @@ Volatilidad diaria del portafolio: 0.0128
 Volatilidad anualizada:            20.36%</code></pre>
 </div>
 </div>
-<p>Esas dos líneas —<code>w @ mu</code> y <code>w @ Sigma @ w</code>— son, literalmente, la Teoría Moderna de Portafolios. En el Capítulo 8 le vamos a pedir a la computadora que busque los pesos <code>w</code> que minimizan ese riesgo. Todo el andamiaje matemático ya lo tenés en NumPy.</p>
+<p>Esas dos líneas —<code>w @ mu</code> y <code>w @ Sigma @ w</code>— son, literalmente, la Teoría Moderna de Portafolios. En el <a href="../unidad2/cap08_markowitz.html">Capítulo 8</a> le vamos a pedir a la computadora que busque los pesos <code>w</code> que minimizan ese riesgo. Todo el andamiaje matemático ya lo tenés en NumPy.</p>
 <p>El submódulo <code>np.linalg</code> completa el kit de álgebra lineal (inversas, determinantes, autovalores, resolución de sistemas):</p>
 <div id="linalg" class="cell" data-execution_count="22">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb34"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>M <span class="op">=</span> np.array([[<span class="fl">4.0</span>, <span class="fl">1.0</span>],</span>
@@ -1054,7 +1053,7 @@ Autovalores:  [4.61803399 2.38196601]</code></pre>
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>Black-Litterman (Capítulo 10) y la regresión por mínimos cuadrados (Capítulo 15) se resuelven invirtiendo matrices con <code>np.linalg.inv</code> y <code>np.linalg.solve</code>. El código que acabás de ver es la base de la mitad del libro.</p>
+<p>Black-Litterman (<a href="../unidad2/cap10_black_litterman.html">Capítulo 10</a>) y la regresión por mínimos cuadrados (<a href="../unidad3/cap15_econometria_modelos_lineales.html">Capítulo 15</a>) se resuelven invirtiendo matrices con <code>np.linalg.inv</code> y <code>np.linalg.solve</code>. El código que acabás de ver es la base de la mitad del libro.</p>
 </div>
 </div>
 <hr>
@@ -1062,7 +1061,7 @@ Autovalores:  [4.61803399 2.38196601]</code></pre>
 <section id="de-numpy-a-pandas" class="level2" data-number="5.9">
 <h2 data-number="5.9" class="anchored" data-anchor-id="de-numpy-a-pandas"><span class="header-section-number">5.9</span> De NumPy a Pandas</h2>
 <p>NumPy es potentísimo, pero tiene una limitación para el trabajo diario: los arrays no tienen <strong>etiquetas</strong>. En <code>R[:, 0]</code> vos sabés que la columna 0 es “el activo A” porque te lo acordás, no porque el array lo diga. Cuando manejás decenas de activos con fechas de por medio, eso se vuelve un problema.</p>
-<p>Ahí entra <strong>Pandas</strong> (Capítulo 6): pone etiquetas (nombres de columnas y un índice de fechas) <em>encima</em> de los arrays de NumPy. Un <code>DataFrame</code> es, en el fondo, un array de NumPy con nombres. Por eso todo lo que aprendiste acá —vectorización, broadcasting, <code>axis</code>, máscaras booleanas— se traslada casi idéntico a Pandas. No estás aprendiendo dos cosas: estás aprendiendo NumPy, y Pandas es NumPy con etiquetas.</p>
+<p>Ahí entra <strong>Pandas</strong> (<a href="../unidad1/cap06_series_tiempo_pandas.html">Capítulo 6</a>): pone etiquetas (nombres de columnas y un índice de fechas) <em>encima</em> de los arrays de NumPy. Un <code>DataFrame</code> es, en el fondo, un array de NumPy con nombres. Por eso todo lo que aprendiste acá —vectorización, broadcasting, <code>axis</code>, máscaras booleanas— se traslada casi idéntico a Pandas. No estás aprendiendo dos cosas: estás aprendiendo NumPy, y Pandas es NumPy con etiquetas.</p>
 <hr>
 </section>
 <section id="errores-comunes" class="level2" data-number="5.10">
@@ -1087,31 +1086,8 @@ Autovalores:  [4.61803399 2.38196601]</code></pre>
 </div>
 <hr>
 </section>
-<section id="ejercicios-propuestos" class="level2" data-number="5.11">
-<h2 data-number="5.11" class="anchored" data-anchor-id="ejercicios-propuestos"><span class="header-section-number">5.11</span> Ejercicios Propuestos</h2>
-<div class="callout callout-style-simple callout-important callout-titled" title="Ejercicios">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Importante</span>Ejercicios
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<ol type="1">
-<li><strong>Retornos y volatilidad</strong>: dado un array de 252 precios simulados, calculá el vector de retornos logarítmicos, su media anualizada (<span class="math inline">\(\times 252\)</span>) y su volatilidad anualizada (<span class="math inline">\(\times \sqrt{252}\)</span>), todo sin usar bucles.</li>
-<li><strong>Máximo drawdown vectorizado</strong>: a partir de un vector de precios, calculá el máximo acumulado con <code>np.maximum.accumulate</code> y usalo para obtener la peor caída desde un pico (el <em>drawdown</em> máximo). <em>Pista</em>: el drawdown en cada instante es <code>precio / pico_hasta_ahora - 1</code>.</li>
-<li><strong>Panel de activos</strong>: generá con <code>rng.normal</code> un panel de retornos de 5 activos por 500 días. Calculá el retorno medio y la volatilidad de cada activo con <code>axis</code>, y estandarizá el panel con broadcasting.</li>
-<li><strong>Portafolio equiponderado</strong>: con el panel del ejercicio 3 y pesos iguales (<span class="math inline">\(w_i = 1/5\)</span>), calculá la serie de retornos del portafolio (<code>R @ w</code>) y comparala con el promedio simple por fecha.</li>
-<li><strong>Covarianza y riesgo</strong>: calculá la matriz de covarianzas del panel y la volatilidad de un portafolio con pesos <code>[0.3, 0.3, 0.2, 0.1, 0.1]</code> usando la forma cuadrática <span class="math inline">\(\mathbf{w}^T\Sigma\mathbf{w}\)</span>. ¿Es menor que el promedio de las volatilidades individuales? ¿Por qué?</li>
-</ol>
-</div>
-</div>
-<hr>
-</section>
-<section id="referencias" class="level2" data-number="5.12">
-<h2 data-number="5.12" class="anchored" data-anchor-id="referencias"><span class="header-section-number">5.12</span> Referencias</h2>
+<section id="referencias" class="level2" data-number="5.11">
+<h2 data-number="5.11" class="anchored" data-anchor-id="referencias"><span class="header-section-number">5.11</span> Referencias</h2>
 <div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list" style="display: none">
 <div id="ref-harris2020" class="csl-entry" role="listitem">
 Harris, Charles R., K. Jarrod Millman, Stéfan J. van der Walt, et&nbsp;al. 2020. <span>«Array Programming with <span>NumPy</span>»</span>. <em>Nature</em> 585: 357-62. <a href="https://doi.org/10.1038/s41586-020-2649-2">https://doi.org/10.1038/s41586-020-2649-2</a>.
@@ -1620,10 +1596,10 @@ VanderPlas, Jake. 2016. <em>Python Data Science Handbook</em>. O’Reilly Media.
 <span id="cb36-16"><a href="#cb36-16" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb36-17"><a href="#cb36-17" aria-hidden="true" tabindex="-1"></a>Hasta ahora venimos representando datos financieros con **listas** y **diccionarios** de Python. Nos sirvieron para aprender a programar, pero tienen un problema serio: son lentas y verbosas cuando hay que hacer cuentas sobre miles de números. Y en finanzas, *siempre* hay miles de números: años de cotizaciones diarias, paneles de cientos de activos, millones de trayectorias en una simulación.</span>
 <span id="cb36-18"><a href="#cb36-18" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb36-19"><a href="#cb36-19" aria-hidden="true" tabindex="-1"></a>Acá entra **NumPy** (de *Numerical Python*). Es la librería que le da a Python la capacidad de hacer cálculo numérico a la velocidad de un lenguaje compilado como C, pero con la comodidad de escribir Python. No es una librería más: es la base sobre la que están construidos Pandas, SciPy, scikit-learn y prácticamente todo lo que vas a usar de acá en adelante. Cuando en el Capítulo 6 hagas <span class="in">`pd.DataFrame`</span>, por debajo hay arrays de NumPy; cuando en el Capítulo 8 optimices un portafolio de Markowitz, vas a estar multiplicando matrices de NumPy.</span>
+<span id="cb36-19"><a href="#cb36-19" aria-hidden="true" tabindex="-1"></a>Acá entra **NumPy** (de *Numerical Python*) <span class="co">[</span><span class="ot">@harris2020</span><span class="co">]</span>. Es la librería que le da a Python la capacidad de hacer cálculo numérico a la velocidad de un lenguaje compilado como C, pero con la comodidad de escribir Python. No es una librería más: es la base sobre la que están construidos Pandas, SciPy, scikit-learn y prácticamente todo lo que vas a usar de acá en adelante. Cuando en el <span class="co">[</span><span class="ot">Capítulo 6</span><span class="co">](../unidad1/cap06_series_tiempo_pandas.qmd)</span> hagas <span class="in">`pd.DataFrame`</span>, por debajo hay arrays de NumPy; cuando en el <span class="co">[</span><span class="ot">Capítulo 8</span><span class="co">](../unidad2/cap08_markowitz.qmd)</span> optimices un portafolio de Markowitz, vas a estar multiplicando matrices de NumPy.</span>
 <span id="cb36-20"><a href="#cb36-20" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb36-21"><a href="#cb36-21" aria-hidden="true" tabindex="-1"></a>::: {.callout-tip title="La idea de fondo"}</span>
-<span id="cb36-22"><a href="#cb36-22" aria-hidden="true" tabindex="-1"></a>Programar con NumPy es cambiar el chip: en vez de pensar *"recorré la lista elemento por elemento y hacé la cuenta"*, pensás *"aplicá esta operación a todo el vector de una"*. Eso se llama **vectorización**, y es la habilidad central de este capítulo.</span>
+<span id="cb36-22"><a href="#cb36-22" aria-hidden="true" tabindex="-1"></a>Programar con NumPy es cambiar el chip: en vez de pensar *"recorré la lista elemento por elemento y hacé la cuenta"*, pensás *"aplicá esta operación a todo el vector de una vez"*. Eso se llama **vectorización**, y es la habilidad central de este capítulo.</span>
 <span id="cb36-23"><a href="#cb36-23" aria-hidden="true" tabindex="-1"></a>:::</span>
 <span id="cb36-24"><a href="#cb36-24" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb36-27"><a href="#cb36-27" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
@@ -1661,7 +1637,7 @@ VanderPlas, Jake. 2016. <em>Python Data Science Handbook</em>. O’Reilly Media.
 <span id="cb36-63"><a href="#cb36-63" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(retornos)</span>
 <span id="cb36-64"><a href="#cb36-64" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb36-65"><a href="#cb36-65" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb36-66"><a href="#cb36-66" aria-hidden="true" tabindex="-1"></a><span class="in">`precios[1:]`</span> es "todos los precios desde el segundo" ($P_t$) y <span class="in">`precios[:-1]`</span> es "todos menos el último" ($P_{t-1}$). NumPy divide los dos vectores **elemento a elemento** automáticamente. Sin bucles, sin índices, sin listas vacías. Esto no es solo más corto: sobre datos reales es **decenas o cientos de veces más rápido**, porque la operación corre en código C optimizado en lugar de un bucle interpretado de Python.</span>
+<span id="cb36-66"><a href="#cb36-66" aria-hidden="true" tabindex="-1"></a><span class="in">`precios[1:]`</span> es "todos los precios desde el segundo" ($P_t$) y <span class="in">`precios[:-1]`</span> es "todos menos el último" ($P_{t-1}$). NumPy divide los dos vectores **elemento a elemento** automáticamente. Sin bucles, sin índices, sin listas vacías. Esto no es solo más corto: sobre datos reales es decenas o cientos de veces más rápido, porque la operación corre en código C optimizado en lugar de un bucle interpretado de Python.</span>
 <span id="cb36-67"><a href="#cb36-67" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb36-68"><a href="#cb36-68" aria-hidden="true" tabindex="-1"></a>La @fig-slicing-retornos muestra el truco: los dos recortes son el mismo array **desfasado una posición**, así que al ponerlos uno sobre otro cada precio queda alineado con el del día anterior.</span>
 <span id="cb36-69"><a href="#cb36-69" aria-hidden="true" tabindex="-1"></a></span>
@@ -1891,7 +1867,7 @@ VanderPlas, Jake. 2016. <em>Python Data Science Handbook</em>. O’Reilly Media.
 <span id="cb36-309"><a href="#cb36-309" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Pérdida promedio: </span><span class="sc">{</span>perdidas<span class="sc">.</span>mean()<span class="sc">:.2%}</span><span class="ss">"</span>)</span>
 <span id="cb36-310"><a href="#cb36-310" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb36-311"><a href="#cb36-311" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb36-312"><a href="#cb36-312" aria-hidden="true" tabindex="-1"></a>Fijate el truco de <span class="in">`mascara_perdidas.sum()`</span>: como <span class="in">`True`</span> vale 1 y <span class="in">`False`</span> vale 0, sumar una máscara booleana **cuenta cuántas condiciones se cumplen**. Es un patrón que vas a repetir mil veces (¿cuántos días superaron el VaR?, ¿cuántos activos rindieron más que el mercado?, etc.).</span>
+<span id="cb36-312"><a href="#cb36-312" aria-hidden="true" tabindex="-1"></a>Fijate el truco de <span class="in">`mascara_perdidas.sum()`</span>: como <span class="in">`True`</span> vale 1 y <span class="in">`False`</span> vale 0, sumar una máscara booleana cuenta cuántas condiciones se cumplen. Es un patrón que vas a repetir mil veces (¿cuántos días superaron el VaR?, ¿cuántos activos rindieron más que el mercado?, etc.).</span>
 <span id="cb36-313"><a href="#cb36-313" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb36-314"><a href="#cb36-314" aria-hidden="true" tabindex="-1"></a>---</span>
 <span id="cb36-315"><a href="#cb36-315" aria-hidden="true" tabindex="-1"></a></span>
@@ -1907,7 +1883,7 @@ VanderPlas, Jake. 2016. <em>Python Data Science Handbook</em>. O’Reilly Media.
 <span id="cb36-327"><a href="#cb36-327" aria-hidden="true" tabindex="-1"></a>ret_log <span class="op">=</span> np.log(precios[<span class="dv">1</span>:] <span class="op">/</span> precios[:<span class="op">-</span><span class="dv">1</span>])</span>
 <span id="cb36-328"><a href="#cb36-328" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Retornos log:"</span>, ret_log)</span>
 <span id="cb36-329"><a href="#cb36-329" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb36-330"><a href="#cb36-330" aria-hidden="true" tabindex="-1"></a><span class="co"># Convertir un vector entero de tasas anuales a mensuales, todo de una</span></span>
+<span id="cb36-330"><a href="#cb36-330" aria-hidden="true" tabindex="-1"></a><span class="co"># Convertir un vector entero de tasas anuales a mensuales, todo de una vez</span></span>
 <span id="cb36-331"><a href="#cb36-331" aria-hidden="true" tabindex="-1"></a>tasas_anuales <span class="op">=</span> np.array([<span class="fl">0.40</span>, <span class="fl">0.35</span>, <span class="fl">0.50</span>, <span class="fl">0.45</span>])</span>
 <span id="cb36-332"><a href="#cb36-332" aria-hidden="true" tabindex="-1"></a>tasas_mensuales <span class="op">=</span> (<span class="dv">1</span> <span class="op">+</span> tasas_anuales) <span class="op">**</span> (<span class="dv">1</span><span class="op">/</span><span class="dv">12</span>) <span class="op">-</span> <span class="dv">1</span></span>
 <span id="cb36-333"><a href="#cb36-333" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Tasas mensuales equivalentes:"</span>, np.<span class="bu">round</span>(tasas_mensuales, <span class="dv">4</span>))</span>
@@ -1944,9 +1920,9 @@ VanderPlas, Jake. 2016. <em>Python Data Science Handbook</em>. O’Reilly Media.
 <span id="cb36-366"><a href="#cb36-366" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"NumPy es ~</span><span class="sc">{</span>t_bucle<span class="op">/</span>t_numpy<span class="sc">:.0f}</span><span class="ss">x más rápido"</span>)</span>
 <span id="cb36-367"><a href="#cb36-367" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb36-368"><a href="#cb36-368" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb36-369"><a href="#cb36-369" aria-hidden="true" tabindex="-1"></a>Sobre un millón de datos la diferencia es de uno a dos órdenes de magnitud. En una simulación de Monte Carlo con millones de trayectorias (Capítulo 13), esto es la diferencia entre que tu código termine en segundos o en horas.</span>
+<span id="cb36-369"><a href="#cb36-369" aria-hidden="true" tabindex="-1"></a>Sobre un millón de datos la diferencia es de uno a dos órdenes de magnitud. En una simulación de Monte Carlo con millones de trayectorias (<span class="co">[</span><span class="ot">Capítulo 13</span><span class="co">](../unidad3/cap13_monte_carlo.qmd)</span>), esto es la diferencia entre que tu código termine en segundos o en horas.</span>
 <span id="cb36-370"><a href="#cb36-370" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb36-371"><a href="#cb36-371" aria-hidden="true" tabindex="-1"></a>¿De dónde sale esa diferencia? Del **trabajo repetido que hace el intérprete**. En el bucle de Python, *cada una* del millón de vueltas repite la misma burocracia: mirar qué tipo tiene `x` (¿es int? ¿float? ¿string?), desempaquetar el valor del objeto que lo envuelve, decidir qué operación "elevar al cuadrado" corresponde a ese tipo, ejecutarla, y volver a empaquetar el resultado en un objeto nuevo. Un millón de elementos, un millón de veces la misma verificación. NumPy hace esa burocracia **una sola vez**: como el array es homogéneo (todos `float64`, gracias al `dtype`), sabe de antemano qué operación aplicar a todos, y delega el recorrido a un bucle compilado en C que barre la memoria contigua a toda velocidad — incluso procesando varios elementos por instrucción del procesador (SIMD). No es que Python "sea lento": es que le pedimos que vuelva a deducir lo obvio un millón de veces. La vectorización es, en el fondo, **mover la decisión fuera del bucle**.</span>
+<span id="cb36-371"><a href="#cb36-371" aria-hidden="true" tabindex="-1"></a>¿De dónde sale esa diferencia? Del trabajo repetido que hace el intérprete. En el bucle de Python, *cada una* del millón de vueltas repite la misma burocracia: mirar qué tipo tiene `x` (¿es int? ¿float? ¿string?), desempaquetar el valor del objeto que lo envuelve, decidir qué operación "elevar al cuadrado" corresponde a ese tipo, ejecutarla, y volver a empaquetar el resultado en un objeto nuevo. Un millón de elementos, un millón de veces la misma verificación. NumPy hace esa burocracia **una sola vez**: como el array es homogéneo (todos <span class="in">`float64`</span>, gracias al <span class="in">`dtype`</span>), sabe de antemano qué operación aplicar a todos, y delega el recorrido a un bucle compilado en C que barre la memoria contigua a toda velocidad, incluso procesando varios elementos por instrucción del procesador (SIMD). No es que Python "sea lento": es que le pedimos que vuelva a deducir lo obvio un millón de veces. La vectorización es, en el fondo, mover la decisión fuera del bucle.</span>
 <span id="cb36-372"><a href="#cb36-372" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb36-373"><a href="#cb36-373" aria-hidden="true" tabindex="-1"></a>---</span>
 <span id="cb36-374"><a href="#cb36-374" aria-hidden="true" tabindex="-1"></a></span>
@@ -2155,7 +2131,7 @@ VanderPlas, Jake. 2016. <em>Python Data Science Handbook</em>. O’Reilly Media.
 <span id="cb36-589"><a href="#cb36-589" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb36-590"><a href="#cb36-590" aria-hidden="true" tabindex="-1"></a>Acá NumPy muestra para qué fue diseñado. La optimización de portafolios del Módulo 2 se escribe entera en lenguaje matricial, y NumPy lo implementa directo.</span>
 <span id="cb36-591"><a href="#cb36-591" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb36-592"><a href="#cb36-592" aria-hidden="true" tabindex="-1"></a>El **producto matricial** se hace con el operador `@` (no con `*`, que es elemento a elemento). Veamos el cálculo más importante de toda la teoría de portafolios: el **retorno esperado de un portafolio**, que es el producto entre el vector de pesos $\mathbf{w}$ y el vector de retornos esperados $\boldsymbol{\mu}$.</span>
+<span id="cb36-592"><a href="#cb36-592" aria-hidden="true" tabindex="-1"></a>El **producto matricial** se hace con el operador <span class="in">`@`</span> (no con <span class="in">`*`</span>, que es elemento a elemento). Veamos el cálculo más importante de toda la teoría de portafolios: el retorno esperado de un portafolio, que es el producto entre el vector de pesos $\mathbf{w}$ y el vector de retornos esperados $\boldsymbol{\mu}$.</span>
 <span id="cb36-593"><a href="#cb36-593" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb36-596"><a href="#cb36-596" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
 <span id="cb36-597"><a href="#cb36-597" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: producto-portafolio</span></span>
@@ -2191,7 +2167,7 @@ VanderPlas, Jake. 2016. <em>Python Data Science Handbook</em>. O’Reilly Media.
 <span id="cb36-629"><a href="#cb36-629" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Volatilidad anualizada:            </span><span class="sc">{</span>vol_portafolio <span class="op">*</span> np<span class="sc">.</span>sqrt(<span class="dv">252</span>)<span class="sc">:.2%}</span><span class="ss">"</span>)</span>
 <span id="cb36-630"><a href="#cb36-630" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb36-631"><a href="#cb36-631" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb36-632"><a href="#cb36-632" aria-hidden="true" tabindex="-1"></a>Esas dos líneas —<span class="in">`w @ mu`</span> y <span class="in">`w @ Sigma @ w`</span>— son, literalmente, la Teoría Moderna de Portafolios. En el Capítulo 8 le vamos a pedir a la computadora que busque los pesos <span class="in">`w`</span> que minimizan ese riesgo. Todo el andamiaje matemático ya lo tenés en NumPy.</span>
+<span id="cb36-632"><a href="#cb36-632" aria-hidden="true" tabindex="-1"></a>Esas dos líneas —<span class="in">`w @ mu`</span> y <span class="in">`w @ Sigma @ w`</span>— son, literalmente, la Teoría Moderna de Portafolios. En el <span class="co">[</span><span class="ot">Capítulo 8</span><span class="co">](../unidad2/cap08_markowitz.qmd)</span> le vamos a pedir a la computadora que busque los pesos <span class="in">`w`</span> que minimizan ese riesgo. Todo el andamiaje matemático ya lo tenés en NumPy.</span>
 <span id="cb36-633"><a href="#cb36-633" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb36-634"><a href="#cb36-634" aria-hidden="true" tabindex="-1"></a>El submódulo <span class="in">`np.linalg`</span> completa el kit de álgebra lineal (inversas, determinantes, autovalores, resolución de sistemas):</span>
 <span id="cb36-635"><a href="#cb36-635" aria-hidden="true" tabindex="-1"></a></span>
@@ -2206,7 +2182,7 @@ VanderPlas, Jake. 2016. <em>Python Data Science Handbook</em>. O’Reilly Media.
 <span id="cb36-646"><a href="#cb36-646" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb36-647"><a href="#cb36-647" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb36-648"><a href="#cb36-648" aria-hidden="true" tabindex="-1"></a>::: {.callout-note title="Guardá esto para más adelante"}</span>
-<span id="cb36-649"><a href="#cb36-649" aria-hidden="true" tabindex="-1"></a>Black-Litterman (Capítulo 10) y la regresión por mínimos cuadrados (Capítulo 15) se resuelven invirtiendo matrices con <span class="in">`np.linalg.inv`</span> y <span class="in">`np.linalg.solve`</span>. El código que acabás de ver es la base de la mitad del libro.</span>
+<span id="cb36-649"><a href="#cb36-649" aria-hidden="true" tabindex="-1"></a>Black-Litterman (<span class="co">[</span><span class="ot">Capítulo 10</span><span class="co">](../unidad2/cap10_black_litterman.qmd)</span>) y la regresión por mínimos cuadrados (<span class="co">[</span><span class="ot">Capítulo 15</span><span class="co">](../unidad3/cap15_econometria_modelos_lineales.qmd)</span>) se resuelven invirtiendo matrices con <span class="in">`np.linalg.inv`</span> y <span class="in">`np.linalg.solve`</span>. El código que acabás de ver es la base de la mitad del libro.</span>
 <span id="cb36-650"><a href="#cb36-650" aria-hidden="true" tabindex="-1"></a>:::</span>
 <span id="cb36-651"><a href="#cb36-651" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb36-652"><a href="#cb36-652" aria-hidden="true" tabindex="-1"></a>---</span>
@@ -2215,7 +2191,7 @@ VanderPlas, Jake. 2016. <em>Python Data Science Handbook</em>. O’Reilly Media.
 <span id="cb36-655"><a href="#cb36-655" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb36-656"><a href="#cb36-656" aria-hidden="true" tabindex="-1"></a>NumPy es potentísimo, pero tiene una limitación para el trabajo diario: los arrays no tienen **etiquetas**. En <span class="in">`R[:, 0]`</span> vos sabés que la columna 0 es "el activo A" porque te lo acordás, no porque el array lo diga. Cuando manejás decenas de activos con fechas de por medio, eso se vuelve un problema.</span>
 <span id="cb36-657"><a href="#cb36-657" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb36-658"><a href="#cb36-658" aria-hidden="true" tabindex="-1"></a>Ahí entra **Pandas** (Capítulo 6): pone etiquetas (nombres de columnas y un índice de fechas) *encima* de los arrays de NumPy. Un <span class="in">`DataFrame`</span> es, en el fondo, un array de NumPy con nombres. Por eso todo lo que aprendiste acá —vectorización, broadcasting, <span class="in">`axis`</span>, máscaras booleanas— se traslada casi idéntico a Pandas. No estás aprendiendo dos cosas: estás aprendiendo NumPy, y Pandas es NumPy con etiquetas.</span>
+<span id="cb36-658"><a href="#cb36-658" aria-hidden="true" tabindex="-1"></a>Ahí entra **Pandas** (<span class="co">[</span><span class="ot">Capítulo 6</span><span class="co">](../unidad1/cap06_series_tiempo_pandas.qmd)</span>): pone etiquetas (nombres de columnas y un índice de fechas) *encima* de los arrays de NumPy. Un <span class="in">`DataFrame`</span> es, en el fondo, un array de NumPy con nombres. Por eso todo lo que aprendiste acá —vectorización, broadcasting, <span class="in">`axis`</span>, máscaras booleanas— se traslada casi idéntico a Pandas. No estás aprendiendo dos cosas: estás aprendiendo NumPy, y Pandas es NumPy con etiquetas.</span>
 <span id="cb36-659"><a href="#cb36-659" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb36-660"><a href="#cb36-660" aria-hidden="true" tabindex="-1"></a>---</span>
 <span id="cb36-661"><a href="#cb36-661" aria-hidden="true" tabindex="-1"></a></span>
@@ -2230,30 +2206,18 @@ VanderPlas, Jake. 2016. <em>Python Data Science Handbook</em>. O’Reilly Media.
 <span id="cb36-670"><a href="#cb36-670" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb36-671"><a href="#cb36-671" aria-hidden="true" tabindex="-1"></a>---</span>
 <span id="cb36-672"><a href="#cb36-672" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb36-673"><a href="#cb36-673" aria-hidden="true" tabindex="-1"></a><span class="fu">## Ejercicios Propuestos</span></span>
+<span id="cb36-673"><a href="#cb36-673" aria-hidden="true" tabindex="-1"></a><span class="fu">## Referencias</span></span>
 <span id="cb36-674"><a href="#cb36-674" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb36-675"><a href="#cb36-675" aria-hidden="true" tabindex="-1"></a>::: {.callout-important title="Ejercicios"}</span>
-<span id="cb36-676"><a href="#cb36-676" aria-hidden="true" tabindex="-1"></a><span class="ss">1. </span>**Retornos y volatilidad**: dado un array de 252 precios simulados, calculá el vector de retornos logarítmicos, su media anualizada ($\times 252$) y su volatilidad anualizada ($\times \sqrt{252}$), todo sin usar bucles.</span>
-<span id="cb36-677"><a href="#cb36-677" aria-hidden="true" tabindex="-1"></a><span class="ss">2. </span>**Máximo drawdown vectorizado**: a partir de un vector de precios, calculá el máximo acumulado con <span class="in">`np.maximum.accumulate`</span> y usalo para obtener la peor caída desde un pico (el *drawdown* máximo). *Pista*: el drawdown en cada instante es <span class="in">`precio / pico_hasta_ahora - 1`</span>.</span>
-<span id="cb36-678"><a href="#cb36-678" aria-hidden="true" tabindex="-1"></a><span class="ss">3. </span>**Panel de activos**: generá con <span class="in">`rng.normal`</span> un panel de retornos de 5 activos por 500 días. Calculá el retorno medio y la volatilidad de cada activo con <span class="in">`axis`</span>, y estandarizá el panel con broadcasting.</span>
-<span id="cb36-679"><a href="#cb36-679" aria-hidden="true" tabindex="-1"></a><span class="ss">4. </span>**Portafolio equiponderado**: con el panel del ejercicio 3 y pesos iguales ($w_i = 1/5$), calculá la serie de retornos del portafolio (<span class="in">`R @ w`</span>) y comparala con el promedio simple por fecha.</span>
-<span id="cb36-680"><a href="#cb36-680" aria-hidden="true" tabindex="-1"></a><span class="ss">5. </span>**Covarianza y riesgo**: calculá la matriz de covarianzas del panel y la volatilidad de un portafolio con pesos <span class="in">`[0.3, 0.3, 0.2, 0.1, 0.1]`</span> usando la forma cuadrática $\mathbf{w}^T\Sigma\mathbf{w}$. ¿Es menor que el promedio de las volatilidades individuales? ¿Por qué?</span>
-<span id="cb36-681"><a href="#cb36-681" aria-hidden="true" tabindex="-1"></a>:::</span>
-<span id="cb36-682"><a href="#cb36-682" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb36-683"><a href="#cb36-683" aria-hidden="true" tabindex="-1"></a>---</span>
-<span id="cb36-684"><a href="#cb36-684" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb36-685"><a href="#cb36-685" aria-hidden="true" tabindex="-1"></a><span class="fu">## Referencias</span></span>
-<span id="cb36-686"><a href="#cb36-686" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb36-687"><a href="#cb36-687" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb36-688"><a href="#cb36-688" aria-hidden="true" tabindex="-1"></a>::: {#refs}</span>
-<span id="cb36-689"><a href="#cb36-689" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb36-675"><a href="#cb36-675" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-676"><a href="#cb36-676" aria-hidden="true" tabindex="-1"></a>::: {#refs}</span>
+<span id="cb36-677"><a href="#cb36-677" aria-hidden="true" tabindex="-1"></a>:::</span>
 </code></pre></div><button title="Copiar al portapapeles" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></div>
 </div></div></div></div></div>
 </div> <!-- /content -->
 <footer class="footer">
   <div class="nav-footer">
     <div class="nav-footer-left">
-<p>Finanzas Computacionales con Python fue escrito por la Cátedra de Finanzas Computacionales — UADE.</p>
+<p>Finanzas Computacionales con Python fue escrito por la Cátedra de Finanzas Computacionales de la UADE.</p>
 </div>   
     <div class="nav-footer-center">
       &nbsp;

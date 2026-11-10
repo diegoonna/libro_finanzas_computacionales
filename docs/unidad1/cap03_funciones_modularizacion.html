@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>3&nbsp; Capítulo 3: Funciones, Excepciones y Módulos – Finanzas Computacionales</title>
+<title>3&nbsp; Capítulo 3: Funciones, Excepciones y Módulos – Finanzas Computacionales con Python</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -293,7 +293,7 @@ globalThis.qpyodideCustomizedPyodideOptions = {
 }
 
 // Store cell data
-globalThis.qpyodideCellDetails = [{"code":"def valor_futuro(capital, tasa, periodos):\n    \"\"\"\n    Calcula el valor futuro de una inversión.\n    \n    Parámetros:\n    -----------\n    capital : float — Monto inicial invertido\n    tasa : float — Tasa de interés por período\n    periodos : int — Número de períodos\n    \n    Retorna:\n    --------\n    float — Valor futuro\n    \"\"\"\n    return capital * (1 + tasa) ** periodos\n\n# Uso\nvf = valor_futuro(100_000, 0.08, 10)\nprint(f\"Valor futuro: ${vf:,.2f}\")","id":1,"options":{"autorun":"","classes":"","comment":"","context":"interactive","dpi":72,"fig-cap":"","fig-height":5,"fig-width":7,"label":"funcion-basica","message":"true","out-height":"","out-width":"700px","output":"true","read-only":"false","results":"markup","warning":"true"}},{"code":"def resumen_inversion(capital, tasa, periodos):\n    vf = capital * (1 + tasa) ** periodos\n    interes_ganado = vf - capital\n    rendimiento_total = interes_ganado / capital\n    return vf, interes_ganado, rendimiento_total\n\n# La función recibe 3 parámetros y devuelve 3 valores\nvf, interes, rendimiento = resumen_inversion(100_000, 0.08, 3)\n\nprint(f\"Valor futuro: ${vf:,.2f}\")\nprint(f\"Interés ganado: ${interes:,.2f}\")\nprint(f\"Rendimiento total: {rendimiento:.2%}\")","id":2,"options":{"autorun":"","classes":"","comment":"","context":"interactive","dpi":72,"fig-cap":"","fig-height":5,"fig-width":7,"label":"multi-params-return","message":"true","out-height":"","out-width":"700px","output":"true","read-only":"false","results":"markup","warning":"true"}},{"code":"def valor_presente(flujo_futuro, tasa, periodos=1):\n    \"\"\"Calcula el valor presente. Por defecto, 1 período.\"\"\"\n    return flujo_futuro / (1 + tasa) ** periodos\n\n# Con y sin el parámetro por defecto\nvp1 = valor_presente(1000, 0.10)       # 1 período (default)\nvp2 = valor_presente(1000, 0.10, 5)    # 5 períodos\n\nprint(f\"VP a 1 año: ${vp1:,.2f}\")\nprint(f\"VP a 5 años: ${vp2:,.2f}\")","id":3,"options":{"autorun":"","classes":"","comment":"","context":"interactive","dpi":72,"fig-cap":"","fig-height":5,"fig-width":7,"label":"params-default","message":"true","out-height":"","out-width":"700px","output":"true","read-only":"false","results":"markup","warning":"true"}},{"code":"def sumar_flujos(*flujos):\n    \"\"\"Suma una cantidad variable de flujos de fondos.\"\"\"\n    total = 0\n    for f in flujos:\n        total += f\n    return total\n\n# Podemos pasar cualquier cantidad de argumentos\ntotal_1 = sumar_flujos(100, 200, 300)\ntotal_2 = sumar_flujos(80, 80, 80, 80, 1080)\n\nprint(f\"Total 3 flujos: ${total_1:,}\")\nprint(f\"Total 5 flujos: ${total_2:,}\")\n\n# Si ya tenemos una lista, usamos * para desempaquetar\nserie = [-1000, 300, 400, 500]\nprint(f\"Suma serie: ${sumar_flujos(*serie):,}\")","id":4,"options":{"autorun":"","classes":"","comment":"","context":"interactive","dpi":72,"fig-cap":"","fig-height":5,"fig-width":7,"label":"args","message":"true","out-height":"","out-width":"700px","output":"true","read-only":"false","results":"markup","warning":"true"}},{"code":"tasa_mercado = 0.05  # VARIABLE GLOBAL (Scope: Main)\n\ndef calcular_rendimiento(monto):\n    # tasa_mercado es visible aquí porque es global\n    return monto * tasa_mercado\n\ndef operacion_interna():\n    variable_interna = 100  # VARIABLE LOCAL (Scope: Función)\n    print(f\"Dentro de la función: {variable_interna}\")\n\nprint(f\"Rendimiento calculado: {calcular_rendimiento(1000)}\")\noperacion_interna()\n\n# Intentar acceder a variable_interna aquí daría un NameError\n# print(variable_interna) ","id":5,"options":{"autorun":"","classes":"","comment":"","context":"interactive","dpi":72,"fig-cap":"","fig-height":5,"fig-width":7,"label":"scope-basico","message":"true","out-height":"","out-width":"700px","output":"true","read-only":"false","results":"markup","warning":"true"}},{"code":"ticker = \"AAPL\"\n\ndef cambiar_ticker_local():\n    ticker = \"GGAL\"  # Esto crea una variable LOCAL, no cambia la global\n    print(f\"Dentro de la función: {ticker}\")\n\ncambiar_ticker_local()\nprint(f\"Fuera de la función (Global): {ticker}\")","id":6,"options":{"autorun":"","classes":"","comment":"","context":"interactive","dpi":72,"fig-cap":"","fig-height":5,"fig-width":7,"label":"scope-shadowing","message":"true","out-height":"","out-width":"700px","output":"true","read-only":"false","results":"markup","warning":"true"}},{"code":"# MALA PRÁCTICA (Dependencia global)\ntasa = 0.10\ndef calcular_interes_malo(capital):\n    return capital * tasa\n\n# BUENA PRÁCTICA (Parámetros explícitos)\ndef calcular_interes_bueno(capital, tasa_activa):\n    return capital * tasa_activa\n\nprint(f\"Malo: {calcular_interes_malo(100)}\")\nprint(f\"Bueno: {calcular_interes_bueno(100, 0.12)}\")","id":7,"options":{"autorun":"","classes":"","comment":"","context":"interactive","dpi":72,"fig-cap":"","fig-height":5,"fig-width":7,"label":"scope-mala-practica","message":"true","out-height":"","out-width":"700px","output":"true","read-only":"false","results":"markup","warning":"true"}},{"code":"def aplicar_comision(flujos):\n    \"\"\"Descuenta 1% de comisión a cada flujo... modificando la lista recibida.\"\"\"\n    for i in range(len(flujos)):\n        flujos[i] = flujos[i] * 0.99\n    return flujos\n\nmis_flujos = [1000.0, 1000.0, 1000.0]\nflujos_netos = aplicar_comision(mis_flujos)\n\nprint(f\"Flujos netos:      {flujos_netos}\")\nprint(f\"¿Y mis originales? {mis_flujos}   ← ¡también cambiaron!\")","id":8,"options":{"autorun":"","classes":"","comment":"","context":"interactive","dpi":72,"fig-cap":"","fig-height":5,"fig-width":7,"label":"mutar-argumentos","message":"true","out-height":"","out-width":"700px","output":"true","read-only":"false","results":"markup","warning":"true"}},{"code":"def aplicar_comision_bien(flujos):\n    \"\"\"Versión pura: trabaja sobre una copia y devuelve una lista nueva.\"\"\"\n    netos = []\n    for f in flujos:\n        netos.append(f * 0.99)\n    return netos\n\nmis_flujos = [1000.0, 1000.0, 1000.0]\nflujos_netos = aplicar_comision_bien(mis_flujos)\n\nprint(f\"Flujos netos:      {flujos_netos}\")\nprint(f\"Originales intactos: {mis_flujos}\")","id":9,"options":{"autorun":"","classes":"","comment":"","context":"interactive","dpi":72,"fig-cap":"","fig-height":5,"fig-width":7,"label":"no-mutar-argumentos","message":"true","out-height":"","out-width":"700px","output":"true","read-only":"false","results":"markup","warning":"true"}},{"code":"def calcular_vpn(flujos, tasa):\n    \"\"\"Calcula el VPN de una serie de flujos.\"\"\"\n    if len(flujos) == 0:\n        raise ValueError(\"La lista de flujos no puede estar vacía\")\n\n    vpn = 0\n    for t, cf in enumerate(flujos):\n        vpn += cf / (1 + tasa) ** t\n    return vpn\n\n# Caso normal\nprint(f\"VPN correcto: {calcular_vpn([-1000, 400, 400, 400], 0.10):.2f}\")\n\n# Caso con error controlado (lista vacía)\ntry:\n    resultado = calcular_vpn([], 0.10)\nexcept ValueError as e:\n    print(f\"Error capturado: {e}\")","id":10,"options":{"autorun":"","classes":"","comment":"","context":"interactive","dpi":72,"fig-cap":"","fig-height":5,"fig-width":7,"label":"try-except","message":"true","out-height":"","out-width":"700px","output":"true","read-only":"false","results":"markup","warning":"true"}},{"code":"def ratio_cobertura(ebit, intereses):\n    return ebit / intereses\n\ntry:\n    print(ratio_cobertura(500, 0))  # podría fallar por división por cero\nexcept ZeroDivisionError:\n    print(\"Error: intereses no puede ser 0\")\nexcept TypeError:\n    print(\"Error: ebit e intereses deben ser numéricos\")","id":11,"options":{"autorun":"","classes":"","comment":"","context":"interactive","dpi":72,"fig-cap":"","fig-height":5,"fig-width":7,"label":"try-except-multiple","message":"true","out-height":"","out-width":"700px","output":"true","read-only":"false","results":"markup","warning":"true"}},{"code":"def parse_tasa(texto):\n    return float(texto)\n\nentrada = \"0.12\"\n\ntry:\n    tasa = parse_tasa(entrada)\nexcept ValueError:\n    print(\"No se pudo convertir la tasa a número\")\nelse:\n    print(f\"Tasa válida: {tasa:.2%}\")\nfinally:\n    print(\"Fin de la validación\")","id":12,"options":{"autorun":"","classes":"","comment":"","context":"interactive","dpi":72,"fig-cap":"","fig-height":5,"fig-width":7,"label":"try-except-else-finally","message":"true","out-height":"","out-width":"700px","output":"true","read-only":"false","results":"markup","warning":"true"}},{"code":"def cuota_francesa(capital, tasa, periodos):\n    if capital <= 0:\n        raise ValueError(\"El capital debe ser positivo\")\n    if tasa <= 0:\n        raise ValueError(\"La tasa debe ser positiva\")\n    if periodos <= 0:\n        raise ValueError(\"Los periodos deben ser mayores a 0\")\n    return capital * (tasa * (1 + tasa) ** periodos) / ((1 + tasa) ** periodos - 1)\n\ntry:\n    cuota = cuota_francesa(100000, 0.03, 24)\n    print(f\"Cuota: ${cuota:,.2f}\")\nexcept ValueError as e:\n    print(f\"Dato inválido: {e}\")","id":13,"options":{"autorun":"","classes":"","comment":"","context":"interactive","dpi":72,"fig-cap":"","fig-height":5,"fig-width":7,"label":"try-except-raise","message":"true","out-height":"","out-width":"700px","output":"true","read-only":"false","results":"markup","warning":"true"}},{"code":"# 1) import modulo\nimport math\nprint(math.sqrt(16))  # accedemos con prefijo math.\n\n# 2) import modulo as alias\nimport math as m\nprint(m.pi)  # mismo módulo, nombre corto\n\n# 3) from modulo import nombre\nfrom math import sqrt\nprint(sqrt(25))  # usamos sqrt directamente\n\n# 4) from modulo import nombre as alias\nfrom math import factorial as fact\nprint(fact(5))","id":14,"options":{"autorun":"","classes":"","comment":"","context":"interactive","dpi":72,"fig-cap":"","fig-height":5,"fig-width":7,"label":"","message":"true","out-height":"","out-width":"700px","output":"true","read-only":"false","results":"markup","warning":"true"}},{"code":"# === finanzas_basicas.py ===\n# En un proyecto real, este bloque viviría en su propio archivo .py\n# y lo importarías con: from finanzas_basicas import valor_futuro, ...\n\ndef valor_futuro(capital, tasa, periodos):\n    \"\"\"Calcula VF = C * (1 + r)^n.\"\"\"\n    if tasa < -1:\n        raise ValueError(\"La tasa no puede ser menor a -100%\")\n    return capital * (1 + tasa) ** periodos\n\n\ndef valor_presente_neto(flujos, tasa):\n    \"\"\"Calcula el VPN de una serie de flujos (el flujo 0 no se descuenta).\"\"\"\n    if not flujos:\n        raise ValueError(\"Lista de flujos vacía\")\n\n    vpn = 0\n    for t, cf in enumerate(flujos):\n        vpn += cf / (1 + tasa) ** t\n    return vpn\n\n\ndef conversion_tasas(tna, capitalizaciones=12):\n    \"\"\"Convierte una TNA con n capitalizaciones anuales a TEA.\"\"\"\n    if capitalizaciones <= 0:\n        raise ValueError(\"Las capitalizaciones deben ser positivas\")\n    return (1 + tna / capitalizaciones) ** capitalizaciones - 1\n\n\ndef valuacion_bono(valor_nominal, tasa_cupon, tasa_descuento, anios):\n    \"\"\"Precio de un bono bullet: cupones fijos + nominal al vencimiento.\n\n    Es la lógica del Capítulo 2, ahora encapsulada y validada.\n    \"\"\"\n    if tasa_cupon < 0 or anios <= 0:\n        raise ValueError(\"Cupón no negativo y plazo positivo\")\n\n    cupon = valor_nominal * tasa_cupon\n    precio = 0\n    for t in range(1, anios + 1):\n        flujo = cupon + (valor_nominal if t == anios else 0)\n        precio += flujo / (1 + tasa_descuento) ** t\n    return precio\n\n\ndef tir(valor_nominal, tasa_cupon, anios, precio_mercado, paso=0.0001):\n    \"\"\"TIR de un bono bullet por búsqueda incremental (Capítulo 2).\"\"\"\n    if precio_mercado <= 0:\n        raise ValueError(\"El precio debe ser positivo\")\n\n    tasa = 0.0\n    while valuacion_bono(valor_nominal, tasa_cupon, tasa, anios) > precio_mercado:\n        tasa += paso\n        if tasa > 5:   # techo de seguridad: 500% anual\n            raise ValueError(\"No se encontró TIR razonable: revisar inputs\")\n    return tasa","id":15,"options":{"autorun":"","classes":"","comment":"","context":"interactive","dpi":72,"fig-cap":"","fig-height":5,"fig-width":7,"label":"libreria","message":"true","out-height":"","out-width":"700px","output":"true","read-only":"false","results":"markup","warning":"true"}},{"code":"# === Uso de las funciones ===\n\n# 1. Valor futuro de una colocación\nvf = valor_futuro(100_000, 0.08, 3)\nprint(f\"Valor futuro: ${vf:,.2f}\")\n\n# 2. VPN de un proyecto de inversión\nflujos = [-1000, 400, 400, 400]\nvpn = valor_presente_neto(flujos, 0.10)\nprint(f\"VPN: ${vpn:,.2f}\")\n\n# 3. Conversión de tasas: TNA 48% con capitalización mensual → TEA\ntea = conversion_tasas(0.48, 12)\nprint(f\"TNA 48% mensual → TEA: {tea:.2%}\")\n\n# 4. Valuación del bono del Capítulo 2, ahora en una línea\nprecio = valuacion_bono(1000, 0.08, 0.10, 5)\nprint(f\"Precio del bono: ${precio:,.2f}\")\n\n# 5. Y su TIR comprándolo a $950\nrendimiento = tir(1000, 0.08, 5, 950)\nprint(f\"TIR al precio de $950: {rendimiento:.2%}\")","id":16,"options":{"autorun":"","classes":"","comment":"","context":"interactive","dpi":72,"fig-cap":"","fig-height":5,"fig-width":7,"label":"uso-libreria","message":"true","out-height":"","out-width":"700px","output":"true","read-only":"false","results":"markup","warning":"true"}}];
+globalThis.qpyodideCellDetails = [{"code":"def valor_futuro(capital, tasa, periodos):\n    \"\"\"\n    Calcula el valor futuro de una inversión.\n    \n    Parámetros:\n    -----------\n    capital : float — Monto inicial invertido\n    tasa : float — Tasa de interés por período\n    periodos : int — Número de períodos\n    \n    Retorna:\n    --------\n    float — Valor futuro\n    \"\"\"\n    return capital * (1 + tasa) ** periodos\n\n# Uso\nvf = valor_futuro(100_000, 0.08, 10)\nprint(f\"Valor futuro: ${vf:,.2f}\")","id":1,"options":{"autorun":"","classes":"","comment":"","context":"interactive","dpi":72,"fig-cap":"","fig-height":5,"fig-width":7,"label":"funcion-basica","message":"true","out-height":"","out-width":"700px","output":"true","read-only":"false","results":"markup","warning":"true"}},{"code":"def resumen_inversion(capital, tasa, periodos):\n    vf = capital * (1 + tasa) ** periodos\n    interes_ganado = vf - capital\n    rendimiento_total = interes_ganado / capital\n    return vf, interes_ganado, rendimiento_total\n\n# La función recibe 3 parámetros y devuelve 3 valores\nvf, interes, rendimiento = resumen_inversion(100_000, 0.08, 3)\n\nprint(f\"Valor futuro: ${vf:,.2f}\")\nprint(f\"Interés ganado: ${interes:,.2f}\")\nprint(f\"Rendimiento total: {rendimiento:.2%}\")","id":2,"options":{"autorun":"","classes":"","comment":"","context":"interactive","dpi":72,"fig-cap":"","fig-height":5,"fig-width":7,"label":"multi-params-return","message":"true","out-height":"","out-width":"700px","output":"true","read-only":"false","results":"markup","warning":"true"}},{"code":"def valor_presente(flujo_futuro, tasa, periodos=1):\n    \"\"\"Calcula el valor presente. Por defecto, 1 período.\"\"\"\n    return flujo_futuro / (1 + tasa) ** periodos\n\n# Con y sin el parámetro por defecto\nvp1 = valor_presente(1000, 0.10)       # 1 período (default)\nvp2 = valor_presente(1000, 0.10, 5)    # 5 períodos\n\nprint(f\"VP a 1 año: ${vp1:,.2f}\")\nprint(f\"VP a 5 años: ${vp2:,.2f}\")","id":3,"options":{"autorun":"","classes":"","comment":"","context":"interactive","dpi":72,"fig-cap":"","fig-height":5,"fig-width":7,"label":"params-default","message":"true","out-height":"","out-width":"700px","output":"true","read-only":"false","results":"markup","warning":"true"}},{"code":"def sumar_flujos(*flujos):\n    \"\"\"Suma una cantidad variable de flujos de fondos.\"\"\"\n    total = 0\n    for f in flujos:\n        total += f\n    return total\n\n# Podemos pasar cualquier cantidad de argumentos\ntotal_1 = sumar_flujos(100, 200, 300)\ntotal_2 = sumar_flujos(80, 80, 80, 80, 1080)\n\nprint(f\"Total 3 flujos: ${total_1:,}\")\nprint(f\"Total 5 flujos: ${total_2:,}\")\n\n# Si ya tenemos una lista, usamos * para desempaquetar\nserie = [-1000, 300, 400, 500]\nprint(f\"Suma serie: ${sumar_flujos(*serie):,}\")","id":4,"options":{"autorun":"","classes":"","comment":"","context":"interactive","dpi":72,"fig-cap":"","fig-height":5,"fig-width":7,"label":"args","message":"true","out-height":"","out-width":"700px","output":"true","read-only":"false","results":"markup","warning":"true"}},{"code":"tasa_mercado = 0.05  # VARIABLE GLOBAL (Scope: Main)\n\ndef calcular_rendimiento(monto):\n    # tasa_mercado es visible aquí porque es global\n    return monto * tasa_mercado\n\ndef operacion_interna():\n    variable_interna = 100  # VARIABLE LOCAL (Scope: Función)\n    print(f\"Dentro de la función: {variable_interna}\")\n\nprint(f\"Rendimiento calculado: {calcular_rendimiento(1000)}\")\noperacion_interna()\n\n# Intentar acceder a variable_interna aquí daría un NameError\n# print(variable_interna) ","id":5,"options":{"autorun":"","classes":"","comment":"","context":"interactive","dpi":72,"fig-cap":"","fig-height":5,"fig-width":7,"label":"scope-basico","message":"true","out-height":"","out-width":"700px","output":"true","read-only":"false","results":"markup","warning":"true"}},{"code":"ticker = \"AAPL\"\n\ndef cambiar_ticker_local():\n    ticker = \"GGAL\"  # Esto crea una variable LOCAL, no cambia la global\n    print(f\"Dentro de la función: {ticker}\")\n\ncambiar_ticker_local()\nprint(f\"Fuera de la función (Global): {ticker}\")","id":6,"options":{"autorun":"","classes":"","comment":"","context":"interactive","dpi":72,"fig-cap":"","fig-height":5,"fig-width":7,"label":"scope-shadowing","message":"true","out-height":"","out-width":"700px","output":"true","read-only":"false","results":"markup","warning":"true"}},{"code":"# MALA PRÁCTICA (Dependencia global)\ntasa = 0.10\ndef calcular_interes_malo(capital):\n    return capital * tasa\n\n# BUENA PRÁCTICA (Parámetros explícitos)\ndef calcular_interes_bueno(capital, tasa_activa):\n    return capital * tasa_activa\n\nprint(f\"Malo: {calcular_interes_malo(100)}\")\nprint(f\"Bueno: {calcular_interes_bueno(100, 0.12)}\")","id":7,"options":{"autorun":"","classes":"","comment":"","context":"interactive","dpi":72,"fig-cap":"","fig-height":5,"fig-width":7,"label":"scope-mala-practica","message":"true","out-height":"","out-width":"700px","output":"true","read-only":"false","results":"markup","warning":"true"}},{"code":"def aplicar_comision(flujos):\n    \"\"\"Descuenta 1% de comisión a cada flujo... modificando la lista recibida.\"\"\"\n    for i in range(len(flujos)):\n        flujos[i] = flujos[i] * 0.99\n    return flujos\n\nmis_flujos = [1000.0, 1000.0, 1000.0]\nflujos_netos = aplicar_comision(mis_flujos)\n\nprint(f\"Flujos netos:      {flujos_netos}\")\nprint(f\"¿Y mis originales? {mis_flujos}   ← ¡también cambiaron!\")","id":8,"options":{"autorun":"","classes":"","comment":"","context":"interactive","dpi":72,"fig-cap":"","fig-height":5,"fig-width":7,"label":"mutar-argumentos","message":"true","out-height":"","out-width":"700px","output":"true","read-only":"false","results":"markup","warning":"true"}},{"code":"def aplicar_comision_bien(flujos):\n    \"\"\"Versión pura: trabaja sobre una copia y devuelve una lista nueva.\"\"\"\n    netos = []\n    for f in flujos:\n        netos.append(f * 0.99)\n    return netos\n\nmis_flujos = [1000.0, 1000.0, 1000.0]\nflujos_netos = aplicar_comision_bien(mis_flujos)\n\nprint(f\"Flujos netos:      {flujos_netos}\")\nprint(f\"Originales intactos: {mis_flujos}\")","id":9,"options":{"autorun":"","classes":"","comment":"","context":"interactive","dpi":72,"fig-cap":"","fig-height":5,"fig-width":7,"label":"no-mutar-argumentos","message":"true","out-height":"","out-width":"700px","output":"true","read-only":"false","results":"markup","warning":"true"}},{"code":"def calcular_vpn(flujos, tasa):\n    \"\"\"Calcula el VPN de una serie de flujos.\"\"\"\n    if len(flujos) == 0:\n        raise ValueError(\"La lista de flujos no puede estar vacía\")\n\n    vpn = 0\n    for t, cf in enumerate(flujos):\n        vpn += cf / (1 + tasa) ** t\n    return vpn\n\n# Caso normal\nprint(f\"VPN correcto: {calcular_vpn([-1000, 400, 400, 400], 0.10):.2f}\")\n\n# Caso con error controlado (lista vacía)\ntry:\n    resultado = calcular_vpn([], 0.10)\nexcept ValueError as e:\n    print(f\"Error capturado: {e}\")","id":10,"options":{"autorun":"","classes":"","comment":"","context":"interactive","dpi":72,"fig-cap":"","fig-height":5,"fig-width":7,"label":"try-except","message":"true","out-height":"","out-width":"700px","output":"true","read-only":"false","results":"markup","warning":"true"}},{"code":"def ratio_cobertura(ebit, intereses):\n    return ebit / intereses\n\ntry:\n    print(ratio_cobertura(500, 0))  # podría fallar por división por cero\nexcept ZeroDivisionError:\n    print(\"Error: intereses no puede ser 0\")\nexcept TypeError:\n    print(\"Error: ebit e intereses deben ser numéricos\")","id":11,"options":{"autorun":"","classes":"","comment":"","context":"interactive","dpi":72,"fig-cap":"","fig-height":5,"fig-width":7,"label":"try-except-multiple","message":"true","out-height":"","out-width":"700px","output":"true","read-only":"false","results":"markup","warning":"true"}},{"code":"def parse_tasa(texto):\n    return float(texto)\n\nentrada = \"0.12\"\n\ntry:\n    tasa = parse_tasa(entrada)\nexcept ValueError:\n    print(\"No se pudo convertir la tasa a número\")\nelse:\n    print(f\"Tasa válida: {tasa:.2%}\")\nfinally:\n    print(\"Fin de la validación\")","id":12,"options":{"autorun":"","classes":"","comment":"","context":"interactive","dpi":72,"fig-cap":"","fig-height":5,"fig-width":7,"label":"try-except-else-finally","message":"true","out-height":"","out-width":"700px","output":"true","read-only":"false","results":"markup","warning":"true"}},{"code":"def cuota_francesa(capital, tasa, periodos):\n    if capital <= 0:\n        raise ValueError(\"El capital debe ser positivo\")\n    if tasa <= 0:\n        raise ValueError(\"La tasa debe ser positiva\")\n    if periodos <= 0:\n        raise ValueError(\"Los periodos deben ser mayores a 0\")\n    return capital * (tasa * (1 + tasa) ** periodos) / ((1 + tasa) ** periodos - 1)\n\ntry:\n    cuota = cuota_francesa(100000, 0.03, 24)\n    print(f\"Cuota: ${cuota:,.2f}\")\nexcept ValueError as e:\n    print(f\"Dato inválido: {e}\")","id":13,"options":{"autorun":"","classes":"","comment":"","context":"interactive","dpi":72,"fig-cap":"","fig-height":5,"fig-width":7,"label":"try-except-raise","message":"true","out-height":"","out-width":"700px","output":"true","read-only":"false","results":"markup","warning":"true"}},{"code":"# 1) import modulo\nimport math\nprint(math.sqrt(16))  # accedemos con prefijo math.\n\n# 2) import modulo as alias\nimport math as m\nprint(m.pi)  # mismo módulo, nombre corto\n\n# 3) from modulo import nombre\nfrom math import sqrt\nprint(sqrt(25))  # usamos sqrt directamente\n\n# 4) from modulo import nombre as alias\nfrom math import factorial as fact\nprint(fact(5))","id":14,"options":{"autorun":"","classes":"","comment":"","context":"interactive","dpi":72,"fig-cap":"","fig-height":5,"fig-width":7,"label":"","message":"true","out-height":"","out-width":"700px","output":"true","read-only":"false","results":"markup","warning":"true"}},{"code":"# === finanzas_basicas.py ===\n# En un proyecto real, este bloque viviría en su propio archivo .py\n# y lo importarías con: from finanzas_basicas import valor_futuro, ...\n\ndef valor_futuro(capital, tasa, periodos):\n    \"\"\"Calcula VF = C * (1 + r)^n.\"\"\"\n    if tasa < -1:\n        raise ValueError(\"La tasa no puede ser menor a -100%\")\n    return capital * (1 + tasa) ** periodos\n\n\ndef valor_presente_neto(flujos, tasa):\n    \"\"\"Calcula el VPN de una serie de flujos (el flujo 0 no se descuenta).\"\"\"\n    if not flujos:\n        raise ValueError(\"Lista de flujos vacía\")\n\n    vpn = 0\n    for t, cf in enumerate(flujos):\n        vpn += cf / (1 + tasa) ** t\n    return vpn\n\n\ndef conversion_tasas(tna, capitalizaciones=12):\n    \"\"\"Convierte una TNA con n capitalizaciones anuales a TEA.\"\"\"\n    if capitalizaciones <= 0:\n        raise ValueError(\"Las capitalizaciones deben ser positivas\")\n    return (1 + tna / capitalizaciones) ** capitalizaciones - 1\n\n\ndef valuacion_bono(valor_nominal, tasa_cupon, tasa_descuento, anios):\n    \"\"\"Precio de un bono bullet: cupones fijos + nominal al vencimiento.\n\n    Es la lógica del Capítulo 2, ahora encapsulada y validada.\n    \"\"\"\n    if tasa_cupon < 0 or anios <= 0:\n        raise ValueError(\"Cupón no negativo y plazo positivo\")\n\n    cupon = valor_nominal * tasa_cupon\n    precio = 0\n    for t in range(1, anios + 1):\n        flujo = cupon + (valor_nominal if t == anios else 0)\n        precio += flujo / (1 + tasa_descuento) ** t\n    return precio\n\n\ndef tir(valor_nominal, tasa_cupon, anios, precio_mercado, paso=0.0001):\n    \"\"\"TIR de un bono bullet por búsqueda incremental (Capítulo 2).\"\"\"\n    if precio_mercado <= 0:\n        raise ValueError(\"El precio debe ser positivo\")\n\n    tasa = 0.0\n    while valuacion_bono(valor_nominal, tasa_cupon, tasa, anios) > precio_mercado:\n        tasa += paso\n        if tasa > 5:   # techo de seguridad: 500% anual\n            raise ValueError(\"No se encontró TIR razonable: revisar inputs\")\n    return tasa","id":15,"options":{"autorun":"","classes":"","comment":"","context":"interactive","dpi":72,"fig-cap":"","fig-height":5,"fig-width":7,"label":"libreria","message":"true","out-height":"","out-width":"700px","output":"true","read-only":"false","results":"markup","warning":"true"}},{"code":"# === Uso de las funciones ===\n\n# 1. Valor futuro de una colocación\nvf = valor_futuro(100_000, 0.08, 3)\nprint(f\"Valor futuro: ${vf:,.2f}\")\n\n# 2. VPN de un proyecto de inversión\nflujos = [-1000, 400, 400, 400]\nvpn = valor_presente_neto(flujos, 0.10)\nprint(f\"VPN: ${vpn:,.2f}\")\n\n# 3. Conversión de tasas: TNA 48% con capitalización mensual → TEA\ntea = conversion_tasas(0.48, 12)\nprint(f\"TNA 48% mensual → TEA: {tea:.2%}\")\n\n# 4. Valuación del bono del Capítulo 2, ahora en una línea\nprecio = valuacion_bono(1000, 0.08, 0.10, 5)\nprint(f\"Precio del bono: ${precio:,.2f}\")\n\n# 5. Y su TIR comprándolo a $950\nrendimiento = tir(1000, 0.08, 5, 950)\nprint(f\"TIR al precio de $950: {rendimiento:.2%}\")","id":16,"options":{"autorun":"","classes":"","comment":"","context":"interactive","dpi":72,"fig-cap":"","fig-height":5,"fig-width":7,"label":"uso-libreria","message":"true","out-height":"","out-width":"700px","output":"true","read-only":"false","results":"markup","warning":"true"}},{"code":"assert valor_futuro(1000, 0.10, 2) > 1000     # se cumple: no imprime nada\nprint(\"Primera verificación superada\")\n\ntry:\n    assert valor_futuro(100, 0.10, 1) == 110, \"100 al 10% durante un año deberían ser 110\"\nexcept AssertionError as error:\n    print(\"Falló:\", error)\n\nprint(valor_futuro(100, 0.10, 1))","id":17,"options":{"autorun":"","classes":"","comment":"","context":"interactive","dpi":72,"fig-cap":"","fig-height":5,"fig-width":7,"label":"assert-basico","message":"true","out-height":"","out-width":"700px","output":"true","read-only":"false","results":"markup","warning":"true"}},{"code":"def casi_igual(a, b, tolerancia=1e-9):\n    \"\"\"Compara dos números decimales admitiendo un error de redondeo.\"\"\"\n    return abs(a - b) < tolerancia\n\n\ndef probar_libreria():\n    # 1. Caso calculado a mano\n    assert casi_igual(valor_futuro(100, 0.10, 1), 110)\n\n    # 2. Con tasa cero, el VPN es la suma de los flujos\n    assert casi_igual(valor_presente_neto([-1000, 400, 400, 400], 0.0), 200)\n\n    # 3. Cupón igual a la tasa de descuento: el bono vale su nominal\n    assert casi_igual(valuacion_bono(1000, 0.08, 0.08, 5), 1000, tolerancia=1e-6)\n\n    # 4. Si la tasa sube, el precio baja\n    assert valuacion_bono(1000, 0.08, 0.12, 5) < valuacion_bono(1000, 0.08, 0.10, 5)\n\n    # 5. Ida y vuelta: la TIR del precio calculado al 10% es 10%\n    precio = valuacion_bono(1000, 0.08, 0.10, 5)\n    assert casi_igual(tir(1000, 0.08, 5, precio), 0.10, tolerancia=0.0002)\n\n    # 6. Un cupón negativo tiene que ser rechazado\n    try:\n        valuacion_bono(1000, -0.05, 0.10, 5)\n        assert False, \"valuacion_bono aceptó un cupón negativo\"\n    except ValueError:\n        pass\n\n    print(\"Las 6 pruebas pasaron\")\n\n\nprobar_libreria()","id":18,"options":{"autorun":"","classes":"","comment":"","context":"interactive","dpi":72,"fig-cap":"","fig-height":5,"fig-width":7,"label":"pruebas-libreria","message":"true","out-height":"","out-width":"700px","output":"true","read-only":"false","results":"markup","warning":"true"}},{"code":"def valuacion_bono_modificada(valor_nominal, tasa_cupon, tasa_descuento, anios):\n    cupon = valor_nominal * tasa_cupon\n    precio = 0\n    for t in range(anios):                    # el error: debería ser range(1, anios + 1)\n        flujo = cupon + (valor_nominal if t == anios - 1 else 0)\n        precio += flujo / (1 + tasa_descuento) ** t\n    return precio\n\n\nprint(f\"Precio al 10%: {valuacion_bono_modificada(1000, 0.08, 0.10, 5):.2f}\")\n\ntry:\n    a_la_par = valuacion_bono_modificada(1000, 0.08, 0.08, 5)\n    assert casi_igual(a_la_par, 1000, tolerancia=1e-6), f\"a la par debería valer 1000 y dio {a_la_par:.2f}\"\nexcept AssertionError as error:\n    print(\"Falló:\", error)","id":19,"options":{"autorun":"","classes":"","comment":"","context":"interactive","dpi":72,"fig-cap":"","fig-height":5,"fig-width":7,"label":"prueba-detecta-error","message":"true","out-height":"","out-width":"700px","output":"true","read-only":"false","results":"markup","warning":"true"}}];
 
 
 </script>
@@ -484,35 +484,6 @@ globalThis._qpyodideGetInstance = function() {
 
 </script>
 
-  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
-  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
-
-<script type="text/javascript">
-const typesetMath = (el) => {
-  if (window.MathJax) {
-    // MathJax Typeset
-    window.MathJax.typeset([el]);
-  } else if (window.katex) {
-    // KaTeX Render
-    var mathElements = el.getElementsByClassName("math");
-    var macros = [];
-    for (var i = 0; i < mathElements.length; i++) {
-      var texText = mathElements[i].firstChild;
-      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
-        window.katex.render(texText.data, mathElements[i], {
-          displayMode: mathElements[i].classList.contains('display'),
-          throwOnError: false,
-          macros: macros,
-          fleqn: false
-        });
-      }
-    }
-  }
-}
-window.Quarto = {
-  typesetMath
-};
-</script>
 
 </head>
 
@@ -540,10 +511,10 @@ window.Quarto = {
   <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation docked overflow-auto">
     <div class="pt-lg-2 mt-2 text-left sidebar-header">
     <div class="sidebar-title mb-0 py-0">
-      <a href="../">Finanzas Computacionales</a> 
+      <a href="../">Finanzas Computacionales con Python</a> 
         <div class="sidebar-tools-main tools-wide">
     <a href="https://github.com/diegoonna/libro_finanzas_computacionales" title="Source Code" class="quarto-navigation-tool px-1" aria-label="Source Code"><i class="bi bi-github"></i></a>
-    <a href="../Finanzas-Computacionales.pdf" title="Download PDF" class="quarto-navigation-tool px-1" aria-label="Download PDF"><i class="bi bi-file-pdf"></i></a>
+    <a href="../Finanzas-Computacionales-con-Python.pdf" title="Download PDF" class="quarto-navigation-tool px-1" aria-label="Download PDF"><i class="bi bi-file-pdf"></i></a>
   <a href="" class="quarto-reader-toggle quarto-navigation-tool px-1" onclick="window.quartoToggleReader(); return false;" title="Alternar modo lector">
   <div class="quarto-reader-toggle-btn">
   <i class="bi"></i>
@@ -788,20 +759,20 @@ window.Quarto = {
   <ul>
   <li><a href="#introducción" id="toc-introducción" class="nav-link active" data-scroll-target="#introducción">Introducción</a>
   <ul class="collapse">
-  <li><a href="#definición-de-funciones" id="toc-definición-de-funciones" class="nav-link" data-scroll-target="#definición-de-funciones"><span class="header-section-number">3.1</span> Definición de Funciones</a>
+  <li><a href="#definición-de-funciones" id="toc-definición-de-funciones" class="nav-link" data-scroll-target="#definición-de-funciones"><span class="header-section-number">3.1</span> Definición de funciones</a>
   <ul class="collapse">
   <li><a href="#recibir-y-devolver-múltiples-valores" id="toc-recibir-y-devolver-múltiples-valores" class="nav-link" data-scroll-target="#recibir-y-devolver-múltiples-valores"><span class="header-section-number">3.1.1</span> Recibir y devolver múltiples valores</a></li>
-  <li><a href="#parámetros-por-defecto" id="toc-parámetros-por-defecto" class="nav-link" data-scroll-target="#parámetros-por-defecto"><span class="header-section-number">3.1.2</span> Parámetros por Defecto</a></li>
-  <li><a href="#argumentos-variables-args" id="toc-argumentos-variables-args" class="nav-link" data-scroll-target="#argumentos-variables-args"><span class="header-section-number">3.1.3</span> Argumentos Variables (<code>*args</code>)</a></li>
+  <li><a href="#parámetros-por-defecto" id="toc-parámetros-por-defecto" class="nav-link" data-scroll-target="#parámetros-por-defecto"><span class="header-section-number">3.1.2</span> Parámetros por defecto</a></li>
+  <li><a href="#argumentos-variables-args" id="toc-argumentos-variables-args" class="nav-link" data-scroll-target="#argumentos-variables-args"><span class="header-section-number">3.1.3</span> Argumentos variables (<code>*args</code>)</a></li>
   </ul></li>
-  <li><a href="#scope-alcance-de-las-variables" id="toc-scope-alcance-de-las-variables" class="nav-link" data-scroll-target="#scope-alcance-de-las-variables"><span class="header-section-number">3.2</span> Scope (Alcance) de las Variables</a>
+  <li><a href="#alcance-scope-de-las-variables" id="toc-alcance-scope-de-las-variables" class="nav-link" data-scroll-target="#alcance-scope-de-las-variables"><span class="header-section-number">3.2</span> Alcance (<em>scope</em>) de las variables</a>
   <ul class="collapse">
-  <li><a href="#variables-globales-vs.-locales" id="toc-variables-globales-vs.-locales" class="nav-link" data-scroll-target="#variables-globales-vs.-locales"><span class="header-section-number">3.2.1</span> Variables Globales vs.&nbsp;Locales</a></li>
-  <li><a href="#el-concepto-de-shadowing-sombreado" id="toc-el-concepto-de-shadowing-sombreado" class="nav-link" data-scroll-target="#el-concepto-de-shadowing-sombreado"><span class="header-section-number">3.2.2</span> El concepto de “Shadowing” (Sombreado)</a></li>
+  <li><a href="#variables-globales-y-locales" id="toc-variables-globales-y-locales" class="nav-link" data-scroll-target="#variables-globales-y-locales"><span class="header-section-number">3.2.1</span> Variables globales y locales</a></li>
+  <li><a href="#el-concepto-de-shadowing-sombreado" id="toc-el-concepto-de-shadowing-sombreado" class="nav-link" data-scroll-target="#el-concepto-de-shadowing-sombreado"><span class="header-section-number">3.2.2</span> El concepto de <em>shadowing</em> (sombreado)</a></li>
   <li><a href="#por-qué-evitar-las-variables-globales" id="toc-por-qué-evitar-las-variables-globales" class="nav-link" data-scroll-target="#por-qué-evitar-las-variables-globales"><span class="header-section-number">3.2.3</span> ¿Por qué evitar las variables globales?</a></li>
   <li><a href="#qué-recibe-una-función-cuando-le-pasás-una-lista" id="toc-qué-recibe-una-función-cuando-le-pasás-una-lista" class="nav-link" data-scroll-target="#qué-recibe-una-función-cuando-le-pasás-una-lista"><span class="header-section-number">3.2.4</span> ¿Qué recibe una función cuando le pasás una lista?</a></li>
   </ul></li>
-  <li><a href="#manejo-de-errores-try-except" id="toc-manejo-de-errores-try-except" class="nav-link" data-scroll-target="#manejo-de-errores-try-except"><span class="header-section-number">3.3</span> Manejo de Errores: <code>try</code> / <code>except</code></a>
+  <li><a href="#manejo-de-errores-try-except" id="toc-manejo-de-errores-try-except" class="nav-link" data-scroll-target="#manejo-de-errores-try-except"><span class="header-section-number">3.3</span> Manejo de errores: <code>try</code> / <code>except</code></a>
   <ul class="collapse">
   <li><a href="#qué-es-una-excepción" id="toc-qué-es-una-excepción" class="nav-link" data-scroll-target="#qué-es-una-excepción"><span class="header-section-number">3.3.1</span> ¿Qué es una excepción?</a></li>
   <li><a href="#flujo-de-try-except" id="toc-flujo-de-try-except" class="nav-link" data-scroll-target="#flujo-de-try-except"><span class="header-section-number">3.3.2</span> Flujo de <code>try</code> / <code>except</code></a></li>
@@ -817,14 +788,14 @@ window.Quarto = {
   <li><a href="#diferencia-entre-módulo-y-librería" id="toc-diferencia-entre-módulo-y-librería" class="nav-link" data-scroll-target="#diferencia-entre-módulo-y-librería"><span class="header-section-number">3.4.2</span> Diferencia entre módulo y librería</a></li>
   <li><a href="#formas-de-importar-import-from-as" id="toc-formas-de-importar-import-from-as" class="nav-link" data-scroll-target="#formas-de-importar-import-from-as"><span class="header-section-number">3.4.3</span> Formas de importar: <code>import</code>, <code>from</code>, <code>as</code></a></li>
   </ul></li>
-  <li><a href="#problemática-financiera-librería-finanzas_basicas.py" id="toc-problemática-financiera-librería-finanzas_basicas.py" class="nav-link" data-scroll-target="#problemática-financiera-librería-finanzas_basicas.py"><span class="header-section-number">3.5</span> Problemática Financiera: Librería <code>finanzas_basicas.py</code></a>
+  <li><a href="#problema-financiero-la-librería-finanzas_basicas.py" id="toc-problema-financiero-la-librería-finanzas_basicas.py" class="nav-link" data-scroll-target="#problema-financiero-la-librería-finanzas_basicas.py"><span class="header-section-number">3.5</span> Problema financiero: la librería <code>finanzas_basicas.py</code></a>
   <ul class="collapse">
-  <li><a href="#funciones-de-la-librería" id="toc-funciones-de-la-librería" class="nav-link" data-scroll-target="#funciones-de-la-librería"><span class="header-section-number">3.5.1</span> Funciones de la Librería</a></li>
-  <li><a href="#usando-la-librería" id="toc-usando-la-librería" class="nav-link" data-scroll-target="#usando-la-librería"><span class="header-section-number">3.5.2</span> Usando la Librería</a></li>
+  <li><a href="#funciones-de-la-librería" id="toc-funciones-de-la-librería" class="nav-link" data-scroll-target="#funciones-de-la-librería"><span class="header-section-number">3.5.1</span> Funciones de la librería</a></li>
+  <li><a href="#uso-de-la-librería" id="toc-uso-de-la-librería" class="nav-link" data-scroll-target="#uso-de-la-librería"><span class="header-section-number">3.5.2</span> Uso de la librería</a></li>
   </ul></li>
-  <li><a href="#principio-dry-dont-repeat-yourself" id="toc-principio-dry-dont-repeat-yourself" class="nav-link" data-scroll-target="#principio-dry-dont-repeat-yourself"><span class="header-section-number">3.6</span> Principio DRY: Don’t Repeat Yourself</a></li>
-  <li><a href="#errores-comunes" id="toc-errores-comunes" class="nav-link" data-scroll-target="#errores-comunes"><span class="header-section-number">3.7</span> Errores comunes</a></li>
-  <li><a href="#ejercicios-propuestos" id="toc-ejercicios-propuestos" class="nav-link" data-scroll-target="#ejercicios-propuestos"><span class="header-section-number">3.8</span> Ejercicios Propuestos</a></li>
+  <li><a href="#probar-el-código-assert" id="toc-probar-el-código-assert" class="nav-link" data-scroll-target="#probar-el-código-assert"><span class="header-section-number">3.6</span> Probar el código: <code>assert</code></a></li>
+  <li><a href="#principio-dry-dont-repeat-yourself" id="toc-principio-dry-dont-repeat-yourself" class="nav-link" data-scroll-target="#principio-dry-dont-repeat-yourself"><span class="header-section-number">3.7</span> Principio DRY: Don’t Repeat Yourself</a></li>
+  <li><a href="#errores-comunes" id="toc-errores-comunes" class="nav-link" data-scroll-target="#errores-comunes"><span class="header-section-number">3.8</span> Errores comunes</a></li>
   <li><a href="#referencias" id="toc-referencias" class="nav-link" data-scroll-target="#referencias"><span class="header-section-number">3.9</span> Referencias</a></li>
   </ul></li>
   </ul>
@@ -874,9 +845,9 @@ window.Quarto = {
 <p>Hasta ahora hemos escrito código de forma lineal. En este capítulo aprendemos a <strong>encapsular lógica</strong> en funciones reutilizables, siguiendo el principio <strong>DRY</strong> (<em>Don’t Repeat Yourself</em>). Al final, tendremos nuestra propia librería <code>finanzas_basicas.py</code>.</p>
 <hr>
 <section id="definición-de-funciones" class="level2" data-number="3.1">
-<h2 data-number="3.1" class="anchored" data-anchor-id="definición-de-funciones"><span class="header-section-number">3.1</span> Definición de Funciones</h2>
+<h2 data-number="3.1" class="anchored" data-anchor-id="definición-de-funciones"><span class="header-section-number">3.1</span> Definición de funciones</h2>
 <p>Una función es un bloque de código reutilizable que recibe <strong>parámetros</strong> y devuelve un <strong>resultado</strong>.</p>
-<p>La mejor forma de pensar una función es como una <strong>caja negra con un contrato</strong> (<a href="#fig-funcion-caja-negra" class="quarto-xref">Figura&nbsp;<span>3.1</span></a>): entran parámetros, sale un resultado por <code>return</code>, y quien la usa no necesita saber qué pasa adentro.</p>
+<p>La mejor forma de pensar una función es como una caja negra con un contrato (<a href="#fig-funcion-caja-negra" class="quarto-xref">Figura&nbsp;<span>3.1</span></a>): entran parámetros, sale un resultado por <code>return</code>, y quien la usa no necesita saber qué pasa adentro.</p>
 <div class="cell" data-layout-align="center">
 <div class="cell-output-display">
 <div id="fig-funcion-caja-negra" class="quarto-float quarto-figure quarto-figure-center anchored">
@@ -909,21 +880,21 @@ Figura&nbsp;3.1: Una función como caja negra: recibe datos por sus parámetros 
 <noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
 <section id="recibir-y-devolver-múltiples-valores" class="level3" data-number="3.1.1">
 <h3 data-number="3.1.1" class="anchored" data-anchor-id="recibir-y-devolver-múltiples-valores"><span class="header-section-number">3.1.1</span> Recibir y devolver múltiples valores</h3>
-<p>En Python, una función puede <strong>recibir varios parámetros</strong> y también <strong>devolver más de un resultado</strong>. Esto es útil en finanzas cuando, a partir de los mismos datos, queremos obtener más de un indicador.</p>
+<p>En Python, una función puede <strong>recibir varios parámetros</strong> y también devolver más de un resultado. Esto es útil en finanzas cuando, a partir de los mismos datos, queremos obtener más de un indicador.</p>
 <div id="qpyodide-insertion-location-2"></div>
 <noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
 <p>Cuando devolvemos varios valores, Python los empaqueta en una tupla. Luego podemos “desempaquetarlos” en variables separadas para trabajar con cada resultado de forma clara.</p>
 </section>
 <section id="parámetros-por-defecto" class="level3" data-number="3.1.2">
-<h3 data-number="3.1.2" class="anchored" data-anchor-id="parámetros-por-defecto"><span class="header-section-number">3.1.2</span> Parámetros por Defecto</h3>
+<h3 data-number="3.1.2" class="anchored" data-anchor-id="parámetros-por-defecto"><span class="header-section-number">3.1.2</span> Parámetros por defecto</h3>
 <div id="qpyodide-insertion-location-3"></div>
 <noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
 </section>
 <section id="argumentos-variables-args" class="level3" data-number="3.1.3">
-<h3 data-number="3.1.3" class="anchored" data-anchor-id="argumentos-variables-args"><span class="header-section-number">3.1.3</span> Argumentos Variables (<code>*args</code>)</h3>
+<h3 data-number="3.1.3" class="anchored" data-anchor-id="argumentos-variables-args"><span class="header-section-number">3.1.3</span> Argumentos variables (<code>*args</code>)</h3>
 <p>Hasta ahora vimos funciones con una cantidad fija de parámetros.<br>
 Pero en problemas financieros muchas veces no sabemos de antemano cuántos valores vamos a procesar (por ejemplo, una serie de flujos que puede tener 3, 10 o 30 períodos).</p>
-<p><code>*args</code> permite que una función reciba una <strong>cantidad variable de argumentos posicionales</strong>. Dentro de la función, esos argumentos se agrupan en una <strong>tupla</strong>.</p>
+<p><code>*args</code> permite que una función reciba una cantidad variable de argumentos posicionales. Dentro de la función, esos argumentos se agrupan en una <strong>tupla</strong>.</p>
 <p>Esto nos da flexibilidad sin tener que escribir versiones distintas de la misma función.</p>
 <div id="qpyodide-insertion-location-4"></div>
 <noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
@@ -950,14 +921,14 @@ Si cada dato tiene un rol distinto y fijo (por ejemplo <code>capital</code>, <co
 <hr>
 </section>
 </section>
-<section id="scope-alcance-de-las-variables" class="level2" data-number="3.2">
-<h2 data-number="3.2" class="anchored" data-anchor-id="scope-alcance-de-las-variables"><span class="header-section-number">3.2</span> Scope (Alcance) de las Variables</h2>
+<section id="alcance-scope-de-las-variables" class="level2" data-number="3.2">
+<h2 data-number="3.2" class="anchored" data-anchor-id="alcance-scope-de-las-variables"><span class="header-section-number">3.2</span> Alcance (<em>scope</em>) de las variables</h2>
 <p>El <strong>scope</strong> o alcance define en qué parte del programa una variable es “visible” y puede ser utilizada. En Python, distinguimos principalmente entre dos niveles:</p>
 <ol type="1">
 <li><strong>Scope Global (Main)</strong>: Variables definidas fuera de cualquier función. Son visibles en todo el archivo, incluso dentro de las funciones.</li>
 <li><strong>Scope Local</strong>: Variables definidas dentro de una función. Solo existen mientras la función se está ejecutando y no pueden verse desde fuera.</li>
 </ol>
-<p>La <a href="#fig-scope" class="quarto-xref">Figura&nbsp;<span>3.2</span></a> muestra los dos niveles como cajas anidadas. Cuando Python encuentra un nombre adentro de una función, lo busca <strong>primero en la caja local</strong> y, solo si no lo encuentra, sube a la global. Por eso <code>calcular_rendimiento</code> ve <code>tasa_mercado</code>, y por eso afuera no existe <code>variable_interna</code>.</p>
+<p>La <a href="#fig-scope" class="quarto-xref">Figura&nbsp;<span>3.2</span></a> muestra los dos niveles como cajas anidadas. Cuando Python encuentra un nombre adentro de una función, lo busca primero en la caja local y, solo si no lo encuentra, sube a la global. Por eso <code>calcular_rendimiento</code> ve <code>tasa_mercado</code>, y por eso afuera no existe <code>variable_interna</code>.</p>
 <div class="cell" data-layout-align="center">
 <div class="cell-output-display">
 <div id="fig-scope" class="quarto-float quarto-figure quarto-figure-center anchored">
@@ -992,14 +963,14 @@ Figura&nbsp;3.2: Scope global y local. Cada llamada a una función crea su propi
 </div>
 </div>
 </div>
-<section id="variables-globales-vs.-locales" class="level3" data-number="3.2.1">
-<h3 data-number="3.2.1" class="anchored" data-anchor-id="variables-globales-vs.-locales"><span class="header-section-number">3.2.1</span> Variables Globales vs.&nbsp;Locales</h3>
-<p>Una función puede <strong>leer</strong> una variable global, pero no puede modificarla directamente: para eso existe la declaración <code>global tasa_mercado</code> dentro de la función. Que exista no significa que convenga usarla — en código financiero es una mala práctica, porque una función que modifica estado externo se vuelve impredecible (el resultado deja de depender solo de sus parámetros). En todo este libro, las funciones reciben lo que necesitan por parámetro y devuelven resultados con <code>return</code>.</p>
+<section id="variables-globales-y-locales" class="level3" data-number="3.2.1">
+<h3 data-number="3.2.1" class="anchored" data-anchor-id="variables-globales-y-locales"><span class="header-section-number">3.2.1</span> Variables globales y locales</h3>
+<p>Una función puede <strong>leer</strong> una variable global, pero no puede modificarla directamente: para eso existe la declaración <code>global tasa_mercado</code> dentro de la función. Que exista no significa que convenga usarla: en código financiero es una mala práctica, porque una función que modifica estado externo se vuelve impredecible (el resultado deja de depender solo de sus parámetros). En todo este libro, las funciones reciben lo que necesitan por parámetro y devuelven resultados con <code>return</code>.</p>
 <div id="qpyodide-insertion-location-5"></div>
 <noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
 </section>
 <section id="el-concepto-de-shadowing-sombreado" class="level3" data-number="3.2.2">
-<h3 data-number="3.2.2" class="anchored" data-anchor-id="el-concepto-de-shadowing-sombreado"><span class="header-section-number">3.2.2</span> El concepto de “Shadowing” (Sombreado)</h3>
+<h3 data-number="3.2.2" class="anchored" data-anchor-id="el-concepto-de-shadowing-sombreado"><span class="header-section-number">3.2.2</span> El concepto de <em>shadowing</em> (sombreado)</h3>
 <p>Si definimos una variable dentro de una función con el mismo nombre que una global, la versión local “sombra” a la global durante la ejecución de esa función.</p>
 <div id="qpyodide-insertion-location-6"></div>
 <noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
@@ -1025,10 +996,10 @@ Figura&nbsp;3.2: Scope global y local. Cada llamada a una función crea su propi
 </section>
 <section id="qué-recibe-una-función-cuando-le-pasás-una-lista" class="level3" data-number="3.2.4">
 <h3 data-number="3.2.4" class="anchored" data-anchor-id="qué-recibe-una-función-cuando-le-pasás-una-lista"><span class="header-section-number">3.2.4</span> ¿Qué recibe una función cuando le pasás una lista?</h3>
-<p>Cerremos el círculo con el concepto de <em>aliasing</em> del Capítulo 2 (“copiar no es lo mismo que apuntar”), porque tiene una consecuencia directa sobre las funciones. Cuando llamás <code>mi_funcion(cartera)</code>, la función <strong>no recibe una copia</strong> de la cartera: recibe <strong>otra etiqueta al mismo objeto</strong>. Con parámetros inmutables (números, strings) esto es invisible — no se pueden modificar. Pero con una <strong>lista o diccionario</strong>, si la función lo muta, <em>el llamador ve el cambio</em>:</p>
+<p>Cerremos el círculo con el concepto de <em>aliasing</em> del <a href="../unidad1/cap02_iteraciones_estructuras.html">Capítulo 2</a> (“copiar no es lo mismo que apuntar”), porque tiene una consecuencia directa sobre las funciones. Cuando llamás <code>mi_funcion(cartera)</code>, la función <strong>no recibe una copia</strong> de la cartera: recibe otra etiqueta al mismo objeto. Con parámetros inmutables (números, strings) esto es invisible: no se pueden modificar. Pero con una <strong>lista o diccionario</strong>, si la función lo muta, <em>el llamador ve el cambio</em>:</p>
 <div id="qpyodide-insertion-location-8"></div>
 <noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
-<p>La función “devolvió” los flujos netos, pero de paso <strong>destruyó los originales</strong> — <code>mis_flujos</code> y el parámetro <code>flujos</code> eran el mismo objeto. En un análisis real esto es venenoso: valuás la cartera dos veces y da distinto, porque la primera pasada la modificó. Hay dos diseños correctos, y ambos empiezan igual — <strong>no mutar lo que te prestaron</strong>:</p>
+<p>La función “devolvió” los flujos netos, pero de paso <strong>destruyó los originales</strong>: <code>mis_flujos</code> y el parámetro <code>flujos</code> eran el mismo objeto. En un análisis real esto es venenoso: valuás la cartera dos veces y da distinto, porque la primera pasada la modificó. Hay dos diseños correctos, y ambos empiezan igual: no mutar lo que te prestaron:</p>
 <div id="qpyodide-insertion-location-9"></div>
 <noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
 <div class="callout callout-style-simple callout-tip callout-titled" title="La convención del oficio">
@@ -1041,14 +1012,14 @@ Figura&nbsp;3.2: Scope global y local. Cada llamada a una función crea su propi
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>Una función debería <strong>recibir datos, devolver resultados y no tocar nada más</strong> — ni globales (la sección anterior) ni los objetos que le pasaron (esta). A las funciones que cumplen esto se las llama <em>puras</em>, y son las más fáciles de testear, reutilizar y razonar. Todas las funciones de la librería que construimos al final del capítulo son puras.</p>
+<p>Una función debería recibir datos, devolver resultados y no tocar nada más: ni globales (la sección anterior) ni los objetos que le pasaron (esta). A las funciones que cumplen esto se las llama <em>puras</em>, y son las más fáciles de testear, reutilizar y razonar. Todas las funciones de la librería que construimos al final del capítulo son puras.</p>
 </div>
 </div>
 <hr>
 </section>
 </section>
 <section id="manejo-de-errores-try-except" class="level2" data-number="3.3">
-<h2 data-number="3.3" class="anchored" data-anchor-id="manejo-de-errores-try-except"><span class="header-section-number">3.3</span> Manejo de Errores: <code>try</code> / <code>except</code></h2>
+<h2 data-number="3.3" class="anchored" data-anchor-id="manejo-de-errores-try-except"><span class="header-section-number">3.3</span> Manejo de errores: <code>try</code> / <code>except</code></h2>
 <p>En el mundo real, los datos financieros casi nunca llegan “perfectos”: pueden venir incompletos, en formato incorrecto o fuera de rango. El manejo de excepciones con <code>try</code> / <code>except</code> permite que el programa sea <strong>robusto</strong>, evitando que se rompa ante errores esperables.</p>
 <section id="qué-es-una-excepción" class="level3" data-number="3.3.1">
 <h3 data-number="3.3.1" class="anchored" data-anchor-id="qué-es-una-excepción"><span class="header-section-number">3.3.1</span> ¿Qué es una excepción?</h3>
@@ -1059,7 +1030,7 @@ Figura&nbsp;3.2: Scope global y local. Cada llamada a una función crea su propi
 <li>acceder a una clave inexistente en un diccionario (<code>KeyError</code>),</li>
 <li>o intentar usar un tipo de dato incorrecto (<code>TypeError</code>).</li>
 </ul>
-<p>Si no capturamos la excepción, el programa se detiene <strong>e imprime un traceback</strong> — el “informe forense” del error. Saber leerlo es probablemente la habilidad que más tiempo te va a ahorrar en toda tu carrera, así que detengámonos un minuto.</p>
+<p>Si no capturamos la excepción, el programa se detiene <strong>e imprime un traceback</strong>, el “informe forense” del error. Saber leerlo es probablemente la habilidad que más tiempo te va a ahorrar en toda tu carrera, así que detengámonos un minuto.</p>
 <div class="callout callout-style-simple callout-tip callout-titled" title="Cómo leer un traceback (la habilidad subvalorada)">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -1083,9 +1054,9 @@ ZeroDivisionError: division by zero</code></pre>
 <ol type="1">
 <li><strong>Empezá por la última línea</strong>: ahí está el <em>tipo</em> de error (<code>ZeroDivisionError</code>) y el <em>mensaje</em> (<code>division by zero</code>). Es el “qué pasó”.</li>
 <li><strong>Subí una línea</strong>: es el lugar exacto donde explotó (<code>finanzas_basicas.py</code>, línea 8). Es el “dónde”.</li>
-<li><strong>El resto, de abajo hacia arriba, es la cadena de llamadas</strong>: quién llamó a quién hasta llegar ahí. El “cómo llegamos”. Ojo: la línea que explotó no siempre es la culpable — acá el bug probablemente esté en quien pasó <code>tasa = -1</code>, no en la fórmula.</li>
+<li><strong>El resto, de abajo hacia arriba, es la cadena de llamadas</strong>: quién llamó a quién hasta llegar ahí. El “cómo llegamos”. La línea donde aparece el error no siempre es la culpable: acá el bug probablemente esté en quien pasó <code>tasa = -1</code>, no en la fórmula.</li>
 </ol>
-<p>El error de principiante es leer solo la primera línea (que es la <em>menos</em> informativa) o, peor, no leer nada y adivinar. El traceback te está diciendo exactamente qué, dónde y cómo — gratis.</p>
+<p>El error de principiante es leer solo la primera línea (que es la <em>menos</em> informativa) o, peor, no leer nada y adivinar. El traceback te está diciendo exactamente qué, dónde y cómo, gratis.</p>
 </div>
 </div>
 <p>Con <code>try</code> / <code>except</code>, en cambio, podemos capturar el error y decidir cómo responder sin que el programa muera.</p>
@@ -1188,7 +1159,7 @@ Primero validamos reglas financieras, luego capturamos errores inevitables del m
 </section>
 <section id="módulos-y-librerías-en-python" class="level2" data-number="3.4">
 <h2 data-number="3.4" class="anchored" data-anchor-id="módulos-y-librerías-en-python"><span class="header-section-number">3.4</span> Módulos y librerías en Python</h2>
-<p>Cuando un programa crece, no conviene dejar todo en un solo archivo. Python permite <strong>organizar el código en módulos</strong> para reutilizar funciones, mantener orden y facilitar el testing.</p>
+<p>Cuando un programa crece, no conviene dejar todo en un solo archivo. Python permite organizar el código en módulos para reutilizar funciones, mantener orden y facilitar el testing.</p>
 <section id="para-qué-sirve-un-módulo" class="level3" data-number="3.4.1">
 <h3 data-number="3.4.1" class="anchored" data-anchor-id="para-qué-sirve-un-módulo"><span class="header-section-number">3.4.1</span> ¿Para qué sirve un módulo?</h3>
 <p>Un <strong>módulo</strong> es, en la práctica, un archivo <code>.py</code> con funciones, variables o clases.</p>
@@ -1230,11 +1201,11 @@ Ejemplos: <code>numpy</code>, <code>pandas</code>, <code>matplotlib</code>.</li>
 <hr>
 </section>
 </section>
-<section id="problemática-financiera-librería-finanzas_basicas.py" class="level2" data-number="3.5">
-<h2 data-number="3.5" class="anchored" data-anchor-id="problemática-financiera-librería-finanzas_basicas.py"><span class="header-section-number">3.5</span> Problemática Financiera: Librería <code>finanzas_basicas.py</code></h2>
-<p>Hora de cosechar lo sembrado. En los dos capítulos anteriores resolviste problemas financieros reales —interés compuesto, conversión de tasas, valuación de bonos, TIR— pero cada solución quedó atrapada en su ejemplo. Vamos a <strong>rescatar esa lógica y empaquetarla en una librería reutilizable</strong>: el conjunto de funciones que vas a poder importar en cualquier análisis futuro. En un entorno real, este código viviría en un archivo <code>finanzas_basicas.py</code> y se importaría con <code>from finanzas_basicas import valuacion_bono, tir</code>.</p>
+<section id="problema-financiero-la-librería-finanzas_basicas.py" class="level2" data-number="3.5">
+<h2 data-number="3.5" class="anchored" data-anchor-id="problema-financiero-la-librería-finanzas_basicas.py"><span class="header-section-number">3.5</span> Problema financiero: la librería <code>finanzas_basicas.py</code></h2>
+<p>Hora de cosechar lo sembrado. En los dos capítulos anteriores resolviste problemas financieros reales —interés compuesto, conversión de tasas, valuación de bonos, TIR— pero cada solución quedó atrapada en su ejemplo. Vamos a rescatar esa lógica y empaquetarla en una librería reutilizable: el conjunto de funciones que vas a poder importar en cualquier análisis futuro. En un entorno real, este código viviría en un archivo <code>finanzas_basicas.py</code> y se importaría con <code>from finanzas_basicas import valuacion_bono, tir</code>.</p>
 <section id="funciones-de-la-librería" class="level3" data-number="3.5.1">
-<h3 data-number="3.5.1" class="anchored" data-anchor-id="funciones-de-la-librería"><span class="header-section-number">3.5.1</span> Funciones de la Librería</h3>
+<h3 data-number="3.5.1" class="anchored" data-anchor-id="funciones-de-la-librería"><span class="header-section-number">3.5.1</span> Funciones de la librería</h3>
 <div id="qpyodide-insertion-location-15"></div>
 <noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
 <p>Fijate el detalle de diseño en <code>tir()</code>: <strong>reutiliza <code>valuacion_bono()</code></strong> en lugar de repetir el bucle de descuento. La <a href="#fig-dependencias-libreria" class="quarto-xref">Figura&nbsp;<span>3.4</span></a> muestra cómo quedan conectadas las piezas: el script de análisis solo conoce los nombres de las funciones, y dentro de la librería unas se apoyan en otras.</p>
@@ -1272,20 +1243,56 @@ Figura&nbsp;3.4: Estructura de <code>finanzas_basicas.py</code>. El análisis im
 </div>
 </div>
 </div>
-<p>Las funciones de una librería se apoyan unas en otras — si mañana mejorás la valuación, la TIR mejora gratis. Notá también el “techo de seguridad”: una función de librería no puede colgarse en un bucle infinito porque alguien le pasó un precio absurdo; falla rápido y con un mensaje claro.</p>
+<p>Las funciones de una librería se apoyan unas en otras: si mañana mejorás la valuación, la TIR mejora gratis. Notá también el “techo de seguridad”: una función de librería no puede colgarse en un bucle infinito porque alguien le pasó un precio absurdo; falla rápido y con un mensaje claro.</p>
 </section>
-<section id="usando-la-librería" class="level3" data-number="3.5.2">
-<h3 data-number="3.5.2" class="anchored" data-anchor-id="usando-la-librería"><span class="header-section-number">3.5.2</span> Usando la Librería</h3>
+<section id="uso-de-la-librería" class="level3" data-number="3.5.2">
+<h3 data-number="3.5.2" class="anchored" data-anchor-id="uso-de-la-librería"><span class="header-section-number">3.5.2</span> Uso de la librería</h3>
 <div id="qpyodide-insertion-location-16"></div>
 <noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
-<p>Compará el punto 4 con las ~10 líneas de bucle que necesitaste en el Capítulo 2: la misma lógica, pero ahora <strong>valuar un bono es una línea</strong> — y con validación de inputs incluida. Ese salto de “código que escribo cada vez” a “herramienta que invoco” es exactamente lo que este capítulo vino a enseñar. En el próximo capítulo estas funciones van a dar su paso final: convertirse en <em>métodos</em> de una clase <code>Bono</code>.</p>
+<p>Compará el punto 4 con las ~10 líneas de bucle que necesitaste en el <a href="../unidad1/cap02_iteraciones_estructuras.html">Capítulo 2</a>: la misma lógica, pero ahora valuar un bono es una línea, y con validación de inputs incluida. Ese salto de “código que escribo cada vez” a “herramienta que invoco” es exactamente lo que este capítulo vino a enseñar. En el próximo capítulo estas funciones van a dar su paso final: convertirse en <em>métodos</em> de una clase <code>Bono</code>.</p>
 <hr>
 </section>
 </section>
-<section id="principio-dry-dont-repeat-yourself" class="level2" data-number="3.6">
-<h2 data-number="3.6" class="anchored" data-anchor-id="principio-dry-dont-repeat-yourself"><span class="header-section-number">3.6</span> Principio DRY: Don’t Repeat Yourself</h2>
+<section id="probar-el-código-assert" class="level2" data-number="3.6">
+<h2 data-number="3.6" class="anchored" data-anchor-id="probar-el-código-assert"><span class="header-section-number">3.6</span> Probar el código: <code>assert</code></h2>
+<p>La librería funciona en los cinco ejemplos que acabamos de correr. Queda una pregunta que todo código de uso repetido tiene que poder contestar: cómo sabemos que sigue funcionando después de modificarla. Mirar los resultados a ojo cada vez no es un método. La alternativa es dejar escritas las verificaciones, de manera que se puedan volver a ejecutar en un segundo.</p>
+<p>La herramienta mínima es la sentencia <code>assert</code>. Recibe una condición: si es verdadera no hace nada, y si es falsa detiene el programa con un <code>AssertionError</code> y el mensaje que le hayamos indicado.</p>
+<div id="qpyodide-insertion-location-17"></div>
+<noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
+<p>La segunda verificación falla, y no porque la función esté mal. El resultado es 110.00000000000001: la computadora guarda los decimales en binario, 0.10 no tiene representación exacta, y el error aparece en el último dígito. Es el mismo motivo por el que <code>0.1 + 0.2 == 0.3</code> da <code>False</code> en Python. La consecuencia práctica es una regla: los números decimales no se comparan con <code>==</code>, se comparan con una tolerancia.</p>
+<p>Con esa precaución podemos escribir las pruebas de la librería. Conviene combinar tres tipos:</p>
+<ul>
+<li><strong>Casos calculados a mano</strong>: un ejemplo simple cuyo resultado conocemos sin usar el código.</li>
+<li><strong>Propiedades financieras</strong>: hechos que tienen que cumplirse siempre. Un bono cuyo cupón es igual a la tasa de descuento vale su nominal, el precio baja cuando la tasa sube, y con tasa cero el VPN es la suma de los flujos.</li>
+<li><strong>Ida y vuelta</strong>: si valuamos un bono al 10% y le pedimos a <code>tir()</code> el rendimiento de ese precio, tiene que devolver 10%.</li>
+</ul>
+<div id="qpyodide-insertion-location-18"></div>
+<noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
+<p>La tolerancia de la prueba 5 es más amplia que las otras porque <code>tir()</code> avanza de a un punto básico y no puede ser más precisa que su paso. Elegir la tolerancia obliga a pensar qué precisión promete cada función, y eso ya es una ventaja de escribir la prueba.</p>
+<p>El valor de estas verificaciones aparece cuando alguien toca el código. Supongamos que una modificación de <code>valuacion_bono()</code> cambia el recorrido del bucle y los flujos empiezan a descontarse desde el período 0 en lugar del 1, un error de índice muy común:</p>
+<div id="qpyodide-insertion-location-19"></div>
+<noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
+<p>El precio al 10% da 1016.60 en lugar de 924.18. Es un número con aspecto razonable para un bono, y en una planilla de resultados podría pasar inadvertido. La prueba de la paridad lo detecta de inmediato: un bono que debería valer 1000 da 1080.</p>
+<div class="callout callout-style-simple callout-note callout-titled" title="`assert` y `raise` no cumplen la misma función">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Nota</span><code>assert</code> y <code>raise</code> no cumplen la misma función
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Los dos detienen el programa, pero se dirigen a problemas distintos. <code>raise</code> responde a datos inválidos que pueden llegar desde afuera, como un cupón negativo o una lista vacía, y forma parte del comportamiento de la función. <code>assert</code> verifica que el propio código hace lo que su autor cree que hace. Por eso las validaciones de entrada se escriben con <code>raise</code> y las pruebas con <code>assert</code>.</p>
+<p>En un proyecto real las pruebas no se guardan junto al código. Van a un archivo aparte, por ejemplo <code>test_finanzas_basicas.py</code>, con una función por prueba cuyo nombre empieza con <code>test_</code>. La herramienta <code>pytest</code> encuentra esos archivos, ejecuta todas las funciones e informa cuáles fallaron. El mecanismo es el mismo <code>assert</code> de esta sección.</p>
+</div>
+</div>
+<hr>
+</section>
+<section id="principio-dry-dont-repeat-yourself" class="level2" data-number="3.7">
+<h2 data-number="3.7" class="anchored" data-anchor-id="principio-dry-dont-repeat-yourself"><span class="header-section-number">3.7</span> Principio DRY: Don’t Repeat Yourself</h2>
 <p>El principio <strong>DRY</strong> (<em>Don’t Repeat Yourself</em>) propone evitar duplicar la misma lógica en distintos lugares del código. Cuando repetimos fórmulas o bloques manualmente, aumentamos el riesgo de inconsistencias: si cambia un supuesto (por ejemplo, la tasa o la frecuencia), debemos corregir múltiples líneas y es fácil olvidar alguna.</p>
-<p>Aplicar DRY en finanzas significa <strong>encapsular cálculos recurrentes en funciones</strong> (por ejemplo, <code>valuacion_bono()</code> o <code>valor_presente_neto()</code>) para tener:</p>
+<p>Aplicar DRY en finanzas significa encapsular cálculos recurrentes en funciones (por ejemplo, <code>valuacion_bono()</code> o <code>valor_presente_neto()</code>) para tener:</p>
 <ul>
 <li><strong>menos errores</strong> de mantenimiento,</li>
 <li><strong>mayor claridad</strong> del modelo,</li>
@@ -1313,8 +1320,8 @@ Figura&nbsp;3.4: Estructura de <code>finanzas_basicas.py</code>. El análisis im
 </div>
 <hr>
 </section>
-<section id="errores-comunes" class="level2" data-number="3.7">
-<h2 data-number="3.7" class="anchored" data-anchor-id="errores-comunes"><span class="header-section-number">3.7</span> Errores comunes</h2>
+<section id="errores-comunes" class="level2" data-number="3.8">
+<h2 data-number="3.8" class="anchored" data-anchor-id="errores-comunes"><span class="header-section-number">3.8</span> Errores comunes</h2>
 <div class="callout callout-style-simple callout-warning callout-titled" title="Trampas frecuentes">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -1326,35 +1333,13 @@ Figura&nbsp;3.4: Estructura de <code>finanzas_basicas.py</code>. El análisis im
 </div>
 <div class="callout-body-container callout-body">
 <ul>
-<li><strong>Argumento por defecto mutable</strong>: <code>def agregar(flujo, lista=[])</code> comparte la MISMA lista entre todas las llamadas — los flujos de un bono aparecen en otro. El idioma correcto: <code>def agregar(flujo, lista=None)</code> y crear la lista adentro (<code>if lista is None: lista = []</code>).</li>
-<li><strong>Olvidar el <code>return</code></strong>: una función que calcula pero no retorna devuelve <code>None</code> silenciosamente; el error explota recién más adelante (“unsupported operand type NoneType”). Si la función produce un valor, terminá con <code>return</code>.</li>
+<li><strong>Argumento por defecto mutable</strong>: <code>def agregar(flujo, lista=[])</code> comparte la MISMA lista entre todas las llamadas, y los flujos de un bono aparecen en otro. El idioma correcto: <code>def agregar(flujo, lista=None)</code> y crear la lista adentro (<code>if lista is None: lista = []</code>).</li>
+<li><strong>Olvidar el <code>return</code></strong>: una función que calcula pero no retorna devuelve <code>None</code> silenciosamente; el error aparece recién más adelante (“unsupported operand type NoneType”). Si la función produce un valor, terminá con <code>return</code>.</li>
 <li><strong>Capturar <code>Exception</code> a ciegas</strong>: <code>except Exception: pass</code> esconde <em>todos</em> los errores, incluidos los bugs que necesitás ver. Capturá el error específico que esperás (<code>except ValueError:</code>) y dejá que el resto explote.</li>
 <li><strong>Modificar los argumentos recibidos</strong>: si tu función hace <code>flujos.append(...)</code> sobre la lista que le pasaron, el llamador ve su lista alterada sin saberlo. Trabajá sobre una copia (<code>flujos = list(flujos)</code>) o no mutes.</li>
+<li><strong>Comparar decimales con <code>==</code></strong>: <code>valor_futuro(100, 0.10, 1) == 110</code> da <code>False</code> por un error de redondeo en el último dígito. En las pruebas y en cualquier condición, compará con una tolerancia (<code>abs(a - b) &lt; 1e-9</code>).</li>
 <li><strong>Validar tarde (o nunca)</strong>: validar los inputs al inicio de la función (como hace <code>valuacion_bono</code>) da errores claros y cercanos a la causa; sin validación, el error aparece diez llamadas más adentro con un mensaje incomprensible.</li>
 </ul>
-</div>
-</div>
-<hr>
-</section>
-<section id="ejercicios-propuestos" class="level2" data-number="3.8">
-<h2 data-number="3.8" class="anchored" data-anchor-id="ejercicios-propuestos"><span class="header-section-number">3.8</span> Ejercicios Propuestos</h2>
-<div class="callout callout-style-simple callout-important callout-titled" title="Ejercicios">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Importante</span>Ejercicios
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<ol type="1">
-<li><p><strong>Función de amortización francesa</strong>: Crear una función <code>cuota_francesa(capital, tasa, periodos)</code> que calcule la cuota fija de un préstamo sistema francés. Validar que los inputs sean positivos.</p></li>
-<li><p><strong>Tabla de sensibilidad</strong>: Usar la función <code>valuacion_bono()</code> para crear una tabla que muestre el precio del bono para distintas combinaciones de yield (filas) y maturity (columnas). <em>Pista</em>: dos bucles anidados.</p></li>
-<li><p><strong>Extender la librería</strong>: Agregar una función <code>duration_macaulay(flujos, tasa)</code> que calcule la duración de Macaulay: <span class="math display">\[D = \frac{\sum_{t=1}^{n} t \cdot \frac{CF_t}{(1+r)^t}}{P}\]</span></p></li>
-<li><p><strong>Manejo de errores robusto</strong>: Crear una función que lea datos de un bono ingresados por el usuario (<code>input()</code>) y maneje todos los posibles errores: texto en lugar de números, tasas fuera de rango, plazos negativos, etc.</p></li>
-<li><p><strong>TIR mejorada</strong>: la función <code>tir()</code> de la librería usa paso fijo. Reescribila con refinamiento progresivo (cuando cruza el precio, retrocede y prueba con paso 10 veces menor) y compará la precisión con la versión original.</p></li>
-</ol>
 </div>
 </div>
 <hr>
@@ -1861,11 +1846,11 @@ Lutz, Mark. 2013. <em>Learning Python</em>. 5.ª ed. O’Reilly Media.
 <span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>---</span>
 <span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a><span class="fu">## Definición de Funciones</span></span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a><span class="fu">## Definición de funciones</span></span>
 <span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a>Una función es un bloque de código reutilizable que recibe **parámetros** y devuelve un **resultado**.</span>
 <span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a>La mejor forma de pensar una función es como una **caja negra con un contrato** (@fig-funcion-caja-negra): entran parámetros, sale un resultado por <span class="in">`return`</span>, y quien la usa no necesita saber qué pasa adentro.</span>
+<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a>La mejor forma de pensar una función es como una caja negra con un contrato (@fig-funcion-caja-negra): entran parámetros, sale un resultado por <span class="in">`return`</span>, y quien la usa no necesita saber qué pasa adentro.</span>
 <span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb5-25"><a href="#cb5-25" aria-hidden="true" tabindex="-1"></a><span class="in">```{mermaid}</span></span>
 <span id="cb5-26"><a href="#cb5-26" aria-hidden="true" tabindex="-1"></a>%%| label: fig-funcion-caja-negra</span>
@@ -1910,7 +1895,7 @@ Lutz, Mark. 2013. <em>Learning Python</em>. 5.ª ed. O’Reilly Media.
 <span id="cb5-65"><a href="#cb5-65" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb5-66"><a href="#cb5-66" aria-hidden="true" tabindex="-1"></a><span class="fu">### Recibir y devolver múltiples valores</span></span>
 <span id="cb5-67"><a href="#cb5-67" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-68"><a href="#cb5-68" aria-hidden="true" tabindex="-1"></a>En Python, una función puede **recibir varios parámetros** y también **devolver más de un resultado**.</span>
+<span id="cb5-68"><a href="#cb5-68" aria-hidden="true" tabindex="-1"></a>En Python, una función puede **recibir varios parámetros** y también devolver más de un resultado.</span>
 <span id="cb5-69"><a href="#cb5-69" aria-hidden="true" tabindex="-1"></a>Esto es útil en finanzas cuando, a partir de los mismos datos, queremos obtener más de un indicador.</span>
 <span id="cb5-70"><a href="#cb5-70" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb5-71"><a href="#cb5-71" aria-hidden="true" tabindex="-1"></a><span class="in">```{pyodide-python}</span></span>
@@ -1932,7 +1917,7 @@ Lutz, Mark. 2013. <em>Learning Python</em>. 5.ª ed. O’Reilly Media.
 <span id="cb5-87"><a href="#cb5-87" aria-hidden="true" tabindex="-1"></a>Cuando devolvemos varios valores, Python los empaqueta en una tupla.</span>
 <span id="cb5-88"><a href="#cb5-88" aria-hidden="true" tabindex="-1"></a>Luego podemos "desempaquetarlos" en variables separadas para trabajar con cada resultado de forma clara.</span>
 <span id="cb5-89"><a href="#cb5-89" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-90"><a href="#cb5-90" aria-hidden="true" tabindex="-1"></a><span class="fu">### Parámetros por Defecto</span></span>
+<span id="cb5-90"><a href="#cb5-90" aria-hidden="true" tabindex="-1"></a><span class="fu">### Parámetros por defecto</span></span>
 <span id="cb5-91"><a href="#cb5-91" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb5-92"><a href="#cb5-92" aria-hidden="true" tabindex="-1"></a><span class="in">```{pyodide-python}</span></span>
 <span id="cb5-93"><a href="#cb5-93" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: params-default</span></span>
@@ -1948,12 +1933,12 @@ Lutz, Mark. 2013. <em>Learning Python</em>. 5.ª ed. O’Reilly Media.
 <span id="cb5-103"><a href="#cb5-103" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"VP a 5 años: $</span><span class="sc">{</span>vp2<span class="sc">:,.2f}</span><span class="ss">"</span>)</span>
 <span id="cb5-104"><a href="#cb5-104" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb5-105"><a href="#cb5-105" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-106"><a href="#cb5-106" aria-hidden="true" tabindex="-1"></a><span class="fu">### Argumentos Variables (`*args`)</span></span>
+<span id="cb5-106"><a href="#cb5-106" aria-hidden="true" tabindex="-1"></a><span class="fu">### Argumentos variables (`*args`)</span></span>
 <span id="cb5-107"><a href="#cb5-107" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb5-108"><a href="#cb5-108" aria-hidden="true" tabindex="-1"></a>Hasta ahora vimos funciones con una cantidad fija de parámetros.  </span>
 <span id="cb5-109"><a href="#cb5-109" aria-hidden="true" tabindex="-1"></a>Pero en problemas financieros muchas veces no sabemos de antemano cuántos valores vamos a procesar (por ejemplo, una serie de flujos que puede tener 3, 10 o 30 períodos).</span>
 <span id="cb5-110"><a href="#cb5-110" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-111"><a href="#cb5-111" aria-hidden="true" tabindex="-1"></a><span class="in">`*args`</span> permite que una función reciba una **cantidad variable de argumentos posicionales**.</span>
+<span id="cb5-111"><a href="#cb5-111" aria-hidden="true" tabindex="-1"></a><span class="in">`*args`</span> permite que una función reciba una cantidad variable de argumentos posicionales.</span>
 <span id="cb5-112"><a href="#cb5-112" aria-hidden="true" tabindex="-1"></a>Dentro de la función, esos argumentos se agrupan en una **tupla**.</span>
 <span id="cb5-113"><a href="#cb5-113" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb5-114"><a href="#cb5-114" aria-hidden="true" tabindex="-1"></a>Esto nos da flexibilidad sin tener que escribir versiones distintas de la misma función.</span>
@@ -1992,7 +1977,7 @@ Lutz, Mark. 2013. <em>Learning Python</em>. 5.ª ed. O’Reilly Media.
 <span id="cb5-147"><a href="#cb5-147" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb5-148"><a href="#cb5-148" aria-hidden="true" tabindex="-1"></a>---</span>
 <span id="cb5-149"><a href="#cb5-149" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-150"><a href="#cb5-150" aria-hidden="true" tabindex="-1"></a><span class="fu">## Scope (Alcance) de las Variables</span></span>
+<span id="cb5-150"><a href="#cb5-150" aria-hidden="true" tabindex="-1"></a><span class="fu">## Alcance (*scope*) de las variables</span></span>
 <span id="cb5-151"><a href="#cb5-151" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb5-152"><a href="#cb5-152" aria-hidden="true" tabindex="-1"></a>El **scope** o alcance define en qué parte del programa una variable es "visible" y puede ser utilizada. En Python, distinguimos principalmente entre dos niveles:</span>
 <span id="cb5-153"><a href="#cb5-153" aria-hidden="true" tabindex="-1"></a></span>
@@ -2000,7 +1985,7 @@ Lutz, Mark. 2013. <em>Learning Python</em>. 5.ª ed. O’Reilly Media.
 <span id="cb5-155"><a href="#cb5-155" aria-hidden="true" tabindex="-1"></a><span class="ss">2.  </span>**Scope Local**: Variables definidas dentro de una función. Solo existen mientras la función se está ejecutando y no pueden verse desde fuera.</span>
 <span id="cb5-156"><a href="#cb5-156" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb5-157"><a href="#cb5-157" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-158"><a href="#cb5-158" aria-hidden="true" tabindex="-1"></a>La @fig-scope muestra los dos niveles como cajas anidadas. Cuando Python encuentra un nombre adentro de una función, lo busca **primero en la caja local** y, solo si no lo encuentra, sube a la global. Por eso <span class="in">`calcular_rendimiento`</span> ve <span class="in">`tasa_mercado`</span>, y por eso afuera no existe <span class="in">`variable_interna`</span>.</span>
+<span id="cb5-158"><a href="#cb5-158" aria-hidden="true" tabindex="-1"></a>La @fig-scope muestra los dos niveles como cajas anidadas. Cuando Python encuentra un nombre adentro de una función, lo busca primero en la caja local y, solo si no lo encuentra, sube a la global. Por eso <span class="in">`calcular_rendimiento`</span> ve <span class="in">`tasa_mercado`</span>, y por eso afuera no existe <span class="in">`variable_interna`</span>.</span>
 <span id="cb5-159"><a href="#cb5-159" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb5-162"><a href="#cb5-162" aria-hidden="true" tabindex="-1"></a><span class="in">```{mermaid}</span></span>
 <span id="cb5-163"><a href="#cb5-163" aria-hidden="true" tabindex="-1"></a>%%| label: fig-scope</span>
@@ -2025,9 +2010,9 @@ Lutz, Mark. 2013. <em>Learning Python</em>. 5.ª ed. O’Reilly Media.
 <span id="cb5-182"><a href="#cb5-182" aria-hidden="true" tabindex="-1"></a>    class l1,l2,l3 loc</span>
 <span id="cb5-183"><a href="#cb5-183" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb5-184"><a href="#cb5-184" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-185"><a href="#cb5-185" aria-hidden="true" tabindex="-1"></a><span class="fu">### Variables Globales vs. Locales</span></span>
+<span id="cb5-185"><a href="#cb5-185" aria-hidden="true" tabindex="-1"></a><span class="fu">### Variables globales y locales</span></span>
 <span id="cb5-186"><a href="#cb5-186" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-187"><a href="#cb5-187" aria-hidden="true" tabindex="-1"></a>Una función puede **leer** una variable global, pero no puede modificarla directamente: para eso existe la declaración <span class="in">`global tasa_mercado`</span> dentro de la función. Que exista no significa que convenga usarla — en código financiero es una mala práctica, porque una función que modifica estado externo se vuelve impredecible (el resultado deja de depender solo de sus parámetros). En todo este libro, las funciones reciben lo que necesitan por parámetro y devuelven resultados con <span class="in">`return`</span>.</span>
+<span id="cb5-187"><a href="#cb5-187" aria-hidden="true" tabindex="-1"></a>Una función puede **leer** una variable global, pero no puede modificarla directamente: para eso existe la declaración <span class="in">`global tasa_mercado`</span> dentro de la función. Que exista no significa que convenga usarla: en código financiero es una mala práctica, porque una función que modifica estado externo se vuelve impredecible (el resultado deja de depender solo de sus parámetros). En todo este libro, las funciones reciben lo que necesitan por parámetro y devuelven resultados con <span class="in">`return`</span>.</span>
 <span id="cb5-188"><a href="#cb5-188" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb5-189"><a href="#cb5-189" aria-hidden="true" tabindex="-1"></a><span class="in">```{pyodide-python}</span></span>
 <span id="cb5-190"><a href="#cb5-190" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: scope-basico</span></span>
@@ -2048,7 +2033,7 @@ Lutz, Mark. 2013. <em>Learning Python</em>. 5.ª ed. O’Reilly Media.
 <span id="cb5-205"><a href="#cb5-205" aria-hidden="true" tabindex="-1"></a><span class="co"># print(variable_interna) </span></span>
 <span id="cb5-206"><a href="#cb5-206" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb5-207"><a href="#cb5-207" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-208"><a href="#cb5-208" aria-hidden="true" tabindex="-1"></a><span class="fu">### El concepto de "Shadowing" (Sombreado)</span></span>
+<span id="cb5-208"><a href="#cb5-208" aria-hidden="true" tabindex="-1"></a><span class="fu">### El concepto de *shadowing* (sombreado)</span></span>
 <span id="cb5-209"><a href="#cb5-209" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb5-210"><a href="#cb5-210" aria-hidden="true" tabindex="-1"></a>Si definimos una variable dentro de una función con el mismo nombre que una global, la versión local "sombra" a la global durante la ejecución de esa función.</span>
 <span id="cb5-211"><a href="#cb5-211" aria-hidden="true" tabindex="-1"></a></span>
@@ -2089,7 +2074,7 @@ Lutz, Mark. 2013. <em>Learning Python</em>. 5.ª ed. O’Reilly Media.
 <span id="cb5-246"><a href="#cb5-246" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb5-247"><a href="#cb5-247" aria-hidden="true" tabindex="-1"></a><span class="fu">### ¿Qué recibe una función cuando le pasás una lista?</span></span>
 <span id="cb5-248"><a href="#cb5-248" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-249"><a href="#cb5-249" aria-hidden="true" tabindex="-1"></a>Cerremos el círculo con el concepto de *aliasing* del Capítulo 2 ("copiar no es lo mismo que apuntar"), porque tiene una consecuencia directa sobre las funciones. Cuando llamás `mi_funcion(cartera)`, la función **no recibe una copia** de la cartera: recibe **otra etiqueta al mismo objeto**. Con parámetros inmutables (números, strings) esto es invisible — no se pueden modificar. Pero con una **lista o diccionario**, si la función lo muta, *el llamador ve el cambio*:</span>
+<span id="cb5-249"><a href="#cb5-249" aria-hidden="true" tabindex="-1"></a>Cerremos el círculo con el concepto de *aliasing* del [Capítulo 2](../unidad1/cap02_iteraciones_estructuras.qmd) ("copiar no es lo mismo que apuntar"), porque tiene una consecuencia directa sobre las funciones. Cuando llamás `mi_funcion(cartera)`, la función **no recibe una copia** de la cartera: recibe otra etiqueta al mismo objeto. Con parámetros inmutables (números, strings) esto es invisible: no se pueden modificar. Pero con una **lista o diccionario**, si la función lo muta, *el llamador ve el cambio*:</span>
 <span id="cb5-250"><a href="#cb5-250" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb5-251"><a href="#cb5-251" aria-hidden="true" tabindex="-1"></a><span class="in">```{pyodide-python}</span></span>
 <span id="cb5-252"><a href="#cb5-252" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: mutar-argumentos</span></span>
@@ -2106,7 +2091,7 @@ Lutz, Mark. 2013. <em>Learning Python</em>. 5.ª ed. O’Reilly Media.
 <span id="cb5-263"><a href="#cb5-263" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"¿Y mis originales? </span><span class="sc">{</span>mis_flujos<span class="sc">}</span><span class="ss">   ← ¡también cambiaron!"</span>)</span>
 <span id="cb5-264"><a href="#cb5-264" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb5-265"><a href="#cb5-265" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-266"><a href="#cb5-266" aria-hidden="true" tabindex="-1"></a>La función "devolvió" los flujos netos, pero de paso **destruyó los originales** — `mis_flujos` y el parámetro `flujos` eran el mismo objeto. En un análisis real esto es venenoso: valuás la cartera dos veces y da distinto, porque la primera pasada la modificó. Hay dos diseños correctos, y ambos empiezan igual — **no mutar lo que te prestaron**:</span>
+<span id="cb5-266"><a href="#cb5-266" aria-hidden="true" tabindex="-1"></a>La función "devolvió" los flujos netos, pero de paso **destruyó los originales**: <span class="in">`mis_flujos`</span> y el parámetro <span class="in">`flujos`</span> eran el mismo objeto. En un análisis real esto es venenoso: valuás la cartera dos veces y da distinto, porque la primera pasada la modificó. Hay dos diseños correctos, y ambos empiezan igual: no mutar lo que te prestaron:</span>
 <span id="cb5-267"><a href="#cb5-267" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb5-268"><a href="#cb5-268" aria-hidden="true" tabindex="-1"></a><span class="in">```{pyodide-python}</span></span>
 <span id="cb5-269"><a href="#cb5-269" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: no-mutar-argumentos</span></span>
@@ -2125,12 +2110,12 @@ Lutz, Mark. 2013. <em>Learning Python</em>. 5.ª ed. O’Reilly Media.
 <span id="cb5-282"><a href="#cb5-282" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb5-283"><a href="#cb5-283" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb5-284"><a href="#cb5-284" aria-hidden="true" tabindex="-1"></a>::: {.callout-tip title="La convención del oficio"}</span>
-<span id="cb5-285"><a href="#cb5-285" aria-hidden="true" tabindex="-1"></a>Una función debería **recibir datos, devolver resultados y no tocar nada más** — ni globales (la sección anterior) ni los objetos que le pasaron (esta). A las funciones que cumplen esto se las llama *puras*, y son las más fáciles de testear, reutilizar y razonar. Todas las funciones de la librería que construimos al final del capítulo son puras.</span>
+<span id="cb5-285"><a href="#cb5-285" aria-hidden="true" tabindex="-1"></a>Una función debería recibir datos, devolver resultados y no tocar nada más: ni globales (la sección anterior) ni los objetos que le pasaron (esta). A las funciones que cumplen esto se las llama *puras*, y son las más fáciles de testear, reutilizar y razonar. Todas las funciones de la librería que construimos al final del capítulo son puras.</span>
 <span id="cb5-286"><a href="#cb5-286" aria-hidden="true" tabindex="-1"></a>:::</span>
 <span id="cb5-287"><a href="#cb5-287" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb5-288"><a href="#cb5-288" aria-hidden="true" tabindex="-1"></a>---</span>
 <span id="cb5-289"><a href="#cb5-289" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-290"><a href="#cb5-290" aria-hidden="true" tabindex="-1"></a><span class="fu">## Manejo de Errores: `try` / `except`</span></span>
+<span id="cb5-290"><a href="#cb5-290" aria-hidden="true" tabindex="-1"></a><span class="fu">## Manejo de errores: `try` / `except`</span></span>
 <span id="cb5-291"><a href="#cb5-291" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb5-292"><a href="#cb5-292" aria-hidden="true" tabindex="-1"></a>En el mundo real, los datos financieros casi nunca llegan "perfectos": pueden venir incompletos, en formato incorrecto o fuera de rango.</span>
 <span id="cb5-293"><a href="#cb5-293" aria-hidden="true" tabindex="-1"></a>El manejo de excepciones con <span class="in">`try`</span> / <span class="in">`except`</span> permite que el programa sea **robusto**, evitando que se rompa ante errores esperables.</span>
@@ -2144,7 +2129,7 @@ Lutz, Mark. 2013. <em>Learning Python</em>. 5.ª ed. O’Reilly Media.
 <span id="cb5-301"><a href="#cb5-301" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>acceder a una clave inexistente en un diccionario (<span class="in">`KeyError`</span>),</span>
 <span id="cb5-302"><a href="#cb5-302" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>o intentar usar un tipo de dato incorrecto (<span class="in">`TypeError`</span>).</span>
 <span id="cb5-303"><a href="#cb5-303" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-304"><a href="#cb5-304" aria-hidden="true" tabindex="-1"></a>Si no capturamos la excepción, el programa se detiene **e imprime un traceback** — el "informe forense" del error. Saber leerlo es probablemente la habilidad que más tiempo te va a ahorrar en toda tu carrera, así que detengámonos un minuto.</span>
+<span id="cb5-304"><a href="#cb5-304" aria-hidden="true" tabindex="-1"></a>Si no capturamos la excepción, el programa se detiene **e imprime un traceback**, el "informe forense" del error. Saber leerlo es probablemente la habilidad que más tiempo te va a ahorrar en toda tu carrera, así que detengámonos un minuto.</span>
 <span id="cb5-305"><a href="#cb5-305" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb5-306"><a href="#cb5-306" aria-hidden="true" tabindex="-1"></a>::: {.callout-tip title="Cómo leer un traceback (la habilidad subvalorada)"}</span>
 <span id="cb5-307"><a href="#cb5-307" aria-hidden="true" tabindex="-1"></a>Un traceback típico luce así:</span>
@@ -2164,9 +2149,9 @@ Lutz, Mark. 2013. <em>Learning Python</em>. 5.ª ed. O’Reilly Media.
 <span id="cb5-321"><a href="#cb5-321" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb5-322"><a href="#cb5-322" aria-hidden="true" tabindex="-1"></a><span class="ss">1. </span>**Empezá por la última línea**: ahí está el *tipo* de error (`ZeroDivisionError`) y el *mensaje* (<span class="in">`division by zero`</span>). Es el "qué pasó".</span>
 <span id="cb5-323"><a href="#cb5-323" aria-hidden="true" tabindex="-1"></a><span class="ss">2. </span>**Subí una línea**: es el lugar exacto donde explotó (<span class="in">`finanzas_basicas.py`</span>, línea 8). Es el "dónde".</span>
-<span id="cb5-324"><a href="#cb5-324" aria-hidden="true" tabindex="-1"></a><span class="ss">3. </span>**El resto, de abajo hacia arriba, es la cadena de llamadas**: quién llamó a quién hasta llegar ahí. El "cómo llegamos". Ojo: la línea que explotó no siempre es la culpable — acá el bug probablemente esté en quien pasó <span class="in">`tasa = -1`</span>, no en la fórmula.</span>
+<span id="cb5-324"><a href="#cb5-324" aria-hidden="true" tabindex="-1"></a><span class="ss">3. </span>**El resto, de abajo hacia arriba, es la cadena de llamadas**: quién llamó a quién hasta llegar ahí. El "cómo llegamos". La línea donde aparece el error no siempre es la culpable: acá el bug probablemente esté en quien pasó <span class="in">`tasa = -1`</span>, no en la fórmula.</span>
 <span id="cb5-325"><a href="#cb5-325" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-326"><a href="#cb5-326" aria-hidden="true" tabindex="-1"></a>El error de principiante es leer solo la primera línea (que es la *menos* informativa) o, peor, no leer nada y adivinar. El traceback te está diciendo exactamente qué, dónde y cómo — gratis.</span>
+<span id="cb5-326"><a href="#cb5-326" aria-hidden="true" tabindex="-1"></a>El error de principiante es leer solo la primera línea (que es la *menos* informativa) o, peor, no leer nada y adivinar. El traceback te está diciendo exactamente qué, dónde y cómo, gratis.</span>
 <span id="cb5-327"><a href="#cb5-327" aria-hidden="true" tabindex="-1"></a>:::</span>
 <span id="cb5-328"><a href="#cb5-328" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb5-329"><a href="#cb5-329" aria-hidden="true" tabindex="-1"></a>Con <span class="in">`try`</span> / <span class="in">`except`</span>, en cambio, podemos capturar el error y decidir cómo responder sin que el programa muera.</span>
@@ -2314,7 +2299,7 @@ Lutz, Mark. 2013. <em>Learning Python</em>. 5.ª ed. O’Reilly Media.
 <span id="cb5-473"><a href="#cb5-473" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb5-474"><a href="#cb5-474" aria-hidden="true" tabindex="-1"></a><span class="fu">## Módulos y librerías en Python</span></span>
 <span id="cb5-475"><a href="#cb5-475" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-476"><a href="#cb5-476" aria-hidden="true" tabindex="-1"></a>Cuando un programa crece, no conviene dejar todo en un solo archivo. Python permite **organizar el código en módulos** para reutilizar funciones, mantener orden y facilitar el testing.</span>
+<span id="cb5-476"><a href="#cb5-476" aria-hidden="true" tabindex="-1"></a>Cuando un programa crece, no conviene dejar todo en un solo archivo. Python permite organizar el código en módulos para reutilizar funciones, mantener orden y facilitar el testing.</span>
 <span id="cb5-477"><a href="#cb5-477" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb5-478"><a href="#cb5-478" aria-hidden="true" tabindex="-1"></a><span class="fu">### ¿Para qué sirve un módulo?</span></span>
 <span id="cb5-479"><a href="#cb5-479" aria-hidden="true" tabindex="-1"></a></span>
@@ -2362,11 +2347,11 @@ Lutz, Mark. 2013. <em>Learning Python</em>. 5.ª ed. O’Reilly Media.
 <span id="cb5-521"><a href="#cb5-521" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb5-522"><a href="#cb5-522" aria-hidden="true" tabindex="-1"></a>---</span>
 <span id="cb5-523"><a href="#cb5-523" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-524"><a href="#cb5-524" aria-hidden="true" tabindex="-1"></a><span class="fu">## Problemática Financiera: Librería `finanzas_basicas.py`</span></span>
+<span id="cb5-524"><a href="#cb5-524" aria-hidden="true" tabindex="-1"></a><span class="fu">## Problema financiero: la librería `finanzas_basicas.py`</span></span>
 <span id="cb5-525"><a href="#cb5-525" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-526"><a href="#cb5-526" aria-hidden="true" tabindex="-1"></a>Hora de cosechar lo sembrado. En los dos capítulos anteriores resolviste problemas financieros reales —interés compuesto, conversión de tasas, valuación de bonos, TIR— pero cada solución quedó atrapada en su ejemplo. Vamos a **rescatar esa lógica y empaquetarla en una librería reutilizable**: el conjunto de funciones que vas a poder importar en cualquier análisis futuro. En un entorno real, este código viviría en un archivo <span class="in">`finanzas_basicas.py`</span> y se importaría con <span class="in">`from finanzas_basicas import valuacion_bono, tir`</span>.</span>
+<span id="cb5-526"><a href="#cb5-526" aria-hidden="true" tabindex="-1"></a>Hora de cosechar lo sembrado. En los dos capítulos anteriores resolviste problemas financieros reales —interés compuesto, conversión de tasas, valuación de bonos, TIR— pero cada solución quedó atrapada en su ejemplo. Vamos a rescatar esa lógica y empaquetarla en una librería reutilizable: el conjunto de funciones que vas a poder importar en cualquier análisis futuro. En un entorno real, este código viviría en un archivo <span class="in">`finanzas_basicas.py`</span> y se importaría con <span class="in">`from finanzas_basicas import valuacion_bono, tir`</span>.</span>
 <span id="cb5-527"><a href="#cb5-527" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-528"><a href="#cb5-528" aria-hidden="true" tabindex="-1"></a><span class="fu">### Funciones de la Librería</span></span>
+<span id="cb5-528"><a href="#cb5-528" aria-hidden="true" tabindex="-1"></a><span class="fu">### Funciones de la librería</span></span>
 <span id="cb5-529"><a href="#cb5-529" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb5-530"><a href="#cb5-530" aria-hidden="true" tabindex="-1"></a><span class="in">```{pyodide-python}</span></span>
 <span id="cb5-531"><a href="#cb5-531" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: libreria</span></span>
@@ -2453,9 +2438,9 @@ Lutz, Mark. 2013. <em>Learning Python</em>. 5.ª ed. O’Reilly Media.
 <span id="cb5-614"><a href="#cb5-614" aria-hidden="true" tabindex="-1"></a>    class A uso</span>
 <span id="cb5-615"><a href="#cb5-615" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb5-616"><a href="#cb5-616" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-617"><a href="#cb5-617" aria-hidden="true" tabindex="-1"></a>Las funciones de una librería se apoyan unas en otras — si mañana mejorás la valuación, la TIR mejora gratis. Notá también el "techo de seguridad": una función de librería no puede colgarse en un bucle infinito porque alguien le pasó un precio absurdo; falla rápido y con un mensaje claro.</span>
+<span id="cb5-617"><a href="#cb5-617" aria-hidden="true" tabindex="-1"></a>Las funciones de una librería se apoyan unas en otras: si mañana mejorás la valuación, la TIR mejora gratis. Notá también el "techo de seguridad": una función de librería no puede colgarse en un bucle infinito porque alguien le pasó un precio absurdo; falla rápido y con un mensaje claro.</span>
 <span id="cb5-618"><a href="#cb5-618" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-619"><a href="#cb5-619" aria-hidden="true" tabindex="-1"></a><span class="fu">### Usando la Librería</span></span>
+<span id="cb5-619"><a href="#cb5-619" aria-hidden="true" tabindex="-1"></a><span class="fu">### Uso de la librería</span></span>
 <span id="cb5-620"><a href="#cb5-620" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb5-621"><a href="#cb5-621" aria-hidden="true" tabindex="-1"></a><span class="in">```{pyodide-python}</span></span>
 <span id="cb5-622"><a href="#cb5-622" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: uso-libreria</span></span>
@@ -2483,80 +2468,162 @@ Lutz, Mark. 2013. <em>Learning Python</em>. 5.ª ed. O’Reilly Media.
 <span id="cb5-644"><a href="#cb5-644" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"TIR al precio de $950: </span><span class="sc">{</span>rendimiento<span class="sc">:.2%}</span><span class="ss">"</span>)</span>
 <span id="cb5-645"><a href="#cb5-645" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb5-646"><a href="#cb5-646" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-647"><a href="#cb5-647" aria-hidden="true" tabindex="-1"></a>Compará el punto 4 con las ~10 líneas de bucle que necesitaste en el Capítulo 2: la misma lógica, pero ahora **valuar un bono es una línea** — y con validación de inputs incluida. Ese salto de "código que escribo cada vez" a "herramienta que invoco" es exactamente lo que este capítulo vino a enseñar. En el próximo capítulo estas funciones van a dar su paso final: convertirse en *métodos* de una clase <span class="in">`Bono`</span>.</span>
+<span id="cb5-647"><a href="#cb5-647" aria-hidden="true" tabindex="-1"></a>Compará el punto 4 con las ~10 líneas de bucle que necesitaste en el <span class="co">[</span><span class="ot">Capítulo 2</span><span class="co">](../unidad1/cap02_iteraciones_estructuras.qmd)</span>: la misma lógica, pero ahora valuar un bono es una línea, y con validación de inputs incluida. Ese salto de "código que escribo cada vez" a "herramienta que invoco" es exactamente lo que este capítulo vino a enseñar. En el próximo capítulo estas funciones van a dar su paso final: convertirse en *métodos* de una clase <span class="in">`Bono`</span>.</span>
 <span id="cb5-648"><a href="#cb5-648" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb5-649"><a href="#cb5-649" aria-hidden="true" tabindex="-1"></a>---</span>
 <span id="cb5-650"><a href="#cb5-650" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-651"><a href="#cb5-651" aria-hidden="true" tabindex="-1"></a><span class="fu">## Principio DRY: Don't Repeat Yourself</span></span>
-<span id="cb5-652"><a href="#cb5-652" aria-hidden="true" tabindex="-1"></a>El principio **DRY** (*Don't Repeat Yourself*) propone evitar duplicar la misma lógica en distintos lugares del código.</span>
-<span id="cb5-653"><a href="#cb5-653" aria-hidden="true" tabindex="-1"></a>Cuando repetimos fórmulas o bloques manualmente, aumentamos el riesgo de inconsistencias: si cambia un supuesto (por ejemplo, la tasa o la frecuencia), debemos corregir múltiples líneas y es fácil olvidar alguna.</span>
+<span id="cb5-651"><a href="#cb5-651" aria-hidden="true" tabindex="-1"></a><span class="fu">## Probar el código: `assert`</span></span>
+<span id="cb5-652"><a href="#cb5-652" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-653"><a href="#cb5-653" aria-hidden="true" tabindex="-1"></a>La librería funciona en los cinco ejemplos que acabamos de correr. Queda una pregunta que todo código de uso repetido tiene que poder contestar: cómo sabemos que sigue funcionando después de modificarla. Mirar los resultados a ojo cada vez no es un método. La alternativa es dejar escritas las verificaciones, de manera que se puedan volver a ejecutar en un segundo.</span>
 <span id="cb5-654"><a href="#cb5-654" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-655"><a href="#cb5-655" aria-hidden="true" tabindex="-1"></a>Aplicar DRY en finanzas significa **encapsular cálculos recurrentes en funciones** (por ejemplo, <span class="in">`valuacion_bono()`</span> o <span class="in">`valor_presente_neto()`</span>) para tener:</span>
+<span id="cb5-655"><a href="#cb5-655" aria-hidden="true" tabindex="-1"></a>La herramienta mínima es la sentencia <span class="in">`assert`</span>. Recibe una condición: si es verdadera no hace nada, y si es falsa detiene el programa con un <span class="in">`AssertionError`</span> y el mensaje que le hayamos indicado.</span>
 <span id="cb5-656"><a href="#cb5-656" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-657"><a href="#cb5-657" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**menos errores** de mantenimiento,</span>
-<span id="cb5-658"><a href="#cb5-658" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**mayor claridad** del modelo,</span>
-<span id="cb5-659"><a href="#cb5-659" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**reutilización** en distintos ejercicios o casos,</span>
-<span id="cb5-660"><a href="#cb5-660" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>y **validaciones centralizadas** en un solo lugar.</span>
+<span id="cb5-657"><a href="#cb5-657" aria-hidden="true" tabindex="-1"></a><span class="in">```{pyodide-python}</span></span>
+<span id="cb5-658"><a href="#cb5-658" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: assert-basico</span></span>
+<span id="cb5-659"><a href="#cb5-659" aria-hidden="true" tabindex="-1"></a><span class="cf">assert</span> valor_futuro(<span class="dv">1000</span>, <span class="fl">0.10</span>, <span class="dv">2</span>) <span class="op">&gt;</span> <span class="dv">1000</span>     <span class="co"># se cumple: no imprime nada</span></span>
+<span id="cb5-660"><a href="#cb5-660" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Primera verificación superada"</span>)</span>
 <span id="cb5-661"><a href="#cb5-661" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-662"><a href="#cb5-662" aria-hidden="true" tabindex="-1"></a>::: {.callout-tip title="DRY en la Práctica"}</span>
-<span id="cb5-663"><a href="#cb5-663" aria-hidden="true" tabindex="-1"></a>Antes de copiar y pegar código, preguntate: *¿puedo hacer una función?*</span>
-<span id="cb5-664"><a href="#cb5-664" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-665"><a href="#cb5-665" aria-hidden="true" tabindex="-1"></a>**Sin DRY** (malo):</span>
-<span id="cb5-666"><a href="#cb5-666" aria-hidden="true" tabindex="-1"></a><span class="in">```python</span></span>
-<span id="cb5-667"><a href="#cb5-667" aria-hidden="true" tabindex="-1"></a>precio_a <span class="op">=</span> <span class="dv">80</span><span class="op">/</span>(<span class="fl">1.1</span>) <span class="op">+</span> <span class="dv">80</span><span class="op">/</span>(<span class="fl">1.1</span><span class="op">**</span><span class="dv">2</span>) <span class="op">+</span> <span class="dv">1080</span><span class="op">/</span>(<span class="fl">1.1</span><span class="op">**</span><span class="dv">3</span>)</span>
-<span id="cb5-668"><a href="#cb5-668" aria-hidden="true" tabindex="-1"></a>precio_b <span class="op">=</span> <span class="dv">60</span><span class="op">/</span>(<span class="fl">1.08</span>) <span class="op">+</span> <span class="dv">60</span><span class="op">/</span>(<span class="fl">1.08</span><span class="op">**</span><span class="dv">2</span>) <span class="op">+</span> <span class="dv">1060</span><span class="op">/</span>(<span class="fl">1.08</span><span class="op">**</span><span class="dv">3</span>)</span>
-<span id="cb5-669"><a href="#cb5-669" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb5-670"><a href="#cb5-670" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-671"><a href="#cb5-671" aria-hidden="true" tabindex="-1"></a>**Con DRY** (bueno):</span>
-<span id="cb5-672"><a href="#cb5-672" aria-hidden="true" tabindex="-1"></a><span class="in">```python</span></span>
-<span id="cb5-673"><a href="#cb5-673" aria-hidden="true" tabindex="-1"></a>precio_a <span class="op">=</span> valuacion_bono(<span class="dv">1000</span>, <span class="fl">0.08</span>, <span class="fl">0.10</span>, <span class="dv">3</span>)</span>
-<span id="cb5-674"><a href="#cb5-674" aria-hidden="true" tabindex="-1"></a>precio_b <span class="op">=</span> valuacion_bono(<span class="dv">1000</span>, <span class="fl">0.06</span>, <span class="fl">0.08</span>, <span class="dv">3</span>)</span>
-<span id="cb5-675"><a href="#cb5-675" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb5-676"><a href="#cb5-676" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb5-662"><a href="#cb5-662" aria-hidden="true" tabindex="-1"></a><span class="cf">try</span>:</span>
+<span id="cb5-663"><a href="#cb5-663" aria-hidden="true" tabindex="-1"></a>    <span class="cf">assert</span> valor_futuro(<span class="dv">100</span>, <span class="fl">0.10</span>, <span class="dv">1</span>) <span class="op">==</span> <span class="dv">110</span>, <span class="st">"100 al 10</span><span class="sc">% d</span><span class="st">urante un año deberían ser 110"</span></span>
+<span id="cb5-664"><a href="#cb5-664" aria-hidden="true" tabindex="-1"></a><span class="cf">except</span> <span class="pp">AssertionError</span> <span class="im">as</span> error:</span>
+<span id="cb5-665"><a href="#cb5-665" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="st">"Falló:"</span>, error)</span>
+<span id="cb5-666"><a href="#cb5-666" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-667"><a href="#cb5-667" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(valor_futuro(<span class="dv">100</span>, <span class="fl">0.10</span>, <span class="dv">1</span>))</span>
+<span id="cb5-668"><a href="#cb5-668" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb5-669"><a href="#cb5-669" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-670"><a href="#cb5-670" aria-hidden="true" tabindex="-1"></a>La segunda verificación falla, y no porque la función esté mal. El resultado es 110.00000000000001: la computadora guarda los decimales en binario, 0.10 no tiene representación exacta, y el error aparece en el último dígito. Es el mismo motivo por el que <span class="in">`0.1 + 0.2 == 0.3`</span> da <span class="in">`False`</span> en Python. La consecuencia práctica es una regla: los números decimales no se comparan con <span class="in">`==`</span>, se comparan con una tolerancia.</span>
+<span id="cb5-671"><a href="#cb5-671" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-672"><a href="#cb5-672" aria-hidden="true" tabindex="-1"></a>Con esa precaución podemos escribir las pruebas de la librería. Conviene combinar tres tipos:</span>
+<span id="cb5-673"><a href="#cb5-673" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-674"><a href="#cb5-674" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Casos calculados a mano**: un ejemplo simple cuyo resultado conocemos sin usar el código.</span>
+<span id="cb5-675"><a href="#cb5-675" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Propiedades financieras**: hechos que tienen que cumplirse siempre. Un bono cuyo cupón es igual a la tasa de descuento vale su nominal, el precio baja cuando la tasa sube, y con tasa cero el VPN es la suma de los flujos.</span>
+<span id="cb5-676"><a href="#cb5-676" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Ida y vuelta**: si valuamos un bono al 10% y le pedimos a <span class="in">`tir()`</span> el rendimiento de ese precio, tiene que devolver 10%.</span>
 <span id="cb5-677"><a href="#cb5-677" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-678"><a href="#cb5-678" aria-hidden="true" tabindex="-1"></a>---</span>
-<span id="cb5-679"><a href="#cb5-679" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-680"><a href="#cb5-680" aria-hidden="true" tabindex="-1"></a><span class="fu">## Errores comunes</span></span>
-<span id="cb5-681"><a href="#cb5-681" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-682"><a href="#cb5-682" aria-hidden="true" tabindex="-1"></a>::: {.callout-warning title="Trampas frecuentes"}</span>
-<span id="cb5-683"><a href="#cb5-683" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Argumento por defecto mutable**: <span class="in">`def agregar(flujo, lista=[])`</span> comparte la MISMA lista entre todas las llamadas — los flujos de un bono aparecen en otro. El idioma correcto: <span class="in">`def agregar(flujo, lista=None)`</span> y crear la lista adentro (<span class="in">`if lista is None: lista = []`</span>).</span>
-<span id="cb5-684"><a href="#cb5-684" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Olvidar el `return`**: una función que calcula pero no retorna devuelve <span class="in">`None`</span> silenciosamente; el error explota recién más adelante ("unsupported operand type NoneType"). Si la función produce un valor, terminá con <span class="in">`return`</span>.</span>
-<span id="cb5-685"><a href="#cb5-685" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Capturar `Exception` a ciegas**: <span class="in">`except Exception: pass`</span> esconde *todos* los errores, incluidos los bugs que necesitás ver. Capturá el error específico que esperás (<span class="in">`except ValueError:`</span>) y dejá que el resto explote.</span>
-<span id="cb5-686"><a href="#cb5-686" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Modificar los argumentos recibidos**: si tu función hace <span class="in">`flujos.append(...)`</span> sobre la lista que le pasaron, el llamador ve su lista alterada sin saberlo. Trabajá sobre una copia (<span class="in">`flujos = list(flujos)`</span>) o no mutes.</span>
-<span id="cb5-687"><a href="#cb5-687" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Validar tarde (o nunca)**: validar los inputs al inicio de la función (como hace <span class="in">`valuacion_bono`</span>) da errores claros y cercanos a la causa; sin validación, el error aparece diez llamadas más adentro con un mensaje incomprensible.</span>
-<span id="cb5-688"><a href="#cb5-688" aria-hidden="true" tabindex="-1"></a>:::</span>
-<span id="cb5-689"><a href="#cb5-689" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-690"><a href="#cb5-690" aria-hidden="true" tabindex="-1"></a>---</span>
+<span id="cb5-678"><a href="#cb5-678" aria-hidden="true" tabindex="-1"></a><span class="in">```{pyodide-python}</span></span>
+<span id="cb5-679"><a href="#cb5-679" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: pruebas-libreria</span></span>
+<span id="cb5-680"><a href="#cb5-680" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> casi_igual(a, b, tolerancia<span class="op">=</span><span class="fl">1e-9</span>):</span>
+<span id="cb5-681"><a href="#cb5-681" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""Compara dos números decimales admitiendo un error de redondeo."""</span></span>
+<span id="cb5-682"><a href="#cb5-682" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> <span class="bu">abs</span>(a <span class="op">-</span> b) <span class="op">&lt;</span> tolerancia</span>
+<span id="cb5-683"><a href="#cb5-683" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-684"><a href="#cb5-684" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-685"><a href="#cb5-685" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> probar_libreria():</span>
+<span id="cb5-686"><a href="#cb5-686" aria-hidden="true" tabindex="-1"></a>    <span class="co"># 1. Caso calculado a mano</span></span>
+<span id="cb5-687"><a href="#cb5-687" aria-hidden="true" tabindex="-1"></a>    <span class="cf">assert</span> casi_igual(valor_futuro(<span class="dv">100</span>, <span class="fl">0.10</span>, <span class="dv">1</span>), <span class="dv">110</span>)</span>
+<span id="cb5-688"><a href="#cb5-688" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-689"><a href="#cb5-689" aria-hidden="true" tabindex="-1"></a>    <span class="co"># 2. Con tasa cero, el VPN es la suma de los flujos</span></span>
+<span id="cb5-690"><a href="#cb5-690" aria-hidden="true" tabindex="-1"></a>    <span class="cf">assert</span> casi_igual(valor_presente_neto([<span class="op">-</span><span class="dv">1000</span>, <span class="dv">400</span>, <span class="dv">400</span>, <span class="dv">400</span>], <span class="fl">0.0</span>), <span class="dv">200</span>)</span>
 <span id="cb5-691"><a href="#cb5-691" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-692"><a href="#cb5-692" aria-hidden="true" tabindex="-1"></a><span class="fu">## Ejercicios Propuestos</span></span>
-<span id="cb5-693"><a href="#cb5-693" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-694"><a href="#cb5-694" aria-hidden="true" tabindex="-1"></a>::: {.callout-important title="Ejercicios"}</span>
-<span id="cb5-695"><a href="#cb5-695" aria-hidden="true" tabindex="-1"></a><span class="ss">1. </span>**Función de amortización francesa**: Crear una función <span class="in">`cuota_francesa(capital, tasa, periodos)`</span> que calcule la cuota fija de un préstamo sistema francés. Validar que los inputs sean positivos.</span>
-<span id="cb5-696"><a href="#cb5-696" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-697"><a href="#cb5-697" aria-hidden="true" tabindex="-1"></a><span class="ss">2. </span>**Tabla de sensibilidad**: Usar la función <span class="in">`valuacion_bono()`</span> para crear una tabla que muestre el precio del bono para distintas combinaciones de yield (filas) y maturity (columnas). *Pista*: dos bucles anidados.</span>
-<span id="cb5-698"><a href="#cb5-698" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-699"><a href="#cb5-699" aria-hidden="true" tabindex="-1"></a><span class="ss">3. </span>**Extender la librería**: Agregar una función <span class="in">`duration_macaulay(flujos, tasa)`</span> que calcule la duración de Macaulay:</span>
-<span id="cb5-700"><a href="#cb5-700" aria-hidden="true" tabindex="-1"></a>$$D = \frac{\sum_{t=1}^{n} t \cdot \frac{CF_t}{(1+r)^t}}{P}$$</span>
+<span id="cb5-692"><a href="#cb5-692" aria-hidden="true" tabindex="-1"></a>    <span class="co"># 3. Cupón igual a la tasa de descuento: el bono vale su nominal</span></span>
+<span id="cb5-693"><a href="#cb5-693" aria-hidden="true" tabindex="-1"></a>    <span class="cf">assert</span> casi_igual(valuacion_bono(<span class="dv">1000</span>, <span class="fl">0.08</span>, <span class="fl">0.08</span>, <span class="dv">5</span>), <span class="dv">1000</span>, tolerancia<span class="op">=</span><span class="fl">1e-6</span>)</span>
+<span id="cb5-694"><a href="#cb5-694" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-695"><a href="#cb5-695" aria-hidden="true" tabindex="-1"></a>    <span class="co"># 4. Si la tasa sube, el precio baja</span></span>
+<span id="cb5-696"><a href="#cb5-696" aria-hidden="true" tabindex="-1"></a>    <span class="cf">assert</span> valuacion_bono(<span class="dv">1000</span>, <span class="fl">0.08</span>, <span class="fl">0.12</span>, <span class="dv">5</span>) <span class="op">&lt;</span> valuacion_bono(<span class="dv">1000</span>, <span class="fl">0.08</span>, <span class="fl">0.10</span>, <span class="dv">5</span>)</span>
+<span id="cb5-697"><a href="#cb5-697" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-698"><a href="#cb5-698" aria-hidden="true" tabindex="-1"></a>    <span class="co"># 5. Ida y vuelta: la TIR del precio calculado al 10% es 10%</span></span>
+<span id="cb5-699"><a href="#cb5-699" aria-hidden="true" tabindex="-1"></a>    precio <span class="op">=</span> valuacion_bono(<span class="dv">1000</span>, <span class="fl">0.08</span>, <span class="fl">0.10</span>, <span class="dv">5</span>)</span>
+<span id="cb5-700"><a href="#cb5-700" aria-hidden="true" tabindex="-1"></a>    <span class="cf">assert</span> casi_igual(tir(<span class="dv">1000</span>, <span class="fl">0.08</span>, <span class="dv">5</span>, precio), <span class="fl">0.10</span>, tolerancia<span class="op">=</span><span class="fl">0.0002</span>)</span>
 <span id="cb5-701"><a href="#cb5-701" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-702"><a href="#cb5-702" aria-hidden="true" tabindex="-1"></a><span class="ss">4. </span>**Manejo de errores robusto**: Crear una función que lea datos de un bono ingresados por el usuario (<span class="in">`input()`</span>) y maneje todos los posibles errores: texto en lugar de números, tasas fuera de rango, plazos negativos, etc.</span>
-<span id="cb5-703"><a href="#cb5-703" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-704"><a href="#cb5-704" aria-hidden="true" tabindex="-1"></a><span class="ss">5. </span>**TIR mejorada**: la función <span class="in">`tir()`</span> de la librería usa paso fijo. Reescribila con refinamiento progresivo (cuando cruza el precio, retrocede y prueba con paso 10 veces menor) y compará la precisión con la versión original.</span>
-<span id="cb5-705"><a href="#cb5-705" aria-hidden="true" tabindex="-1"></a>:::</span>
-<span id="cb5-706"><a href="#cb5-706" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-707"><a href="#cb5-707" aria-hidden="true" tabindex="-1"></a>---</span>
+<span id="cb5-702"><a href="#cb5-702" aria-hidden="true" tabindex="-1"></a>    <span class="co"># 6. Un cupón negativo tiene que ser rechazado</span></span>
+<span id="cb5-703"><a href="#cb5-703" aria-hidden="true" tabindex="-1"></a>    <span class="cf">try</span>:</span>
+<span id="cb5-704"><a href="#cb5-704" aria-hidden="true" tabindex="-1"></a>        valuacion_bono(<span class="dv">1000</span>, <span class="op">-</span><span class="fl">0.05</span>, <span class="fl">0.10</span>, <span class="dv">5</span>)</span>
+<span id="cb5-705"><a href="#cb5-705" aria-hidden="true" tabindex="-1"></a>        <span class="cf">assert</span> <span class="va">False</span>, <span class="st">"valuacion_bono aceptó un cupón negativo"</span></span>
+<span id="cb5-706"><a href="#cb5-706" aria-hidden="true" tabindex="-1"></a>    <span class="cf">except</span> <span class="pp">ValueError</span>:</span>
+<span id="cb5-707"><a href="#cb5-707" aria-hidden="true" tabindex="-1"></a>        <span class="cf">pass</span></span>
 <span id="cb5-708"><a href="#cb5-708" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-709"><a href="#cb5-709" aria-hidden="true" tabindex="-1"></a><span class="fu">## Referencias</span></span>
+<span id="cb5-709"><a href="#cb5-709" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="st">"Las 6 pruebas pasaron"</span>)</span>
 <span id="cb5-710"><a href="#cb5-710" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb5-711"><a href="#cb5-711" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-712"><a href="#cb5-712" aria-hidden="true" tabindex="-1"></a>::: {#refs}</span>
-<span id="cb5-713"><a href="#cb5-713" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb5-712"><a href="#cb5-712" aria-hidden="true" tabindex="-1"></a>probar_libreria()</span>
+<span id="cb5-713"><a href="#cb5-713" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb5-714"><a href="#cb5-714" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-715"><a href="#cb5-715" aria-hidden="true" tabindex="-1"></a>La tolerancia de la prueba 5 es más amplia que las otras porque <span class="in">`tir()`</span> avanza de a un punto básico y no puede ser más precisa que su paso. Elegir la tolerancia obliga a pensar qué precisión promete cada función, y eso ya es una ventaja de escribir la prueba.</span>
+<span id="cb5-716"><a href="#cb5-716" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-717"><a href="#cb5-717" aria-hidden="true" tabindex="-1"></a>El valor de estas verificaciones aparece cuando alguien toca el código. Supongamos que una modificación de <span class="in">`valuacion_bono()`</span> cambia el recorrido del bucle y los flujos empiezan a descontarse desde el período 0 en lugar del 1, un error de índice muy común:</span>
+<span id="cb5-718"><a href="#cb5-718" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-719"><a href="#cb5-719" aria-hidden="true" tabindex="-1"></a><span class="in">```{pyodide-python}</span></span>
+<span id="cb5-720"><a href="#cb5-720" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: prueba-detecta-error</span></span>
+<span id="cb5-721"><a href="#cb5-721" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> valuacion_bono_modificada(valor_nominal, tasa_cupon, tasa_descuento, anios):</span>
+<span id="cb5-722"><a href="#cb5-722" aria-hidden="true" tabindex="-1"></a>    cupon <span class="op">=</span> valor_nominal <span class="op">*</span> tasa_cupon</span>
+<span id="cb5-723"><a href="#cb5-723" aria-hidden="true" tabindex="-1"></a>    precio <span class="op">=</span> <span class="dv">0</span></span>
+<span id="cb5-724"><a href="#cb5-724" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> t <span class="kw">in</span> <span class="bu">range</span>(anios):                    <span class="co"># el error: debería ser range(1, anios + 1)</span></span>
+<span id="cb5-725"><a href="#cb5-725" aria-hidden="true" tabindex="-1"></a>        flujo <span class="op">=</span> cupon <span class="op">+</span> (valor_nominal <span class="cf">if</span> t <span class="op">==</span> anios <span class="op">-</span> <span class="dv">1</span> <span class="cf">else</span> <span class="dv">0</span>)</span>
+<span id="cb5-726"><a href="#cb5-726" aria-hidden="true" tabindex="-1"></a>        precio <span class="op">+=</span> flujo <span class="op">/</span> (<span class="dv">1</span> <span class="op">+</span> tasa_descuento) <span class="op">**</span> t</span>
+<span id="cb5-727"><a href="#cb5-727" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> precio</span>
+<span id="cb5-728"><a href="#cb5-728" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-729"><a href="#cb5-729" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-730"><a href="#cb5-730" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Precio al 10%: </span><span class="sc">{</span>valuacion_bono_modificada(<span class="dv">1000</span>, <span class="fl">0.08</span>, <span class="fl">0.10</span>, <span class="dv">5</span>)<span class="sc">:.2f}</span><span class="ss">"</span>)</span>
+<span id="cb5-731"><a href="#cb5-731" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-732"><a href="#cb5-732" aria-hidden="true" tabindex="-1"></a><span class="cf">try</span>:</span>
+<span id="cb5-733"><a href="#cb5-733" aria-hidden="true" tabindex="-1"></a>    a_la_par <span class="op">=</span> valuacion_bono_modificada(<span class="dv">1000</span>, <span class="fl">0.08</span>, <span class="fl">0.08</span>, <span class="dv">5</span>)</span>
+<span id="cb5-734"><a href="#cb5-734" aria-hidden="true" tabindex="-1"></a>    <span class="cf">assert</span> casi_igual(a_la_par, <span class="dv">1000</span>, tolerancia<span class="op">=</span><span class="fl">1e-6</span>), <span class="ss">f"a la par debería valer 1000 y dio </span><span class="sc">{</span>a_la_par<span class="sc">:.2f}</span><span class="ss">"</span></span>
+<span id="cb5-735"><a href="#cb5-735" aria-hidden="true" tabindex="-1"></a><span class="cf">except</span> <span class="pp">AssertionError</span> <span class="im">as</span> error:</span>
+<span id="cb5-736"><a href="#cb5-736" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="st">"Falló:"</span>, error)</span>
+<span id="cb5-737"><a href="#cb5-737" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb5-738"><a href="#cb5-738" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-739"><a href="#cb5-739" aria-hidden="true" tabindex="-1"></a>El precio al 10% da 1016.60 en lugar de 924.18. Es un número con aspecto razonable para un bono, y en una planilla de resultados podría pasar inadvertido. La prueba de la paridad lo detecta de inmediato: un bono que debería valer 1000 da 1080.</span>
+<span id="cb5-740"><a href="#cb5-740" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-741"><a href="#cb5-741" aria-hidden="true" tabindex="-1"></a>::: {.callout-note title="<span class="in">`assert`</span> y <span class="in">`raise`</span> no cumplen la misma función"}</span>
+<span id="cb5-742"><a href="#cb5-742" aria-hidden="true" tabindex="-1"></a>Los dos detienen el programa, pero se dirigen a problemas distintos. <span class="in">`raise`</span> responde a datos inválidos que pueden llegar desde afuera, como un cupón negativo o una lista vacía, y forma parte del comportamiento de la función. <span class="in">`assert`</span> verifica que el propio código hace lo que su autor cree que hace. Por eso las validaciones de entrada se escriben con <span class="in">`raise`</span> y las pruebas con <span class="in">`assert`</span>.</span>
+<span id="cb5-743"><a href="#cb5-743" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-744"><a href="#cb5-744" aria-hidden="true" tabindex="-1"></a>En un proyecto real las pruebas no se guardan junto al código. Van a un archivo aparte, por ejemplo <span class="in">`test_finanzas_basicas.py`</span>, con una función por prueba cuyo nombre empieza con <span class="in">`test_`</span>. La herramienta <span class="in">`pytest`</span> encuentra esos archivos, ejecuta todas las funciones e informa cuáles fallaron. El mecanismo es el mismo <span class="in">`assert`</span> de esta sección.</span>
+<span id="cb5-745"><a href="#cb5-745" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb5-746"><a href="#cb5-746" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-747"><a href="#cb5-747" aria-hidden="true" tabindex="-1"></a>---</span>
+<span id="cb5-748"><a href="#cb5-748" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-749"><a href="#cb5-749" aria-hidden="true" tabindex="-1"></a><span class="fu">## Principio DRY: Don't Repeat Yourself</span></span>
+<span id="cb5-750"><a href="#cb5-750" aria-hidden="true" tabindex="-1"></a>El principio **DRY** (*Don't Repeat Yourself*) propone evitar duplicar la misma lógica en distintos lugares del código.</span>
+<span id="cb5-751"><a href="#cb5-751" aria-hidden="true" tabindex="-1"></a>Cuando repetimos fórmulas o bloques manualmente, aumentamos el riesgo de inconsistencias: si cambia un supuesto (por ejemplo, la tasa o la frecuencia), debemos corregir múltiples líneas y es fácil olvidar alguna.</span>
+<span id="cb5-752"><a href="#cb5-752" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-753"><a href="#cb5-753" aria-hidden="true" tabindex="-1"></a>Aplicar DRY en finanzas significa encapsular cálculos recurrentes en funciones (por ejemplo, <span class="in">`valuacion_bono()`</span> o <span class="in">`valor_presente_neto()`</span>) para tener:</span>
+<span id="cb5-754"><a href="#cb5-754" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-755"><a href="#cb5-755" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**menos errores** de mantenimiento,</span>
+<span id="cb5-756"><a href="#cb5-756" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**mayor claridad** del modelo,</span>
+<span id="cb5-757"><a href="#cb5-757" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**reutilización** en distintos ejercicios o casos,</span>
+<span id="cb5-758"><a href="#cb5-758" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>y **validaciones centralizadas** en un solo lugar.</span>
+<span id="cb5-759"><a href="#cb5-759" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-760"><a href="#cb5-760" aria-hidden="true" tabindex="-1"></a>::: {.callout-tip title="DRY en la Práctica"}</span>
+<span id="cb5-761"><a href="#cb5-761" aria-hidden="true" tabindex="-1"></a>Antes de copiar y pegar código, preguntate: *¿puedo hacer una función?*</span>
+<span id="cb5-762"><a href="#cb5-762" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-763"><a href="#cb5-763" aria-hidden="true" tabindex="-1"></a>**Sin DRY** (malo):</span>
+<span id="cb5-764"><a href="#cb5-764" aria-hidden="true" tabindex="-1"></a><span class="in">```python</span></span>
+<span id="cb5-765"><a href="#cb5-765" aria-hidden="true" tabindex="-1"></a>precio_a <span class="op">=</span> <span class="dv">80</span><span class="op">/</span>(<span class="fl">1.1</span>) <span class="op">+</span> <span class="dv">80</span><span class="op">/</span>(<span class="fl">1.1</span><span class="op">**</span><span class="dv">2</span>) <span class="op">+</span> <span class="dv">1080</span><span class="op">/</span>(<span class="fl">1.1</span><span class="op">**</span><span class="dv">3</span>)</span>
+<span id="cb5-766"><a href="#cb5-766" aria-hidden="true" tabindex="-1"></a>precio_b <span class="op">=</span> <span class="dv">60</span><span class="op">/</span>(<span class="fl">1.08</span>) <span class="op">+</span> <span class="dv">60</span><span class="op">/</span>(<span class="fl">1.08</span><span class="op">**</span><span class="dv">2</span>) <span class="op">+</span> <span class="dv">1060</span><span class="op">/</span>(<span class="fl">1.08</span><span class="op">**</span><span class="dv">3</span>)</span>
+<span id="cb5-767"><a href="#cb5-767" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb5-768"><a href="#cb5-768" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-769"><a href="#cb5-769" aria-hidden="true" tabindex="-1"></a>**Con DRY** (bueno):</span>
+<span id="cb5-770"><a href="#cb5-770" aria-hidden="true" tabindex="-1"></a><span class="in">```python</span></span>
+<span id="cb5-771"><a href="#cb5-771" aria-hidden="true" tabindex="-1"></a>precio_a <span class="op">=</span> valuacion_bono(<span class="dv">1000</span>, <span class="fl">0.08</span>, <span class="fl">0.10</span>, <span class="dv">3</span>)</span>
+<span id="cb5-772"><a href="#cb5-772" aria-hidden="true" tabindex="-1"></a>precio_b <span class="op">=</span> valuacion_bono(<span class="dv">1000</span>, <span class="fl">0.06</span>, <span class="fl">0.08</span>, <span class="dv">3</span>)</span>
+<span id="cb5-773"><a href="#cb5-773" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb5-774"><a href="#cb5-774" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb5-775"><a href="#cb5-775" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-776"><a href="#cb5-776" aria-hidden="true" tabindex="-1"></a>---</span>
+<span id="cb5-777"><a href="#cb5-777" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-778"><a href="#cb5-778" aria-hidden="true" tabindex="-1"></a><span class="fu">## Errores comunes</span></span>
+<span id="cb5-779"><a href="#cb5-779" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-780"><a href="#cb5-780" aria-hidden="true" tabindex="-1"></a>::: {.callout-warning title="Trampas frecuentes"}</span>
+<span id="cb5-781"><a href="#cb5-781" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Argumento por defecto mutable**: <span class="in">`def agregar(flujo, lista=[])`</span> comparte la MISMA lista entre todas las llamadas, y los flujos de un bono aparecen en otro. El idioma correcto: <span class="in">`def agregar(flujo, lista=None)`</span> y crear la lista adentro (<span class="in">`if lista is None: lista = []`</span>).</span>
+<span id="cb5-782"><a href="#cb5-782" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Olvidar el `return`**: una función que calcula pero no retorna devuelve <span class="in">`None`</span> silenciosamente; el error aparece recién más adelante ("unsupported operand type NoneType"). Si la función produce un valor, terminá con <span class="in">`return`</span>.</span>
+<span id="cb5-783"><a href="#cb5-783" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Capturar `Exception` a ciegas**: <span class="in">`except Exception: pass`</span> esconde *todos* los errores, incluidos los bugs que necesitás ver. Capturá el error específico que esperás (<span class="in">`except ValueError:`</span>) y dejá que el resto explote.</span>
+<span id="cb5-784"><a href="#cb5-784" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Modificar los argumentos recibidos**: si tu función hace <span class="in">`flujos.append(...)`</span> sobre la lista que le pasaron, el llamador ve su lista alterada sin saberlo. Trabajá sobre una copia (<span class="in">`flujos = list(flujos)`</span>) o no mutes.</span>
+<span id="cb5-785"><a href="#cb5-785" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Comparar decimales con `==`**: <span class="in">`valor_futuro(100, 0.10, 1) == 110`</span> da <span class="in">`False`</span> por un error de redondeo en el último dígito. En las pruebas y en cualquier condición, compará con una tolerancia (<span class="in">`abs(a - b) &lt; 1e-9`</span>).</span>
+<span id="cb5-786"><a href="#cb5-786" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Validar tarde (o nunca)**: validar los inputs al inicio de la función (como hace <span class="in">`valuacion_bono`</span>) da errores claros y cercanos a la causa; sin validación, el error aparece diez llamadas más adentro con un mensaje incomprensible.</span>
+<span id="cb5-787"><a href="#cb5-787" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb5-788"><a href="#cb5-788" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-789"><a href="#cb5-789" aria-hidden="true" tabindex="-1"></a>---</span>
+<span id="cb5-790"><a href="#cb5-790" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-791"><a href="#cb5-791" aria-hidden="true" tabindex="-1"></a><span class="fu">## Referencias</span></span>
+<span id="cb5-792"><a href="#cb5-792" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-793"><a href="#cb5-793" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-794"><a href="#cb5-794" aria-hidden="true" tabindex="-1"></a>::: {#refs}</span>
+<span id="cb5-795"><a href="#cb5-795" aria-hidden="true" tabindex="-1"></a>:::</span>
 </code></pre></div><button title="Copiar al portapapeles" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></div>
 </div></div></div></div></div>
 </div> <!-- /content -->
 <footer class="footer">
   <div class="nav-footer">
     <div class="nav-footer-left">
-<p>Finanzas Computacionales con Python fue escrito por la Cátedra de Finanzas Computacionales — UADE.</p>
+<p>Finanzas Computacionales con Python fue escrito por la Cátedra de Finanzas Computacionales de la UADE.</p>
 </div>   
     <div class="nav-footer-center">
       &nbsp;

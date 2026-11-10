@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Apéndice B — Obtención de Datos Financieros – Finanzas Computacionales</title>
+<title>Apéndice B — Obtención de Datos Financieros – Finanzas Computacionales con Python</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -183,10 +183,10 @@ window.Quarto = {
   <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation docked overflow-auto">
     <div class="pt-lg-2 mt-2 text-left sidebar-header">
     <div class="sidebar-title mb-0 py-0">
-      <a href="../">Finanzas Computacionales</a> 
+      <a href="../">Finanzas Computacionales con Python</a> 
         <div class="sidebar-tools-main tools-wide">
     <a href="https://github.com/diegoonna/libro_finanzas_computacionales" title="Source Code" class="quarto-navigation-tool px-1" aria-label="Source Code"><i class="bi bi-github"></i></a>
-    <a href="../Finanzas-Computacionales.pdf" title="Download PDF" class="quarto-navigation-tool px-1" aria-label="Download PDF"><i class="bi bi-file-pdf"></i></a>
+    <a href="../Finanzas-Computacionales-con-Python.pdf" title="Download PDF" class="quarto-navigation-tool px-1" aria-label="Download PDF"><i class="bi bi-file-pdf"></i></a>
   <a href="" class="quarto-reader-toggle quarto-navigation-tool px-1" onclick="window.quartoToggleReader(); return false;" title="Alternar modo lector">
   <div class="quarto-reader-toggle-btn">
   <i class="bi"></i>
@@ -435,8 +435,7 @@ window.Quarto = {
   <li><a href="#fred-datos-macroeconómicos-gratis" id="toc-fred-datos-macroeconómicos-gratis" class="nav-link" data-scroll-target="#fred-datos-macroeconómicos-gratis"><span class="header-section-number">B.4</span> FRED: datos macroeconómicos, gratis</a></li>
   <li><a href="#bloomberg-el-estándar-institucional" id="toc-bloomberg-el-estándar-institucional" class="nav-link" data-scroll-target="#bloomberg-el-estándar-institucional"><span class="header-section-number">B.5</span> Bloomberg: el estándar institucional</a></li>
   <li><a href="#cuál-usar-comparación-y-mapa-de-uso" id="toc-cuál-usar-comparación-y-mapa-de-uso" class="nav-link" data-scroll-target="#cuál-usar-comparación-y-mapa-de-uso"><span class="header-section-number">B.6</span> ¿Cuál usar? Comparación y mapa de uso</a></li>
-  <li><a href="#ejercicios-propuestos" id="toc-ejercicios-propuestos" class="nav-link" data-scroll-target="#ejercicios-propuestos"><span class="header-section-number">B.7</span> Ejercicios Propuestos</a></li>
-  <li><a href="#referencias" id="toc-referencias" class="nav-link" data-scroll-target="#referencias"><span class="header-section-number">B.8</span> Referencias</a></li>
+  <li><a href="#referencias" id="toc-referencias" class="nav-link" data-scroll-target="#referencias"><span class="header-section-number">B.7</span> Referencias</a></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/diegoonna/libro_finanzas_computacionales/edit/main/apendices/datos_financieros.qmd" class="toc-action"><i class="bi bi-github"></i>Editar esta página</a></li><li><a href="https://github.com/diegoonna/libro_finanzas_computacionales/issues/new" class="toc-action"><i class="bi empty"></i>Informar sobre problema</a></li></ul></div></nav>
     </div>
@@ -462,7 +461,7 @@ window.Quarto = {
 </header>
 
 
-<p>A lo largo del libro trabajamos sobre todo con datos simulados: son reproducibles, no dependen de internet y dejan el foco en los conceptos. Los complementa el dataset real congelado del repositorio (<code>datos/precios.csv</code>, descripto más abajo), que alimenta las secciones “Con datos reales”. Pero tarde o temprano vas a querer tus propios datos — y en el trabajo profesional, conseguir datos limpios es la mitad del oficio. Este apéndice presenta las tres fuentes que cubren el 95% de las necesidades: <strong>yfinance</strong> (precios de mercado, gratis), <strong>FRED</strong> (macro, gratis) y <strong>Bloomberg</strong> (el estándar institucional, pago).</p>
+<p>A lo largo del libro trabajamos sobre todo con datos simulados: son reproducibles, no dependen de internet y dejan el foco en los conceptos. Los complementa el dataset real congelado del repositorio (<code>datos/precios.csv</code>, descripto más abajo), que alimenta las secciones “Con datos reales”. Pero tarde o temprano vas a querer tus propios datos, y en el trabajo profesional, conseguir datos limpios es la mitad del oficio. Este apéndice presenta las tres fuentes que cubren el 95% de las necesidades: <strong>yfinance</strong> (precios de mercado, gratis), <strong>FRED</strong> (macro, gratis) y <strong>Bloomberg</strong> (el estándar institucional, pago).</p>
 <div class="callout callout-style-simple callout-warning callout-titled" title="Los bloques de este apéndice no se ejecutan en el libro">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -478,12 +477,12 @@ window.Quarto = {
 </div>
 <section id="el-patrón-profesional-descargar-una-vez-trabajar-en-local" class="level2" data-number="B.1">
 <h2 data-number="B.1" class="anchored" data-anchor-id="el-patrón-profesional-descargar-una-vez-trabajar-en-local"><span class="header-section-number">B.1</span> El patrón profesional: descargar una vez, trabajar en local</h2>
-<p>Antes de las herramientas, el hábito. El error típico del principiante es poner la descarga <strong>adentro</strong> del análisis: cada corrida vuelve a pedir los datos a la API — lento, frágil (la API puede fallar o cambiar) e <strong>irreproducible</strong> (los datos de hoy no son los de ayer si el proveedor corrige algo). El patrón correcto separa las dos etapas:</p>
+<p>Antes de las herramientas, el hábito. El error típico del principiante es poner la descarga <strong>adentro</strong> del análisis: cada corrida vuelve a pedir los datos a la API, un proceso lento, frágil (la API puede fallar o cambiar) e <strong>irreproducible</strong> (los datos de hoy no son los de ayer si el proveedor corrige algo). El patrón correcto separa las dos etapas:</p>
 <ol type="1">
 <li><strong>Script de descarga</strong>: pide los datos y los guarda en disco (CSV o Parquet).</li>
-<li><strong>Análisis</strong>: lee siempre del archivo local (<code>pd.read_csv</code>, como en el Capítulo 6).</li>
+<li><strong>Análisis</strong>: lee siempre del archivo local (<code>pd.read_csv</code>, como en el <a href="../unidad1/cap06_series_tiempo_pandas.html">Capítulo 6</a>).</li>
 </ol>
-<div id="fa0a4b03" class="cell" data-execution_count="1">
+<div id="6bdc1f29" class="cell" data-execution_count="1">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># --- 1) descargar_datos.py: se corre UNA vez (o cuando querés actualizar) ---</span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> yfinance <span class="im">as</span> yf</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -498,26 +497,26 @@ window.Quarto = {
 </section>
 <section id="el-dataset-del-libro-datosprecios.csv" class="level2" data-number="B.2">
 <h2 data-number="B.2" class="anchored" data-anchor-id="el-dataset-del-libro-datosprecios.csv"><span class="header-section-number">B.2</span> El dataset del libro: <code>datos/precios.csv</code></h2>
-<p>El libro practica lo que predica: aplicamos este patrón una vez y <strong>congelamos el resultado en el repositorio</strong>, en <a href="https://github.com/diegoonna/libro_finanzas_computacionales/blob/main/datos/precios.csv"><code>datos/precios.csv</code></a>. Es el archivo que usan las secciones “Con datos reales” de los capítulos 8, 9, 11 y 17 — todas trabajan sobre los mismos datos, y cualquiera puede reproducirlas sin claves de API ni conexión.</p>
+<p>El libro practica lo que predica: aplicamos este patrón una vez y congelamos el resultado en el repositorio, en <a href="https://github.com/diegoonna/libro_finanzas_computacionales/blob/main/datos/precios.csv"><code>datos/precios.csv</code></a>. Es el archivo que usan las secciones “Con datos reales” de los capítulos <a href="../unidad1/cap06_series_tiempo_pandas.html">6</a>, <a href="../unidad2/cap07_estadistica_optimizacion.html">7</a>, <a href="../unidad2/cap08_markowitz.html">8</a>, <a href="../unidad2/cap09_hrp.html">9</a>, <a href="../unidad3/cap11_var_expected_shortfall.html">11</a>, <a href="../unidad3/cap15_econometria_modelos_lineales.html">15</a>, <a href="../unidad3/cap16_series_temporales_macro.html">16</a> y <a href="../unidad3/cap17_backtesting.html">17</a>: todas trabajan sobre los mismos datos, y cualquiera puede reproducirlas sin claves de API ni conexión.</p>
 <p>Qué contiene:</p>
 <ul>
-<li><strong>Precios diarios ajustados</strong> (dividendos y splits incluidos — el retorno total del que habla el Capítulo 8), redondeados a 4 decimales.</li>
-<li><strong>Período</strong>: julio 2021 a junio 2026 (~1250 ruedas). Incluye el bear market de 2022, el ciclo de suba de tasas y el boom de la IA — cinco años con de todo.</li>
+<li><strong>Precios diarios ajustados</strong> (dividendos y splits incluidos; el retorno total del que habla el <a href="../unidad2/cap08_markowitz.html">Capítulo 8</a>), redondeados a 4 decimales.</li>
+<li><strong>Período</strong>: julio 2021 a junio 2026 (~1250 ruedas). Incluye el bear market de 2022, el ciclo de suba de tasas y el boom de la IA: cinco años con de todo.</li>
 <li><strong>10 tickers</strong> elegidos para cubrir sectores bien distintos: tecnología (AAPL, MSFT, NVDA), financiero (JPM), energía (XOM), consumo defensivo (KO, JNJ, WMT), medios (DIS), más el ETF <strong>SPY</strong> como proxy del mercado.</li>
 </ul>
 <p>Para cargarlo, desde cualquier capítulo del libro (o desde tu clon del repositorio):</p>
-<div id="69a5da7f" class="cell" data-execution_count="2">
+<div id="8c55690f" class="cell" data-execution_count="2">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>precios <span class="op">=</span> pd.read_csv(<span class="st">"datos/precios.csv"</span>, index_col<span class="op">=</span><span class="st">"Date"</span>, parse_dates<span class="op">=</span><span class="va">True</span>)</span>
 <span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>retornos <span class="op">=</span> precios.pct_change().dropna()</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<p>El archivo se regeneró por última vez en <strong>julio de 2026</strong> con <code>yfinance</code> y <code>auto_adjust=True</code>, siguiendo exactamente el patrón de dos etapas de arriba. Si querés actualizarlo o cambiar el universo, el script es el de la sección anterior con la lista de tickers completa — pero recordá que al hacerlo tus números dejarán de coincidir con los impresos en el libro: ese es justamente el costo de la frescura que el congelamiento evita.</p>
+<p>El archivo se regeneró por última vez en <strong>julio de 2026</strong> con <code>yfinance</code> y <code>auto_adjust=True</code>, siguiendo exactamente el patrón de dos etapas de arriba. Si querés actualizarlo o cambiar el universo, el script es el de la sección anterior con la lista de tickers completa, pero recordá que al hacerlo tus números dejarán de coincidir con los impresos en el libro: ese es justamente el costo de la frescura que el congelamiento evita.</p>
 </section>
 <section id="yfinance-precios-de-mercado-gratis" class="level2" data-number="B.3">
 <h2 data-number="B.3" class="anchored" data-anchor-id="yfinance-precios-de-mercado-gratis"><span class="header-section-number">B.3</span> yfinance: precios de mercado, gratis</h2>
 <p><a href="https://github.com/ranaroussi/yfinance"><code>yfinance</code></a> descarga datos de Yahoo Finance: acciones, ETFs, índices, monedas y cripto de casi cualquier mercado del mundo. Se instala con <code>pip install yfinance</code>.</p>
-<div id="d1e4c7ce" class="cell" data-execution_count="3">
+<div id="2ae4bbca" class="cell" data-execution_count="3">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> yfinance <span class="im">as</span> yf</span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Un ticker: precios diarios ajustados</span></span>
@@ -540,9 +539,9 @@ window.Quarto = {
 </div>
 <p>Tres puntos que importan:</p>
 <ul>
-<li><strong><code>auto_adjust=True</code></strong> te da precios ajustados por dividendos y splits — el <em>retorno total</em> que el Capítulo 8 mostró que es el correcto para estimar <span class="math inline">\(\mu\)</span>. Sin ajustar, subestimás sistemáticamente el retorno de los activos de alto dividendo.</li>
+<li><strong><code>auto_adjust=True</code></strong> te da precios ajustados por dividendos y splits, el <em>retorno total</em> que el <a href="../unidad2/cap08_markowitz.html">Capítulo 8</a> mostró que es el correcto para estimar <span class="math inline">\(\mu\)</span>. Sin ajustar, subestimás sistemáticamente el retorno de los activos de alto dividendo.</li>
 <li>El parámetro <code>interval</code> permite otras frecuencias: <code>"1wk"</code>, <code>"1mo"</code>, e intradiario (<code>"1h"</code>, <code>"5m"</code>) con historia limitada.</li>
-<li>Para <strong>tickers argentinos</strong> en BYMA se usa el sufijo <code>.BA</code>: <code>"GGAL.BA"</code>, <code>"YPFD.BA"</code> (pesos); los ADRs (<code>"GGAL"</code>, <code>"YPF"</code>) cotizan en dólares de NY — no los mezcles sin pensar en qué moneda estás.</li>
+<li>Para <strong>tickers argentinos</strong> en BYMA se usa el sufijo <code>.BA</code>: <code>"GGAL.BA"</code>, <code>"YPFD.BA"</code> (pesos); los ADRs (<code>"GGAL"</code>, <code>"YPF"</code>) cotizan en dólares de NY: no los mezcles sin pensar en qué moneda estás.</li>
 </ul>
 <div class="callout callout-style-simple callout-warning callout-titled" title="Las limitaciones de lo gratuito">
 <div class="callout-header d-flex align-content-center">
@@ -554,15 +553,15 @@ window.Quarto = {
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>yfinance usa una API <strong>no oficial</strong> de Yahoo: puede romperse tras cambios del sitio (actualizá la librería si deja de funcionar), tiene <em>rate limits</em> (descargas masivas → bloqueos temporales), y la calidad es de “análisis personal”, no de auditoría: hay huecos y correcciones ocasionales. Además, ojo con el <strong>sesgo de supervivencia</strong> (Capítulo 17): si armás tu universo con los tickers <em>de hoy</em>, las empresas que quebraron no están — el pasado se ve mejor de lo que fue.</p>
+<p>yfinance usa una API <strong>no oficial</strong> de Yahoo: puede romperse tras cambios del sitio (actualizá la librería si deja de funcionar), tiene <em>rate limits</em> (descargas masivas → bloqueos temporales), y la calidad es de “análisis personal”, no de auditoría: hay huecos y correcciones ocasionales. Además, hay que tener presente el <strong>sesgo de supervivencia</strong> (<a href="../unidad3/cap17_backtesting.html">Capítulo 17</a>): si armás tu universo con los tickers <em>de hoy</em>, las empresas que quebraron no están, y el pasado se ve mejor de lo que fue.</p>
 </div>
 </div>
 </section>
 <section id="fred-datos-macroeconómicos-gratis" class="level2" data-number="B.4">
 <h2 data-number="B.4" class="anchored" data-anchor-id="fred-datos-macroeconómicos-gratis"><span class="header-section-number">B.4</span> FRED: datos macroeconómicos, gratis</h2>
-<p><strong>FRED</strong> (<em>Federal Reserve Economic Data</em>, de la Fed de St.&nbsp;Louis) es la referencia mundial de series macro: inflación, tasas, PIB, desempleo, spreads — más de 800.000 series. Es la fuente natural para alimentar los modelos ARIMA y VAR del Capítulo 16.</p>
+<p><strong>FRED</strong> (<em>Federal Reserve Economic Data</em>, de la Fed de St.&nbsp;Louis) es la referencia mundial de series macro: inflación, tasas, PIB, desempleo, spreads. Son más de 800.000 series. Es la fuente natural para alimentar los modelos ARIMA y VAR del <a href="../unidad3/cap16_series_temporales_macro.html">Capítulo 16</a>.</p>
 <p>La vía clásica es <a href="https://pandas-datareader.readthedocs.io"><code>pandas-datareader</code></a> (<code>pip install pandas-datareader</code>), que también documenta el acceso a otras fuentes públicas:</p>
-<div id="8af9f90b" class="cell" data-execution_count="4">
+<div id="d1b23b04" class="cell" data-execution_count="4">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas_datareader.data <span class="im">as</span> web</span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> datetime <span class="im">import</span> datetime</span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -573,12 +572,12 @@ window.Quarto = {
 <span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>tasa_10y <span class="op">=</span> web.DataReader(<span class="st">"DGS10"</span>, <span class="st">"fred"</span>, inicio, fin)    <span class="co"># Treasury a 10 años</span></span>
 <span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>desempleo <span class="op">=</span> web.DataReader(<span class="st">"UNRATE"</span>, <span class="st">"fred"</span>, inicio, fin)  <span class="co"># tasa de desempleo</span></span>
 <span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Varias series de un tiro, alineadas por fecha (la alineación del Capítulo 6)</span></span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Varias series de una vez, alineadas por fecha (la alineación del Capítulo 6)</span></span>
 <span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>macro <span class="op">=</span> web.DataReader([<span class="st">"CPIAUCSL"</span>, <span class="st">"DGS10"</span>, <span class="st">"UNRATE"</span>], <span class="st">"fred"</span>, inicio, fin)</span>
 <span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(macro.tail(<span class="dv">3</span>))</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>La alternativa moderna es <a href="https://github.com/mortada/fredapi"><code>fredapi</code></a>, que usa la API oficial con una <strong>clave gratuita</strong> (se pide en el sitio de FRED en dos minutos):</p>
-<div id="6934f661" class="cell" data-execution_count="5">
+<div id="7b396b09" class="cell" data-execution_count="5">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> fredapi <span class="im">import</span> Fred</span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>fred <span class="op">=</span> Fred(api_key<span class="op">=</span><span class="st">"TU_CLAVE_GRATUITA"</span>)</span>
@@ -587,17 +586,17 @@ window.Quarto = {
 <span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Consejo: nunca escribas la clave en el código; guardala en una</span></span>
 <span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a><span class="co"># variable de entorno y leela con os.environ["FRED_API_KEY"]</span></span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<p>El flujo típico para el Capítulo 16: descargar el CPI, convertirlo a inflación interanual (<code>cpi.pct_change(12)</code>), guardarlo a CSV, y ajustarle un ARIMA — ahora con datos reales.</p>
+<p>El flujo típico para el <a href="../unidad3/cap16_series_temporales_macro.html">Capítulo 16</a>: descargar el CPI, convertirlo a inflación interanual (<code>cpi.pct_change(12)</code>), guardarlo a CSV, y ajustarle un ARIMA, ahora con datos reales.</p>
 </section>
 <section id="bloomberg-el-estándar-institucional" class="level2" data-number="B.5">
 <h2 data-number="B.5" class="anchored" data-anchor-id="bloomberg-el-estándar-institucional"><span class="header-section-number">B.5</span> Bloomberg: el estándar institucional</h2>
-<p>En bancos, fondos y mesas de trading, la fuente es la <strong>Terminal Bloomberg</strong> — datos de calidad auditada, cobertura universal (renta fija, derivados OTC, curvas) y el costo correspondiente (~USD 25.000/año por terminal). Si trabajás en una institución, tu acceso a datos será este.</p>
+<p>En bancos, fondos y mesas de trading, la fuente es la <strong>Terminal Bloomberg</strong>: datos de calidad auditada, cobertura universal (renta fija, derivados OTC, curvas) y el costo correspondiente (~USD 25.000/año por terminal). Si trabajás en una institución, tu acceso a datos será este.</p>
 <p>Cómo funciona el acceso desde Python:</p>
 <ul>
-<li>La <strong>Desktop API</strong> (<code>blpapi</code>, la librería oficial de Bloomberg) permite pedir datos desde Python <strong>solo si la Terminal está corriendo y logueada en la misma máquina</strong> — la licencia es por usuario, y la API respeta eso. No hay versión gratuita ni “clave de prueba”.</li>
+<li>La <strong>Desktop API</strong> (<code>blpapi</code>, la librería oficial de Bloomberg) permite pedir datos desde Python solo si la Terminal está corriendo y logueada en la misma máquina: la licencia es por usuario, y la API respeta eso. No hay versión gratuita ni “clave de prueba”.</li>
 <li>Sobre <code>blpapi</code> (que es verbosa) la comunidad construyó wrappers pythónicos: <a href="https://github.com/alpha-xone/xbbg"><code>xbbg</code></a> es el más usado hoy. Sus funciones replican las que ya conocés de Excel: <code>bdh</code> (histórico), <code>bdp</code> (dato puntual), <code>bds</code> (bulk).</li>
 </ul>
-<div id="39fbf4e3" class="cell" data-execution_count="6">
+<div id="d04f1402" class="cell" data-execution_count="6">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Requiere: Terminal Bloomberg abierta + pip install blpapi xbbg</span></span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> xbbg <span class="im">import</span> blp</span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -615,17 +614,11 @@ window.Quarto = {
 <span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a><span class="co"># BDS: datos "bulk" (p.ej., el cronograma de flujos de un bono)</span></span>
 <span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a>flujos <span class="op">=</span> blp.bds(<span class="st">"GD30 Corp"</span>, flds<span class="op">=</span><span class="st">"DES_CASH_FLOW"</span>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<p>Notá la sintaxis de tickers de Bloomberg: <code>"AAPL US Equity"</code>, <code>"GD30 Corp"</code> — el sufijo indica la clase de activo (<em>yellow key</em>). Y un detalle contractual que importa: la licencia restringe la <strong>redistribución</strong> de los datos; podés analizarlos, no republicarlos.</p>
+<p>Notá la sintaxis de tickers de Bloomberg: <code>"AAPL US Equity"</code>, <code>"GD30 Corp"</code>: el sufijo indica la clase de activo (<em>yellow key</em>). Y un detalle contractual que importa: la licencia restringe la <strong>redistribución</strong> de los datos; podés analizarlos, no republicarlos.</p>
 </section>
 <section id="cuál-usar-comparación-y-mapa-de-uso" class="level2" data-number="B.6">
 <h2 data-number="B.6" class="anchored" data-anchor-id="cuál-usar-comparación-y-mapa-de-uso"><span class="header-section-number">B.6</span> ¿Cuál usar? Comparación y mapa de uso</h2>
 <table class="caption-top table">
-<colgroup>
-<col style="width: 25%">
-<col style="width: 25%">
-<col style="width: 25%">
-<col style="width: 25%">
-</colgroup>
 <thead>
 <tr class="header">
 <th></th>
@@ -644,7 +637,7 @@ window.Quarto = {
 <tr class="even">
 <td><strong>Cobertura</strong></td>
 <td>Acciones, ETFs, FX, cripto</td>
-<td>Macro (EEUUU y global)</td>
+<td>Macro (EE. UU. y global)</td>
 <td>Todo, incl.&nbsp;renta fija y OTC</td>
 </tr>
 <tr class="odd">
@@ -661,38 +654,16 @@ window.Quarto = {
 </tr>
 <tr class="odd">
 <td><strong>Uso en este libro</strong></td>
-<td>Ejercicios de los Caps. 6–9, 15, 17</td>
-<td>Caps. 15–16 (ARIMA/VAR con macro real)</td>
+<td>El dataset <code>datos/precios.csv</code> (secciones “Con datos reales”)</td>
+<td>Llevar el ARIMA/VAR del <a href="../unidad3/cap16_series_temporales_macro.html">Cap. 16</a> a datos reales</td>
 <td>El mundo profesional que te espera</td>
 </tr>
 </tbody>
 </table>
-<p>La regla práctica: <strong>yfinance para aprender y prototipar, FRED para macro, Bloomberg cuando alguien más paga la licencia</strong>. Y sea cual sea la fuente: descargá una vez, guardá a disco, y analizá en local.</p>
+<p>La regla práctica: yfinance para aprender y prototipar, FRED para macro, Bloomberg cuando alguien más paga la licencia. Y sea cual sea la fuente: descargá una vez, guardá a disco, y analizá en local.</p>
 </section>
-<section id="ejercicios-propuestos" class="level2" data-number="B.7">
-<h2 data-number="B.7" class="anchored" data-anchor-id="ejercicios-propuestos"><span class="header-section-number">B.7</span> Ejercicios Propuestos</h2>
-<div class="callout callout-style-simple callout-important callout-titled" title="Ejercicios">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Importante</span>Ejercicios
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<ol type="1">
-<li><strong>Primer pipeline</strong>: escribí <code>descargar_datos.py</code> que baje 5 años de un ETF (p.ej. SPY) con <code>auto_adjust=True</code> y lo guarde en <code>datos/spy.csv</code>. Después rehacé el análisis de retornos y volatilidad móvil del Capítulo 6 leyendo ese archivo.</li>
-<li><strong>El efecto del ajuste</strong>: descargá el mismo ticker con <code>auto_adjust=True</code> y <code>False</code>, calculá el retorno acumulado de 5 años con cada versión y medí la diferencia. ¿Coincide con el dividend yield acumulado?</li>
-<li><strong>Markowitz real</strong>: bajá 5 acciones de sectores distintos + un ETF de bonos, guardá los cierres ajustados, y corré la frontera eficiente del Capítulo 8 con retornos mensuales reales.</li>
-<li><strong>Inflación real</strong>: descargá el CPI de FRED, convertilo a inflación interanual y ajustale el ARIMA del Capítulo 16. ¿Qué orden elige el AIC con datos reales?</li>
-<li><strong>Supervivencia</strong>: buscá qué pasó con los tickers “ENRNQ” (Enron) o “LEHMQ” (Lehman) en yfinance. ¿Qué te dice el resultado sobre armar backtests con el listado de tickers actual?</li>
-</ol>
-</div>
-</div>
-</section>
-<section id="referencias" class="level2" data-number="B.8">
-<h2 data-number="B.8" class="anchored" data-anchor-id="referencias"><span class="header-section-number">B.8</span> Referencias</h2>
+<section id="referencias" class="level2" data-number="B.7">
+<h2 data-number="B.7" class="anchored" data-anchor-id="referencias"><span class="header-section-number">B.7</span> Referencias</h2>
 <div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list" style="display: none">
 <div id="ref-xbbg" class="csl-entry" role="listitem">
 alpha-xone. s.&nbsp;f. <span>«xbbg — An Intuitive <span>Bloomberg</span> <span>API</span> Wrapper for <span>Python</span>»</span>. Accedido 13 de julio de 2026. <a href="https://github.com/alpha-xone/xbbg">https://github.com/alpha-xone/xbbg</a>.
@@ -1186,7 +1157,7 @@ Federal Reserve Bank of St. Louis. s.&nbsp;f. <span>«<span>FRED</span> — Fede
 <span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a><span class="fu"># Obtención de Datos Financieros {#sec-datos-financieros}</span></span>
 <span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>A lo largo del libro trabajamos sobre todo con datos simulados: son reproducibles, no dependen de internet y dejan el foco en los conceptos. Los complementa el dataset real congelado del repositorio (<span class="in">`datos/precios.csv`</span>, descripto más abajo), que alimenta las secciones "Con datos reales". Pero tarde o temprano vas a querer tus propios datos — y en el trabajo profesional, conseguir datos limpios es la mitad del oficio. Este apéndice presenta las tres fuentes que cubren el 95% de las necesidades: **yfinance** (precios de mercado, gratis), **FRED** (macro, gratis) y **Bloomberg** (el estándar institucional, pago).</span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>A lo largo del libro trabajamos sobre todo con datos simulados: son reproducibles, no dependen de internet y dejan el foco en los conceptos. Los complementa el dataset real congelado del repositorio (<span class="in">`datos/precios.csv`</span>, descripto más abajo), que alimenta las secciones "Con datos reales". Pero tarde o temprano vas a querer tus propios datos, y en el trabajo profesional, conseguir datos limpios es la mitad del oficio. Este apéndice presenta las tres fuentes que cubren el 95% de las necesidades: **yfinance** (precios de mercado, gratis), **FRED** (macro, gratis) y **Bloomberg** (el estándar institucional, pago).</span>
 <span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>::: {.callout-warning title="Los bloques de este apéndice no se ejecutan en el libro"}</span>
 <span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>A diferencia del resto del libro, el código de este apéndice está marcado como **no ejecutable** (<span class="in">`eval: false`</span>): requiere conexión a internet, claves de API o —en el caso de Bloomberg— una terminal con licencia. Las salidas que se muestran son ejemplos ilustrativos. Copiá el código a tu entorno para correrlo de verdad.</span>
@@ -1194,10 +1165,10 @@ Federal Reserve Bank of St. Louis. s.&nbsp;f. <span>«<span>FRED</span> — Fede
 <span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a><span class="fu">## El patrón profesional: descargar una vez, trabajar en local</span></span>
 <span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a>Antes de las herramientas, el hábito. El error típico del principiante es poner la descarga **adentro** del análisis: cada corrida vuelve a pedir los datos a la API — lento, frágil (la API puede fallar o cambiar) e **irreproducible** (los datos de hoy no son los de ayer si el proveedor corrige algo). El patrón correcto separa las dos etapas:</span>
+<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a>Antes de las herramientas, el hábito. El error típico del principiante es poner la descarga **adentro** del análisis: cada corrida vuelve a pedir los datos a la API, un proceso lento, frágil (la API puede fallar o cambiar) e **irreproducible** (los datos de hoy no son los de ayer si el proveedor corrige algo). El patrón correcto separa las dos etapas:</span>
 <span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a><span class="ss">1. </span>**Script de descarga**: pide los datos y los guarda en disco (CSV o Parquet).</span>
-<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a><span class="ss">2. </span>**Análisis**: lee siempre del archivo local (<span class="in">`pd.read_csv`</span>, como en el Capítulo 6).</span>
+<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a><span class="ss">2. </span>**Análisis**: lee siempre del archivo local (<span class="in">`pd.read_csv`</span>, como en el <span class="co">[</span><span class="ot">Capítulo 6</span><span class="co">](../unidad1/cap06_series_tiempo_pandas.qmd)</span>).</span>
 <span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb7-23"><a href="#cb7-23" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
 <span id="cb7-24"><a href="#cb7-24" aria-hidden="true" tabindex="-1"></a><span class="co">#| eval: false</span></span>
@@ -1216,12 +1187,12 @@ Federal Reserve Bank of St. Louis. s.&nbsp;f. <span>«<span>FRED</span> — Fede
 <span id="cb7-37"><a href="#cb7-37" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb7-38"><a href="#cb7-38" aria-hidden="true" tabindex="-1"></a><span class="fu">## El dataset del libro: `datos/precios.csv`</span></span>
 <span id="cb7-39"><a href="#cb7-39" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-40"><a href="#cb7-40" aria-hidden="true" tabindex="-1"></a>El libro practica lo que predica: aplicamos este patrón una vez y **congelamos el resultado en el repositorio**, en <span class="co">[</span><span class="ot">`datos/precios.csv`</span><span class="co">](https://github.com/diegoonna/libro_finanzas_computacionales/blob/main/datos/precios.csv)</span>. Es el archivo que usan las secciones "Con datos reales" de los capítulos 8, 9, 11 y 17 — todas trabajan sobre los mismos datos, y cualquiera puede reproducirlas sin claves de API ni conexión.</span>
+<span id="cb7-40"><a href="#cb7-40" aria-hidden="true" tabindex="-1"></a>El libro practica lo que predica: aplicamos este patrón una vez y congelamos el resultado en el repositorio, en <span class="co">[</span><span class="ot">`datos/precios.csv`</span><span class="co">](https://github.com/diegoonna/libro_finanzas_computacionales/blob/main/datos/precios.csv)</span>. Es el archivo que usan las secciones "Con datos reales" de los capítulos <span class="co">[</span><span class="ot">6</span><span class="co">](../unidad1/cap06_series_tiempo_pandas.qmd)</span>, <span class="co">[</span><span class="ot">7</span><span class="co">](../unidad2/cap07_estadistica_optimizacion.qmd)</span>, <span class="co">[</span><span class="ot">8</span><span class="co">](../unidad2/cap08_markowitz.qmd)</span>, <span class="co">[</span><span class="ot">9</span><span class="co">](../unidad2/cap09_hrp.qmd)</span>, <span class="co">[</span><span class="ot">11</span><span class="co">](../unidad3/cap11_var_expected_shortfall.qmd)</span>, <span class="co">[</span><span class="ot">15</span><span class="co">](../unidad3/cap15_econometria_modelos_lineales.qmd)</span>, <span class="co">[</span><span class="ot">16</span><span class="co">](../unidad3/cap16_series_temporales_macro.qmd)</span> y <span class="co">[</span><span class="ot">17</span><span class="co">](../unidad3/cap17_backtesting.qmd)</span>: todas trabajan sobre los mismos datos, y cualquiera puede reproducirlas sin claves de API ni conexión.</span>
 <span id="cb7-41"><a href="#cb7-41" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb7-42"><a href="#cb7-42" aria-hidden="true" tabindex="-1"></a>Qué contiene:</span>
 <span id="cb7-43"><a href="#cb7-43" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-44"><a href="#cb7-44" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Precios diarios ajustados** (dividendos y splits incluidos — el retorno total del que habla el Capítulo 8), redondeados a 4 decimales.</span>
-<span id="cb7-45"><a href="#cb7-45" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Período**: julio 2021 a junio 2026 (~1250 ruedas). Incluye el bear market de 2022, el ciclo de suba de tasas y el boom de la IA — cinco años con de todo.</span>
+<span id="cb7-44"><a href="#cb7-44" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Precios diarios ajustados** (dividendos y splits incluidos; el retorno total del que habla el <span class="co">[</span><span class="ot">Capítulo 8</span><span class="co">](../unidad2/cap08_markowitz.qmd)</span>), redondeados a 4 decimales.</span>
+<span id="cb7-45"><a href="#cb7-45" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Período**: julio 2021 a junio 2026 (~1250 ruedas). Incluye el bear market de 2022, el ciclo de suba de tasas y el boom de la IA: cinco años con de todo.</span>
 <span id="cb7-46"><a href="#cb7-46" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**10 tickers** elegidos para cubrir sectores bien distintos: tecnología (AAPL, MSFT, NVDA), financiero (JPM), energía (XOM), consumo defensivo (KO, JNJ, WMT), medios (DIS), más el ETF **SPY** como proxy del mercado.</span>
 <span id="cb7-47"><a href="#cb7-47" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb7-48"><a href="#cb7-48" aria-hidden="true" tabindex="-1"></a>Para cargarlo, desde cualquier capítulo del libro (o desde tu clon del repositorio):</span>
@@ -1234,7 +1205,7 @@ Federal Reserve Bank of St. Louis. s.&nbsp;f. <span>«<span>FRED</span> — Fede
 <span id="cb7-57"><a href="#cb7-57" aria-hidden="true" tabindex="-1"></a>retornos <span class="op">=</span> precios.pct_change().dropna()</span>
 <span id="cb7-58"><a href="#cb7-58" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb7-59"><a href="#cb7-59" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-60"><a href="#cb7-60" aria-hidden="true" tabindex="-1"></a>El archivo se regeneró por última vez en **julio de 2026** con <span class="in">`yfinance`</span> y <span class="in">`auto_adjust=True`</span>, siguiendo exactamente el patrón de dos etapas de arriba. Si querés actualizarlo o cambiar el universo, el script es el de la sección anterior con la lista de tickers completa — pero recordá que al hacerlo tus números dejarán de coincidir con los impresos en el libro: ese es justamente el costo de la frescura que el congelamiento evita.</span>
+<span id="cb7-60"><a href="#cb7-60" aria-hidden="true" tabindex="-1"></a>El archivo se regeneró por última vez en **julio de 2026** con <span class="in">`yfinance`</span> y <span class="in">`auto_adjust=True`</span>, siguiendo exactamente el patrón de dos etapas de arriba. Si querés actualizarlo o cambiar el universo, el script es el de la sección anterior con la lista de tickers completa, pero recordá que al hacerlo tus números dejarán de coincidir con los impresos en el libro: ese es justamente el costo de la frescura que el congelamiento evita.</span>
 <span id="cb7-61"><a href="#cb7-61" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb7-62"><a href="#cb7-62" aria-hidden="true" tabindex="-1"></a><span class="fu">## yfinance: precios de mercado, gratis</span></span>
 <span id="cb7-63"><a href="#cb7-63" aria-hidden="true" tabindex="-1"></a></span>
@@ -1265,17 +1236,17 @@ Federal Reserve Bank of St. Louis. s.&nbsp;f. <span>«<span>FRED</span> — Fede
 <span id="cb7-90"><a href="#cb7-90" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb7-91"><a href="#cb7-91" aria-hidden="true" tabindex="-1"></a>Tres puntos que importan:</span>
 <span id="cb7-92"><a href="#cb7-92" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-93"><a href="#cb7-93" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**`auto_adjust=True`** te da precios ajustados por dividendos y splits — el *retorno total* que el Capítulo 8 mostró que es el correcto para estimar $\mu$. Sin ajustar, subestimás sistemáticamente el retorno de los activos de alto dividendo.</span>
+<span id="cb7-93"><a href="#cb7-93" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**`auto_adjust=True`** te da precios ajustados por dividendos y splits, el *retorno total* que el <span class="co">[</span><span class="ot">Capítulo 8</span><span class="co">](../unidad2/cap08_markowitz.qmd)</span> mostró que es el correcto para estimar $\mu$. Sin ajustar, subestimás sistemáticamente el retorno de los activos de alto dividendo.</span>
 <span id="cb7-94"><a href="#cb7-94" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>El parámetro <span class="in">`interval`</span> permite otras frecuencias: <span class="in">`"1wk"`</span>, <span class="in">`"1mo"`</span>, e intradiario (<span class="in">`"1h"`</span>, <span class="in">`"5m"`</span>) con historia limitada.</span>
-<span id="cb7-95"><a href="#cb7-95" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Para **tickers argentinos** en BYMA se usa el sufijo <span class="in">`.BA`</span>: <span class="in">`"GGAL.BA"`</span>, <span class="in">`"YPFD.BA"`</span> (pesos); los ADRs (<span class="in">`"GGAL"`</span>, <span class="in">`"YPF"`</span>) cotizan en dólares de NY — no los mezcles sin pensar en qué moneda estás.</span>
+<span id="cb7-95"><a href="#cb7-95" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Para **tickers argentinos** en BYMA se usa el sufijo <span class="in">`.BA`</span>: <span class="in">`"GGAL.BA"`</span>, <span class="in">`"YPFD.BA"`</span> (pesos); los ADRs (<span class="in">`"GGAL"`</span>, <span class="in">`"YPF"`</span>) cotizan en dólares de NY: no los mezcles sin pensar en qué moneda estás.</span>
 <span id="cb7-96"><a href="#cb7-96" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb7-97"><a href="#cb7-97" aria-hidden="true" tabindex="-1"></a>::: {.callout-warning title="Las limitaciones de lo gratuito"}</span>
-<span id="cb7-98"><a href="#cb7-98" aria-hidden="true" tabindex="-1"></a>yfinance usa una API **no oficial** de Yahoo: puede romperse tras cambios del sitio (actualizá la librería si deja de funcionar), tiene *rate limits* (descargas masivas → bloqueos temporales), y la calidad es de "análisis personal", no de auditoría: hay huecos y correcciones ocasionales. Además, ojo con el **sesgo de supervivencia** (Capítulo 17): si armás tu universo con los tickers *de hoy*, las empresas que quebraron no están — el pasado se ve mejor de lo que fue.</span>
+<span id="cb7-98"><a href="#cb7-98" aria-hidden="true" tabindex="-1"></a>yfinance usa una API **no oficial** de Yahoo: puede romperse tras cambios del sitio (actualizá la librería si deja de funcionar), tiene *rate limits* (descargas masivas → bloqueos temporales), y la calidad es de "análisis personal", no de auditoría: hay huecos y correcciones ocasionales. Además, hay que tener presente el **sesgo de supervivencia** (<span class="co">[</span><span class="ot">Capítulo 17</span><span class="co">](../unidad3/cap17_backtesting.qmd)</span>): si armás tu universo con los tickers *de hoy*, las empresas que quebraron no están, y el pasado se ve mejor de lo que fue.</span>
 <span id="cb7-99"><a href="#cb7-99" aria-hidden="true" tabindex="-1"></a>:::</span>
 <span id="cb7-100"><a href="#cb7-100" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb7-101"><a href="#cb7-101" aria-hidden="true" tabindex="-1"></a><span class="fu">## FRED: datos macroeconómicos, gratis</span></span>
 <span id="cb7-102"><a href="#cb7-102" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-103"><a href="#cb7-103" aria-hidden="true" tabindex="-1"></a>**FRED** (*Federal Reserve Economic Data*, de la Fed de St. Louis) es la referencia mundial de series macro: inflación, tasas, PIB, desempleo, spreads — más de 800.000 series. Es la fuente natural para alimentar los modelos ARIMA y VAR del Capítulo 16.</span>
+<span id="cb7-103"><a href="#cb7-103" aria-hidden="true" tabindex="-1"></a>**FRED** (*Federal Reserve Economic Data*, de la Fed de St. Louis) es la referencia mundial de series macro: inflación, tasas, PIB, desempleo, spreads. Son más de 800.000 series. Es la fuente natural para alimentar los modelos ARIMA y VAR del <span class="co">[</span><span class="ot">Capítulo 16</span><span class="co">](../unidad3/cap16_series_temporales_macro.qmd)</span>.</span>
 <span id="cb7-104"><a href="#cb7-104" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb7-105"><a href="#cb7-105" aria-hidden="true" tabindex="-1"></a>La vía clásica es <span class="co">[</span><span class="ot">`pandas-datareader`</span><span class="co">](https://pandas-datareader.readthedocs.io)</span> (<span class="in">`pip install pandas-datareader`</span>), que también documenta el acceso a otras fuentes públicas:</span>
 <span id="cb7-106"><a href="#cb7-106" aria-hidden="true" tabindex="-1"></a></span>
@@ -1291,7 +1262,7 @@ Federal Reserve Bank of St. Louis. s.&nbsp;f. <span>«<span>FRED</span> — Fede
 <span id="cb7-118"><a href="#cb7-118" aria-hidden="true" tabindex="-1"></a>tasa_10y <span class="op">=</span> web.DataReader(<span class="st">"DGS10"</span>, <span class="st">"fred"</span>, inicio, fin)    <span class="co"># Treasury a 10 años</span></span>
 <span id="cb7-119"><a href="#cb7-119" aria-hidden="true" tabindex="-1"></a>desempleo <span class="op">=</span> web.DataReader(<span class="st">"UNRATE"</span>, <span class="st">"fred"</span>, inicio, fin)  <span class="co"># tasa de desempleo</span></span>
 <span id="cb7-120"><a href="#cb7-120" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-121"><a href="#cb7-121" aria-hidden="true" tabindex="-1"></a><span class="co"># Varias series de un tiro, alineadas por fecha (la alineación del Capítulo 6)</span></span>
+<span id="cb7-121"><a href="#cb7-121" aria-hidden="true" tabindex="-1"></a><span class="co"># Varias series de una vez, alineadas por fecha (la alineación del Capítulo 6)</span></span>
 <span id="cb7-122"><a href="#cb7-122" aria-hidden="true" tabindex="-1"></a>macro <span class="op">=</span> web.DataReader([<span class="st">"CPIAUCSL"</span>, <span class="st">"DGS10"</span>, <span class="st">"UNRATE"</span>], <span class="st">"fred"</span>, inicio, fin)</span>
 <span id="cb7-123"><a href="#cb7-123" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(macro.tail(<span class="dv">3</span>))</span>
 <span id="cb7-124"><a href="#cb7-124" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
@@ -1309,15 +1280,15 @@ Federal Reserve Bank of St. Louis. s.&nbsp;f. <span>«<span>FRED</span> — Fede
 <span id="cb7-138"><a href="#cb7-138" aria-hidden="true" tabindex="-1"></a><span class="co"># variable de entorno y leela con os.environ["FRED_API_KEY"]</span></span>
 <span id="cb7-139"><a href="#cb7-139" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb7-140"><a href="#cb7-140" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-141"><a href="#cb7-141" aria-hidden="true" tabindex="-1"></a>El flujo típico para el Capítulo 16: descargar el CPI, convertirlo a inflación interanual (<span class="in">`cpi.pct_change(12)`</span>), guardarlo a CSV, y ajustarle un ARIMA — ahora con datos reales.</span>
+<span id="cb7-141"><a href="#cb7-141" aria-hidden="true" tabindex="-1"></a>El flujo típico para el <span class="co">[</span><span class="ot">Capítulo 16</span><span class="co">](../unidad3/cap16_series_temporales_macro.qmd)</span>: descargar el CPI, convertirlo a inflación interanual (<span class="in">`cpi.pct_change(12)`</span>), guardarlo a CSV, y ajustarle un ARIMA, ahora con datos reales.</span>
 <span id="cb7-142"><a href="#cb7-142" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb7-143"><a href="#cb7-143" aria-hidden="true" tabindex="-1"></a><span class="fu">## Bloomberg: el estándar institucional</span></span>
 <span id="cb7-144"><a href="#cb7-144" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-145"><a href="#cb7-145" aria-hidden="true" tabindex="-1"></a>En bancos, fondos y mesas de trading, la fuente es la **Terminal Bloomberg** — datos de calidad auditada, cobertura universal (renta fija, derivados OTC, curvas) y el costo correspondiente (~USD 25.000/año por terminal). Si trabajás en una institución, tu acceso a datos será este.</span>
+<span id="cb7-145"><a href="#cb7-145" aria-hidden="true" tabindex="-1"></a>En bancos, fondos y mesas de trading, la fuente es la **Terminal Bloomberg**: datos de calidad auditada, cobertura universal (renta fija, derivados OTC, curvas) y el costo correspondiente (~USD 25.000/año por terminal). Si trabajás en una institución, tu acceso a datos será este.</span>
 <span id="cb7-146"><a href="#cb7-146" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb7-147"><a href="#cb7-147" aria-hidden="true" tabindex="-1"></a>Cómo funciona el acceso desde Python:</span>
 <span id="cb7-148"><a href="#cb7-148" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-149"><a href="#cb7-149" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>La **Desktop API** (`blpapi`, la librería oficial de Bloomberg) permite pedir datos desde Python **solo si la Terminal está corriendo y logueada en la misma máquina** — la licencia es por usuario, y la API respeta eso. No hay versión gratuita ni "clave de prueba".</span>
+<span id="cb7-149"><a href="#cb7-149" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>La **Desktop API** (<span class="in">`blpapi`</span>, la librería oficial de Bloomberg) permite pedir datos desde Python solo si la Terminal está corriendo y logueada en la misma máquina: la licencia es por usuario, y la API respeta eso. No hay versión gratuita ni "clave de prueba".</span>
 <span id="cb7-150"><a href="#cb7-150" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Sobre <span class="in">`blpapi`</span> (que es verbosa) la comunidad construyó wrappers pythónicos: <span class="co">[</span><span class="ot">`xbbg`</span><span class="co">](https://github.com/alpha-xone/xbbg)</span> es el más usado hoy. Sus funciones replican las que ya conocés de Excel: <span class="in">`bdh`</span> (histórico), <span class="in">`bdp`</span> (dato puntual), <span class="in">`bds`</span> (bulk).</span>
 <span id="cb7-151"><a href="#cb7-151" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb7-154"><a href="#cb7-154" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
@@ -1340,41 +1311,31 @@ Federal Reserve Bank of St. Louis. s.&nbsp;f. <span>«<span>FRED</span> — Fede
 <span id="cb7-171"><a href="#cb7-171" aria-hidden="true" tabindex="-1"></a>flujos <span class="op">=</span> blp.bds(<span class="st">"GD30 Corp"</span>, flds<span class="op">=</span><span class="st">"DES_CASH_FLOW"</span>)</span>
 <span id="cb7-172"><a href="#cb7-172" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb7-173"><a href="#cb7-173" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-174"><a href="#cb7-174" aria-hidden="true" tabindex="-1"></a>Notá la sintaxis de tickers de Bloomberg: <span class="in">`"AAPL US Equity"`</span>, <span class="in">`"GD30 Corp"`</span> — el sufijo indica la clase de activo (*yellow key*). Y un detalle contractual que importa: la licencia restringe la **redistribución** de los datos; podés analizarlos, no republicarlos.</span>
+<span id="cb7-174"><a href="#cb7-174" aria-hidden="true" tabindex="-1"></a>Notá la sintaxis de tickers de Bloomberg: <span class="in">`"AAPL US Equity"`</span>, <span class="in">`"GD30 Corp"`</span>: el sufijo indica la clase de activo (*yellow key*). Y un detalle contractual que importa: la licencia restringe la **redistribución** de los datos; podés analizarlos, no republicarlos.</span>
 <span id="cb7-175"><a href="#cb7-175" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb7-176"><a href="#cb7-176" aria-hidden="true" tabindex="-1"></a><span class="fu">## ¿Cuál usar? Comparación y mapa de uso</span></span>
 <span id="cb7-177"><a href="#cb7-177" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb7-178"><a href="#cb7-178" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> <span class="pp">|</span> **yfinance** | **FRED** | **Bloomberg** <span class="pp">|</span></span>
 <span id="cb7-179"><a href="#cb7-179" aria-hidden="true" tabindex="-1"></a><span class="pp">|---|---|---|---|</span></span>
 <span id="cb7-180"><a href="#cb7-180" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> **Costo** <span class="pp">|</span> Gratis <span class="pp">|</span> Gratis (clave gratuita) <span class="pp">|</span> ~USD 25k/año <span class="pp">|</span></span>
-<span id="cb7-181"><a href="#cb7-181" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> **Cobertura** <span class="pp">|</span> Acciones, ETFs, FX, cripto <span class="pp">|</span> Macro (EEUUU y global) <span class="pp">|</span> Todo, incl. renta fija y OTC <span class="pp">|</span></span>
+<span id="cb7-181"><a href="#cb7-181" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> **Cobertura** <span class="pp">|</span> Acciones, ETFs, FX, cripto <span class="pp">|</span> Macro (EE. UU. y global) <span class="pp">|</span> Todo, incl. renta fija y OTC <span class="pp">|</span></span>
 <span id="cb7-182"><a href="#cb7-182" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> **Calidad** <span class="pp">|</span> Buena para análisis personal <span class="pp">|</span> Oficial (la Fed) <span class="pp">|</span> Auditada, estándar de la industria <span class="pp">|</span></span>
 <span id="cb7-183"><a href="#cb7-183" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> **Confiabilidad de API** <span class="pp">|</span> No oficial, puede romperse <span class="pp">|</span> Estable <span class="pp">|</span> Estable (con Terminal) <span class="pp">|</span></span>
-<span id="cb7-184"><a href="#cb7-184" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> **Uso en este libro** <span class="pp">|</span> Ejercicios de los Caps. 6–9, 15, 17 <span class="pp">|</span> Caps. 15–16 (ARIMA/VAR con macro real) <span class="pp">|</span> El mundo profesional que te espera <span class="pp">|</span></span>
+<span id="cb7-184"><a href="#cb7-184" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> **Uso en este libro** <span class="pp">|</span> El dataset <span class="in">`datos/precios.csv`</span> (secciones "Con datos reales") <span class="pp">|</span> Llevar el ARIMA/VAR del <span class="co">[</span><span class="ot">Cap. 16</span><span class="co">](../unidad3/cap16_series_temporales_macro.qmd)</span> a datos reales <span class="pp">|</span> El mundo profesional que te espera <span class="pp">|</span></span>
 <span id="cb7-185"><a href="#cb7-185" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-186"><a href="#cb7-186" aria-hidden="true" tabindex="-1"></a>La regla práctica: **yfinance para aprender y prototipar, FRED para macro, Bloomberg cuando alguien más paga la licencia**. Y sea cual sea la fuente: descargá una vez, guardá a disco, y analizá en local.</span>
+<span id="cb7-186"><a href="#cb7-186" aria-hidden="true" tabindex="-1"></a>La regla práctica: yfinance para aprender y prototipar, FRED para macro, Bloomberg cuando alguien más paga la licencia. Y sea cual sea la fuente: descargá una vez, guardá a disco, y analizá en local.</span>
 <span id="cb7-187"><a href="#cb7-187" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-188"><a href="#cb7-188" aria-hidden="true" tabindex="-1"></a><span class="fu">## Ejercicios Propuestos</span></span>
+<span id="cb7-188"><a href="#cb7-188" aria-hidden="true" tabindex="-1"></a><span class="fu">## Referencias</span></span>
 <span id="cb7-189"><a href="#cb7-189" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-190"><a href="#cb7-190" aria-hidden="true" tabindex="-1"></a>::: {.callout-important title="Ejercicios"}</span>
-<span id="cb7-191"><a href="#cb7-191" aria-hidden="true" tabindex="-1"></a><span class="ss">1. </span>**Primer pipeline**: escribí <span class="in">`descargar_datos.py`</span> que baje 5 años de un ETF (p.ej. SPY) con <span class="in">`auto_adjust=True`</span> y lo guarde en <span class="in">`datos/spy.csv`</span>. Después rehacé el análisis de retornos y volatilidad móvil del Capítulo 6 leyendo ese archivo.</span>
-<span id="cb7-192"><a href="#cb7-192" aria-hidden="true" tabindex="-1"></a><span class="ss">2. </span>**El efecto del ajuste**: descargá el mismo ticker con <span class="in">`auto_adjust=True`</span> y <span class="in">`False`</span>, calculá el retorno acumulado de 5 años con cada versión y medí la diferencia. ¿Coincide con el dividend yield acumulado?</span>
-<span id="cb7-193"><a href="#cb7-193" aria-hidden="true" tabindex="-1"></a><span class="ss">3. </span>**Markowitz real**: bajá 5 acciones de sectores distintos + un ETF de bonos, guardá los cierres ajustados, y corré la frontera eficiente del Capítulo 8 con retornos mensuales reales.</span>
-<span id="cb7-194"><a href="#cb7-194" aria-hidden="true" tabindex="-1"></a><span class="ss">4. </span>**Inflación real**: descargá el CPI de FRED, convertilo a inflación interanual y ajustale el ARIMA del Capítulo 16. ¿Qué orden elige el AIC con datos reales?</span>
-<span id="cb7-195"><a href="#cb7-195" aria-hidden="true" tabindex="-1"></a><span class="ss">5. </span>**Supervivencia**: buscá qué pasó con los tickers "ENRNQ" (Enron) o "LEHMQ" (Lehman) en yfinance. ¿Qué te dice el resultado sobre armar backtests con el listado de tickers actual?</span>
-<span id="cb7-196"><a href="#cb7-196" aria-hidden="true" tabindex="-1"></a>:::</span>
-<span id="cb7-197"><a href="#cb7-197" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-198"><a href="#cb7-198" aria-hidden="true" tabindex="-1"></a><span class="fu">## Referencias</span></span>
-<span id="cb7-199"><a href="#cb7-199" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-200"><a href="#cb7-200" aria-hidden="true" tabindex="-1"></a>::: {#refs}</span>
-<span id="cb7-201"><a href="#cb7-201" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb7-190"><a href="#cb7-190" aria-hidden="true" tabindex="-1"></a>::: {#refs}</span>
+<span id="cb7-191"><a href="#cb7-191" aria-hidden="true" tabindex="-1"></a>:::</span>
 </code></pre></div><button title="Copiar al portapapeles" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></div>
 </div></div></div></div></div>
 </div> <!-- /content -->
 <footer class="footer">
   <div class="nav-footer">
     <div class="nav-footer-left">
-<p>Finanzas Computacionales con Python fue escrito por la Cátedra de Finanzas Computacionales — UADE.</p>
+<p>Finanzas Computacionales con Python fue escrito por la Cátedra de Finanzas Computacionales de la UADE.</p>
 </div>   
     <div class="nav-footer-center">
       &nbsp;
